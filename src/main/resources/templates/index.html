@@ -4,68 +4,223 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco Skill Factory</title>
-    <!-- Bootstrap 5 CSS e Bootstrap Icons -->
+    
+    <!-- Google Fonts & Bootstrap 5 CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
+        :root {
+            --brand-primary: #00dc82;
+            --brand-primary-hover: #00b368;
+            --brand-dark: #0f172a;
         }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #334155;
+            background-color: #080c14; /* Sfondo scuro profondo per far risaltare il neon */
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas per lo sfondo animato leggero */
+        #tech-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism Navbar */
+        .glass-header {
+            background: rgba(15, 23, 42, 0.75) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-text {
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-accent {
+            background: linear-gradient(135deg, #00dc82 0%, #36e4da 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .block-container {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
         }
+
+        /* Jumbotron custom style con effetto Glass translucent */
+        .custom-jumbotron {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Modern Card Stacking con trasparenza Glass */
+        .card-custom {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.25rem;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            color: #f1f5f9;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-custom:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 220, 130, 0.2);
+            border-color: rgba(0, 220, 130, 0.6);
+        }
+
+        .card-custom .card-title {
+            color: #ffffff !important;
+        }
+
+        .card-custom .card-text {
+            color: #cbd5e1 !important;
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-top-left-radius: 1.25rem;
+            border-top-right-radius: 1.25rem;
+        }
+
+        .card-img-wrapper img {
+            transition: transform 0.5s ease;
+        }
+
+        .card-custom:hover .card-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        /* Custom Buttons */
+        .btn-brand {
+            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
+            color: #0f172a;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 220, 130, 0.25);
+        }
+
+        .btn-brand:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
+            color: #0f172a;
+        }
+
+        /* Modern Carousel Styling */
+        .carousel-custom {
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .carousel-item img {
             object-fit: cover;
-            max-height: 500px;
+            max-height: 550px;
+            filter: brightness(0.8);
+        }
+
+        .carousel-caption-custom {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 1rem;
+            padding: 2rem;
+            bottom: 3rem;
+        }
+
+        /* Hero / Empty State */
+        .hero-fallback {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2rem;
+            color: #ffffff;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <!-- Header / Navbar Minimal -->
-    <header class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <!-- Canvas per Animazione Circuiti + Codice -->
+    <canvas id="tech-bg-canvas"></canvas>
+
+    <!-- Header / Navbar Glassmorphism -->
+    <header class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3">
         <div class="container">
-            <a class="navbar-brand fw-bold text-uppercase tracking-wide" href="/">
-                Eco <span class="text-primary">Skill Factory</span>
+            <a class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2" href="/">
+                <i class="bi bi-cpu-fill text-success fs-3"></i>
+                <span class="brand-text fw-bold">Eco</span> <span class="brand-accent fw-bold">Skill Factory</span>
             </a>
             <div class="ms-auto">
-                <a href="/login" class="btn btn-outline-light btn-sm"><i class="bi bi-lock-fill"></i> Area Admin</a>
+                <a href="/login" class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
+                    <i class="bi bi-shield-lock-fill me-1"></i> Area Admin
+                </a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content: Iterazione dinamica sulle righe della pagina -->
-    <main>
+    <!-- Main Content -->
+    <main th:if="${not #lists.isEmpty(blocks)}">
         <div th:each="block : ${blocks}" 
-             th:class="${block.containerType.cssClass} + ' py-4 block-container ' + ${block.backgroundColor}"
+             th:class="${block.containerType.cssClass} + ' py-5 block-container '"
              th:style="'min-height:' + ${block.customHeight}">
 
-            <!-- MODELLO 1: JUMBOTRON / SEZIONE TESTO -->
-            <div th:if="${block.blockType.name() == 'JUMBOTRON'}" class="p-5 mb-4 rounded-3 border shadow-sm">
+            <!-- MODELLO 1: JUMBOTRON -->
+            <div th:if="${block.blockType.name() == 'JUMBOTRON'}" class="p-4 p-md-5 mb-4 rounded-4 custom-jumbotron">
                 <div class="container-fluid py-2" th:utext="${block.contentHtml}">
-                    <!-- Contenuto TinyMCE iniettato direttamente -->
+                    <!-- Contenuto TinyMCE -->
                 </div>
             </div>
 
-            <!-- MODELLO 2: GRIGLIA CARD (2 o 3 Colonne) -->
+            <!-- MODELLO 2: GRIGLIA CARD (Centrata Dinamicamente) -->
             <div th:if="${block.blockType.name() == 'CARDS'}">
-                <div th:if="${block.contentHtml != null and !block.contentHtml.empty}" class="mb-4" th:utext="${block.contentHtml}">
-                    <!-- Testo introduttivo facoltativo della sezione -->
+                <div th:if="${block.contentHtml != null and !block.contentHtml.empty}" class="mb-4 text-center text-light" th:utext="${block.contentHtml}">
+                    <!-- Testo introduttivo facoltativo -->
                 </div>
-                <div class="row g-4 align-items-stretch">
-                    <div th:each="item : ${block.items}" class="col-md-4">
-                        <div class="card h-100 shadow-sm border-0">
-                            <img th:if="${item.imageUrl != null and !item.imageUrl.empty}" 
-                                 th:src="${item.imageUrl}" class="card-img-top" alt="Card Image" style="height: 200px; object-fit: cover;">
-                            <div class="card-body d-flex flex-column">
-                                <h4 class="card-title fw-bold" th:text="${item.title}">Titolo Card</h4>
-                                <h6 th:if="${item.subtitle != null}" class="card-subtitle mb-2 text-muted" th:text="${item.subtitle}">Sottotitolo</h6>
+                
+                <div class="row g-4 justify-content-center align-items-stretch">
+                    <div th:each="item : ${block.items}" class="col-12 col-md-6 col-lg-4 d-flex">
+                        <div class="card card-custom w-100 d-flex flex-column overflow-hidden">
+                            <div th:if="${item.imageUrl != null and !item.imageUrl.empty}" class="card-img-wrapper">
+                                <img th:src="${item.imageUrl}" class="card-img-top" alt="Card Image" style="height: 220px; object-fit: cover;">
+                            </div>
+                            <div class="card-body p-4 d-flex flex-column">
+                                <h4 class="card-title fw-bold mb-2" th:text="${item.title}">Titolo Card</h4>
+                                <h6 th:if="${item.subtitle != null}" class="card-subtitle mb-3 text-success opacity-75 fw-semibold" th:text="${item.subtitle}">Sottotitolo</h6>
                                 <div class="card-text flex-grow-1" th:utext="${item.contentHtml}"></div>
-                                <div th:if="${item.buttonText != null and !item.buttonText.empty}" class="mt-3">
-                                    <a th:href="${item.buttonUrl}" class="btn btn-primary w-100" th:text="${item.buttonText}">Scopri di più</a>
+                                <div th:if="${item.buttonText != null and !item.buttonText.empty}" class="mt-4 pt-2">
+                                    <a th:href="${item.buttonUrl}" class="btn btn-brand w-100 d-inline-flex justify-content-center align-items-center gap-2" th:text="${item.buttonText}">
+                                        Scopri di più <i class="bi bi-arrow-right-short fs-4"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -74,45 +229,200 @@
             </div>
 
             <!-- MODELLO 3: CAROSELLO -->
-            <div th:if="${block.blockType.name() == 'CAROUSEL'}" th:id="'carouselBlock-' + ${block.id}" class="carousel slide shadow rounded overflow-hidden" data-bs-ride="carousel">
+            <div th:if="${block.blockType.name() == 'CAROUSEL'}" th:id="'carouselBlock-' + ${block.id}" class="carousel slide carousel-custom overflow-hidden" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div th:each="item, iterStat : ${block.items}" 
                          th:class="'carousel-item ' + ${iterStat.index == 0 ? 'active' : ''}">
-                        <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://via.placeholder.com/1200x400'}" class="d-block w-100" th:alt="${item.title}">
-                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
-                            <h3 class="fw-bold" th:text="${item.title}">Titolo Slide</h3>
-                            <div th:utext="${item.contentHtml}"></div>
+                        <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'}" class="d-block w-100" th:alt="${item.title}">
+                        <div class="carousel-caption carousel-caption-custom d-none d-md-block text-start mx-auto" style="max-width: 800px;">
+                            <h2 class="fw-extrabold text-white mb-2" th:text="${item.title}">Titolo Slide</h2>
+                            <div class="text-light opacity-90" th:utext="${item.contentHtml}"></div>
                         </div>
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" th:data-bs-target="'#carouselBlock-' + ${block.id}" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="carousel-control-prev-icon p-3 bg-dark bg-opacity-50 rounded-circle" aria-hidden="true"></span>
                     <span class="visually-hidden">Precedente</span>
                 </button>
                 <button class="carousel-control-next" type="button" th:data-bs-target="'#carouselBlock-' + ${block.id}" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="carousel-control-next-icon p-3 bg-dark bg-opacity-50 rounded-circle" aria-hidden="true"></span>
                     <span class="visually-hidden">Successivo</span>
                 </button>
             </div>
 
         </div>
-
-        <!-- Messaggio di fallback se non ci sono ancora righe create -->
-        <div th:if="${#lists.isEmpty(blocks)}" class="container py-5 text-center">
-            <h2 class="text-muted">Benvenuto su Eco Skill Factory</h2>
-            <p>Nessun contenuto configurato. Accedi all'area riservata per aggiungere le prime righe.</p>
-            <a href="/login" class="btn btn-primary">Accedi al CMS</a>
-        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
+    <!-- Messaggio Fallback (Nessuna riga creata) -->
+    <div th:if="${#lists.isEmpty(blocks)}" class="container py-5 my-5">
+        <div class="p-5 hero-fallback text-center shadow-lg position-relative overflow-hidden">
+            <div class="position-relative z-1 py-4">
+                <div class="bg-success bg-opacity-20 d-inline-block p-3 rounded-circle mb-3">
+                    <i class="bi bi-layers-half text-success fs-1"></i>
+                </div>
+                <h1 class="display-4 fw-bold mb-3">Benvenuto su Eco Skill Factory</h1>
+                <p class="lead text-slate-300 max-w-2xl mx-auto mb-4" style="max-width: 600px;">
+                    La tua piattaforma è pronta. Non hai ancora configurato nessun blocco dinamico per la homepage.
+                </p>
+                <a href="/login" class="btn btn-brand btn-lg rounded-pill px-5">
+                    Accedi al Dashboard CMS <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Moderno -->
+    <footer class="bg-dark text-white py-5 mt-auto border-top border-secondary border-opacity-10">
         <div class="container text-center">
-            <p class="mb-0 small">&copy; 2026 Eco Skill Factory - Tutti i diritti riservati.</p>
+            <p class="mb-0 small text-secondary">&copy; 2026 Eco Skill Factory. Tutti i diritti riservati.</p>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script Sfondo Animato Tech: Circuiti + Righe di Codice (Leggerissimo) -->
+    <script>
+        const canvas = document.getElementById('tech-bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 1. GENERATORE DI CIRCUITI
+        class Circuit {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.length = Math.floor(Math.random() * 8) + 4;
+                this.currentStep = 0;
+                this.dir = Math.floor(Math.random() * 4); // 0: up, 1: right, 2: down, 3: left
+                this.path = [{ x: this.x, y: this.y }];
+                this.speed = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.4 + 0.1;
+                this.size = 20; // dimensione griglia circuito
+            }
+
+            update() {
+                if (this.currentStep < this.length) {
+                    let last = this.path[this.path.length - 1];
+                    let nx = last.x;
+                    let ny = last.y;
+
+                    if (Math.random() < 0.3) {
+                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4; // curva a 90 gradi
+                    }
+
+                    switch (this.dir) {
+                        case 0: ny -= this.size; break;
+                        case 1: nx += this.size; break;
+                        case 2: ny += this.size; break;
+                        case 3: nx -= this.size; break;
+                    }
+
+                    this.path.push({ x: nx, y: ny });
+                    this.currentStep++;
+                } else {
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
+                }
+            }
+
+            draw() {
+                if (this.path.length < 2) return;
+                ctx.beginPath();
+                ctx.moveTo(this.path[0].x, this.path[0].y);
+                for (let i = 1; i < this.path.length; i++) {
+                    ctx.lineTo(this.path[i].x, this.path[i].y);
+                }
+                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Snodo finale (nodo del circuito)
+                let last = this.path[this.path.length - 1];
+                ctx.beginPath();
+                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+                ctx.fill();
+            }
+        }
+
+        // 2. GENERATORE DI RIGHE DI CODICE / MATRIX FLUTTUANTI
+        const codeSnippets = [
+            "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
+            "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
+            "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
+            "npm run build", "docker-compose up -d", "mvn clean install"
+        ];
+
+        class CodeText {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * (width - 200);
+                this.y = Math.random() * height;
+                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                this.alpha = 0;
+                this.maxAlpha = Math.random() * 0.3 + 0.1;
+                this.fadeIn = true;
+                this.speed = Math.random() * 0.3 + 0.1;
+            }
+
+            update() {
+                this.y -= this.speed;
+                if (this.fadeIn) {
+                    this.alpha += 0.008;
+                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+                } else {
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
+                }
+            }
+
+            draw() {
+                ctx.font = '12px "Fira Code", monospace';
+                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.fillText(this.text, this.x, this.y);
+            }
+        }
+
+        // Inizializzazione degli oggetti leggeri
+        const circuits = Array.from({ length: 18 }, () => new Circuit());
+        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
+
+        // Loop di Animazione Optimized (requestAnimationFrame)
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Disegna e aggiorna i circuiti
+            circuits.forEach(c => {
+                c.update();
+                c.draw();
+            });
+
+            // Disegna e aggiorna il codice fluttuante
+            codeTexts.forEach(ct => {
+                ct.update();
+                ct.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
 </body>
 </html>

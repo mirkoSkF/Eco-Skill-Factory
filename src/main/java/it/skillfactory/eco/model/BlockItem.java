@@ -11,15 +11,18 @@ public class BlockItem {
     private Long id;
 
     private String title;
+
     private String subtitle;
+
+    private String imageUrl;
+
+    private String buttonText;
+
+    private String buttonUrl;
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String contentHtml;
-
-    private String imageUrl;
-    private String buttonText;
-    private String buttonUrl;
 
     private Integer itemOrder = 0;
 
@@ -39,9 +42,6 @@ public class BlockItem {
     public String getSubtitle() { return subtitle; }
     public void setSubtitle(String subtitle) { this.subtitle = subtitle; }
 
-    public String getContentHtml() { return contentHtml; }
-    public void setContentHtml(String contentHtml) { this.contentHtml = contentHtml; }
-
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
@@ -50,6 +50,9 @@ public class BlockItem {
 
     public String getButtonUrl() { return buttonUrl; }
     public void setButtonUrl(String buttonUrl) { this.buttonUrl = buttonUrl; }
+
+    public String getContentHtml() { return contentHtml; }
+    public void setContentHtml(String contentHtml) { this.contentHtml = contentHtml; }
 
     public Integer getItemOrder() { return itemOrder; }
     public void setItemOrder(Integer itemOrder) { this.itemOrder = itemOrder; }

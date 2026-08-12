@@ -6,6 +6,7 @@ import it.skillfactory.eco.model.ContainerType;
 import it.skillfactory.eco.model.PageBlock;
 import it.skillfactory.eco.repository.BlockItemRepository;
 import it.skillfactory.eco.repository.PageBlockRepository;
+import it.skillfactory.eco.repository.PageRepository;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,15 +26,18 @@ public class AdminController {
 
     private final PageBlockRepository blockRepository;
     private final BlockItemRepository itemRepository;
+    private final PageRepository pageRepository;
 
     private static final String UPLOAD_DIR = "uploads/";
 
     public AdminController(
             PageBlockRepository blockRepository,
-            BlockItemRepository itemRepository) {
+            BlockItemRepository itemRepository,
+            PageRepository pageRepository) {
 
         this.blockRepository = blockRepository;
         this.itemRepository = itemRepository;
+        this.pageRepository = pageRepository;
     }
 
 
@@ -44,10 +48,25 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
 
+        // --------------------------------------------------------
+        // RIGHE HOME PAGE
+        // --------------------------------------------------------
+
         model.addAttribute(
                 "blocks",
                 blockRepository.findAllByOrderByPositionAsc()
         );
+
+
+        // --------------------------------------------------------
+        // PAGINE DINAMICHE
+        // --------------------------------------------------------
+
+        model.addAttribute(
+                "pages",
+                pageRepository.findAll()
+        );
+
 
         return "admin/dashboard";
     }
@@ -131,6 +150,7 @@ public class AdminController {
 
         PageBlock block;
 
+
         // ========================================================
         // RECUPERO L'ENTITÀ ESISTENTE
         // ========================================================
@@ -153,6 +173,7 @@ public class AdminController {
             block = new PageBlock();
         }
 
+
         // ========================================================
         // CAMPI GENERALI
         // ========================================================
@@ -168,6 +189,7 @@ public class AdminController {
         block.setContainerType(
                 formBlock.getContainerType()
         );
+
 
         // ========================================================
         // ALTEZZA
@@ -190,6 +212,7 @@ public class AdminController {
         block.setCustomHeight(
                 customHeight
         );
+
 
         // ========================================================
         // LARGHEZZA
@@ -217,6 +240,7 @@ public class AdminController {
                 width
         );
 
+
         // ========================================================
         // MODELLO
         // ========================================================
@@ -225,6 +249,7 @@ public class AdminController {
                 formBlock.getBlockType()
         );
 
+
         // ========================================================
         // CONTENUTO HTML
         // ========================================================
@@ -232,6 +257,7 @@ public class AdminController {
         block.setContentHtml(
                 formBlock.getContentHtml()
         );
+
 
         // ========================================================
         // SFONDO
@@ -244,6 +270,7 @@ public class AdminController {
             );
         }
 
+
         // ========================================================
         // IMMAGINE PRINCIPALE
         // ========================================================
@@ -251,24 +278,27 @@ public class AdminController {
         boolean imageAllowed =
                 block.getBlockType()
                         == BlockType.JUMBO_DEMO_1
-
                 ||
-
                 block.getBlockType()
                         == BlockType.JUMBO_DEMO_2;
+
 
         if (imageAllowed) {
 
             if (imageFile != null
                     && !imageFile.isEmpty()) {
 
-                // (Opzionale) Rimuove la vecchia immagine dal disco se presente
-                deleteUploadedFile(block.getImageUrl());
+                // Cancella la vecchia immagine
+                deleteUploadedFile(
+                        block.getImageUrl()
+                );
+
 
                 String imageUrl =
                         saveUploadedFile(
                                 imageFile
                         );
+
 
                 if (imageUrl != null) {
 
@@ -283,6 +313,7 @@ public class AdminController {
             block.setImageUrl(null);
         }
 
+
         // ========================================================
         // TESTI DEMO PREDEFINITI
         // ========================================================
@@ -292,11 +323,18 @@ public class AdminController {
                        .trim()
                        .isEmpty()) {
 
+
+            // ----------------------------------------------------
+            // JUMBO DEMO 1
+            // ----------------------------------------------------
+
             if (block.getBlockType()
                     == BlockType.JUMBO_DEMO_1) {
 
                 block.setContentHtml(
+
                         "<h2>Chi Siamo</h2>" +
+
                         "<p><strong>Skill Factory</strong> è la " +
                         "<strong>Learning Company</strong> specializzata in " +
                         "<strong>servizi e prodotti per la formazione</strong>. " +
@@ -308,6 +346,7 @@ public class AdminController {
                         "cambiamenti dovuti alla " +
                         "<strong>trasformazione digitale</strong>." +
                         "</p>" +
+
                         "<p>La nostra <strong>Mission</strong> è quella di ridurre " +
                         "il <strong>mismatch</strong> tra " +
                         "<strong>domanda e offerta</strong> di lavoro. " +
@@ -326,11 +365,18 @@ public class AdminController {
                 );
             }
 
+
+            // ----------------------------------------------------
+            // JUMBO DEMO 2
+            // ----------------------------------------------------
+
             else if (block.getBlockType()
                     == BlockType.JUMBO_DEMO_2) {
 
                 block.setContentHtml(
+
                         "<h2>La Sede</h2>" +
+
                         "<p>Siamo a <strong>Napoli</strong>, presso il " +
                         "<strong>Centro Direzionale</strong>, all'isola " +
                         "<strong>E2</strong>, al primo piano della " +
@@ -342,6 +388,7 @@ public class AdminController {
                         "automunito, in zona ci sono " +
                         "<strong>ampi parcheggi</strong>." +
                         "</p>" +
+
                         "<p>La struttura, di oltre " +
                         "<strong>300 metri quadrati</strong>, dispone di " +
                         "<strong>tre aule attrezzate</strong> con computer e " +
@@ -350,6 +397,7 @@ public class AdminController {
                         "<strong>due aree amministrative</strong> e un'ampia " +
                         "<strong>sala ricreativa</strong>." +
                         "</p>" +
+
                         "<p>L'ambiente è <strong>accogliente</strong>, con " +
                         "<strong>aria condizionata</strong>, dispone di " +
                         "<strong>servizi</strong> per i diversamente abili e " +
@@ -358,13 +406,22 @@ public class AdminController {
                 );
             }
 
+
+            // ----------------------------------------------------
+            // JUMBO 2 COLONNE
+            // ----------------------------------------------------
+
             else if (block.getBlockType()
                     == BlockType.JUMBO_2_COL) {
 
                 block.setContentHtml(
+
                         "<div class='row g-4'>" +
+
                         "<div class='col-md-6'>" +
+
                         "<h2>L' Academy</h2>" +
+
                         "<p>Attraverso la nostra " +
                         "<strong>Academy delle Professioni Digitali</strong> " +
                         "eroghiamo <strong>percorsi di formazione " +
@@ -376,12 +433,16 @@ public class AdminController {
                         "<strong>mercato</strong> del lavoro oltre " +
                         "<strong>3000 giovani</strong>." +
                         "</p>" +
+
                         "<p>L'<strong>Academy Skill Factory</strong> nasce " +
                         "con un <strong>duplice obiettivo</strong>:</p>" +
+
                         "<p>1. <strong>formare</strong> le nuove " +
                         "<strong>figure professionali</strong> del mondo digital;</p>" +
+
                         "<p>2. <strong>supportare l'Upskilling e il " +
                         "Reskilling</strong> dei professionisti del settore.</p>" +
+
                         "<p>Offriamo una <strong>formazione di qualità</strong>, " +
                         "mettendo i <strong>nostri studenti</strong> al centro " +
                         "del processo di <strong>apprendimento</strong>, " +
@@ -391,37 +452,53 @@ public class AdminController {
                         "l'acquisizione delle <strong>soft skills</strong> e " +
                         "delle <strong>hard skills</strong> richieste." +
                         "</p>" +
+
                         "</div>" +
+
                         "<div class='col-md-6'>" +
+
                         "<h2>L' Offerta Formativa</h2>" +
+
                         "<p>I nostri corsi di " +
                         "<strong>specializzazione</strong> possono essere " +
                         "seguiti in <strong>presenza</strong> o a " +
                         "<strong>distanza</strong>.</p>" +
+
                         "<p>Formiamo i " +
                         "<strong>professionisti</strong> dell'" +
                         "<strong>innovazione</strong> più richiesti dalle " +
                         "<strong>aziende</strong> del " +
                         "<strong>mondo digitale</strong>:</p>" +
+
                         "<ul class='list-unstyled fw-bold mt-4'>" +
+
                         "<li class='border-bottom border-secondary " +
                         "border-opacity-25 py-2'>SAP CONSULTANT</li>" +
+
                         "<li class='border-bottom border-secondary " +
                         "border-opacity-25 py-2'>SALESFORCE CONSULTANT</li>" +
+
                         "<li class='border-bottom border-secondary " +
                         "border-opacity-25 py-2'>BIG DATA ANALYST</li>" +
+
                         "<li class='border-bottom border-secondary " +
                         "border-opacity-25 py-2'>CYBER SECURITY EXPERT</li>" +
+
                         "<li class='border-bottom border-secondary " +
                         "border-opacity-25 py-2'>WEB / MOBILE DEVELOPER</li>" +
+
                         "<li class='border-bottom border-secondary " +
                         "border-opacity-25 py-2'>UI / UX DESIGNER</li>" +
+
                         "</ul>" +
+
                         "</div>" +
+
                         "</div>"
                 );
             }
         }
+
 
         // ========================================================
         // SALVATAGGIO
@@ -429,38 +506,56 @@ public class AdminController {
 
         blockRepository.save(block);
 
-        return "redirect:/admin/block/edit/" + block.getId();
+        return "redirect:/admin/block/edit/"
+                + block.getId();
     }
 
 
     // ============================================================
-    // UPLOAD & DELETE FILE HELPER
+    // UPLOAD FILE
     // ============================================================
 
-    private String saveUploadedFile(MultipartFile file) {
+    private String saveUploadedFile(
+            MultipartFile file) {
 
         try {
 
-            Path uploadPath = Paths.get(UPLOAD_DIR);
+            Path uploadPath =
+                    Paths.get(UPLOAD_DIR);
+
 
             if (!Files.exists(uploadPath)) {
 
-                Files.createDirectories(uploadPath);
+                Files.createDirectories(
+                        uploadPath
+                );
             }
 
-            String originalFilename = file.getOriginalFilename();
+
+            String originalFilename =
+                    file.getOriginalFilename();
+
 
             String cleanFileName =
                     originalFilename != null
-                            ? originalFilename.replaceAll("\\s+", "_")
+                            ? originalFilename.replaceAll(
+                                    "\\s+",
+                                    "_"
+                            )
                             : "file";
+
 
             String fileName =
                     UUID.randomUUID()
                             + "_"
                             + cleanFileName;
 
-            Path filePath = uploadPath.resolve(fileName);
+
+            Path filePath =
+                    uploadPath.resolve(
+                            fileName
+                    );
+
 
             Files.copy(
                     file.getInputStream(),
@@ -468,7 +563,9 @@ public class AdminController {
                     StandardCopyOption.REPLACE_EXISTING
             );
 
+
             return "/uploads/" + fileName;
+
 
         } catch (IOException e) {
 
@@ -478,19 +575,39 @@ public class AdminController {
         }
     }
 
-    private void deleteUploadedFile(String relativeUrl) {
 
-        if (relativeUrl == null || !relativeUrl.startsWith("/uploads/")) {
+    // ============================================================
+    // DELETE FILE
+    // ============================================================
+
+    private void deleteUploadedFile(
+            String relativeUrl) {
+
+        if (relativeUrl == null
+                || !relativeUrl.startsWith("/uploads/")) {
+
             return;
         }
 
+
         try {
 
-            String fileName = relativeUrl.replace("/uploads/", "");
+            String fileName =
+                    relativeUrl.replace(
+                            "/uploads/",
+                            ""
+                    );
 
-            Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
 
-            Files.deleteIfExists(filePath);
+            Path filePath =
+                    Paths.get(UPLOAD_DIR)
+                            .resolve(fileName);
+
+
+            Files.deleteIfExists(
+                    filePath
+            );
+
 
         } catch (IOException e) {
 
@@ -504,7 +621,8 @@ public class AdminController {
     // ============================================================
 
     @GetMapping("/block/delete/{id}")
-    public String deleteBlock(@PathVariable Long id) {
+    public String deleteBlock(
+            @PathVariable Long id) {
 
         blockRepository.deleteById(id);
 
@@ -547,6 +665,7 @@ public class AdminController {
             )
             String buttonUrl) {
 
+
         PageBlock block =
                 blockRepository.findById(id)
                         .orElseThrow(() ->
@@ -555,50 +674,112 @@ public class AdminController {
                                 )
                         );
 
-        BlockItem item = new BlockItem();
+
+        BlockItem item =
+                new BlockItem();
+
 
         item.setTitle(title);
-        item.setContentHtml(contentHtml);
-        item.setButtonText(buttonText);
-        item.setButtonUrl(buttonUrl);
-        item.setPageBlock(block);
 
-        if (imageFile != null && !imageFile.isEmpty()) {
+        item.setContentHtml(
+                contentHtml
+        );
 
-            String imageUrl = saveUploadedFile(imageFile);
+        item.setButtonText(
+                buttonText
+        );
+
+        item.setButtonUrl(
+                buttonUrl
+        );
+
+        item.setPageBlock(
+                block
+        );
+
+
+        if (imageFile != null
+                && !imageFile.isEmpty()) {
+
+            String imageUrl =
+                    saveUploadedFile(
+                            imageFile
+                    );
+
 
             if (imageUrl != null) {
 
-                item.setImageUrl(imageUrl);
+                item.setImageUrl(
+                        imageUrl
+                );
             }
         }
 
+
         itemRepository.save(item);
+
 
         return "redirect:/admin/block/edit/" + id;
     }
 
 
     // ============================================================
-    // FORM EDIT CARD / SLIDE (MOSTRA DATI DA MODIFICARE)
+    // FORM EDIT CARD / SLIDE
     // ============================================================
 
-    @GetMapping("/block/{blockId}/item/edit/{itemId}")
+    @GetMapping(
+            "/block/{blockId}/item/edit/{itemId}"
+    )
     public String editItemForm(
             @PathVariable Long blockId,
             @PathVariable Long itemId,
             Model model) {
 
-        PageBlock block = blockRepository.findById(blockId)
-                .orElseThrow(() -> new IllegalArgumentException("ID Riga non valido: " + blockId));
 
-        BlockItem item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("ID Elemento non valido: " + itemId));
+        PageBlock block =
+                blockRepository.findById(
+                        blockId
+                )
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "ID Riga non valido: "
+                                        + blockId
+                        )
+                );
 
-        model.addAttribute("block", block);
-        model.addAttribute("editingItem", item);
-        model.addAttribute("blockTypes", BlockType.values());
-        model.addAttribute("containerTypes", ContainerType.values());
+
+        BlockItem item =
+                itemRepository.findById(
+                        itemId
+                )
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "ID Elemento non valido: "
+                                        + itemId
+                        )
+                );
+
+
+        model.addAttribute(
+                "block",
+                block
+        );
+
+        model.addAttribute(
+                "editingItem",
+                item
+        );
+
+        model.addAttribute(
+                "blockTypes",
+                BlockType.values()
+        );
+
+        model.addAttribute(
+                "containerTypes",
+                ContainerType.values()
+        );
+
 
         return "admin/block-form";
     }
@@ -608,7 +789,9 @@ public class AdminController {
     // SALVA MODIFICA CARD / SLIDE
     // ============================================================
 
-    @PostMapping("/block/{blockId}/item/update/{itemId}")
+    @PostMapping(
+            "/block/{blockId}/item/update/{itemId}"
+    )
     public String updateItem(
             @PathVariable Long blockId,
             @PathVariable Long itemId,
@@ -640,30 +823,62 @@ public class AdminController {
             )
             String buttonUrl) {
 
-        BlockItem item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("ID Elemento non valido: " + itemId));
+
+        BlockItem item =
+                itemRepository.findById(
+                        itemId
+                )
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "ID Elemento non valido: "
+                                        + itemId
+                        )
+                );
+
 
         item.setTitle(title);
-        item.setContentHtml(contentHtml);
-        item.setButtonText(buttonText);
-        item.setButtonUrl(buttonUrl);
 
-        if (imageFile != null && !imageFile.isEmpty()) {
+        item.setContentHtml(
+                contentHtml
+        );
 
-            // Cancella l'immagine precedente se ne esisteva una
-            deleteUploadedFile(item.getImageUrl());
+        item.setButtonText(
+                buttonText
+        );
 
-            String imageUrl = saveUploadedFile(imageFile);
+        item.setButtonUrl(
+                buttonUrl
+        );
+
+
+        if (imageFile != null
+                && !imageFile.isEmpty()) {
+
+            deleteUploadedFile(
+                    item.getImageUrl()
+            );
+
+
+            String imageUrl =
+                    saveUploadedFile(
+                            imageFile
+                    );
+
 
             if (imageUrl != null) {
 
-                item.setImageUrl(imageUrl);
+                item.setImageUrl(
+                        imageUrl
+                );
             }
         }
 
+
         itemRepository.save(item);
 
-        return "redirect:/admin/block/edit/" + blockId;
+
+        return "redirect:/admin/block/edit/"
+                + blockId;
     }
 
 
@@ -671,17 +886,39 @@ public class AdminController {
     // ELIMINA CARD / SLIDE
     // ============================================================
 
-    @GetMapping("/block/{blockId}/item/delete/{itemId}")
+    @GetMapping(
+            "/block/{blockId}/item/delete/{itemId}"
+    )
     public String deleteItem(
             @PathVariable Long blockId,
             @PathVariable Long itemId) {
 
-        // Cancella l'immagine dal filesystem prima di eliminare dal DB
-        itemRepository.findById(itemId).ifPresent(item -> deleteUploadedFile(item.getImageUrl()));
 
-        itemRepository.deleteById(itemId);
+        // --------------------------------------------------------
+        // Cancella immagine dal filesystem
+        // --------------------------------------------------------
 
-        return "redirect:/admin/block/edit/" + blockId;
+        itemRepository.findById(
+                itemId
+        ).ifPresent(
+                item ->
+                        deleteUploadedFile(
+                                item.getImageUrl()
+                        )
+        );
+
+
+        // --------------------------------------------------------
+        // Cancella elemento
+        // --------------------------------------------------------
+
+        itemRepository.deleteById(
+                itemId
+        );
+
+
+        return "redirect:/admin/block/edit/"
+                + blockId;
     }
 
 }

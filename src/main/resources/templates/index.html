@@ -11,7 +11,9 @@
     <title>Eco Skill Factory</title>
 
 
-    <!-- Google Fonts & Bootstrap 5 CSS -->
+    <!-- ========================================================
+         GOOGLE FONTS
+         ======================================================== -->
 
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
@@ -23,12 +25,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
           rel="stylesheet">
 
+
+    <!-- ========================================================
+         BOOTSTRAP
+         ======================================================== -->
+
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
+
+    <!-- ========================================================
+         CSS
+         ======================================================== -->
 
     <style>
 
@@ -42,6 +53,10 @@
 
         }
 
+
+        /* ========================================================
+           BODY
+           ======================================================== */
 
         body {
 
@@ -57,6 +72,10 @@
 
         }
 
+
+        /* ========================================================
+           SFONDO TECNOLOGICO
+           ======================================================== */
 
         #tech-bg-canvas {
 
@@ -76,6 +95,10 @@
 
         }
 
+
+        /* ========================================================
+           HEADER
+           ======================================================== */
 
         .glass-header {
 
@@ -123,7 +146,7 @@
 
 
         /* ========================================================
-           FIX ALTEZZA PERSONALIZZATA & MARGIN TOP PRESERVATO
+           CONTENITORE BLOCCO
            ======================================================== */
 
         .block-container {
@@ -142,7 +165,7 @@
 
         }
 
-        /* Rimuove il padding di Bootstrap ma preserva lo stacco in alto con il margin */
+
         .block-container[style*="height"]:not([style*="height:auto"]):not([style*="height: auto"]) {
 
             padding-top: 0 !important;
@@ -153,13 +176,17 @@
 
         }
 
-        /* Garantisce che i blocchi interni occupino l'intera altezza del contenitore */
+
         .block-container > div {
 
             height: 100% !important;
 
         }
 
+
+        /* ========================================================
+           JUMBOTRON
+           ======================================================== */
 
         .custom-jumbotron {
 
@@ -178,6 +205,10 @@
 
         }
 
+
+        /* ========================================================
+           CARD
+           ======================================================== */
 
         .card-custom {
 
@@ -229,6 +260,10 @@
         }
 
 
+        /* ========================================================
+           IMMAGINE CARD
+           ======================================================== */
+
         .card-img-wrapper {
 
             position: relative;
@@ -257,6 +292,276 @@
         }
 
 
+        /* ========================================================
+           NUOVO BOTTONE CARD
+           
+           Elegante, discreto, piccolo
+           ======================================================== */
+
+        .btn-card-link {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 0.45rem;
+
+            padding: 0.55rem 1rem;
+
+            border: 1px solid rgba(0, 220, 130, 0.45);
+
+            border-radius: 999px;
+
+            background: rgba(0, 220, 130, 0.08);
+
+            color: #00dc82 !important;
+
+            font-size: 0.82rem;
+
+            font-weight: 600;
+
+            text-decoration: none;
+
+            transition:
+                background 0.25s ease,
+                border-color 0.25s ease,
+                color 0.25s ease,
+                transform 0.25s ease;
+
+        }
+
+
+        .btn-card-link:hover {
+
+            background: #00dc82;
+
+            border-color: #00dc82;
+
+            color: #0f172a !important;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        .btn-card-link i {
+
+            font-size: 1.05rem;
+
+            transition:
+                transform 0.25s ease;
+
+        }
+
+
+        .btn-card-link:hover i {
+
+            transform: translateX(3px);
+
+        }
+
+
+        /* ========================================================
+           CAROSELLO
+           ======================================================== */
+
+        .carousel-custom {
+
+            border-radius: 1.5rem;
+
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.1);
+
+            background: #0f172a;
+
+        }
+
+
+        .carousel-item {
+
+            position: relative;
+
+        }
+
+
+        .carousel-item img {
+
+            display: block;
+
+            width: 100%;
+
+            object-fit: cover;
+
+            max-height: 550px;
+
+            min-height: 350px;
+
+            filter: brightness(0.72);
+
+        }
+
+
+        /* ========================================================
+           CAPTION CAROSELLO
+           ======================================================== */
+
+        .carousel-caption-custom {
+
+            background: rgba(15, 23, 42, 0.78);
+
+            backdrop-filter: blur(16px);
+
+            -webkit-backdrop-filter: blur(16px);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.14);
+
+            border-radius: 1rem;
+
+            padding: 1.5rem 1.75rem;
+
+            bottom: 2rem;
+
+            left: 5%;
+
+            right: 5%;
+
+            width: auto;
+
+        }
+
+
+        .carousel-caption-custom h2 {
+
+            font-size: clamp(
+                1.4rem,
+                3vw,
+                2.2rem
+            );
+
+        }
+
+
+        .carousel-caption-custom p {
+
+            margin-bottom: 0.5rem;
+
+        }
+
+
+        /* ========================================================
+           BOTTONE CAROSELLO
+           ======================================================== */
+
+        .carousel-button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 0.4rem;
+
+            margin-top: 1rem;
+
+            padding: 0.55rem 1rem;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.35);
+
+            border-radius: 999px;
+
+            background: rgba(0, 0, 0, 0.25);
+
+            color: #ffffff !important;
+
+            font-size: 0.82rem;
+
+            font-weight: 600;
+
+            text-decoration: none;
+
+            backdrop-filter: blur(8px);
+
+            -webkit-backdrop-filter: blur(8px);
+
+            transition:
+                background 0.25s ease,
+                border-color 0.25s ease,
+                transform 0.25s ease,
+                color 0.25s ease;
+
+        }
+
+
+        .carousel-button:hover {
+
+            background: rgba(0, 220, 130, 0.9);
+
+            border-color: #00dc82;
+
+            color: #0f172a !important;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        .carousel-button i {
+
+            transition:
+                transform 0.25s ease;
+
+        }
+
+
+        .carousel-button:hover i {
+
+            transform: translateX(3px);
+
+        }
+
+
+        /* ========================================================
+           CONTROLLI CAROSELLO
+           ======================================================== */
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+
+            background-size: 60% 60%;
+
+        }
+
+
+        /* ========================================================
+           HERO FALLBACK
+           ======================================================== */
+
+        .hero-fallback {
+
+            background: rgba(15, 23, 42, 0.7);
+
+            backdrop-filter: blur(16px);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 2rem;
+
+            color: #ffffff;
+
+        }
+
+
+        /* ========================================================
+           BOTTONE BRAND
+           ======================================================== */
+
         .btn-brand {
 
             background: linear-gradient(
@@ -275,7 +580,8 @@
 
             padding: 0.75rem 1.5rem;
 
-            transition: all 0.3s ease;
+            transition:
+                all 0.3s ease;
 
             box-shadow:
                 0 4px 12px rgba(0, 220, 130, 0.25);
@@ -295,62 +601,72 @@
         }
 
 
-        .carousel-custom {
+        /* ========================================================
+           RESPONSIVE CAROSELLO
+           ======================================================== */
 
-            border-radius: 1.5rem;
-
-            box-shadow:
-                0 25px 50px -12px rgba(0, 0, 0, 0.5);
-
-            border:
-                1px solid rgba(255, 255, 255, 0.1);
-
-        }
+        @media (max-width: 767.98px) {
 
 
-        .carousel-item img {
+            .carousel-custom {
 
-            object-fit: cover;
+                border-radius: 1rem;
 
-            max-height: 550px;
-
-            filter: brightness(0.8);
-
-        }
+            }
 
 
-        .carousel-caption-custom {
+            .carousel-item img {
 
-            background: rgba(15, 23, 42, 0.75);
+                min-height: 260px;
 
-            backdrop-filter: blur(16px);
+                max-height: 400px;
 
-            -webkit-backdrop-filter: blur(16px);
-
-            border:
-                1px solid rgba(255, 255, 255, 0.15);
-
-            border-radius: 1rem;
-
-            padding: 2rem;
-
-            bottom: 3rem;
-
-        }
+            }
 
 
-        .hero-fallback {
+            .carousel-caption-custom {
 
-            background: rgba(15, 23, 42, 0.7);
+                position: relative;
 
-            backdrop-filter: blur(16px);
+                left: 0;
 
-            border:
-                1px solid rgba(255, 255, 255, 0.1);
+                right: 0;
 
-            border-radius: 2rem;
+                bottom: 0;
 
-            color: #ffffff;
+                width: 100%;
+
+                border-radius: 0;
+
+                padding: 1.25rem;
+
+                background:
+                    rgba(15, 23, 42, 0.95);
+
+            }
+
+
+            .carousel-caption-custom h2 {
+
+                font-size: 1.35rem;
+
+                margin-bottom: 0.6rem;
+
+            }
+
+
+            .carousel-caption-custom .carousel-button {
+
+                margin-top: 0.75rem;
+
+            }
+
+
+            .card-custom:hover {
+
+                transform: none;
+
+            }
 
         }
 
@@ -362,45 +678,68 @@
 <body>
 
 
+    <!-- ========================================================
+         SFONDO ANIMATO
+         ======================================================== -->
+
     <canvas id="tech-bg-canvas"></canvas>
 
 
-    <!-- HEADER -->
+    <!-- ========================================================
+         HEADER
+         ======================================================== -->
 
     <header class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3">
 
+
         <div class="container">
+
 
             <a class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2"
                href="/">
 
+
                 <i class="bi bi-cpu-fill text-success fs-3"></i>
 
+
                 <span class="brand-text fw-bold">
+
                     Eco
+
                 </span>
 
+
                 <span class="brand-accent fw-bold">
+
                     Skill Factory
+
                 </span>
+
 
             </a>
 
 
             <div class="ms-auto">
 
+
                 <a href="/login"
                    class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
 
+
                     <i class="bi bi-shield-lock-fill me-1"></i>
+
 
                     Area Admin
 
+
                 </a>
+
 
             </div>
 
+
         </div>
+
 
     </header>
 
@@ -441,6 +780,7 @@
                      th:utext="${block.contentHtml}">
                 </div>
 
+
             </div>
 
 
@@ -458,7 +798,9 @@
                             : 'width: 100%;'">
 
 
-                <!-- Contenuto introduttivo -->
+                <!-- =================================================
+                     CONTENUTO INTRODUTTIVO
+                     ================================================= -->
 
                 <div th:if="${block.contentHtml != null
                              and !block.contentHtml.empty}"
@@ -469,7 +811,9 @@
                 </div>
 
 
-                <!-- CARDS -->
+                <!-- =================================================
+                     CARDS
+                     ================================================= -->
 
                 <div class="row g-4 justify-content-center align-items-stretch">
 
@@ -482,7 +826,9 @@
                         <div class="card card-custom w-100 d-flex flex-column overflow-hidden">
 
 
-                            <!-- IMMAGINE CARD -->
+                            <!-- =========================================
+                                 IMMAGINE CARD
+                                 ========================================= -->
 
                             <div th:if="${item.imageUrl != null
                                          and !item.imageUrl.empty}"
@@ -505,10 +851,14 @@
                             </div>
 
 
-                            <!-- CONTENUTO CARD -->
+                            <!-- =========================================
+                                 CONTENUTO CARD
+                                 ========================================= -->
 
                             <div class="card-body p-4 d-flex flex-column">
 
+
+                                <!-- TITOLO -->
 
                                 <h4 class="card-title fw-bold mb-2"
                                     th:text="${item.title}">
@@ -517,6 +867,8 @@
 
                                 </h4>
 
+
+                                <!-- SOTTOTITOLO -->
 
                                 <h6 th:if="${item.subtitle != null}"
 
@@ -529,30 +881,69 @@
                                 </h6>
 
 
+                                <!-- DESCRIZIONE -->
+
                                 <div class="card-text flex-grow-1"
                                      th:utext="${item.contentHtml}">
                                 </div>
 
 
-                                <!-- PULSANTE -->
+                                <!-- =========================================
+                                     PULSANTE CARD
+                                     ========================================= -->
 
                                 <div th:if="${item.buttonText != null
-                                             and !item.buttonText.empty}"
+                                             and !item.buttonText.trim().isEmpty()}"
 
                                      class="mt-4 pt-2">
 
 
-                                    <a th:href="${item.buttonUrl}"
+                                    <!-- CON LINK -->
 
-                                       class="btn btn-brand w-100 d-inline-flex justify-content-center align-items-center gap-2"
+                                    <a th:if="${item.buttonUrl != null
+                                               and !item.buttonUrl.trim().isEmpty()}"
 
-                                       th:text="${item.buttonText}">
+                                       th:href="${item.buttonUrl}"
 
-                                        Scopri di più
+                                       class="btn-card-link"
 
-                                        <i class="bi bi-arrow-right-short fs-4"></i>
+                                       target="_blank"
+
+                                       rel="noopener noreferrer">
+
+
+                                        <span th:text="${item.buttonText}">
+
+                                            Scopri di più
+
+                                        </span>
+
+
+                                        <i class="bi bi-arrow-right"></i>
+
 
                                     </a>
+
+
+                                    <!-- SENZA LINK -->
+
+                                    <span th:unless="${item.buttonUrl != null
+                                                      and !item.buttonUrl.trim().isEmpty()}"
+
+                                          class="btn-card-link">
+
+
+                                        <span th:text="${item.buttonText}">
+
+                                            Scopri di più
+
+                                        </span>
+
+
+                                        <i class="bi bi-arrow-right"></i>
+
+
+                                    </span>
 
 
                                 </div>
@@ -591,6 +982,10 @@
                             : 'width: 100%;'">
 
 
+                <!-- =================================================
+                     SLIDE
+                     ================================================= -->
+
                 <div class="carousel-inner">
 
 
@@ -602,6 +997,10 @@
                                        : ''}">
 
 
+                        <!-- =============================================
+                             IMMAGINE SLIDE
+                             ============================================= -->
+
                         <img th:src="${item.imageUrl != null
                                       and !item.imageUrl.empty
                                       ? item.imageUrl
@@ -612,9 +1011,17 @@
                              th:alt="${item.title}">
 
 
-                        <div class="carousel-caption carousel-caption-custom d-none d-md-block text-start mx-auto"
-                             style="max-width: 800px;">
+                        <!-- =============================================
+                             CAPTION
+                             ============================================= -->
 
+                        <div class="carousel-caption carousel-caption-custom
+                                    text-start mx-auto">
+
+
+                            <!-- =========================================
+                                 TITOLO
+                                 ========================================= -->
 
                             <h2 class="fw-extrabold text-white mb-2"
                                 th:text="${item.title}">
@@ -624,8 +1031,80 @@
                             </h2>
 
 
-                            <div class="text-light opacity-90"
+                            <!-- =========================================
+                                 DESCRIZIONE
+                                 ========================================= -->
+
+                            <div th:if="${item.contentHtml != null
+                                         and !item.contentHtml.trim().isEmpty()}"
+
+                                 class="text-light opacity-90"
+
                                  th:utext="${item.contentHtml}">
+
+                            </div>
+
+
+                            <!-- =========================================
+                                 PULSANTE CAROSELLO
+                                 ========================================= -->
+
+                            <div th:if="${item.buttonText != null
+                                         and !item.buttonText.trim().isEmpty()}">
+
+
+                                <!-- =====================================
+                                     CON LINK
+                                     ===================================== -->
+
+                                <a th:if="${item.buttonUrl != null
+                                           and !item.buttonUrl.trim().isEmpty()}"
+
+                                   th:href="${item.buttonUrl}"
+
+                                   class="carousel-button"
+
+                                   target="_blank"
+
+                                   rel="noopener noreferrer">
+
+
+                                    <span th:text="${item.buttonText}">
+
+                                        Scopri di più
+
+                                    </span>
+
+
+                                    <i class="bi bi-arrow-right"></i>
+
+
+                                </a>
+
+
+                                <!-- =====================================
+                                     SENZA LINK
+                                     ===================================== -->
+
+                                <span th:unless="${item.buttonUrl != null
+                                                  and !item.buttonUrl.trim().isEmpty()}"
+
+                                      class="carousel-button">
+
+
+                                    <span th:text="${item.buttonText}">
+
+                                        Scopri di più
+
+                                    </span>
+
+
+                                    <i class="bi bi-arrow-right"></i>
+
+
+                                </span>
+
+
                             </div>
 
 
@@ -638,34 +1117,68 @@
                 </div>
 
 
+                <!-- =================================================
+                     PRECEDENTE
+                     ================================================= -->
+
                 <button class="carousel-control-prev"
+
                         type="button"
+
                         th:data-bs-target="'#carouselBlock-' + ${block.id}"
+
                         data-bs-slide="prev">
 
-                    <span class="carousel-control-prev-icon p-3 bg-dark bg-opacity-50 rounded-circle"
+
+                    <span class="carousel-control-prev-icon
+                                 p-3
+                                 bg-dark
+                                 bg-opacity-50
+                                 rounded-circle"
+
                           aria-hidden="true">
                     </span>
 
+
                     <span class="visually-hidden">
+
                         Precedente
+
                     </span>
+
 
                 </button>
 
 
+                <!-- =================================================
+                     SUCCESSIVO
+                     ================================================= -->
+
                 <button class="carousel-control-next"
+
                         type="button"
+
                         th:data-bs-target="'#carouselBlock-' + ${block.id}"
+
                         data-bs-slide="next">
 
-                    <span class="carousel-control-next-icon p-3 bg-dark bg-opacity-50 rounded-circle"
+
+                    <span class="carousel-control-next-icon
+                                 p-3
+                                 bg-dark
+                                 bg-opacity-50
+                                 rounded-circle"
+
                           aria-hidden="true">
                     </span>
 
+
                     <span class="visually-hidden">
+
                         Successivo
+
                     </span>
+
 
                 </button>
 
@@ -845,7 +1358,9 @@
     </main>
 
 
-    <!-- FALLBACK -->
+    <!-- ========================================================
+         FALLBACK
+         ======================================================== -->
 
     <div th:if="${#lists.isEmpty(blocks)}"
          class="container py-5 my-5">
@@ -884,9 +1399,12 @@
                 <a href="/login"
                    class="btn btn-brand btn-lg rounded-pill px-5">
 
+
                     Accedi al Dashboard CMS
 
+
                     <i class="bi bi-arrow-right ms-2"></i>
+
 
                 </a>
 
@@ -900,12 +1418,15 @@
     </div>
 
 
-    <!-- FOOTER -->
+    <!-- ========================================================
+         FOOTER
+         ======================================================== -->
 
     <footer class="bg-dark text-white py-5 mt-auto border-top border-secondary border-opacity-10">
 
 
         <div class="container text-center">
+
 
             <p class="mb-0 small text-secondary">
 
@@ -914,19 +1435,24 @@
 
             </p>
 
+
         </div>
 
 
     </footer>
 
 
-    <!-- BOOTSTRAP -->
+    <!-- ========================================================
+         BOOTSTRAP JS
+         ======================================================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
     </script>
 
 
-    <!-- SFONDO ANIMATO -->
+    <!-- ========================================================
+         SFONDO ANIMATO
+         ======================================================== -->
 
     <script>
 
@@ -938,6 +1464,7 @@
 
 
         let width;
+
         let height;
 
 
@@ -963,7 +1490,12 @@
         resize();
 
 
+        /* ========================================================
+           CIRCUIT
+           ======================================================== */
+
         class Circuit {
+
 
             constructor() {
 
@@ -981,12 +1513,16 @@
                     Math.random() * height;
 
                 this.length =
-                    Math.floor(Math.random() * 8) + 4;
+                    Math.floor(
+                        Math.random() * 8
+                    ) + 4;
 
                 this.currentStep = 0;
 
                 this.dir =
-                    Math.floor(Math.random() * 4);
+                    Math.floor(
+                        Math.random() * 4
+                    );
 
                 this.path = [
                     {
@@ -1008,66 +1544,106 @@
 
             update() {
 
-                if (this.currentStep < this.length) {
+
+                if (
+                    this.currentStep
+                    <
+                    this.length
+                ) {
+
 
                     let last =
-                        this.path[this.path.length - 1];
-
-                    let nx = last.x;
-
-                    let ny = last.y;
+                        this.path[
+                            this.path.length - 1
+                        ];
 
 
-                    if (Math.random() < 0.3) {
+                    let nx =
+                        last.x;
+
+                    let ny =
+                        last.y;
+
+
+                    if (
+                        Math.random()
+                        <
+                        0.3
+                    ) {
+
 
                         this.dir =
                             (
-                                this.dir +
+                                this.dir
+                                +
                                 (
                                     Math.random() < 0.5
                                         ? 1
                                         : 3
                                 )
-                            ) % 4;
+                            )
+                            %
+                            4;
 
                     }
 
 
                     switch (this.dir) {
 
+
                         case 0:
+
                             ny -= this.size;
+
                             break;
+
 
                         case 1:
+
                             nx += this.size;
+
                             break;
+
 
                         case 2:
+
                             ny += this.size;
+
                             break;
 
+
                         case 3:
+
                             nx -= this.size;
+
                             break;
 
                     }
 
 
                     this.path.push({
+
                         x: nx,
+
                         y: ny
+
                     });
+
 
                     this.currentStep++;
 
+
                 }
+
                 else {
+
 
                     this.alpha -= 0.005;
 
 
-                    if (this.alpha <= 0) {
+                    if (
+                        this.alpha <= 0
+                    ) {
 
                         this.reset();
 
@@ -1080,7 +1656,10 @@
 
             draw() {
 
-                if (this.path.length < 2) {
+
+                if (
+                    this.path.length < 2
+                ) {
 
                     return;
 
@@ -1102,6 +1681,7 @@
                     i++
                 ) {
 
+
                     ctx.lineTo(
                         this.path[i].x,
                         this.path[i].y
@@ -1113,13 +1693,17 @@
                 ctx.strokeStyle =
                     `rgba(0, 220, 130, ${this.alpha})`;
 
+
                 ctx.lineWidth = 1.5;
+
 
                 ctx.stroke();
 
 
                 let last =
-                    this.path[this.path.length - 1];
+                    this.path[
+                        this.path.length - 1
+                    ];
 
 
                 ctx.beginPath();
@@ -1137,6 +1721,7 @@
                 ctx.fillStyle =
                     `rgba(54, 228, 218, ${this.alpha + 0.2})`;
 
+
                 ctx.fill();
 
             }
@@ -1144,7 +1729,12 @@
         }
 
 
+        /* ========================================================
+           CODE TEXT
+           ======================================================== */
+
         const codeSnippets = [
+
 
             "class BlockManager {}",
 
@@ -1175,6 +1765,7 @@
 
         class CodeText {
 
+
             constructor() {
 
                 this.reset();
@@ -1184,26 +1775,38 @@
 
             reset() {
 
+
                 this.x =
-                    Math.random() * (width - 200);
+                    Math.random()
+                    *
+                    (width - 200);
+
 
                 this.y =
-                    Math.random() * height;
+                    Math.random()
+                    *
+                    height;
+
 
                 this.text =
                     codeSnippets[
                         Math.floor(
-                            Math.random() *
+                            Math.random()
+                            *
                             codeSnippets.length
                         )
                     ];
 
+
                 this.alpha = 0;
+
 
                 this.maxAlpha =
                     Math.random() * 0.3 + 0.1;
 
+
                 this.fadeIn = true;
+
 
                 this.speed =
                     Math.random() * 0.3 + 0.1;
@@ -1213,27 +1816,42 @@
 
             update() {
 
-                this.y -= this.speed;
+
+                this.y -=
+                    this.speed;
 
 
-                if (this.fadeIn) {
+                if (
+                    this.fadeIn
+                ) {
 
-                    this.alpha += 0.008;
+
+                    this.alpha +=
+                        0.008;
 
 
-                    if (this.alpha >= this.maxAlpha) {
+                    if (
+                        this.alpha >=
+                        this.maxAlpha
+                    ) {
 
-                        this.fadeIn = false;
+                        this.fadeIn =
+                            false;
 
                     }
 
                 }
+
                 else {
 
-                    this.alpha -= 0.005;
+
+                    this.alpha -=
+                        0.005;
 
 
-                    if (this.alpha <= 0) {
+                    if (
+                        this.alpha <= 0
+                    ) {
 
                         this.reset();
 
@@ -1246,11 +1864,14 @@
 
             draw() {
 
+
                 ctx.font =
                     '12px "Fira Code", monospace';
 
+
                 ctx.fillStyle =
                     `rgba(0, 220, 130, ${this.alpha})`;
+
 
                 ctx.fillText(
                     this.text,
@@ -1262,6 +1883,10 @@
 
         }
 
+
+        /* ========================================================
+           OGGETTI SFONDO
+           ======================================================== */
 
         const circuits =
             Array.from(
@@ -1281,7 +1906,12 @@
             );
 
 
+        /* ========================================================
+           ANIMAZIONE
+           ======================================================== */
+
         function animate() {
+
 
             ctx.clearRect(
                 0,
@@ -1291,25 +1921,31 @@
             );
 
 
-            circuits.forEach(c => {
+            circuits.forEach(
+                c => {
 
-                c.update();
+                    c.update();
 
-                c.draw();
+                    c.draw();
 
-            });
-
-
-            codeTexts.forEach(ct => {
-
-                ct.update();
-
-                ct.draw();
-
-            });
+                }
+            );
 
 
-            requestAnimationFrame(animate);
+            codeTexts.forEach(
+                ct => {
+
+                    ct.update();
+
+                    ct.draw();
+
+                }
+            );
+
+
+            requestAnimationFrame(
+                animate
+            );
 
         }
 

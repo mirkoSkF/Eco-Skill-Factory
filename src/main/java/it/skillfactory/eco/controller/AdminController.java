@@ -62,9 +62,20 @@ public class AdminController {
 
         PageBlock block = new PageBlock();
 
-        model.addAttribute("block", block);
-        model.addAttribute("blockTypes", BlockType.values());
-        model.addAttribute("containerTypes", ContainerType.values());
+        model.addAttribute(
+                "block",
+                block
+        );
+
+        model.addAttribute(
+                "blockTypes",
+                BlockType.values()
+        );
+
+        model.addAttribute(
+                "containerTypes",
+                ContainerType.values()
+        );
 
         return "admin/block-form";
     }
@@ -79,16 +90,30 @@ public class AdminController {
             @PathVariable Long id,
             Model model) {
 
-        PageBlock block = blockRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "ID Riga non valido: " + id
-                        )
-                );
+        PageBlock block =
+                blockRepository.findById(id)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "ID Riga non valido: " + id
+                                )
+                        );
 
-        model.addAttribute("block", block);
-        model.addAttribute("blockTypes", BlockType.values());
-        model.addAttribute("containerTypes", ContainerType.values());
+
+        model.addAttribute(
+                "block",
+                block
+        );
+
+        model.addAttribute(
+                "blockTypes",
+                BlockType.values()
+        );
+
+        model.addAttribute(
+                "containerTypes",
+                ContainerType.values()
+        );
+
 
         return "admin/block-form";
     }
@@ -106,6 +131,7 @@ public class AdminController {
                     required = false
             ) MultipartFile imageFile) {
 
+
         PageBlock block;
 
 
@@ -115,7 +141,10 @@ public class AdminController {
 
         if (formBlock.getId() != null) {
 
-            block = blockRepository.findById(formBlock.getId())
+            block =
+                    blockRepository.findById(
+                            formBlock.getId()
+                    )
                     .orElseThrow(() ->
                             new IllegalArgumentException(
                                     "ID Riga non valido: "
@@ -137,9 +166,11 @@ public class AdminController {
                 formBlock.getTitleAdmin()
         );
 
+
         block.setPosition(
                 formBlock.getPosition()
         );
+
 
         block.setContainerType(
                 formBlock.getContainerType()
@@ -156,6 +187,7 @@ public class AdminController {
         String customHeight =
                 formBlock.getCustomHeight();
 
+
         if (customHeight == null
                 || customHeight.trim().isEmpty()) {
 
@@ -167,7 +199,10 @@ public class AdminController {
                     customHeight.trim();
         }
 
-        block.setCustomHeight(customHeight);
+
+        block.setCustomHeight(
+                customHeight
+        );
 
 
         // ========================================================
@@ -177,22 +212,28 @@ public class AdminController {
         Integer width =
                 formBlock.getWidthPercent();
 
+
         if (width == null) {
 
             width = 100;
         }
+
 
         if (width < 10) {
 
             width = 10;
         }
 
+
         if (width > 100) {
 
             width = 100;
         }
 
-        block.setWidthPercent(width);
+
+        block.setWidthPercent(
+                width
+        );
 
 
         // ========================================================
@@ -206,6 +247,12 @@ public class AdminController {
 
         // ========================================================
         // CONTENUTO HTML
+        //
+        // Per CARDS e CAROUSEL il contenuto principale
+        // non viene utilizzato dal nuovo editor.
+        //
+        // Lo manteniamo comunque nell'entità per non alterare
+        // eventuali dati già presenti.
         // ========================================================
 
         block.setContentHtml(
@@ -242,25 +289,39 @@ public class AdminController {
         // ========================================================
 
         boolean imageAllowed =
-                block.getBlockType() == BlockType.JUMBO_DEMO_1
-                        || block.getBlockType() == BlockType.JUMBO_DEMO_2;
+                block.getBlockType()
+                        == BlockType.JUMBO_DEMO_1
+
+                ||
+
+                block.getBlockType()
+                        == BlockType.JUMBO_DEMO_2;
 
 
         if (imageAllowed) {
 
+
             if (imageFile != null
                     && !imageFile.isEmpty()) {
 
+
                 String imageUrl =
-                        saveUploadedFile(imageFile);
+                        saveUploadedFile(
+                                imageFile
+                        );
+
 
                 if (imageUrl != null) {
 
-                    block.setImageUrl(imageUrl);
+                    block.setImageUrl(
+                            imageUrl
+                    );
                 }
             }
 
+
         } else {
+
 
             // Per tutti gli altri modelli
             // l'immagine principale deve essere assente.
@@ -271,11 +332,14 @@ public class AdminController {
 
         // ========================================================
         // TESTI DEMO PREDEFINITI
+        //
         // SOLO SE IL CONTENUTO È VUOTO
         // ========================================================
 
         if (block.getContentHtml() == null
-                || block.getContentHtml().trim().isEmpty()) {
+                || block.getContentHtml()
+                       .trim()
+                       .isEmpty()) {
 
 
             // ====================================================
@@ -284,6 +348,7 @@ public class AdminController {
 
             if (block.getBlockType()
                     == BlockType.JUMBO_DEMO_1) {
+
 
                 block.setContentHtml(
 
@@ -327,6 +392,7 @@ public class AdminController {
             else if (block.getBlockType()
                     == BlockType.JUMBO_DEMO_2) {
 
+
                 block.setContentHtml(
 
                         "<h2>La Sede</h2>" +
@@ -367,6 +433,7 @@ public class AdminController {
 
             else if (block.getBlockType()
                     == BlockType.JUMBO_2_COL) {
+
 
                 block.setContentHtml(
 
@@ -457,15 +524,20 @@ public class AdminController {
         // ========================================================
         // SALVATAGGIO
         //
-        // IMPORTANTISSIMO:
-        // salviamo l'entità recuperata dal DB.
-        // Gli items esistenti quindi non vengono persi.
+        // IMPORTANTE:
+        // NON TORNIAMO PIÙ ALLA DASHBOARD.
+        //
+        // Dopo il salvataggio torniamo alla pagina di modifica
+        // della stessa riga.
+        //
+        // Questo permette a CARDS e CAROUSEL di mostrare
+        // immediatamente il form per aggiungere il primo elemento.
         // ========================================================
 
         blockRepository.save(block);
 
 
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin/block/edit/" + block.getId();
     }
 
 
@@ -473,9 +545,11 @@ public class AdminController {
     // UPLOAD FILE
     // ============================================================
 
-    private String saveUploadedFile(MultipartFile file) {
+    private String saveUploadedFile(
+            MultipartFile file) {
 
         try {
+
 
             Path uploadPath =
                     Paths.get(UPLOAD_DIR);
@@ -483,7 +557,9 @@ public class AdminController {
 
             if (!Files.exists(uploadPath)) {
 
-                Files.createDirectories(uploadPath);
+                Files.createDirectories(
+                        uploadPath
+                );
             }
 
 
@@ -493,7 +569,8 @@ public class AdminController {
 
             String cleanFileName =
                     originalFilename != null
-                            ? originalFilename.replaceAll("\\s+", "_")
+                            ? originalFilename
+                                .replaceAll("\\s+", "_")
                             : "file";
 
 
@@ -504,7 +581,9 @@ public class AdminController {
 
 
             Path filePath =
-                    uploadPath.resolve(fileName);
+                    uploadPath.resolve(
+                            fileName
+                    );
 
 
             Files.copy(
@@ -531,9 +610,14 @@ public class AdminController {
     // ============================================================
 
     @GetMapping("/block/delete/{id}")
-    public String deleteBlock(@PathVariable Long id) {
+    public String deleteBlock(
+            @PathVariable Long id) {
 
-        blockRepository.deleteById(id);
+
+        blockRepository.deleteById(
+                id
+        );
+
 
         return "redirect:/admin/dashboard";
     }
@@ -546,21 +630,38 @@ public class AdminController {
     @PostMapping("/block/{id}/item/add")
     public String addItemToBlock(
             @PathVariable("id") Long id,
-            @RequestParam("title") String title,
+
+            @RequestParam("title")
+            String title,
+
             @RequestParam(
                     value = "itemImageFile",
                     required = false
-            ) MultipartFile imageFile,
-            @RequestParam("contentHtml") String contentHtml,
+            )
+            MultipartFile imageFile,
+
+            @RequestParam(
+                    value = "contentHtml",
+                    required = false
+            )
+            String contentHtml,
+
             @RequestParam(
                     value = "buttonText",
                     required = false
-            ) String buttonText,
+            )
+            String buttonText,
+
             @RequestParam(
                     value = "buttonUrl",
                     required = false
-            ) String buttonUrl) {
+            )
+            String buttonUrl) {
 
+
+        // ========================================================
+        // RECUPERA LA RIGA
+        // ========================================================
 
         PageBlock block =
                 blockRepository.findById(id)
@@ -571,36 +672,79 @@ public class AdminController {
                         );
 
 
+        // ========================================================
+        // CREA ELEMENTO
+        // ========================================================
+
         BlockItem item =
                 new BlockItem();
 
 
-        item.setTitle(title);
+        item.setTitle(
+                title
+        );
 
-        item.setContentHtml(contentHtml);
 
-        item.setButtonText(buttonText);
+        item.setContentHtml(
+                contentHtml
+        );
 
-        item.setButtonUrl(buttonUrl);
 
-        item.setPageBlock(block);
+        item.setButtonText(
+                buttonText
+        );
 
+
+        item.setButtonUrl(
+                buttonUrl
+        );
+
+
+        item.setPageBlock(
+                block
+        );
+
+
+        // ========================================================
+        // IMMAGINE CARD / SLIDE
+        // ========================================================
 
         if (imageFile != null
                 && !imageFile.isEmpty()) {
 
+
             String imageUrl =
-                    saveUploadedFile(imageFile);
+                    saveUploadedFile(
+                            imageFile
+                    );
+
 
             if (imageUrl != null) {
 
-                item.setImageUrl(imageUrl);
+                item.setImageUrl(
+                        imageUrl
+                );
             }
         }
 
 
-        itemRepository.save(item);
+        // ========================================================
+        // SALVA ELEMENTO
+        // ========================================================
 
+        itemRepository.save(
+                item
+        );
+
+
+        // ========================================================
+        // TORNA ALLA STESSA PAGINA
+        //
+        // In questo modo:
+        //
+        // 1. viene mostrata la Card/Slide appena inserita
+        // 2. rimane disponibile il form per aggiungerne un'altra
+        // ========================================================
 
         return "redirect:/admin/block/edit/" + id;
     }
@@ -615,8 +759,15 @@ public class AdminController {
             @PathVariable Long blockId,
             @PathVariable Long itemId) {
 
-        itemRepository.deleteById(itemId);
+
+        itemRepository.deleteById(
+                itemId
+        );
+
+
+        // Dopo la cancellazione torniamo alla stessa pagina.
 
         return "redirect:/admin/block/edit/" + blockId;
     }
+
 }

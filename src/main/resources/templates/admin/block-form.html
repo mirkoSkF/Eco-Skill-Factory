@@ -14,7 +14,9 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 
-    <!-- TINYMCE -->
+    <!-- ========================================================
+         TINYMCE
+         ======================================================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
             referrerpolicy="origin">
@@ -286,7 +288,7 @@
 
 
     <!-- ========================================================
-         FORM PRINCIPALE
+         FORM PRINCIPALE RIGA
          ======================================================== -->
 
     <form th:action="@{/admin/block/save}"
@@ -306,6 +308,8 @@
 
         <div class="row g-3 mb-3">
 
+
+            <!-- TITOLO -->
 
             <div class="col-md-6">
 
@@ -328,6 +332,8 @@
             </div>
 
 
+            <!-- POSIZIONE -->
+
             <div class="col-md-2">
 
 
@@ -346,6 +352,8 @@
 
             </div>
 
+
+            <!-- MODELLO -->
 
             <div class="col-md-4">
 
@@ -385,6 +393,8 @@
         <div class="row g-3 mb-3">
 
 
+            <!-- CONTAINER -->
+
             <div class="col-md-4">
 
 
@@ -411,6 +421,8 @@
 
             </div>
 
+
+            <!-- LARGHEZZA -->
 
             <div class="col-md-4">
 
@@ -439,6 +451,8 @@
 
             </div>
 
+
+            <!-- ALTEZZA -->
 
             <div class="col-md-4">
 
@@ -474,7 +488,9 @@
         <!-- ====================================================
              IMMAGINE PRINCIPALE
              
-             SOLO DEMO 1 E DEMO 2
+             SOLO:
+             JUMBO_DEMO_1
+             JUMBO_DEMO_2
              ==================================================== -->
 
         <div id="mainImageUpload"
@@ -504,7 +520,9 @@
                 Disponibile esclusivamente per
                 <strong>Demo 1</strong> e
                 <strong>Demo 2</strong>.
-                Non disponibile per il modello a colonne.
+
+                Non disponibile per il modello a colonne,
+                Cards o Carosello.
 
             </div>
 
@@ -519,7 +537,7 @@
                    th:field="*{imageUrl}" />
 
 
-            <!-- ANTEPRIMA -->
+            <!-- ANTEPRIMA IMMAGINE PRINCIPALE -->
 
             <div th:if="${block.imageUrl != null
                          and !block.imageUrl.empty}"
@@ -549,10 +567,15 @@
 
 
         <!-- ====================================================
-             EDITOR
+             EDITOR PRINCIPALE
+             
+             VIENE NASCOSTO PER:
+             CARDS
+             CAROUSEL
              ==================================================== -->
 
-        <div class="mb-3">
+        <div id="mainEditorSection"
+             class="mb-3">
 
 
             <label class="form-label fw-bold">
@@ -572,7 +595,7 @@
 
 
         <!-- ====================================================
-             SALVA
+             SALVA RIGA
              ==================================================== -->
 
         <div class="text-end">
@@ -596,84 +619,126 @@
 
     <!-- ========================================================
          GESTIONE CARDS / CAROSELLO
+         
+         IMPORTANTE:
+         QUESTA SEZIONE NON HA th:if SUL DIV PRINCIPALE.
+
+         Così JavaScript può mostrarla immediatamente quando
+         l'utente cambia modello.
+
+         Quando la riga è nuova:
+         - mostriamo il messaggio "salva prima la riga"
+
+         Quando la riga ha un ID:
+         - mostriamo anteprime
+         - mostriamo form aggiunta
          ======================================================== -->
 
-    <div th:if="${block.id != null
-                 and (
-                     block.blockType.name() == 'CARDS'
-                     or block.blockType.name() == 'CAROUSEL'
-                 )}"
+    <div id="itemsSection"
+         class="card shadow-sm p-4 mb-4"
 
-         class="card shadow-sm p-4">
-
-
-        <h4 class="mb-3">
-
-            Elementi della Riga
-            (Card o Slide Carosello)
-
-        </h4>
+         th:style="${block.blockType != null
+                     and (
+                         block.blockType.name() == 'CARDS'
+                         or block.blockType.name() == 'CAROUSEL'
+                     )}
+                     ? ''
+                     : 'display:none;'">
 
 
-        <!-- ELEMENTI ESISTENTI -->
+        <!-- ====================================================
+             INTESTAZIONE
+             ==================================================== -->
 
-        <div class="row mb-4">
-
-
-            <div class="col-md-4 mb-3"
-                 th:each="item : ${block.items}">
+        <div class="d-flex align-items-center mb-4">
 
 
-                <div class="card h-100 border">
+            <div class="me-3">
 
 
-                    <img th:if="${item.imageUrl != null
-                                 and !item.imageUrl.empty}"
-
-                         th:src="${item.imageUrl}"
-
-                         class="card-img-top"
-
-                         style="
-                             height: 150px;
-                             object-fit: cover;
-                         ">
+                <div id="itemsIcon"
+                     class="rounded-circle bg-primary bg-opacity-10
+                            d-flex align-items-center justify-content-center"
+                     style="
+                         width: 55px;
+                         height: 55px;
+                     ">
 
 
-                    <div class="card-body">
+                    <i class="bi bi-grid-3x3-gap fs-4 text-primary"></i>
 
 
-                        <h5 class="card-title"
-                            th:text="${item.title}">
-
-                            Titolo
-
-                        </h5>
+                </div>
 
 
-                        <div class="card-text small text-muted"
-                             th:utext="${item.contentHtml}">
-
-                        </div>
+            </div>
 
 
-                    </div>
+            <div>
 
 
-                    <div class="card-footer bg-transparent text-end">
+                <h4 id="itemsSectionTitle"
+                    class="mb-1">
+
+                    Gestione Griglia Cards
+
+                </h4>
 
 
-                        <a th:href="@{/admin/block/{bId}/item/delete/{iId}(bId=${block.id}, iId=${item.id})}"
-                           class="btn btn-sm btn-outline-danger">
+                <div id="itemsSectionDescription"
+                     class="text-muted">
+
+                    Gestisci le Card di questa riga.
+
+                </div>
 
 
-                            <i class="bi bi-trash"></i>
-
-                            Rimuovi
+            </div>
 
 
-                        </a>
+        </div>
 
+
+        <!-- ====================================================
+             NUOVA RIGA: SALVA PRIMA
+             ==================================================== -->
+
+        <div th:if="${block.id == null}"
+             id="newBlockItemsMessage"
+             class="alert alert-info">
+
+
+            <div class="d-flex align-items-start">
+
+
+                <div class="me-3">
+
+                    <i class="bi bi-info-circle-fill fs-4"></i>
+
+                </div>
+
+
+                <div>
+
+
+                    <strong>
+
+                        Salva prima la riga.
+
+                    </strong>
+
+
+                    <div class="mt-1">
+
+                        Il modello è stato selezionato correttamente.
+
+                        Salva la configurazione della riga
+                        utilizzando il pulsante
+                        <strong>“Salva Configurazione Riga”</strong>.
+
+                        Dopo il salvataggio rimarrai in questa pagina
+                        e potrai aggiungere immediatamente la prima
+                        Card o la prima Slide.
 
                     </div>
 
@@ -687,123 +752,537 @@
         </div>
 
 
-        <!-- AGGIUNTA ELEMENTO -->
+        <!-- ====================================================
+             CONTENUTO SOLO DOPO IL SALVATAGGIO
+             ==================================================== -->
 
-        <h5 class="border-top pt-3">
-
-            Aggiungi Card / Slide
-
-        </h5>
+        <div th:if="${block.id != null}">
 
 
-        <form th:action="@{/admin/block/{id}/item/add(id=${block.id})}"
-              method="post"
-              enctype="multipart/form-data"
-              class="row g-3">
+            <!-- =================================================
+                 ELEMENTI ESISTENTI
+                 ================================================= -->
+
+            <div th:if="${block.items != null
+                         and !block.items.empty}">
 
 
-            <div class="col-md-6">
+                <div class="d-flex justify-content-between
+                            align-items-center mb-3">
 
 
-                <label class="form-label fw-bold small">
-
-                    Titolo Card/Slide
-
-                </label>
+                    <h5 class="mb-0">
 
 
-                <input type="text"
-                       name="title"
-                       class="form-control"
-                       placeholder="Titolo Card/Slide"
-                       required />
+                        <i class="bi bi-collection text-primary"></i>
+
+
+                        <span id="existingItemsTitle">
+
+                            Card inserite
+
+                        </span>
+
+
+                    </h5>
+
+
+                    <span class="badge bg-primary"
+                          th:text="${#lists.size(block.items)}">
+
+                        0
+
+                    </span>
+
+
+                </div>
+
+
+                <div class="row mb-4">
+
+
+                    <!-- =================================================
+                         ANTEPRIMA CARD / SLIDE
+                         ================================================= -->
+
+                    <div class="col-md-4 mb-4"
+                         th:each="item : ${block.items}">
+
+
+                        <div class="card h-100 border shadow-sm">
+
+
+                            <!-- ==============================
+                                 IMMAGINE
+                                 ============================== -->
+
+                            <div th:if="${item.imageUrl != null
+                                         and !item.imageUrl.empty}"
+                                 class="position-relative">
+
+
+                                <img th:src="${item.imageUrl}"
+
+                                     class="card-img-top"
+
+                                     th:alt="${item.title}"
+
+                                     style="
+                                         height: 180px;
+                                         object-fit: cover;
+                                     ">
+
+
+                                <span class="position-absolute
+                                             top-0 end-0
+                                             m-2 badge bg-dark bg-opacity-75">
+
+                                    <i class="bi bi-image"></i>
+
+                                </span>
+
+
+                            </div>
+
+
+                            <!-- ==============================
+                                 NESSUNA IMMAGINE
+                                 ============================== -->
+
+                            <div th:unless="${item.imageUrl != null
+                                             and !item.imageUrl.empty}"
+
+                                 class="bg-light d-flex
+                                        align-items-center
+                                        justify-content-center"
+
+                                 style="
+                                     height: 180px;
+                                 ">
+
+
+                                <div class="text-center text-muted">
+
+                                    <i class="bi bi-image fs-1"></i>
+
+
+                                    <div class="small mt-2">
+
+                                        Nessuna immagine
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- ==============================
+                                 CORPO CARD
+                                 ============================== -->
+
+                            <div class="card-body">
+
+
+                                <h5 class="card-title"
+                                    th:text="${item.title}">
+
+                                    Titolo Card
+
+                                </h5>
+
+
+                                <!-- DESCRIZIONE -->
+
+                                <div th:if="${item.contentHtml != null
+                                             and !item.contentHtml.empty}"
+
+                                     class="card-text small text-muted"
+
+                                     th:utext="${item.contentHtml}">
+
+                                </div>
+
+
+                                <!-- ==========================
+                                     PULSANTE
+                                     ========================== -->
+
+                                <div th:if="${item.buttonText != null
+                                             and !item.buttonText.empty}"
+
+                                     class="mt-3">
+
+
+                                    <a th:if="${item.buttonUrl != null
+                                               and !item.buttonUrl.empty}"
+
+                                       th:href="${item.buttonUrl}"
+
+                                       class="btn btn-sm btn-outline-primary"
+
+                                       target="_blank">
+
+
+                                        <span th:text="${item.buttonText}">
+
+                                            Scopri
+
+                                        </span>
+
+
+                                        <i class="bi bi-box-arrow-up-right"></i>
+
+
+                                    </a>
+
+
+                                    <span th:unless="${item.buttonUrl != null
+                                                      and !item.buttonUrl.empty}"
+
+                                          class="btn btn-sm btn-outline-secondary"
+
+                                          th:text="${item.buttonText}">
+
+                                        Pulsante
+
+                                    </span>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- ==============================
+                                 FOOTER
+                                 ============================== -->
+
+                            <div class="card-footer bg-transparent
+                                        d-flex justify-content-end">
+
+
+                                <a th:href="@{/admin/block/{bId}/item/delete/{iId}
+                                              (bId=${block.id},
+                                               iId=${item.id})}"
+
+                                   class="btn btn-sm btn-outline-danger"
+
+                                   onclick="return confirm('Vuoi davvero rimuovere questo elemento?');">
+
+
+                                    <i class="bi bi-trash"></i>
+
+                                    Rimuovi
+
+
+                                </a>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
 
 
             </div>
 
 
-            <div class="col-md-6">
+            <!-- =================================================
+                 NESSUN ELEMENTO
+                 ================================================= -->
+
+            <div th:if="${block.items == null
+                         or block.items.empty}"
+
+                 class="alert alert-warning">
 
 
-                <label class="form-label fw-bold small">
-
-                    Carica Immagine Card/Slide
-
-                </label>
+                <div class="d-flex align-items-center">
 
 
-                <input type="file"
-                       name="itemImageFile"
-                       class="form-control"
-                       accept="image/*" />
+                    <div class="me-3">
+
+                        <i class="bi bi-stars fs-3"></i>
+
+                    </div>
 
 
-            </div>
+                    <div>
 
 
-            <div class="col-12">
+                        <strong>
+
+                            Nessun elemento inserito.
+
+                        </strong>
 
 
-                <label class="form-label fw-bold small text-muted">
+                        <div>
 
-                    Descrizione Elemento
+                            Utilizza il modulo qui sotto per aggiungere
+                            il primo elemento.
 
-                </label>
-
-
-                <textarea name="contentHtml"
-                          class="wysiwyg-editor"
-                          placeholder="Testo descrittivo...">
-
-                </textarea>
+                        </div>
 
 
-            </div>
+                    </div>
 
 
-            <div class="col-md-6">
-
-
-                <input type="text"
-                       name="buttonText"
-                       class="form-control"
-                       placeholder="Testo Pulsante (opzionale)" />
+                </div>
 
 
             </div>
 
 
-            <div class="col-md-6">
+            <!-- =================================================
+                 FORM AGGIUNTA CARD / SLIDE
+                 ================================================= -->
+
+            <div class="border-top pt-4 mt-4">
 
 
-                <input type="text"
-                       name="buttonUrl"
-                       class="form-control"
-                       placeholder="Link Pulsante (opzionale)" />
+                <div class="d-flex align-items-center mb-3">
+
+
+                    <div class="me-2">
+
+
+                        <i class="bi bi-plus-circle-fill
+                                  text-success fs-4"></i>
+
+
+                    </div>
+
+
+                    <h5 id="addItemTitle"
+                        class="mb-0">
+
+                        Aggiungi Card
+
+                    </h5>
+
+
+                </div>
+
+
+                <div class="card bg-light border-0 p-3">
+
+
+                    <form th:action="@{/admin/block/{id}/item/add(id=${block.id})}"
+
+                          method="post"
+
+                          enctype="multipart/form-data"
+
+                          class="row g-3">
+
+
+                        <!-- =========================================
+                             TITOLO
+                             ========================================= -->
+
+                        <div class="col-md-6">
+
+
+                            <label class="form-label fw-bold">
+
+                                <span id="itemTitleLabel">
+
+                                    Titolo Card
+
+                                </span>
+
+
+                            </label>
+
+
+                            <input type="text"
+
+                                   name="title"
+
+                                   class="form-control"
+
+                                   placeholder="Titolo Card"
+
+                                   required />
+
+
+                        </div>
+
+
+                        <!-- =========================================
+                             IMMAGINE
+                             ========================================= -->
+
+                        <div class="col-md-6">
+
+
+                            <label class="form-label fw-bold">
+
+
+                                <i class="bi bi-image"></i>
+
+
+                                <span id="itemImageLabel">
+
+                                    Carica Immagine Card
+
+                                </span>
+
+
+                            </label>
+
+
+                            <input type="file"
+
+                                   name="itemImageFile"
+
+                                   class="form-control"
+
+                                   accept="image/*" />
+
+
+                            <div class="form-text">
+
+                                Formati immagine supportati dal server.
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- =========================================
+                             DESCRIZIONE
+                             ========================================= -->
+
+                        <div class="col-12">
+
+
+                            <label class="form-label fw-bold">
+
+                                Descrizione Elemento
+
+                            </label>
+
+
+                            <textarea name="contentHtml"
+
+                                      class="wysiwyg-editor"
+
+                                      placeholder="Testo descrittivo...">
+
+                            </textarea>
+
+
+                        </div>
+
+
+                        <!-- =========================================
+                             PULSANTE
+                             ========================================= -->
+
+                        <div class="col-md-6">
+
+
+                            <label class="form-label">
+
+                                Testo Pulsante
+                                <span class="text-muted">
+                                    (opzionale)
+                                </span>
+
+                            </label>
+
+
+                            <input type="text"
+
+                                   name="buttonText"
+
+                                   class="form-control"
+
+                                   placeholder="es. Scopri di più" />
+
+
+                        </div>
+
+
+                        <!-- =========================================
+                             URL
+                             ========================================= -->
+
+                        <div class="col-md-6">
+
+
+                            <label class="form-label">
+
+                                Link Pulsante
+                                <span class="text-muted">
+                                    (opzionale)
+                                </span>
+
+                            </label>
+
+
+                            <input type="text"
+
+                                   name="buttonUrl"
+
+                                   class="form-control"
+
+                                   placeholder="https://..." />
+
+
+                        </div>
+
+
+                        <!-- =========================================
+                             PULSANTE AGGIUNTA
+                             ========================================= -->
+
+                        <div class="col-12 text-end">
+
+
+                            <button type="submit"
+
+                                    class="btn btn-success btn-lg">
+
+
+                                <i class="bi bi-plus-lg"></i>
+
+
+                                <span id="addItemButtonText">
+
+                                    Aggiungi Card
+
+                                </span>
+
+
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
 
 
             </div>
 
 
-            <div class="col-12 text-end">
-
-
-                <button type="submit"
-                        class="btn btn-success">
-
-
-                    <i class="bi bi-plus-lg"></i>
-
-                    Aggiungi Elemento
-
-
-                </button>
-
-
-            </div>
-
-
-        </form>
+        </div>
 
 
     </div>
@@ -813,78 +1292,356 @@
 
 
 <!-- ============================================================
-     VISIBILITÀ IMMAGINE PRINCIPALE
-     
-     SOLO:
-     - JUMBO_DEMO_1
-     - JUMBO_DEMO_2
-     
-     NON:
-     - JUMBOTRON
-     - JUMBO_2_COL
-     - CARDS
-     - CAROUSEL
+     JAVASCRIPT GESTIONE MODELLO
      ============================================================ -->
 
 <script>
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            const blockTypeSelect =
-                document.getElementById(
-                    "blockTypeSelect"
-                );
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
 
-            const mainImageUpload =
-                document.getElementById(
-                    "mainImageUpload"
-                );
+        /* =====================================================
+           ELEMENTI
+           ===================================================== */
 
-
-            if (!blockTypeSelect
-                    || !mainImageUpload) {
-
-                return;
-            }
-
-
-            function aggiornaVisibilitaImmagine() {
-
-                const tipo =
-                    blockTypeSelect.value;
-
-
-                const mostraImmagine =
-                    tipo === "JUMBO_DEMO_1"
-                    || tipo === "JUMBO_DEMO_2";
-
-
-                if (mostraImmagine) {
-
-                    mainImageUpload.style.display =
-                        "";
-
-                } else {
-
-                    mainImageUpload.style.display =
-                        "none";
-                }
-            }
-
-
-            blockTypeSelect.addEventListener(
-                "change",
-                aggiornaVisibilitaImmagine
+        const blockTypeSelect =
+            document.getElementById(
+                "blockTypeSelect"
             );
 
 
-            aggiornaVisibilitaImmagine();
+        const mainImageUpload =
+            document.getElementById(
+                "mainImageUpload"
+            );
+
+
+        const mainEditorSection =
+            document.getElementById(
+                "mainEditorSection"
+            );
+
+
+        const itemsSection =
+            document.getElementById(
+                "itemsSection"
+            );
+
+
+        const itemsSectionTitle =
+            document.getElementById(
+                "itemsSectionTitle"
+            );
+
+
+        const itemsSectionDescription =
+            document.getElementById(
+                "itemsSectionDescription"
+            );
+
+
+        const itemsIcon =
+            document.getElementById(
+                "itemsIcon"
+            );
+
+
+        const addItemTitle =
+            document.getElementById(
+                "addItemTitle"
+            );
+
+
+        const itemTitleLabel =
+            document.getElementById(
+                "itemTitleLabel"
+            );
+
+
+        const itemImageLabel =
+            document.getElementById(
+                "itemImageLabel"
+            );
+
+
+        const addItemButtonText =
+            document.getElementById(
+                "addItemButtonText"
+            );
+
+
+        const existingItemsTitle =
+            document.getElementById(
+                "existingItemsTitle"
+            );
+
+
+        if (!blockTypeSelect) {
+
+            return;
 
         }
-    );
+
+
+        /* =====================================================
+           AGGIORNA INTERFACCIA
+           ===================================================== */
+
+        function aggiornaInterfaccia() {
+
+
+            const tipo =
+                blockTypeSelect.value;
+
+
+            /* =================================================
+               IMMAGINE PRINCIPALE
+
+               SOLO DEMO 1 / DEMO 2
+               ================================================= */
+
+            const mostraImmaginePrincipale =
+                tipo === "JUMBO_DEMO_1"
+                ||
+                tipo === "JUMBO_DEMO_2";
+
+
+            if (mainImageUpload) {
+
+                mainImageUpload.style.display =
+                    mostraImmaginePrincipale
+                        ? ""
+                        : "none";
+
+            }
+
+
+            /* =================================================
+               CARDS
+               ================================================= */
+
+            const isCards =
+                tipo === "CARDS";
+
+
+            /* =================================================
+               CAROUSEL
+               ================================================= */
+
+            const isCarousel =
+                tipo === "CAROUSEL";
+
+
+            /* =================================================
+               BLOCCO CON ELEMENTI
+               ================================================= */
+
+            const isItemsBlock =
+                isCards
+                ||
+                isCarousel;
+
+
+            /* =================================================
+               EDITOR PRINCIPALE
+
+               NASCOSTO PER CARDS / CAROUSEL
+               ================================================= */
+
+            if (mainEditorSection) {
+
+                mainEditorSection.style.display =
+                    isItemsBlock
+                        ? "none"
+                        : "";
+
+            }
+
+
+            /* =================================================
+               PANNELLO ELEMENTI
+               ================================================= */
+
+            if (itemsSection) {
+
+                itemsSection.style.display =
+                    isItemsBlock
+                        ? ""
+                        : "none";
+
+            }
+
+
+            /* =================================================
+               CONFIGURAZIONE CARDS
+               ================================================= */
+
+            if (isCards) {
+
+
+                if (itemsSectionTitle) {
+
+                    itemsSectionTitle.textContent =
+                        "Gestione Griglia Cards";
+
+                }
+
+
+                if (itemsSectionDescription) {
+
+                    itemsSectionDescription.textContent =
+                        "Gestisci le Card che compongono questa riga.";
+
+                }
+
+
+                if (addItemTitle) {
+
+                    addItemTitle.textContent =
+                        "Aggiungi Card";
+
+                }
+
+
+                if (itemTitleLabel) {
+
+                    itemTitleLabel.textContent =
+                        "Titolo Card";
+
+                }
+
+
+                if (itemImageLabel) {
+
+                    itemImageLabel.textContent =
+                        "Carica Immagine Card";
+
+                }
+
+
+                if (addItemButtonText) {
+
+                    addItemButtonText.textContent =
+                        "Aggiungi Card";
+
+                }
+
+
+                if (existingItemsTitle) {
+
+                    existingItemsTitle.textContent =
+                        "Card inserite";
+
+                }
+
+
+                if (itemsIcon) {
+
+                    itemsIcon.innerHTML =
+                        '<i class="bi bi-grid-3x3-gap fs-4 text-primary"></i>';
+
+                }
+
+            }
+
+
+            /* =================================================
+               CONFIGURAZIONE CAROUSEL
+               ================================================= */
+
+            if (isCarousel) {
+
+
+                if (itemsSectionTitle) {
+
+                    itemsSectionTitle.textContent =
+                        "Gestione Carosello";
+
+                }
+
+
+                if (itemsSectionDescription) {
+
+                    itemsSectionDescription.textContent =
+                        "Gestisci le Slide che compongono questo carosello.";
+
+                }
+
+
+                if (addItemTitle) {
+
+                    addItemTitle.textContent =
+                        "Aggiungi Slide";
+
+                }
+
+
+                if (itemTitleLabel) {
+
+                    itemTitleLabel.textContent =
+                        "Titolo Slide";
+
+                }
+
+
+                if (itemImageLabel) {
+
+                    itemImageLabel.textContent =
+                        "Carica Immagine Slide";
+
+                }
+
+
+                if (addItemButtonText) {
+
+                    addItemButtonText.textContent =
+                        "Aggiungi Slide";
+
+                }
+
+
+                if (existingItemsTitle) {
+
+                    existingItemsTitle.textContent =
+                        "Slide inserite";
+
+                }
+
+
+                if (itemsIcon) {
+
+                    itemsIcon.innerHTML =
+                        '<i class="bi bi-images fs-4 text-primary"></i>';
+
+                }
+
+            }
+
+
+        }
+
+
+        /* =====================================================
+           CAMBIO MODELLO
+           ===================================================== */
+
+        blockTypeSelect.addEventListener(
+            "change",
+            aggiornaInterfaccia
+        );
+
+
+        /* =====================================================
+           STATO INIZIALE
+           ===================================================== */
+
+        aggiornaInterfaccia();
+
+
+    }
+);
 
 </script>
 

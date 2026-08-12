@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Editor Riga - Eco Skill Factory</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <!-- =========================================================
-         TINYMCE 8.5.0
-         ========================================================= -->
-    <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js" referrerpolicy="origin"></script>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- TINYMCE 8.5.0 -->
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
+            referrerpolicy="origin">
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -34,9 +37,9 @@
                 font_size_formats: '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
                 font_size_input_default_unit: 'px',
                 plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'anchor',
-                    'searchreplace', 'visualblocks', 'code', 'fullscreen', 'media',
-                    'table', 'wordcount', 'help', 'emoticons'
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'media', 'table', 'wordcount', 'help', 'emoticons'
                 ],
                 toolbar:
                     'undo redo | blocks fontfamily fontsize | ' +
@@ -47,7 +50,13 @@
                     'link image media table emoticons | ' +
                     'code fullscreen | help',
                 content_style: `
-                    body { font-family: Arial, sans-serif; font-size: 18px; line-height: 1.6; color: #333; padding: 15px; }
+                    body {
+                        font-family: Arial, sans-serif;
+                        font-size: 18px;
+                        line-height: 1.6;
+                        color: #333;
+                        padding: 15px;
+                    }
                     p { font-size: 18px; }
                     img { max-width: 100%; height: auto; }
                     figure.image.align-left { float: left; margin: 0 15px 10px 0; }
@@ -71,7 +80,9 @@
                         body: formData
                     })
                     .then(response => {
-                        if (!response.ok) throw new Error('Errore durante il caricamento dell\'immagine nel server.');
+                        if (!response.ok) {
+                            throw new Error('Errore durante il caricamento dell\'immagine nel server.');
+                        }
                         return response.json();
                     })
                     .then(data => resolve(data.location || data.url))
@@ -94,77 +105,166 @@
         <h2 th:text="${block.id == null ? 'Nuova Riga' : 'Modifica Riga #' + block.id}">
             Editor Riga
         </h2>
+
         <a th:href="@{/admin/dashboard}" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Torna alla Dashboard
+            <i class="bi bi-arrow-left"></i>
+            Torna alla Dashboard
         </a>
     </div>
 
     <!-- FORM CONFIGURAZIONE BLOCCO -->
-    <form th:action="@{/admin/block/save}" th:object="${block}" method="post" class="card shadow-sm p-4 mb-4">
+    <form th:action="@{/admin/block/save}"
+          th:object="${block}"
+          method="post"
+          enctype="multipart/form-data"
+          class="card shadow-sm p-4 mb-4">
+
         <input type="hidden" th:field="*{id}" />
 
+        <!-- TITOLO / POSIZIONE / MODELLO -->
         <div class="row g-3 mb-3">
             <div class="col-md-6">
-                <label class="form-label fw-bold">Titolo Riga (Uso Interno Admin)</label>
-                <input type="text" class="form-control" th:field="*{titleAdmin}" required placeholder="es. Banner Iniziale / Sezione Servizi" />
+                <label class="form-label fw-bold">
+                    Titolo Riga (Uso Interno Admin)
+                </label>
+                <input type="text"
+                       class="form-control"
+                       th:field="*{titleAdmin}"
+                       required
+                       placeholder="es. Banner Iniziale / Sezione Servizi" />
             </div>
+
             <div class="col-md-2">
-                <label class="form-label fw-bold">Posizione Ordine</label>
-                <input type="number" class="form-control" th:field="*{position}" required />
+                <label class="form-label fw-bold">
+                    Posizione Ordine
+                </label>
+                <input type="number"
+                       class="form-control"
+                       th:field="*{position}"
+                       required />
             </div>
+
             <div class="col-md-4">
-                <label class="form-label fw-bold">Modello Blocco</label>
+                <label class="form-label fw-bold">
+                    Modello Blocco
+                </label>
                 <select class="form-select" th:field="*{blockType}">
-                    <option th:each="type : ${blockTypes}" th:value="${type}" th:text="${type.label}"></option>
+                    <option th:each="type : ${blockTypes}"
+                            th:value="${type}"
+                            th:text="${type.label}">
+                    </option>
                 </select>
             </div>
         </div>
 
+        <!-- CONTAINER / LARGHEZZA / ALTEZZA -->
         <div class="row g-3 mb-3">
             <div class="col-md-4">
-                <label class="form-label fw-bold">Larghezza Container</label>
+                <label class="form-label fw-bold">
+                    Larghezza Container
+                </label>
                 <select class="form-select" th:field="*{containerType}">
-                    <option th:each="ct : ${containerTypes}" th:value="${ct}" th:text="${ct.name()}"></option>
+                    <option th:each="ct : ${containerTypes}"
+                            th:value="${ct}"
+                            th:text="${ct.name()}">
+                    </option>
                 </select>
             </div>
+
             <div class="col-md-4">
-                <label class="form-label fw-bold">Altezza Personalizzata CSS</label>
-                <input type="text" class="form-control" th:field="*{customHeight}" placeholder="auto, 400px, 80vh" />
+                <label class="form-label fw-bold">
+                    Larghezza Blocco (%)
+                </label>
+                <input type="number"
+                       class="form-control"
+                       th:field="*{widthPercent}"
+                       min="10"
+                       max="100"
+                       placeholder="100" />
             </div>
+
             <div class="col-md-4">
-                <label class="form-label fw-bold">Classe Sfondo CSS</label>
-                <input type="text" class="form-control" th:field="*{backgroundColor}" placeholder="bg-white, bg-dark, bg-light" />
+                <label class="form-label fw-bold">
+                    Altezza Personalizzata CSS
+                </label>
+                <input type="text"
+                       class="form-control"
+                       th:field="*{customHeight}"
+                       placeholder="auto, 400px, 80vh" />
             </div>
         </div>
 
+        <!-- UPLOAD IMMAGINE PRINCIPALE (SEMPRE VISIBILE) -->
+        <div class="mb-3 p-3 border rounded bg-white shadow-sm">
+            <label class="form-label fw-bold text-primary">
+                <i class="bi bi-upload"></i> Carica Immagine Principale Riga (Jumbo / Demo 1 / Demo 2)
+            </label>
+            <input type="file"
+                   name="imageFile"
+                   class="form-control mb-2"
+                   accept="image/*" />
+
+            <!-- Mantiene l'URL corrente se l'immagine è già stata salvata -->
+            <input type="hidden" th:field="*{imageUrl}" />
+
+            <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="mt-2">
+                <small class="text-muted d-block mb-1">Immagine Attualmente Caricata:</small>
+                <img th:src="${block.imageUrl}"
+                     alt="Anteprima"
+                     class="img-thumbnail"
+                     style="max-height: 120px; object-fit: contain;" />
+            </div>
+        </div>
+
+        <!-- EDITOR TINYMCE PRINCIPALE -->
         <div class="mb-3">
-            <label class="form-label fw-bold">Testo / Contenuto Principale (Editor Avanzato TinyMCE)</label>
-            <textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
+            <label class="form-label fw-bold">
+                Testo / Contenuto Principale (Editor Avanzato TinyMCE)
+            </label>
+            <textarea class="wysiwyg-editor"
+                      th:field="*{contentHtml}">
+            </textarea>
         </div>
 
+        <!-- SALVA -->
         <div class="text-end">
             <button type="submit" class="btn btn-primary btn-lg">
-                <i class="bi bi-save"></i> Salva Configurazione Riga
+                <i class="bi bi-save"></i>
+                Salva Configurazione Riga
             </button>
         </div>
     </form>
 
     <!-- GESTIONE CARD / SLIDE -->
-    <div th:if="${block.id != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')}" class="card shadow-sm p-4">
-        <h4 class="mb-3">Elementi della Riga (Card o Slide Carosello)</h4>
+    <div th:if="${block.id != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')}"
+         class="card shadow-sm p-4">
+
+        <h4 class="mb-3">
+            Elementi della Riga (Card o Slide Carosello)
+        </h4>
 
         <!-- LISTA ELEMENTI ESISTENTI -->
         <div class="row mb-4">
             <div class="col-md-4 mb-3" th:each="item : ${block.items}">
                 <div class="card h-100 border">
-                    <img th:if="${item.imageUrl != null and !item.imageUrl.empty}" th:src="${item.imageUrl}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                    <img th:if="${item.imageUrl != null and !item.imageUrl.empty}"
+                         th:src="${item.imageUrl}"
+                         class="card-img-top"
+                         style="height: 150px; object-fit: cover;">
+
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${item.title}">Titolo</h5>
-                        <div class="card-text small text-muted" th:utext="${item.contentHtml}"></div>
+                        <h5 class="card-title" th:text="${item.title}">
+                            Titolo
+                        </h5>
+                        <div class="card-text small text-muted" th:utext="${item.contentHtml}">
+                        </div>
                     </div>
+
                     <div class="card-footer bg-transparent text-end">
-                        <a th:href="@{/admin/block/{bId}/item/delete/{iId}(bId=${block.id}, iId=${item.id})}" class="btn btn-sm btn-outline-danger">
-                            <i class="bi bi-trash"></i> Rimuovi
+                        <a th:href="@{/admin/block/{bId}/item/delete/{iId}(bId=${block.id}, iId=${item.id})}"
+                           class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                            Rimuovi
                         </a>
                     </div>
                 </div>
@@ -172,38 +272,64 @@
         </div>
 
         <!-- FORM AGGIUNTA ELEMENTO -->
-        <h5 class="border-top pt-3">Aggiungi Card / Slide</h5>
+        <h5 class="border-top pt-3">
+            Aggiungi Card / Slide
+        </h5>
 
-        <form th:action="@{/admin/block/{id}/item/add(id=${block.id})}" method="post" enctype="multipart/form-data" class="row g-3">
+        <form th:action="@{/admin/block/{id}/item/add(id=${block.id})}"
+              method="post"
+              enctype="multipart/form-data"
+              class="row g-3">
+
             <div class="col-md-6">
-                <label class="form-label fw-bold small text-muted">Titolo Card/Slide</label>
-                <input type="text" name="title" class="form-control" placeholder="Titolo Card/Slide" required />
+                <label class="form-label fw-bold small">Titolo Card/Slide</label>
+                <input type="text"
+                       name="title"
+                       class="form-control"
+                       placeholder="Titolo Card/Slide"
+                       required />
             </div>
 
             <div class="col-md-6">
-                <label class="form-label fw-bold small text-muted">Immagine Card/Slide</label>
-                <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                <label class="form-label fw-bold small">Carica Immagine Card/Slide</label>
+                <input type="file"
+                       name="itemImageFile"
+                       class="form-control"
+                       accept="image/*" />
             </div>
 
             <div class="col-12">
-                <label class="form-label fw-bold small text-muted">Descrizione Elemento</label>
-                <textarea name="contentHtml" class="wysiwyg-editor" placeholder="Testo descrittivo..."></textarea>
+                <label class="form-label fw-bold small text-muted">
+                    Descrizione Elemento
+                </label>
+                <textarea name="contentHtml"
+                          class="wysiwyg-editor"
+                          placeholder="Testo descrittivo...">
+                </textarea>
             </div>
 
             <div class="col-md-6">
-                <input type="text" name="buttonText" class="form-control" placeholder="Testo Pulsante (opzionale)" />
+                <input type="text"
+                       name="buttonText"
+                       class="form-control"
+                       placeholder="Testo Pulsante (opzionale)" />
             </div>
 
             <div class="col-md-6">
-                <input type="text" name="buttonUrl" class="form-control" placeholder="Link Pulsante (opzionale)" />
+                <input type="text"
+                       name="buttonUrl"
+                       class="form-control"
+                       placeholder="Link Pulsante (opzionale)" />
             </div>
 
             <div class="col-12 text-end">
                 <button type="submit" class="btn btn-success">
-                    <i class="bi bi-plus-lg"></i> Aggiungi Elemento
+                    <i class="bi bi-plus-lg"></i>
+                    Aggiungi Elemento
                 </button>
             </div>
         </form>
+
     </div>
 
 </div>

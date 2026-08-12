@@ -19,14 +19,16 @@ public class PageBlock {
     private Integer position = 0;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "container_type", nullable = false, length = 50)
     private ContainerType containerType = ContainerType.CONTAINER;
 
     @Column(length = 50)
     private String customHeight = "auto";
 
+    private Integer widthPercent = 100;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "block_type", nullable = false, length = 50)
     private BlockType blockType;
 
     @Lob
@@ -69,6 +71,9 @@ public class PageBlock {
     public String getCustomHeight() { return customHeight; }
     public void setCustomHeight(String customHeight) { this.customHeight = customHeight; }
 
+    public Integer getWidthPercent() { return widthPercent; }
+    public void setWidthPercent(Integer widthPercent) { this.widthPercent = widthPercent; }
+
     public BlockType getBlockType() { return blockType; }
     public void setBlockType(BlockType blockType) { this.blockType = blockType; }
 
@@ -80,4 +85,16 @@ public class PageBlock {
 
     public List<BlockItem> getItems() { return items; }
     public void setItems(List<BlockItem> items) { this.items = items; }
+    
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    // Getter e Setter
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

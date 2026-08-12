@@ -1,9 +1,12 @@
 package it.skillfactory.eco.model;
 
 public enum BlockType {
-    JUMBOTRON("Jumbotron / Sezione Testo"),
-    CARDS("Griglia Card (2 o 3 Colonne)"),
-    CAROUSEL("Carosello di Immagini / Slider");
+    JUMBOTRON("Jumbotron Generico"),
+    CARDS("Griglia Card"),
+    CAROUSEL("Carosello Dynamic"),
+    JUMBO_DEMO_1("Jumbo Demo 1 (Testo Sinistra + Immagine Destra)"),
+    JUMBO_DEMO_2("Jumbo Demo 2 (Immagine Sinistra + Testo Destra)"),
+    JUMBO_2_COL("Jumbo Demo 2 Colonne (Testo + Testo/Offerta)");
 
     private final String label;
 

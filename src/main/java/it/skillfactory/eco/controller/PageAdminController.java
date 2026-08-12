@@ -48,9 +48,14 @@ public class PageAdminController {
     @GetMapping("/new")
     public String newPage(Model model) {
 
+        Page page = new Page();
+
+        // Larghezza predefinita
+        page.setWidthPercent(100);
+
         model.addAttribute(
                 "page",
-                new Page()
+                page
         );
 
         return "admin/page-form";
@@ -74,6 +79,13 @@ public class PageAdminController {
                                 )
                         );
 
+        // Compatibilità con pagine create prima
+        // dell'introduzione di widthPercent
+        if (page.getWidthPercent() == null) {
+
+            page.setWidthPercent(100);
+        }
+
         model.addAttribute(
                 "page",
                 page
@@ -94,7 +106,9 @@ public class PageAdminController {
 
         try {
 
-            // Controllo titolo
+            // ====================================================
+            // CONTROLLO TITOLO
+            // ====================================================
 
             if (page.getTitle() == null ||
                 page.getTitle().trim().isEmpty()) {
@@ -108,7 +122,9 @@ public class PageAdminController {
             }
 
 
-            // Controllo slug
+            // ====================================================
+            // CONTROLLO SLUG
+            // ====================================================
 
             if (page.getSlug() == null ||
                 page.getSlug().trim().isEmpty()) {
@@ -122,7 +138,9 @@ public class PageAdminController {
             }
 
 
-            // Formattazione slug
+            // ====================================================
+            // FORMATTAZIONE SLUG
+            // ====================================================
 
             String formattedSlug =
                     page.getSlug()
@@ -131,16 +149,50 @@ public class PageAdminController {
                         .replaceAll("[^a-z0-9]+", "-")
                         .replaceAll("^-+|-+$", "");
 
-
             page.setSlug(formattedSlug);
 
+
+            // ====================================================
+            // CONTROLLO CONTENUTO
+            // ====================================================
 
             if (page.getContentHtml() == null) {
 
                 page.setContentHtml("");
-
             }
 
+
+            // ====================================================
+            // LARGHEZZA BLOCCO
+            // ====================================================
+
+            Integer width =
+                    page.getWidthPercent();
+
+            // Se non specificata
+            if (width == null) {
+
+                width = 100;
+            }
+
+            // Minimo 10%
+            if (width < 10) {
+
+                width = 10;
+            }
+
+            // Massimo 100%
+            if (width > 100) {
+
+                width = 100;
+            }
+
+            page.setWidthPercent(width);
+
+
+            // ====================================================
+            // SALVATAGGIO
+            // ====================================================
 
             pageRepository.save(page);
 

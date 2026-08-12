@@ -563,6 +563,61 @@
 
 
             <!-- ====================================================
+                 LARGHEZZA BLOCCO
+                 ==================================================== -->
+
+            <div class="mb-4">
+
+                <label
+                    for="widthPercent"
+                    class="form-label fw-bold">
+
+                    Larghezza Blocco (%)
+
+                </label>
+
+
+                <div class="input-group">
+
+                    <input
+                        id="widthPercent"
+                        type="number"
+                        th:field="*{widthPercent}"
+                        class="form-control"
+                        min="10"
+                        max="100"
+                        step="1"
+                        value="100"
+                        placeholder="100">
+
+                    <span class="input-group-text">
+
+                        %
+
+                    </span>
+
+                </div>
+
+
+                <div class="form-text">
+
+                    Imposta la larghezza del contenuto della pagina
+                    rispetto alla larghezza disponibile.
+
+                    Il valore predefinito è
+                    <strong>100%</strong>.
+
+                    Puoi utilizzare valori compresi tra
+                    <strong>10%</strong> e
+                    <strong>100%</strong>.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ====================================================
                  CONTENUTO
                  ==================================================== -->
 

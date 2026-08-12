@@ -12,66 +12,185 @@
         Eco Skill Factory
     </title>
 
+
+    <!-- =========================================================
+         BOOTSTRAP
+         ========================================================= -->
+
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+
+    <!-- =========================================================
+         BOOTSTRAP ICONS
+         ========================================================= -->
 
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
+
+    <!-- =========================================================
+         STILI
+         ========================================================= -->
+
     <style>
 
         body {
+
             background: #080c14;
+
             color: #f1f5f9;
+
             min-height: 100vh;
+
         }
+
+
+        /* =====================================================
+           NAVBAR
+           ===================================================== */
 
         .navbar-custom {
+
             background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.1);
+
         }
+
+
+        /* =====================================================
+           CONTENITORE PAGINA
+           
+           La larghezza viene gestita direttamente da
+           th:style utilizzando page.widthPercent.
+           
+           NON impostiamo più max-width: 1000px.
+           ===================================================== */
 
         .page-container {
-            max-width: 1000px;
-            margin: 0 auto;
+
+            margin-left: auto;
+
+            margin-right: auto;
+
         }
+
+
+        /* =====================================================
+           BOX PAGINA
+           ===================================================== */
 
         .page-box {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(255,255,255,0.1);
+
+            background:
+                rgba(15, 23, 42, 0.85);
+
+            border:
+                1px solid rgba(255,255,255,0.1);
+
             border-radius: 20px;
+
             padding: 50px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.3);
+
         }
+
+
+        /* =====================================================
+           TITOLO
+           ===================================================== */
 
         .page-title {
+
             color: #00dc82;
+
             font-weight: 800;
+
             margin-bottom: 35px;
+
         }
 
+
+        /* =====================================================
+           CONTENUTO
+           ===================================================== */
+
         .content-body {
+
             color: #cbd5e1;
+
             font-size: 1.05rem;
+
             line-height: 1.8;
+
         }
+
 
         .content-body h1,
         .content-body h2,
         .content-body h3 {
+
             color: #ffffff;
+
         }
 
+
         .content-body a {
+
             color: #00dc82;
+
         }
+
+
+        /* =====================================================
+           IMMAGINI INSERITE CON TINYMCE
+           ===================================================== */
+
+        .content-body img {
+
+            max-width: 100%;
+
+            height: auto;
+
+        }
+
+
+        /* =====================================================
+           TABELLE
+           ===================================================== */
+
+        .content-body table {
+
+            max-width: 100%;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
 
         @media (max-width: 767px) {
 
+            .page-container {
+
+                width: 100% !important;
+
+            }
+
+
             .page-box {
+
                 padding: 25px;
+
+                border-radius: 12px;
+
             }
 
         }
@@ -112,14 +231,41 @@
      PAGINA
      ========================================================= -->
 
-<main class="container py-5">
+<main class="container-fluid py-5">
 
-    <div class="page-container">
+
+    <!-- =====================================================
+         CONTENITORE CON LARGHEZZA DINAMICA
+         
+         Esempi:
+         
+         widthPercent = 100
+         → 100%
+         
+         widthPercent = 90
+         → 90%
+         
+         widthPercent = 75
+         → 75%
+         
+         widthPercent = 50
+         → 50%
+         
+         widthPercent = 30
+         → 30%
+         ===================================================== -->
+
+    <div
+        class="page-container"
+        th:style="'width: ' + ${page.widthPercent != null ? page.widthPercent : 100} + '%;'">
+
 
         <div class="page-box">
 
 
-            <!-- TITOLO -->
+            <!-- =================================================
+                 TITOLO
+                 ================================================= -->
 
             <h1
                 class="page-title"
@@ -130,20 +276,28 @@
             </h1>
 
 
-            <!-- CONTENUTO -->
+            <!-- =================================================
+                 CONTENUTO
+                 ================================================= -->
 
             <div
                 class="content-body"
-                th:if="${page.contentHtml != null}"
+                th:if="${page.contentHtml != null
+                        and !#strings.isEmpty(page.contentHtml)}"
+
                 th:utext="${page.contentHtml}">
 
             </div>
 
 
-            <!-- NESSUN CONTENUTO -->
+            <!-- =================================================
+                 NESSUN CONTENUTO
+                 ================================================= -->
 
             <div
-                th:if="${page.contentHtml == null or #strings.isEmpty(page.contentHtml)}"
+                th:if="${page.contentHtml == null
+                        or #strings.isEmpty(page.contentHtml)}"
+
                 class="alert alert-secondary">
 
                 Questa pagina non contiene ancora contenuto.
@@ -163,12 +317,18 @@
      FOOTER
      ========================================================= -->
 
-<footer class="text-center text-secondary py-4">
+<footer
+    class="text-center text-secondary py-4">
 
     © 2026 Eco Skill Factory
 
 </footer>
 
+
+
+<!-- =========================================================
+     BOOTSTRAP JS
+     ========================================================= -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">

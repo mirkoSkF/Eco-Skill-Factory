@@ -122,25 +122,41 @@
         }
 
 
-        /*
-         * Il contenitore esterno occupa sempre
-         * tutto lo spazio disponibile.
-         *
-         * La larghezza effettiva del blocco viene
-         * gestita dal contenuto interno.
-         */
+        /* ========================================================
+           FIX ALTEZZA PERSONALIZZATA & MARGIN TOP PRESERVATO
+           ======================================================== */
 
         .block-container {
 
-            display: flex;
+            display: flex !important;
 
-            flex-direction: column;
+            flex-direction: column !important;
 
-            justify-content: center;
+            justify-content: flex-start !important;
 
-            position: relative;
+            position: relative !important;
 
-            width: 100%;
+            width: 100% !important;
+
+            box-sizing: border-box !important;
+
+        }
+
+        /* Rimuove il padding di Bootstrap ma preserva lo stacco in alto con il margin */
+        .block-container[style*="height"]:not([style*="height:auto"]):not([style*="height: auto"]) {
+
+            padding-top: 0 !important;
+
+            padding-bottom: 0 !important;
+
+            margin-top: 3rem !important;
+
+        }
+
+        /* Garantisce che i blocchi interni occupino l'intera altezza del contenitore */
+        .block-container > div {
+
+            height: 100% !important;
 
         }
 
@@ -401,7 +417,7 @@
              th:class="${block.containerType.cssClass}
                        + ' py-5 block-container'"
 
-             th:style="'min-height:' +
+             th:style="'height:' +
                        ${block.customHeight != null
                            ? block.customHeight
                            : 'auto'}">
@@ -803,8 +819,6 @@
 
             <!-- =================================================
                  JUMBO 2 COLONNE
-                 NOTA:
-                 NESSUNA IMMAGINE PRINCIPALE
                  ================================================= -->
 
             <div th:if="${block.blockType.name() == 'JUMBO_2_COL'}"
@@ -912,9 +926,7 @@
     </script>
 
 
-    <!-- ========================================================
-         SFONDO ANIMATO
-         ======================================================== -->
+    <!-- SFONDO ANIMATO -->
 
     <script>
 

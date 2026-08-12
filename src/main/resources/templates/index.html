@@ -97,7 +97,7 @@
 
 
         /* ========================================================
-           HEADER
+           HEADER & HOVER NAVBAR
            ======================================================== */
 
         .glass-header {
@@ -141,6 +141,84 @@
             -webkit-background-clip: text;
 
             -webkit-text-fill-color: transparent;
+
+        }
+
+
+        /* Effetto Hover Voci Navbar Principali */
+
+        .navbar-nav .nav-link {
+
+            position: relative;
+
+            transition: color 0.3s ease, transform 0.2s ease;
+
+            font-weight: 500;
+
+        }
+
+
+        .navbar-nav .nav-link::after {
+
+            content: '';
+
+            position: absolute;
+
+            bottom: 0px;
+
+            left: 50%;
+
+            width: 0;
+
+            height: 2px;
+
+            background: linear-gradient(90deg, #00dc82, #36e4da);
+
+            transition: width 0.3s ease, left 0.3s ease;
+
+            border-radius: 2px;
+
+        }
+
+
+        .navbar-nav .nav-link:hover {
+
+            color: #00dc82 !important;
+
+            opacity: 1 !important;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        .navbar-nav .nav-link:hover::after {
+
+            width: 80%;
+
+            left: 10%;
+
+        }
+
+
+        /* Effetto Hover Dropdown Items */
+
+        .dropdown-menu-dark .dropdown-item {
+
+            transition: background-color 0.25s ease, color 0.25s ease, padding-left 0.25s ease;
+
+            border-radius: 0.375rem;
+
+        }
+
+
+        .dropdown-menu-dark .dropdown-item:hover {
+
+            background-color: rgba(0, 220, 130, 0.15) !important;
+
+            color: #00dc82 !important;
+
+            padding-left: 1.5rem;
 
         }
 
@@ -293,9 +371,7 @@
 
 
         /* ========================================================
-           NUOVO BOTTONE CARD
-           
-           Elegante, discreto, piccolo
+           BOTTONE CARD
            ======================================================== */
 
         .btn-card-link {
@@ -614,18 +690,16 @@
 
 
         /* ========================================================
-           RESPONSIVE CAROSELLO
+           RESPONSIVE
            ======================================================== */
 
         @media (max-width: 767.98px) {
-
 
             .carousel-custom {
 
                 border-radius: 1rem;
 
             }
-
 
             .carousel-item img {
 
@@ -634,7 +708,6 @@
                 max-height: 400px;
 
             }
-
 
             .carousel-caption-custom {
 
@@ -657,7 +730,6 @@
 
             }
 
-
             .carousel-caption-custom h2 {
 
                 font-size: 1.35rem;
@@ -666,13 +738,11 @@
 
             }
 
-
             .carousel-caption-custom .carousel-button {
 
                 margin-top: 0.75rem;
 
             }
-
 
             .card-custom:hover {
 
@@ -698,60 +768,75 @@
 
 
     <!-- ========================================================
-         HEADER
+         HEADER CON NAVBAR DINAMICA
          ======================================================== -->
 
     <header class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3">
 
-
         <div class="container">
 
-
-            <a class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2"
-               href="/">
-
-
+            <a class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2" href="/">
                 <i class="bi bi-cpu-fill text-success fs-3"></i>
-
-
-                <span class="brand-text fw-bold">
-
-                    Eco
-
-                </span>
-
-
-                <span class="brand-accent fw-bold">
-
-                    Skill Factory
-
-                </span>
-
-
+                <span class="brand-text fw-bold">Eco</span>
+                <span class="brand-accent fw-bold">Skill Factory</span>
             </a>
 
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <div class="ms-auto">
+            <div class="collapse navbar-collapse" id="navbarContent">
+                
+                <!-- MENU DINAMICO DA DATABASE -->
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0" th:if="${navItems != null}">
+                    <li th:each="item : ${navItems}" 
+                        th:class="${(item.children != null and !item.children.isEmpty()) ? 'nav-item dropdown' : 'nav-item'}">
+                        
+                        <!-- VOCE SINGOLA -->
+                        <a th:if="${item.children == null or item.children.isEmpty()}" 
+                           class="nav-link px-3 text-light opacity-75 opacity-100-hover" 
+                           th:href="${item.page != null ? '/p/' + item.page.slug : (item.url != null and !#strings.isEmpty(item.url) ? item.url : 'javascript:void(0);')}" 
+                           th:target="${item.page != null or (item.url != null and !#strings.isEmpty(item.url)) ? '_blank' : '_self'}"
+                           rel="noopener noreferrer"
+                           th:text="${item.label}">
+                           Menu Item
+                        </a>
 
+                        <!-- VOCE DROPDOWN -->
+                        <a th:if="${item.children != null and !item.children.isEmpty()}" 
+                           class="nav-link dropdown-toggle px-3 text-light opacity-75 opacity-100-hover" 
+                           href="javascript:void(0);" 
+                           role="button" 
+                           data-bs-toggle="dropdown" 
+                           aria-expanded="false" 
+                           th:text="${item.label}">
+                           Dropdown
+                        </a>
+                        
+                        <!-- SOTTO-VOCI DROPDOWN -->
+                        <ul th:if="${item.children != null and !item.children.isEmpty()}" class="dropdown-menu dropdown-menu-dark bg-dark border-secondary p-2">
+                            <li th:each="child : ${item.children}">
+                                <a class="dropdown-item" 
+                                   th:href="${child.page != null ? '/p/' + child.page.slug : (child.url != null and !#strings.isEmpty(child.url) ? child.url : 'javascript:void(0);')}" 
+                                   th:target="${child.page != null or (child.url != null and !#strings.isEmpty(child.url)) ? '_blank' : '_self'}"
+                                   rel="noopener noreferrer"
+                                   th:text="${child.label}">
+                                   Sub Item
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
 
-                <a href="/login"
-                   class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
-
-
-                    <i class="bi bi-shield-lock-fill me-1"></i>
-
-
-                    Area Admin
-
-
-                </a>
-
+                <div class="ms-auto">
+                    <a href="/login" class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
+                        <i class="bi bi-shield-lock-fill me-1"></i> Area Admin
+                    </a>
+                </div>
 
             </div>
 
-
         </div>
-
 
     </header>
 
@@ -810,10 +895,6 @@
                             : 'width: 100%;'">
 
 
-                <!-- =================================================
-                     CONTENUTO INTRODUTTIVO
-                     ================================================= -->
-
                 <div th:if="${block.contentHtml != null
                              and !block.contentHtml.empty}"
 
@@ -822,10 +903,6 @@
                      th:utext="${block.contentHtml}">
                 </div>
 
-
-                <!-- =================================================
-                     CARDS
-                     ================================================= -->
 
                 <div class="row g-4 justify-content-center align-items-stretch">
 
@@ -837,10 +914,6 @@
 
                         <div class="card card-custom w-100 d-flex flex-column overflow-hidden">
 
-
-                            <!-- =========================================
-                                 IMMAGINE CARD
-                                 ========================================= -->
 
                             <div th:if="${item.imageUrl != null
                                          and !item.imageUrl.empty}"
@@ -863,14 +936,8 @@
                             </div>
 
 
-                            <!-- =========================================
-                                 CONTENUTO CARD
-                                 ========================================= -->
-
                             <div class="card-body p-4 d-flex flex-column">
 
-
-                                <!-- TITOLO -->
 
                                 <h4 class="card-title fw-bold mb-2"
                                     th:text="${item.title}">
@@ -879,8 +946,6 @@
 
                                 </h4>
 
-
-                                <!-- SOTTOTITOLO -->
 
                                 <h6 th:if="${item.subtitle != null}"
 
@@ -893,24 +958,16 @@
                                 </h6>
 
 
-                                <!-- DESCRIZIONE -->
-
                                 <div class="card-text flex-grow-1"
                                      th:utext="${item.contentHtml}">
                                 </div>
 
-
-                                <!-- =========================================
-                                     PULSANTE CARD
-                                     ========================================= -->
 
                                 <div th:if="${item.buttonText != null
                                              and !item.buttonText.trim().isEmpty()}"
 
                                      class="mt-4 pt-2">
 
-
-                                    <!-- CON LINK -->
 
                                     <a th:if="${item.buttonUrl != null
                                                and !item.buttonUrl.trim().isEmpty()}"
@@ -936,8 +993,6 @@
 
                                     </a>
 
-
-                                    <!-- SENZA LINK -->
 
                                     <span th:unless="${item.buttonUrl != null
                                                       and !item.buttonUrl.trim().isEmpty()}"
@@ -994,10 +1049,6 @@
                             : 'width: 100%;'">
 
 
-                <!-- =================================================
-                     SLIDE
-                     ================================================= -->
-
                 <div class="carousel-inner">
 
 
@@ -1009,10 +1060,6 @@
                                        : ''}">
 
 
-                        <!-- =============================================
-                             IMMAGINE SLIDE
-                             ============================================= -->
-
                         <img th:src="${item.imageUrl != null
                                       and !item.imageUrl.empty
                                       ? item.imageUrl
@@ -1023,17 +1070,9 @@
                              th:alt="${item.title}">
 
 
-                        <!-- =============================================
-                             CAPTION
-                             ============================================= -->
-
                         <div class="carousel-caption carousel-caption-custom
                                     text-start mx-auto">
 
-
-                            <!-- =========================================
-                                 TITOLO
-                                 ========================================= -->
 
                             <h2 class="fw-extrabold text-white mb-2"
                                 th:text="${item.title}">
@@ -1042,10 +1081,6 @@
 
                             </h2>
 
-
-                            <!-- =========================================
-                                 DESCRIZIONE
-                                 ========================================= -->
 
                             <div th:if="${item.contentHtml != null
                                          and !item.contentHtml.trim().isEmpty()}"
@@ -1057,17 +1092,9 @@
                             </div>
 
 
-                            <!-- =========================================
-                                 PULSANTE CAROSELLO
-                                 ========================================= -->
-
                             <div th:if="${item.buttonText != null
                                          and !item.buttonText.trim().isEmpty()}">
 
-
-                                <!-- =====================================
-                                     CON LINK
-                                     ===================================== -->
 
                                 <a th:if="${item.buttonUrl != null
                                            and !item.buttonUrl.trim().isEmpty()}"
@@ -1093,10 +1120,6 @@
 
                                 </a>
 
-
-                                <!-- =====================================
-                                     SENZA LINK
-                                     ===================================== -->
 
                                 <span th:unless="${item.buttonUrl != null
                                                   and !item.buttonUrl.trim().isEmpty()}"
@@ -1129,10 +1152,6 @@
                 </div>
 
 
-                <!-- =================================================
-                     PRECEDENTE
-                     ================================================= -->
-
                 <button class="carousel-control-prev"
 
                         type="button"
@@ -1161,10 +1180,6 @@
 
                 </button>
 
-
-                <!-- =================================================
-                     SUCCESSIVO
-                     ================================================= -->
 
                 <button class="carousel-control-next"
 

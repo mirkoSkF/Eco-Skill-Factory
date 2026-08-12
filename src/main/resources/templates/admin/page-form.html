@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Gestione Pagina</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-body p-4">
+
+            <h2
+                class="mb-4"
+                th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina'}">
+
+                Nuova Pagina
+
+            </h2>
+
+
+            <form
+                th:action="@{/admin/pages/save}"
+                th:object="${page}"
+                method="post">
+
+
+                <!-- ID -->
+
+                <input
+                    type="hidden"
+                    th:field="*{id}">
+
+
+                <!-- TITOLO -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+
+                        Titolo
+
+                    </label>
+
+                    <input
+                        type="text"
+                        th:field="*{title}"
+                        class="form-control"
+                        placeholder="es. Chi Siamo"
+                        required>
+
+                </div>
+
+
+                <!-- SLUG -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+
+                        Slug URL
+
+                    </label>
+
+                    <input
+                        type="text"
+                        th:field="*{slug}"
+                        class="form-control"
+                        placeholder="es. chi-siamo"
+                        required>
+
+                    <div class="form-text">
+
+                        La pagina sarà disponibile all'indirizzo:
+
+                        <strong>/p/chi-siamo</strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTENUTO -->
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-bold">
+
+                        Contenuto HTML
+
+                    </label>
+
+                    <textarea
+                        th:field="*{contentHtml}"
+                        class="form-control"
+                        rows="12"
+                        placeholder="Inserisci il contenuto della pagina...">
+                    </textarea>
+
+                </div>
+
+
+                <!-- BOTTONI -->
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Salva Pagina
+
+                </button>
+
+
+                <a
+                    th:href="@{/admin/dashboard}"
+                    class="btn btn-secondary">
+
+                    Annulla
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

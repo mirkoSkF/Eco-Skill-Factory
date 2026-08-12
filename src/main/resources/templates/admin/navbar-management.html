@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Navbar - Eco Skill Factory</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold" href="#">Eco Skill Factory - CMS</a>
+        <div class="navbar-nav me-auto ms-3">
+            <a class="nav-link" th:href="@{/admin/dashboard}">Righe Home Page</a>
+            <a class="nav-link active" th:href="@{/admin/navbar}">Gestione Navbar</a>
+        </div>
+        <div class="d-flex">
+            <a href="/" target="_blank" class="btn btn-outline-light btn-sm me-2">Vedi Sito <i class="bi bi-box-arrow-up-right"></i></a>
+            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-2">
+    <h2 class="mb-4">Gestione Voci di Navigazione</h2>
+
+    <div class="row g-4">
+        <!-- FORM CREAZIONE/MODIFICA -->
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">Aggiungi / Modifica Voce</div>
+                <div class="card-body">
+                    <form th:action="@{/admin/navbar/save}" th:object="${newItem}" method="post">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Etichetta Menu (Label)</label>
+                            <input type="text" class="form-control" th:field="*{label}" placeholder="es. Chi Siamo" required />
+                        </div>
+
+                        <!-- SELETTORE TIPO LINK -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tipo di Link</label>
+                            <select id="linkTypeSelect" class="form-select" onchange="toggleLinkInput()">
+                                <option value="PAGE" th:selected="${newItem.page != null}">Pagina CMS</option>
+                                <option value="URL" th:selected="${newItem.url != null and !#strings.isEmpty(newItem.url)}">URL Personalizzato</option>
+                            </select>
+                        </div>
+
+                        <!-- SELEZIONE PAGINA CMS -->
+                        <div class="mb-3" id="pageSelectGroup">
+                            <label class="form-label fw-bold">Pagina Collegata</label>
+                            <select id="pageSelect" class="form-select" th:field="*{page}">
+                                <option value="">-- Nessuna (Menu Categoria / Dropdown) --</option>
+                                <option th:each="p : ${pages}" th:value="${p.id}" th:text="${p.title}"></option>
+                            </select>
+                        </div>
+
+                        <!-- INPUT URL PERSONALIZZATO -->
+                        <div class="mb-3 d-none" id="urlInputGroup">
+                            <label class="form-label fw-bold">URL Personalizzato</label>
+                            <input type="text" id="urlInput" class="form-control" th:field="*{url}" placeholder="https://google.com o /contatti" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Menu Padre (Per Dropdown)</label>
+                            <select class="form-select" th:field="*{parent}">
+                                <option value="">-- Nessuno (Voce Principale) --</option>
+                                <option th:each="parentItem : ${navItems}" th:value="${parentItem.id}" th:text="${parentItem.label}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ordine di Visualizzazione</label>
+                            <input type="number" class="form-control" th:field="*{itemOrder}" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100"><i class="bi bi-save"></i> Salva Voce</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABELLA VOCE E SOTTOVOCI -->
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Ordine</th>
+                                <th>Etichetta</th>
+                                <th>Tipo / Destinazione</th>
+                                <th class="text-end">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <th:block th:each="item : ${navItems}">
+                                <tr>
+                                    <td class="fw-bold text-center" th:text="${item.itemOrder}">1</td>
+                                    <td class="fw-semibold" th:text="${item.label}">Home</td>
+                                    <td>
+                                        <span th:if="${item.dropdown}" class="badge bg-warning text-dark">Dropdown</span>
+                                        <a th:if="${item.page != null}" 
+                                           th:href="@{'/p/' + ${item.page.slug}}" 
+                                           target="_blank" 
+                                           class="badge bg-info text-dark text-decoration-none">
+                                            <i class="bi bi-box-arrow-up-right me-1"></i>/p/[[${item.page.slug}]]
+                                        </a>
+                                        <a th:if="${item.url != null and !#strings.isEmpty(item.url)}" 
+                                           th:href="${item.url}" 
+                                           target="_blank" 
+                                           class="badge bg-secondary text-decoration-none">
+                                            <i class="bi bi-box-arrow-up-right me-1"></i>[[${item.url}]]
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <a th:href="@{/admin/navbar/delete/{id}(id=${item.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Eliminare questa voce e le sue sottovoci?');">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- SOTTOVOCI DROPDOWN -->
+                                <tr th:each="child : ${item.children}" class="table-light">
+                                    <td class="text-center text-muted ps-4">└ <span th:text="${child.itemOrder}">1</span></td>
+                                    <td class="ps-4 text-muted" th:text="${child.label}">Sottovoce</td>
+                                    <td>
+                                        <a th:if="${child.page != null}" 
+                                           th:href="@{'/p/' + ${child.page.slug}}" 
+                                           target="_blank" 
+                                           class="badge bg-info text-dark text-decoration-none">
+                                            <i class="bi bi-box-arrow-up-right me-1"></i>/p/[[${child.page.slug}]]
+                                        </a>
+                                        <a th:if="${child.url != null and !#strings.isEmpty(child.url)}" 
+                                           th:href="${child.url}" 
+                                           target="_blank" 
+                                           class="badge bg-secondary text-decoration-none">
+                                            <i class="bi bi-box-arrow-up-right me-1"></i>[[${child.url}]]
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <a th:href="@{/admin/navbar/delete/{id}(id=${child.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Eliminare questa sottovoce?');">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleLinkInput() {
+    const linkType = document.getElementById('linkTypeSelect').value;
+    const pageGroup = document.getElementById('pageSelectGroup');
+    const urlGroup = document.getElementById('urlInputGroup');
+    const pageSelect = document.getElementById('pageSelect');
+    const urlInput = document.getElementById('urlInput');
+
+    if (linkType === 'PAGE') {
+        pageGroup.classList.remove('d-none');
+        urlGroup.classList.add('d-none');
+        urlInput.value = '';
+    } else {
+        urlGroup.classList.remove('d-none');
+        pageGroup.classList.add('d-none');
+        pageSelect.value = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', toggleLinkInput);
+</script>
+
+</body>
+</html>

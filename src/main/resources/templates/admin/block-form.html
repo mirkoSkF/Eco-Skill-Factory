@@ -631,7 +631,7 @@
 
          Quando la riga ha un ID:
          - mostriamo anteprime
-         - mostriamo form aggiunta
+         - mostriamo form aggiunta / modifica
          ======================================================== -->
 
     <div id="itemsSection"
@@ -961,7 +961,21 @@
                                  ============================== -->
 
                             <div class="card-footer bg-transparent
-                                        d-flex justify-content-end">
+                                        d-flex justify-content-end gap-1">
+
+                                <a th:href="@{/admin/block/{bId}/item/edit/{iId}
+                                              (bId=${block.id},
+                                               iId=${item.id})}"
+
+                                   class="btn btn-sm btn-outline-primary">
+
+
+                                    <i class="bi bi-pencil"></i>
+
+                                    Modifica
+
+
+                                </a>
 
 
                                 <a th:href="@{/admin/block/{bId}/item/delete/{iId}
@@ -1044,7 +1058,7 @@
 
 
             <!-- =================================================
-                 FORM AGGIUNTA CARD / SLIDE
+                 FORM AGGIUNTA / MODIFICA CARD / SLIDE
                  ================================================= -->
 
             <div class="border-top pt-4 mt-4">
@@ -1056,15 +1070,17 @@
                     <div class="me-2">
 
 
-                        <i class="bi bi-plus-circle-fill
-                                  text-success fs-4"></i>
+                        <i th:class="${editingItem != null} 
+                                   ? 'bi bi-pencil-square text-warning fs-4' 
+                                   : 'bi bi-plus-circle-fill text-success fs-4'"></i>
 
 
                     </div>
 
 
                     <h5 id="addItemTitle"
-                        class="mb-0">
+                        class="mb-0"
+                        th:text="${editingItem != null ? 'Modifica Elemento' : 'Aggiungi Card'}">
 
                         Aggiungi Card
 
@@ -1077,7 +1093,9 @@
                 <div class="card bg-light border-0 p-3">
 
 
-                    <form th:action="@{/admin/block/{id}/item/add(id=${block.id})}"
+                    <form th:action="${editingItem != null} 
+                                     ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} 
+                                     : @{/admin/block/{id}/item/add(id=${block.id})}"
 
                           method="post"
 
@@ -1112,6 +1130,8 @@
                                    class="form-control"
 
                                    placeholder="Titolo Card"
+
+                                   th:value="${editingItem != null ? editingItem.title : ''}"
 
                                    required />
 
@@ -1157,6 +1177,20 @@
 
                             </div>
 
+                            <div th:if="${editingItem != null and editingItem.imageUrl != null and !editingItem.imageUrl.empty}"
+                                 class="mt-2">
+
+                                <small class="text-muted d-block mb-1">
+                                    Immagine attuale:
+                                </small>
+
+                                <img th:src="${editingItem.imageUrl}"
+                                     alt="Anteprima"
+                                     class="img-thumbnail"
+                                     style="max-height: 80px; object-fit: contain;" />
+
+                            </div>
+
 
                         </div>
 
@@ -1179,7 +1213,9 @@
 
                                       class="wysiwyg-editor"
 
-                                      placeholder="Testo descrittivo...">
+                                      placeholder="Testo descrittivo..."
+
+                                      th:text="${editingItem != null ? editingItem.contentHtml : ''}">
 
                             </textarea>
 
@@ -1210,7 +1246,9 @@
 
                                    class="form-control"
 
-                                   placeholder="es. Scopri di più" />
+                                   placeholder="es. Scopri di più"
+
+                                   th:value="${editingItem != null ? editingItem.buttonText : ''}" />
 
 
                         </div>
@@ -1239,28 +1277,40 @@
 
                                    class="form-control"
 
-                                   placeholder="https://..." />
+                                   placeholder="https://..."
+
+                                   th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
 
 
                         </div>
 
 
                         <!-- =========================================
-                             PULSANTE AGGIUNTA
+                             PULSANTE AGGIUNTA / MODIFICA
                              ========================================= -->
 
-                        <div class="col-12 text-end">
+                        <div class="col-12 text-end d-flex justify-content-end gap-2">
+
+
+                            <a th:if="${editingItem != null}"
+                               th:href="@{/admin/block/edit/{id}(id=${block.id})}"
+                               class="btn btn-secondary btn-lg">
+
+                                Annulla Modifica
+
+                            </a>
 
 
                             <button type="submit"
 
-                                    class="btn btn-success btn-lg">
+                                    th:class="${editingItem != null} ? 'btn btn-warning btn-lg' : 'btn btn-success btn-lg'">
 
 
-                                <i class="bi bi-plus-lg"></i>
+                                <i th:class="${editingItem != null} ? 'bi bi-check-lg' : 'bi bi-plus-lg'"></i>
 
 
-                                <span id="addItemButtonText">
+                                <span id="addItemButtonText"
+                                      th:text="${editingItem != null ? 'Salva Modifiche Elemento' : 'Aggiungi Card'}">
 
                                     Aggiungi Card
 
@@ -1497,7 +1547,7 @@ document.addEventListener(
                 }
 
 
-                if (addItemTitle) {
+                if (addItemTitle && addItemTitle.textContent.trim() === "Aggiungi Card") {
 
                     addItemTitle.textContent =
                         "Aggiungi Card";
@@ -1521,7 +1571,7 @@ document.addEventListener(
                 }
 
 
-                if (addItemButtonText) {
+                if (addItemButtonText && addItemButtonText.textContent.trim() === "Aggiungi Card") {
 
                     addItemButtonText.textContent =
                         "Aggiungi Card";
@@ -1570,7 +1620,7 @@ document.addEventListener(
                 }
 
 
-                if (addItemTitle) {
+                if (addItemTitle && addItemTitle.textContent.trim() === "Aggiungi Card") {
 
                     addItemTitle.textContent =
                         "Aggiungi Slide";
@@ -1594,7 +1644,7 @@ document.addEventListener(
                 }
 
 
-                if (addItemButtonText) {
+                if (addItemButtonText && addItemButtonText.textContent.trim() === "Aggiungi Card") {
 
                     addItemButtonText.textContent =
                         "Aggiungi Slide";

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 
@@ -781,14 +782,21 @@
                 <span class="brand-accent fw-bold">Skill Factory</span>
             </a>
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <button class="navbar-toggler border-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent">
+
                 <span class="navbar-toggler-icon"></span>
+
             </button>
 
             <div class="collapse navbar-collapse" id="navbarContent">
                 
                 <!-- MENU DINAMICO DA DATABASE -->
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0" th:if="${navItems != null}">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0"
+                    th:if="${navItems != null}">
+
                     <li th:each="item : ${navItems}" 
                         th:class="${(item.children != null and !item.children.isEmpty()) ? 'nav-item dropdown' : 'nav-item'}">
                         
@@ -799,7 +807,9 @@
                            th:target="${item.page != null or (item.url != null and !#strings.isEmpty(item.url)) ? '_blank' : '_self'}"
                            rel="noopener noreferrer"
                            th:text="${item.label}">
+
                            Menu Item
+
                         </a>
 
                         <!-- VOCE DROPDOWN -->
@@ -810,28 +820,63 @@
                            data-bs-toggle="dropdown" 
                            aria-expanded="false" 
                            th:text="${item.label}">
+
                            Dropdown
+
                         </a>
                         
                         <!-- SOTTO-VOCI DROPDOWN -->
-                        <ul th:if="${item.children != null and !item.children.isEmpty()}" class="dropdown-menu dropdown-menu-dark bg-dark border-secondary p-2">
+                        <ul th:if="${item.children != null and !item.children.isEmpty()}"
+                            class="dropdown-menu dropdown-menu-dark bg-dark border-secondary p-2">
+
                             <li th:each="child : ${item.children}">
+
                                 <a class="dropdown-item" 
                                    th:href="${child.page != null ? '/p/' + child.page.slug : (child.url != null and !#strings.isEmpty(child.url) ? child.url : 'javascript:void(0);')}" 
                                    th:target="${child.page != null or (child.url != null and !#strings.isEmpty(child.url)) ? '_blank' : '_self'}"
                                    rel="noopener noreferrer"
                                    th:text="${child.label}">
+
                                    Sub Item
+
                                 </a>
+
                             </li>
+
                         </ul>
+
                     </li>
+
                 </ul>
 
+
+                <!-- ========================================================
+                     PULSANTE AUTENTICAZIONE / DASHBOARD
+                     ======================================================== -->
+
                 <div class="ms-auto">
-                    <a href="/login" class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
-                        <i class="bi bi-shield-lock-fill me-1"></i> Area Admin
+
+                    <!-- UTENTE NON AUTENTICATO -->
+                    <a sec:authorize="!isAuthenticated()"
+                       href="/login"
+                       class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
+
+                        <i class="bi bi-shield-lock-fill me-1"></i>
+                        Area Admin
+
                     </a>
+
+
+                    <!-- UTENTE AUTENTICATO -->
+                    <a sec:authorize="isAuthenticated()"
+                       href="/admin/dashboard"
+                       class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
+
+                        <i class="bi bi-speedometer2 me-1"></i>
+                        Dashboard
+
+                    </a>
+
                 </div>
 
             </div>

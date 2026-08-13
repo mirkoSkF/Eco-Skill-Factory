@@ -133,11 +133,26 @@ public class AdminController {
     @PostMapping("/block/save")
     public String saveBlock(
             @ModelAttribute("block") PageBlock formBlock,
+
             @RequestParam(
                     value = "imageFile",
                     required = false
             )
             MultipartFile imageFile) {
+
+
+        // ========================================================
+        // IMPORTANTE:
+        //
+        // true  = stiamo creando una nuova riga
+        // false = stiamo modificando una riga esistente
+        //
+        // Questa informazione ci serve SOLO per decidere
+        // il redirect finale.
+        // ========================================================
+
+        boolean isNewBlock =
+                formBlock.getId() == null;
 
 
         PageBlock block;
@@ -156,7 +171,7 @@ public class AdminController {
                     .orElseThrow(() ->
                             new IllegalArgumentException(
                                     "ID Riga non valido: "
-                                    + formBlock.getId()
+                                            + formBlock.getId()
                             )
                     );
 
@@ -228,14 +243,17 @@ public class AdminController {
                 formBlock.getWidthPercent();
 
         if (width == null) {
+
             width = 100;
         }
 
         if (width < 10) {
+
             width = 10;
         }
 
         if (width > 100) {
+
             width = 100;
         }
 
@@ -265,14 +283,6 @@ public class AdminController {
         // ========================================================
         // CONTENUTI AUTOMATICI DEMO
         // ========================================================
-
-        /*
-         * Se contentHtml è vuoto, inserisce automaticamente
-         * il contenuto predefinito in base al tipo di blocco.
-         *
-         * Se invece contentHtml contiene già qualcosa,
-         * il contenuto NON viene sovrascritto.
-         */
 
         applyDefaultDemoContent(
                 block
@@ -308,8 +318,7 @@ public class AdminController {
             if (imageFile != null
                     && !imageFile.isEmpty()) {
 
-
-                // Cancella eventuale immagine precedente
+                // Cancella immagine precedente
 
                 deleteUploadedFile(
                         block.getImageUrl()
@@ -334,9 +343,6 @@ public class AdminController {
 
         } else {
 
-            // Gli altri blocchi non utilizzano
-            // l'immagine principale.
-
             block.setImageUrl(
                     null
             );
@@ -347,14 +353,41 @@ public class AdminController {
         // SALVATAGGIO
         // ========================================================
 
-        blockRepository.save(
-                block
-        );
+        PageBlock savedBlock =
+                blockRepository.save(
+                        block
+                );
 
 
         // ========================================================
-        // DOPO IL SALVATAGGIO:
-        // TORNA ALLA DASHBOARD
+        // REDIRECT DOPO IL SALVATAGGIO
+        // ========================================================
+        //
+        // QUI C'È LA LOGICA IMPORTANTE.
+        //
+        // SOLO se:
+        //
+        // 1. è una NUOVA riga
+        // 2. il tipo è GRIGLIA CARD oppure
+        //    CAROSELLO DYNAMIC
+        //
+        // allora apriamo direttamente la modifica.
+        //
+        // Tutto il resto torna alla dashboard.
+        // ========================================================
+
+        if (isNewBlock
+                && shouldOpenEditorAfterCreate(
+                        savedBlock.getBlockType()
+                )) {
+
+            return "redirect:/admin/block/edit/"
+                    + savedBlock.getId();
+        }
+
+
+        // ========================================================
+        // TUTTI GLI ALTRI CASI
         // ========================================================
 
         return "redirect:/admin/dashboard";
@@ -362,7 +395,115 @@ public class AdminController {
 
 
     // ============================================================
-    // CONTENUTI AUTOMATICI JUMBO
+    // CONTROLLA SE IL BLOCCO DEVE APRIRE DIRETTAMENTE L'EDITOR
+    // ============================================================
+    //
+    // Questa funzione riconosce:
+    //
+    // - Griglia Card
+    // - Carosello Dynamic
+    //
+    // Utilizziamo sia il nome dell'enum sia la label.
+    //
+    // In questo modo funziona anche se nel tuo BlockType
+    // i nomi tecnici sono ad esempio:
+    //
+    // CARD_GRID
+    // GRID_CARD
+    // CAROUSEL_DYNAMIC
+    // CAROSELLO_DYNAMIC
+    //
+    // ============================================================
+
+    private boolean shouldOpenEditorAfterCreate(
+            BlockType blockType) {
+
+
+        if (blockType == null) {
+
+            return false;
+        }
+
+
+        // ========================================================
+        // NOME TECNICO ENUM
+        // ========================================================
+
+        String enumName =
+                blockType.name()
+                        .toUpperCase();
+
+
+        // ========================================================
+        // LABEL VISUALIZZATA NEL CMS
+        // ========================================================
+
+        String label = "";
+
+        try {
+
+            if (blockType.getLabel() != null) {
+
+                label =
+                        blockType.getLabel()
+                                .toUpperCase();
+            }
+
+        } catch (Exception ignored) {
+
+            // Se getLabel non fosse disponibile
+            // usiamo solamente il nome dell'enum.
+        }
+
+
+        // ========================================================
+        // GRIGLIA CARD
+        // ========================================================
+
+        boolean isCardGrid =
+                (
+                        enumName.contains("GRID")
+                                && enumName.contains("CARD")
+                )
+                ||
+                (
+                        label.contains("GRIGLIA")
+                                && label.contains("CARD")
+                );
+
+
+        // ========================================================
+        // CAROSELLO DYNAMIC
+        // ========================================================
+
+        boolean isDynamicCarousel =
+                (
+                        (
+                                enumName.contains("CAROUSEL")
+                                        || enumName.contains("CAROSELLO")
+                        )
+                                &&
+                                enumName.contains("DYNAMIC")
+                )
+                ||
+                (
+                        (
+                                label.contains("CAROUSEL")
+                                        || label.contains("CAROSELLO")
+                                        || label.contains("CAROSELLO")
+                        )
+                                &&
+                                label.contains("DYNAMIC")
+                );
+
+
+        return isCardGrid
+                || isDynamicCarousel;
+    }
+
+
+    // ============================================================
+    // CONTENUTI AUTOMATICI
     // ============================================================
 
     private void applyDefaultDemoContent(
@@ -370,13 +511,8 @@ public class AdminController {
 
 
         /*
-         * IMPORTANTE:
-         *
-         * Il contenuto automatico viene inserito solamente
-         * quando contentHtml è vuoto.
-         *
-         * In questo modo, quando modifichi manualmente
-         * il contenuto dal CMS, non viene sovrascritto.
+         * Se contentHtml contiene già qualcosa,
+         * non sovrascriverlo.
          */
 
         if (block.getContentHtml() != null
@@ -395,61 +531,36 @@ public class AdminController {
         if (block.getBlockType()
                 == BlockType.JUMBO_DEMO_1) {
 
-
             block.setContentHtml(
 
                     "<h2>Chi Siamo</h2>" +
 
                     "<p><strong>Skill Factory</strong> è la " +
-
                     "<strong>Learning Company</strong> specializzata in " +
-
                     "<strong>servizi e prodotti per la formazione</strong>. " +
-
                     "Nasce nel <strong>2011</strong>, con l'obiettivo di " +
-
                     "<strong>valorizzare</strong> le risorse umane attraverso " +
-
                     "la riduzione dello <strong>skill shortage</strong>, " +
-
                     "la carenza di competenze che si crea nel " +
-
                     "<strong>mercato del lavoro</strong> a causa dei continui " +
-
                     "cambiamenti dovuti alla " +
-
                     "<strong>trasformazione digitale</strong>." +
-
                     "</p>" +
 
                     "<p>La nostra <strong>Mission</strong> è quella di ridurre " +
-
                     "il <strong>mismatch</strong> tra " +
-
                     "<strong>domanda e offerta</strong> di lavoro. " +
-
                     "Progettiamo ed eroghiamo " +
-
                     "<strong>corsi di formazione</strong> per creare le " +
-
                     "<strong>figure professionali</strong> più richieste dalle " +
-
                     "aziende, individuate attraverso l'" +
-
                     "<strong>analisi continua dei fabbisogni formativi</strong> " +
-
                     "del <strong>mercato del lavoro</strong>. " +
-
                     "Ogni anno eroghiamo oltre " +
-
                     "<strong>5000 ore di formazione</strong> e " +
-
                     "<strong>7000 ore di laboratorio</strong>, sia in modalità " +
-
                     "<strong>sincrona</strong>, sia " +
-
                     "<strong>asincrona</strong>." +
-
                     "</p>"
             );
         }
@@ -462,57 +573,35 @@ public class AdminController {
         else if (block.getBlockType()
                 == BlockType.JUMBO_DEMO_2) {
 
-
             block.setContentHtml(
 
                     "<h2>La Sede</h2>" +
 
                     "<p>Siamo a <strong>Napoli</strong>, presso il " +
-
                     "<strong>Centro Direzionale</strong>, all'isola " +
-
                     "<strong>E2</strong>, al primo piano della " +
-
                     "<strong>scala A</strong>. La nostra sede si trova a " +
-
                     "pochi passi dalla stazione di " +
-
                     "<strong>Piazza Garibaldi</strong> ed è facilmente " +
-
                     "raggiungibile con tutti i " +
-
                     "<strong>mezzi pubblici</strong>. Inoltre, per chi è " +
-
                     "automunito, in zona ci sono " +
-
                     "<strong>ampi parcheggi</strong>." +
-
                     "</p>" +
 
                     "<p>La struttura, di oltre " +
-
                     "<strong>300 metri quadrati</strong>, dispone di " +
-
                     "<strong>tre aule attrezzate</strong> con computer e " +
-
                     "collegamento ad internet, " +
-
                     "<strong>un laboratorio</strong>, " +
-
                     "<strong>due aree amministrative</strong> e un'ampia " +
-
                     "<strong>sala ricreativa</strong>." +
-
                     "</p>" +
 
                     "<p>L'ambiente è <strong>accogliente</strong>, con " +
-
                     "<strong>aria condizionata</strong>, dispone di " +
-
                     "<strong>servizi</strong> per i diversamente abili e " +
-
                     "non sono presenti barriere architettoniche." +
-
                     "</p>"
             );
         }
@@ -525,7 +614,6 @@ public class AdminController {
         else if (block.getBlockType()
                 == BlockType.JUMBO_2_COL) {
 
-
             block.setContentHtml(
 
                     "<div class='row g-4'>" +
@@ -535,55 +623,34 @@ public class AdminController {
                     "<h2>L' Academy</h2>" +
 
                     "<p>Attraverso la nostra " +
-
                     "<strong>Academy delle Professioni Digitali</strong> " +
-
                     "eroghiamo <strong>percorsi di formazione " +
-
                     "specialistici</strong> per formare i profili tecnici " +
-
                     "più richiesti dalle <strong>aziende</strong> che " +
-
                     "operano nel <strong>mondo digitale</strong>. " +
-
                     "In 10 anni di attività abbiamo " +
-
                     "<strong>formato e inserito</strong> nel " +
-
                     "<strong>mercato</strong> del lavoro oltre " +
-
                     "<strong>3000 giovani</strong>." +
-
                     "</p>" +
 
                     "<p>L'<strong>Academy Skill Factory</strong> nasce " +
-
                     "con un <strong>duplice obiettivo</strong>:</p>" +
 
                     "<p>1. <strong>formare</strong> le nuove " +
-
                     "<strong>figure professionali</strong> del mondo digital;</p>" +
 
                     "<p>2. <strong>supportare l'Upskilling e il " +
-
                     "Reskilling</strong> dei professionisti del settore.</p>" +
 
                     "<p>Offriamo una <strong>formazione di qualità</strong>, " +
-
                     "mettendo i <strong>nostri studenti</strong> al centro " +
-
                     "del processo di <strong>apprendimento</strong>, " +
-
                     "favorendo lo sviluppo delle " +
-
                     "<strong>competenze</strong> necessarie per la loro " +
-
                     "<strong>crescita professionale</strong>, attraverso " +
-
                     "l'acquisizione delle <strong>soft skills</strong> e " +
-
                     "delle <strong>hard skills</strong> richieste." +
-
                     "</p>" +
 
                     "</div>" +
@@ -593,47 +660,34 @@ public class AdminController {
                     "<h2>L' Offerta Formativa</h2>" +
 
                     "<p>I nostri corsi di " +
-
                     "<strong>specializzazione</strong> possono essere " +
-
                     "seguiti in <strong>presenza</strong> o a " +
-
                     "<strong>distanza</strong>.</p>" +
 
                     "<p>Formiamo i " +
-
                     "<strong>professionisti</strong> dell'" +
-
                     "<strong>innovazione</strong> più richiesti dalle " +
-
                     "<strong>aziende</strong> del " +
-
                     "<strong>mondo digitale</strong>:</p>" +
 
                     "<ul class='list-unstyled fw-bold mt-4'>" +
 
                     "<li class='border-bottom border-secondary " +
-
                     "border-opacity-25 py-2'>SAP CONSULTANT</li>" +
 
                     "<li class='border-bottom border-secondary " +
-
                     "border-opacity-25 py-2'>SALESFORCE CONSULTANT</li>" +
 
                     "<li class='border-bottom border-secondary " +
-
                     "border-opacity-25 py-2'>BIG DATA ANALYST</li>" +
 
                     "<li class='border-bottom border-secondary " +
-
                     "border-opacity-25 py-2'>CYBER SECURITY EXPERT</li>" +
 
                     "<li class='border-bottom border-secondary " +
-
                     "border-opacity-25 py-2'>WEB / MOBILE DEVELOPER</li>" +
 
                     "<li class='border-bottom border-secondary " +
-
                     "border-opacity-25 py-2'>UI / UX DESIGNER</li>" +
 
                     "</ul>" +
@@ -673,13 +727,10 @@ public class AdminController {
 
             String cleanFileName =
                     originalFilename != null
-
-                            ? originalFilename
-                                    .replaceAll(
-                                            "\\s+",
-                                            "_"
-                                    )
-
+                            ? originalFilename.replaceAll(
+                                    "\\s+",
+                                    "_"
+                            )
                             : "file";
 
 
@@ -702,8 +753,7 @@ public class AdminController {
             );
 
 
-            return "/uploads/"
-                    + fileName;
+            return "/uploads/" + fileName;
 
 
         } catch (IOException e) {
@@ -769,11 +819,9 @@ public class AdminController {
     public String deleteBlock(
             @PathVariable Long id) {
 
-
         blockRepository.deleteById(
                 id
         );
-
 
         return "redirect:/admin/dashboard";
     }
@@ -822,7 +870,7 @@ public class AdminController {
                         .orElseThrow(() ->
                                 new IllegalArgumentException(
                                         "ID Riga non valido: "
-                                        + id
+                                                + id
                                 )
                         );
 
@@ -863,7 +911,6 @@ public class AdminController {
         if (imageFile != null
                 && !imageFile.isEmpty()) {
 
-
             String imageUrl =
                     saveUploadedFile(
                             imageFile
@@ -879,13 +926,18 @@ public class AdminController {
         }
 
 
+        // ========================================================
+        // SALVA CARD / SLIDE
+        // ========================================================
+
         itemRepository.save(
                 item
         );
 
 
         // ========================================================
-        // TORNA ALLA MODIFICA DEL BLOCCO
+        // DOPO AVER AGGIUNTO CARD / SLIDE
+        // RIMANI SEMPRE NELLA MODIFICA DELLA RIGA
         // ========================================================
 
         return "redirect:/admin/block/edit/"
@@ -894,7 +946,7 @@ public class AdminController {
 
 
     // ============================================================
-    // FORM EDIT CARD / SLIDE
+    // FORM MODIFICA CARD / SLIDE
     // ============================================================
 
     @GetMapping(
@@ -916,7 +968,7 @@ public class AdminController {
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "ID Riga non valido: "
-                                + blockId
+                                        + blockId
                         )
                 );
 
@@ -928,7 +980,7 @@ public class AdminController {
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "ID Elemento non valido: "
-                                + itemId
+                                        + itemId
                         )
                 );
 
@@ -1009,7 +1061,7 @@ public class AdminController {
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "ID Elemento non valido: "
-                                + itemId
+                                        + itemId
                         )
                 );
 
@@ -1042,14 +1094,10 @@ public class AdminController {
                 && !imageFile.isEmpty()) {
 
 
-            // Elimina immagine precedente
-
             deleteUploadedFile(
                     item.getImageUrl()
             );
 
-
-            // Salva nuova immagine
 
             String imageUrl =
                     saveUploadedFile(
@@ -1066,13 +1114,17 @@ public class AdminController {
         }
 
 
+        // ========================================================
+        // SALVA
+        // ========================================================
+
         itemRepository.save(
                 item
         );
 
 
         // ========================================================
-        // TORNA ALLA MODIFICA DEL BLOCCO
+        // RIMANI NELLA MODIFICA DELLA RIGA
         // ========================================================
 
         return "redirect:/admin/block/edit/"

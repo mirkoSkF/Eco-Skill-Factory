@@ -88,6 +88,29 @@
 
 
         /* =====================================================
+           SFONDO TECNOLOGICO
+           ===================================================== */
+
+        #tech-bg-canvas {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100vw;
+
+            height: 100vh;
+
+            z-index: -1;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =====================================================
            NAVBAR GLASS
            IDENTICA ALLA HOMEPAGE ORIGINALE
            ===================================================== */
@@ -643,6 +666,13 @@
 
 
 <!-- =========================================================
+     SFONDO ANIMATO
+     ========================================================= -->
+
+<canvas id="tech-bg-canvas"></canvas>
+
+
+<!-- =========================================================
      NAVBAR
      IDENTICA ALLA HOMEPAGE ORIGINALE
      ========================================================= -->
@@ -1057,6 +1087,511 @@
 
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- =========================================================
+     SFONDO ANIMATO
+     ========================================================= -->
+
+<script>
+
+    const canvas =
+        document.getElementById('tech-bg-canvas');
+
+    const ctx =
+        canvas.getContext('2d');
+
+
+    let width;
+
+    let height;
+
+
+    function resize() {
+
+        width =
+            canvas.width =
+            window.innerWidth;
+
+        height =
+            canvas.height =
+            window.innerHeight;
+
+    }
+
+
+    window.addEventListener(
+        'resize',
+        resize
+    );
+
+
+    resize();
+
+
+    /* ========================================================
+       CIRCUIT
+       ======================================================== */
+
+    class Circuit {
+
+
+        constructor() {
+
+            this.reset();
+
+        }
+
+
+        reset() {
+
+            this.x =
+                Math.random() * width;
+
+            this.y =
+                Math.random() * height;
+
+            this.length =
+                Math.floor(
+                    Math.random() * 8
+                ) + 4;
+
+            this.currentStep = 0;
+
+            this.dir =
+                Math.floor(
+                    Math.random() * 4
+                );
+
+            this.path = [
+                {
+                    x: this.x,
+                    y: this.y
+                }
+            ];
+
+            this.speed =
+                Math.random() * 1.5 + 0.5;
+
+            this.alpha =
+                Math.random() * 0.4 + 0.1;
+
+            this.size = 20;
+
+        }
+
+
+        update() {
+
+
+            if (
+                this.currentStep
+                <
+                this.length
+            ) {
+
+
+                let last =
+                    this.path[
+                        this.path.length - 1
+                    ];
+
+
+                let nx =
+                    last.x;
+
+                let ny =
+                    last.y;
+
+
+                if (
+                    Math.random()
+                    <
+                    0.3
+                ) {
+
+
+                    this.dir =
+                        (
+                            this.dir
+                            +
+                            (
+                                Math.random() < 0.5
+                                    ? 1
+                                    : 3
+                            )
+                        )
+                        %
+                        4;
+
+                }
+
+
+                switch (this.dir) {
+
+
+                    case 0:
+
+                        ny -= this.size;
+
+                        break;
+
+
+                    case 1:
+
+                        nx += this.size;
+
+                        break;
+
+
+                    case 2:
+
+                        ny += this.size;
+
+                        break;
+
+
+                    case 3:
+
+                        nx -= this.size;
+
+                        break;
+
+                }
+
+
+                this.path.push({
+
+                    x: nx,
+
+                    y: ny
+
+                });
+
+
+                this.currentStep++;
+
+
+            }
+
+            else {
+
+
+                this.alpha -= 0.005;
+
+
+                if (
+                    this.alpha <= 0
+                ) {
+
+                    this.reset();
+
+                }
+
+            }
+
+        }
+
+
+        draw() {
+
+
+            if (
+                this.path.length < 2
+            ) {
+
+                return;
+
+            }
+
+
+            ctx.beginPath();
+
+
+            ctx.moveTo(
+                this.path[0].x,
+                this.path[0].y
+            );
+
+
+            for (
+                let i = 1;
+                i < this.path.length;
+                i++
+            ) {
+
+
+                ctx.lineTo(
+                    this.path[i].x,
+                    this.path[i].y
+                );
+
+            }
+
+
+            ctx.strokeStyle =
+                `rgba(0, 220, 130, ${this.alpha})`;
+
+
+            ctx.lineWidth = 1.5;
+
+
+            ctx.stroke();
+
+
+            let last =
+                this.path[
+                    this.path.length - 1
+                ];
+
+
+            ctx.beginPath();
+
+
+            ctx.arc(
+                last.x,
+                last.y,
+                3,
+                0,
+                Math.PI * 2
+            );
+
+
+            ctx.fillStyle =
+                `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+
+
+            ctx.fill();
+
+        }
+
+    }
+
+
+    /* ========================================================
+       CODE TEXT
+       ======================================================== */
+
+    const codeSnippets = [
+
+
+        "class BlockManager {}",
+
+        "import spring.boot.*;",
+
+        "<div class='eco'>",
+
+        "SELECT * FROM blocks;",
+
+        "const init = () => {};",
+
+        "return new PageBlock();",
+
+        "01000101 01000011 01001111",
+
+        "public static void main()",
+
+        "async fetch('/api')",
+
+        "npm run build",
+
+        "docker-compose up -d",
+
+        "mvn clean install"
+
+    ];
+
+
+    class CodeText {
+
+
+        constructor() {
+
+            this.reset();
+
+        }
+
+
+        reset() {
+
+
+            this.x =
+                Math.random()
+                *
+                (width - 200);
+
+
+            this.y =
+                Math.random()
+                *
+                height;
+
+
+            this.text =
+                codeSnippets[
+                    Math.floor(
+                        Math.random()
+                        *
+                        codeSnippets.length
+                    )
+                ];
+
+
+            this.alpha = 0;
+
+
+            this.maxAlpha =
+                Math.random() * 0.3 + 0.1;
+
+
+            this.fadeIn = true;
+
+
+            this.speed =
+                Math.random() * 0.3 + 0.1;
+
+        }
+
+
+        update() {
+
+
+            this.y -=
+                this.speed;
+
+
+            if (
+                this.fadeIn
+            ) {
+
+
+                this.alpha +=
+                    0.008;
+
+
+                if (
+                    this.alpha >=
+                    this.maxAlpha
+                ) {
+
+                    this.fadeIn =
+                        false;
+
+                }
+
+            }
+
+            else {
+
+
+                this.alpha -=
+                    0.005;
+
+
+                if (
+                    this.alpha <= 0
+                ) {
+
+                    this.reset();
+
+                }
+
+            }
+
+        }
+
+
+        draw() {
+
+
+            ctx.font =
+                '12px "Fira Code", monospace';
+
+
+            ctx.fillStyle =
+                `rgba(0, 220, 130, ${this.alpha})`;
+
+
+            ctx.fillText(
+                this.text,
+                this.x,
+                this.y
+            );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       OGGETTI SFONDO
+       ======================================================== */
+
+    const circuits =
+        Array.from(
+            {
+                length: 18
+            },
+            () => new Circuit()
+        );
+
+
+    const codeTexts =
+        Array.from(
+            {
+                length: 12
+            },
+            () => new CodeText()
+        );
+
+
+    /* ========================================================
+       ANIMAZIONE
+       ======================================================== */
+
+    function animate() {
+
+
+        ctx.clearRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+        circuits.forEach(
+            c => {
+
+                c.update();
+
+                c.draw();
+
+            }
+        );
+
+
+        codeTexts.forEach(
+            ct => {
+
+                ct.update();
+
+                ct.draw();
+
+            }
+        );
+
+
+        requestAnimationFrame(
+            animate
+        );
+
+    }
+
+
+    animate();
+
 </script>
 
 

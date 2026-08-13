@@ -5,28 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - Eco Skill Factory</title>
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
     <!-- Bootstrap CSS & Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #080c14;
+            color: #f1f5f9;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
+
+        /* Canvas Sfondo Tecnologico */
+        #tech-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Stile Card Glassmorphism */
         .card-login {
-            background: #ffffff;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            color: #f1f5f9;
         }
+
+        .form-control {
+            background-color: rgba(15, 23, 42, 0.6);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
         .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+            background-color: rgba(15, 23, 42, 0.8);
+            border-color: #00dc82;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .input-group-text {
+            background-color: rgba(15, 23, 42, 0.8) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            color: #00dc82 !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
+            border: none;
+            color: #0f172a;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00b368 0%, #00dc82 100%);
+            color: #0f172a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 220, 130, 0.3);
         }
     </style>
 </head>
 <body class="d-flex align-items-center justify-content-center py-5">
+
+<!-- Sfondo Animato -->
+<canvas id="tech-bg-canvas"></canvas>
 
 <div class="container" style="max-width: 420px;">
     
@@ -35,11 +96,11 @@
         
         <!-- Header / Branding -->
         <div class="text-center mb-4">
-            <div class="mb-3 text-primary">
+            <div class="mb-3 text-success">
                 <i class="bi bi-shield-lock-fill display-4"></i>
             </div>
-            <h3 class="fw-bold text-dark mb-1">Eco Skill Factory</h3>
-            <p class="text-muted small">Area riservata di Amministrazione</p>
+            <h3 class="fw-bold text-white mb-1">Eco Skill Factory</h3>
+            <p class="text-light opacity-75 small">Area riservata di Amministrazione</p>
         </div>
 
         <!-- Alert Errore Credenziali -->
@@ -59,9 +120,9 @@
             
             <!-- Campo Username -->
             <div class="mb-3">
-                <label for="username" class="form-label text-secondary fw-semibold small">Username</label>
+                <label for="username" class="form-label text-light opacity-75 fw-semibold small">Username</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
+                    <span class="input-group-text border-end-0">
                         <i class="bi bi-person"></i>
                     </span>
                     <input type="text" 
@@ -76,9 +137,9 @@
 
             <!-- Campo Password -->
             <div class="mb-4">
-                <label for="password" class="form-label text-secondary fw-semibold small">Password</label>
+                <label for="password" class="form-label text-light opacity-75 fw-semibold small">Password</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0 text-muted">
+                    <span class="input-group-text border-end-0">
                         <i class="bi bi-key"></i>
                     </span>
                     <input type="password" 
@@ -97,8 +158,8 @@
         </form>
         
         <!-- Link Torna alla Home -->
-        <div class="text-center mt-4 pt-2 border-top">
-            <a th:href="@{/}" class="text-decoration-none text-muted small">
+        <div class="text-center mt-4 pt-2 border-top border-secondary border-opacity-25">
+            <a th:href="@{/}" class="text-decoration-none text-light opacity-75 small">
                 <i class="bi bi-arrow-left me-1"></i> Torna al sito principale
             </a>
         </div>
@@ -108,5 +169,152 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script Sfondo Animato Tecnologico -->
+<script>
+    const canvas = document.getElementById('tech-bg-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width;
+    let height;
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Circuit {
+        constructor() {
+            this.reset();
+        }
+
+        reset() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.length = Math.floor(Math.random() * 8) + 4;
+            this.currentStep = 0;
+            this.dir = Math.floor(Math.random() * 4);
+            this.path = [{ x: this.x, y: this.y }];
+            this.speed = Math.random() * 1.5 + 0.5;
+            this.alpha = Math.random() * 0.4 + 0.1;
+            this.size = 20;
+        }
+
+        update() {
+            if (this.currentStep < this.length) {
+                let last = this.path[this.path.length - 1];
+                let nx = last.x;
+                let ny = last.y;
+
+                if (Math.random() < 0.3) {
+                    this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+                }
+
+                switch (this.dir) {
+                    case 0: ny -= this.size; break;
+                    case 1: nx += this.size; break;
+                    case 2: ny += this.size; break;
+                    case 3: nx -= this.size; break;
+                }
+
+                this.path.push({ x: nx, y: ny });
+                this.currentStep++;
+            } else {
+                this.alpha -= 0.005;
+                if (this.alpha <= 0) {
+                    this.reset();
+                }
+            }
+        }
+
+        draw() {
+            if (this.path.length < 2) return;
+
+            ctx.beginPath();
+            ctx.moveTo(this.path[0].x, this.path[0].y);
+
+            for (let i = 1; i < this.path.length; i++) {
+                ctx.lineTo(this.path[i].x, this.path[i].y);
+            }
+
+            ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            let last = this.path[this.path.length - 1];
+            ctx.beginPath();
+            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+            ctx.fill();
+        }
+    }
+
+    const codeSnippets = [
+        "class BlockManager {}",
+        "import spring.boot.*;",
+        "<div class='eco'>",
+        "SELECT * FROM blocks;",
+        "const init = () => {};",
+        "return new PageBlock();",
+        "01000101 01000011 01001111",
+        "public static void main()",
+        "async fetch('/api')",
+        "npm run build",
+        "docker-compose up -d",
+        "mvn clean install"
+    ];
+
+    class CodeText {
+        constructor() {
+            this.reset();
+        }
+
+        reset() {
+            this.x = Math.random() * (width - 200);
+            this.y = Math.random() * height;
+            this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            this.alpha = 0;
+            this.maxAlpha = Math.random() * 0.3 + 0.1;
+            this.fadeIn = true;
+            this.speed = Math.random() * 0.3 + 0.1;
+        }
+
+        update() {
+            this.y -= this.speed;
+            if (this.fadeIn) {
+                this.alpha += 0.008;
+                if (this.alpha >= this.maxAlpha) {
+                    this.fadeIn = false;
+                }
+            } else {
+                this.alpha -= 0.005;
+                if (this.alpha <= 0) {
+                    this.reset();
+                }
+            }
+        }
+
+        draw() {
+            ctx.font = '12px "Fira Code", monospace';
+            ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+            ctx.fillText(this.text, this.x, this.y);
+        }
+    }
+
+    const circuits = Array.from({ length: 18 }, () => new Circuit());
+    const codeTexts = Array.from({ length: 12 }, () => new CodeText());
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        circuits.forEach(c => { c.update(); c.draw(); });
+        codeTexts.forEach(ct => { ct.update(); ct.draw(); });
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
 </body>
 </html>

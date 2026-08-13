@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Editor Riga - Eco Skill Factory</title>
 
@@ -14,106 +13,107 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- ========================================================
-         STILI SFONDO ANIMATO (SENZA VETRO/GLASS SUI FORM)
-         ======================================================== -->
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #f1f5f9;
-            background-color: #080c14 !important;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Canvas fisso solo per lo sfondo */
-        #tech-bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* I form e le card mantengono lo sfondo solido opaco */
-        .card, .bg-light, .bg-white {
-            background-color: #0f172a !important;
-            border: 1px solid #1e293b !important;
-            color: #f1f5f9 !important;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
-        }
-
-        label, h2, h4, h5, .form-label, .form-text, .text-muted, .card-title {
-            color: #cbd5e1 !important;
-        }
-
-        .form-control, .form-select {
-            background-color: #1e293b !important;
-            border: 1px solid #334155 !important;
-            color: #ffffff !important;
-        }
-
-        .form-control:focus, .form-select:focus {
-            background-color: #1e293b !important;
-            color: #ffffff !important;
-            border-color: #00dc82 !important;
-            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25) !important;
-        }
-
-        code {
-            color: #36e4da !important;
-        }
-    </style>
 
     <!-- ========================================================
          TINYMCE
          ======================================================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
             referrerpolicy="origin">
     </script>
 
+
     <script>
+
         document.addEventListener("DOMContentLoaded", function () {
+
             tinymce.init({
+
                 selector: '.wysiwyg-editor',
+
                 language: 'it',
+
                 language_url: '/tinymce/langs/it.js',
+
                 content_language: 'it',
+
                 min_height: 400,
+
                 menubar: true,
+
                 branding: false,
+
                 promotion: false,
+
                 license_key: 'gpl',
+
                 statusbar: true,
+
                 elementpath: true,
-                skin: 'oxide-dark',
+
                 image_advtab: true,
+
                 image_title: true,
+
                 image_caption: true,
+
                 automatic_uploads: true,
+
                 object_resizing: 'img',
+
                 resize_img_proportional: true,
 
+
+                /* =================================================
+                   GESTIONE URL IMMAGINI
+                   ================================================= */
+
                 relative_urls: false,
+
                 remove_script_host: false,
+
                 convert_urls: false,
+
                 document_base_url: window.location.origin + '/',
+
+
+                /* =================================================
+                   DIMENSIONI FONT
+                   ================================================= */
 
                 font_size_formats:
                     '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
+
                 font_size_input_default_unit: 'px',
 
+
+                /* =================================================
+                   PLUGIN
+                   ================================================= */
+
                 plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                    'media', 'table', 'wordcount', 'help', 'emoticons'
+                    'advlist',
+                    'autolink',
+                    'lists',
+                    'link',
+                    'image',
+                    'charmap',
+                    'anchor',
+                    'searchreplace',
+                    'visualblocks',
+                    'code',
+                    'fullscreen',
+                    'media',
+                    'table',
+                    'wordcount',
+                    'help',
+                    'emoticons'
                 ],
+
+
+                /* =================================================
+                   TOOLBAR
+                   ================================================= */
 
                 toolbar:
                     'undo redo | blocks fontfamily fontsize | ' +
@@ -124,451 +124,1659 @@
                     'link image media table emoticons | ' +
                     'code fullscreen | help',
 
+
+                /* =================================================
+                   STILE EDITOR
+                   ================================================= */
+
                 content_style: `
+
                     body {
                         font-family: Arial, sans-serif;
                         font-size: 18px;
                         line-height: 1.6;
-                        background-color: #0d1b2a !important;
-                        color: #ffffff !important;
+                        color: #333;
                         padding: 15px;
                     }
-                    p { font-size: 18px; color: #ffffff !important; }
-                    h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
-                    a { color: #36e4da !important; }
-                    img { max-width: 100%; height: auto; }
-                    figure.image.align-left { float: left; margin: 0 15px 10px 0; }
-                    figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
-                    figure.image.align-right { float: right; margin: 0 0 10px 15px; }
-                    figure.image { display: inline-block; margin: 0 2px 0 1px; }
-                    figure.image img { max-width: 100%; height: auto; }
+
+                    p {
+                        font-size: 18px;
+                    }
+
+                    img {
+                        max-width: 100%;
+                        height: auto;
+                    }
+
+                    figure.image.align-left {
+                        float: left;
+                        margin: 0 15px 10px 0;
+                    }
+
+                    figure.image.align-center {
+                        display: block;
+                        text-align: center;
+                        margin: 10px auto;
+                    }
+
+                    figure.image.align-right {
+                        float: right;
+                        margin: 0 0 10px 15px;
+                    }
+
+                    figure.image {
+                        display: inline-block;
+                        margin: 0 2px 0 1px;
+                    }
+
+                    figure.image img {
+                        max-width: 100%;
+                        height: auto;
+                    }
+
                 `,
 
+
+                /* =================================================
+                   STILI IMMAGINE
+                   ================================================= */
+
                 style_formats: [
-                    { title: 'Immagine a sinistra', selector: 'img', styles: { 'float': 'left', 'margin': '0 15px 10px 0' } },
-                    { title: 'Immagine centrata', selector: 'img', styles: { 'display': 'block', 'float': 'none', 'margin-left': 'auto', 'margin-right': 'auto' } },
-                    { title: 'Immagine a destra', selector: 'img', styles: { 'float': 'right', 'margin': '0 0 10px 15px' } },
-                    { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
+
+                    {
+                        title: 'Immagine a sinistra',
+                        selector: 'img',
+                        styles: {
+                            'float': 'left',
+                            'margin': '0 15px 10px 0'
+                        }
+                    },
+
+                    {
+                        title: 'Immagine centrata',
+                        selector: 'img',
+                        styles: {
+                            'display': 'block',
+                            'float': 'none',
+                            'margin-left': 'auto',
+                            'margin-right': 'auto'
+                        }
+                    },
+
+                    {
+                        title: 'Immagine a destra',
+                        selector: 'img',
+                        styles: {
+                            'float': 'right',
+                            'margin': '0 0 10px 15px'
+                        }
+                    },
+
+                    {
+                        title: 'Immagine normale',
+                        selector: 'img',
+                        styles: {
+                            'float': 'none',
+                            'display': 'inline',
+                            'margin': '0'
+                        }
+                    }
+
                 ],
 
+
+                /* =================================================
+                   UPLOAD IMMAGINI TINYMCE
+                   ================================================= */
+
                 images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
+
                     const formData = new FormData();
-                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                    formData.append(
+                        'file',
+                        blobInfo.blob(),
+                        blobInfo.filename()
+                    );
+
 
                     fetch('/api/uploads/immagine', {
+
                         method: 'POST',
+
                         body: formData
+
                     })
+
                     .then(response => {
+
                         if (!response.ok) {
-                            throw new Error('Errore durante il caricamento dell\'immagine nel server.');
+
+                            throw new Error(
+                                'Errore durante il caricamento dell\'immagine nel server.'
+                            );
+
                         }
+
                         return response.json();
+
                     })
+
                     .then(data => {
-                        const imageUrl = data.location || data.url;
+
+                        const imageUrl =
+                            data.location ||
+                            data.url;
+
                         if (!imageUrl) {
-                            throw new Error('Il server non ha restituito l\'URL dell\'immagine.');
+
+                            throw new Error(
+                                'Il server non ha restituito l\'URL dell\'immagine.'
+                            );
+
                         }
+
+                        /*
+                         * Se il server restituisce:
+                         *
+                         * /uploads/foto.jpg
+                         *
+                         * lo manteniamo così.
+                         *
+                         * Se restituisce un URL completo:
+                         *
+                         * https://dominio.it/uploads/foto.jpg
+                         *
+                         * manteniamo anche quello.
+                         */
+
                         resolve(imageUrl);
+
                     })
+
                     .catch(error => {
-                        console.error('Upload fallito:', error);
-                        reject({ message: 'Caricamento immagine non riuscito', remove: true });
+
+                        console.error(
+                            'Upload fallito:',
+                            error
+                        );
+
+                        reject({
+                            message:
+                                'Caricamento immagine non riuscito',
+                            remove: true
+                        });
+
                     });
+
                 })
+
             });
+
         });
+
     </script>
+
 </head>
 
-<body>
 
-    <!-- Canvas Sfondo Animato -->
-    <canvas id="tech-bg-canvas"></canvas>
+<body class="bg-light">
 
-    <div class="container py-4">
 
-        <!-- INTESTAZIONE -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 th:text="${block.id == null ? 'Nuova Riga' : 'Modifica Riga #' + block.id}">
-                Editor Riga
-            </h2>
-            <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
-                <i class="bi bi-arrow-left"></i> Torna alla Dashboard
-            </a>
+<div class="container py-4">
+
+
+    <!-- ========================================================
+         INTESTAZIONE
+         ======================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+
+        <h2 th:text="${block.id == null
+                       ? 'Nuova Riga'
+                       : 'Modifica Riga #' + block.id}">
+
+            Editor Riga
+
+        </h2>
+
+
+        <a th:href="@{/admin/dashboard}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Torna alla Dashboard
+
+        </a>
+
+
+    </div>
+
+
+    <!-- ========================================================
+         FORM PRINCIPALE RIGA
+         ======================================================== -->
+
+    <form th:action="@{/admin/block/save}"
+          th:object="${block}"
+          method="post"
+          enctype="multipart/form-data"
+          class="card shadow-sm p-4 mb-4">
+
+
+        <input type="hidden"
+               th:field="*{id}" />
+
+
+        <!-- ====================================================
+             TITOLO / POSIZIONE / MODELLO
+             ==================================================== -->
+
+        <div class="row g-3 mb-3">
+
+
+            <!-- TITOLO -->
+
+            <div class="col-md-6">
+
+                <label class="form-label fw-bold">
+
+                    Titolo Riga
+                    (Uso Interno Admin)
+
+                </label>
+
+
+                <input type="text"
+                       class="form-control"
+                       th:field="*{titleAdmin}"
+                       required
+                       placeholder="es. Banner Iniziale / Sezione Servizi" />
+
+            </div>
+
+
+            <!-- POSIZIONE -->
+
+            <div class="col-md-2">
+
+                <label class="form-label fw-bold">
+
+                    Posizione Ordine
+
+                </label>
+
+
+                <input type="number"
+                       class="form-control"
+                       th:field="*{position}"
+                       required />
+
+            </div>
+
+
+            <!-- MODELLO -->
+
+            <div class="col-md-4">
+
+                <label class="form-label fw-bold">
+
+                    Modello Blocco
+
+                </label>
+
+
+                <select id="blockTypeSelect"
+                        class="form-select"
+                        th:field="*{blockType}">
+
+                    <option th:each="type : ${blockTypes}"
+                            th:value="${type}"
+                            th:text="${type.label}">
+                    </option>
+
+                </select>
+
+            </div>
+
         </div>
 
-        <!-- FORM PRINCIPALE RIGA -->
-        <form th:action="@{/admin/block/save}"
-              th:object="${block}"
-              method="post"
-              enctype="multipart/form-data"
-              class="card shadow-sm p-4 mb-4">
 
-            <input type="hidden" th:field="*{id}" />
+        <!-- ====================================================
+             CONTAINER / LARGHEZZA / ALTEZZA
+             ==================================================== -->
 
-            <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Titolo Riga (Uso Interno Admin)</label>
-                    <input type="text" class="form-control" th:field="*{titleAdmin}" required placeholder="es. Banner Iniziale / Sezione Servizi" />
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label fw-bold">Posizione Ordine</label>
-                    <input type="number" class="form-control" th:field="*{position}" required />
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Modello Blocco</label>
-                    <select id="blockTypeSelect" class="form-select" th:field="*{blockType}">
-                        <option th:each="type : ${blockTypes}" th:value="${type}" th:text="${type.label}"></option>
-                    </select>
-                </div>
-            </div>
+        <div class="row g-3 mb-3">
 
-            <div class="row g-3 mb-3">
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Larghezza Blocco (%)</label>
-                    <input type="number" class="form-control" th:field="*{widthPercent}" min="10" max="100" placeholder="100" />
-                    <div class="form-text">Inserisci un valore tra 10 e 100.</div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Altezza Riga</label>
-                    <input type="text" class="form-control" th:field="*{customHeight}" placeholder="auto, 400px, 50vh, 30rem" />
-                    <div class="form-text">Usa <strong>auto</strong> per l'altezza automatica oppure un valore CSS come <strong>400px</strong>.</div>
-                </div>
-            </div>
 
-            <div id="mainImageUpload" class="mb-3 p-3 border rounded shadow-sm"
-                 th:style="${block.blockType != null and (block.blockType.name() == 'JUMBO_DEMO_1' or block.blockType.name() == 'JUMBO_DEMO_2')} ? '' : 'display:none;'">
-                <label class="form-label fw-bold text-success">
-                    <i class="bi bi-upload"></i> Carica Immagine Principale Riga (Jumbo / Demo 1 / Demo 2)
+            <!-- LARGHEZZA -->
+
+            <div class="col-md-4">
+
+                <label class="form-label fw-bold">
+
+                    Larghezza Blocco (%)
+
                 </label>
-                <div class="form-text mb-2">Disponibile esclusivamente per Demo 1 e Demo 2.</div>
-                <input type="file" name="imageFile" class="form-control mb-2" accept="image/*" />
-                <input type="hidden" th:field="*{imageUrl}" />
-                <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="mt-2">
-                    <small class="text-muted d-block mb-1">Immagine Attualmente Caricata:</small>
-                    <img th:src="${block.imageUrl}" alt="Anteprima" class="img-thumbnail" style="max-height: 120px; width: auto; object-fit: contain;" />
+
+
+                <input type="number"
+                       class="form-control"
+                       th:field="*{widthPercent}"
+                       min="10"
+                       max="100"
+                       placeholder="100" />
+
+
+                <div class="form-text">
+
+                    Inserisci un valore tra 10 e 100.
+
                 </div>
+
             </div>
 
-            <div id="mainEditorSection" class="mb-3">
-                <label class="form-label fw-bold">Testo / Contenuto Principale (Editor Avanzato TinyMCE)</label>
-                <textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
+
+            <!-- ALTEZZA -->
+
+            <div class="col-md-4">
+
+                <label class="form-label fw-bold">
+
+                    Altezza Riga
+
+                </label>
+
+
+                <input type="text"
+                       class="form-control"
+                       th:field="*{customHeight}"
+                       placeholder="auto, 400px, 50vh, 30rem" />
+
+
+                <div class="form-text">
+
+                    Usa <strong>auto</strong> per l'altezza automatica
+                    oppure un valore CSS come
+                    <strong>400px</strong> o <strong>50vh</strong>.
+
+                </div>
+
             </div>
 
-            <div class="text-end">
-                <button type="submit" class="btn btn-success btn-lg">
-                    <i class="bi bi-save"></i> Salva Configurazione Riga
-                </button>
+        </div>
+
+
+        <!-- ====================================================
+             IMMAGINE PRINCIPALE
+             SOLO JUMBO_DEMO_1 / JUMBO_DEMO_2
+             ==================================================== -->
+
+        <div id="mainImageUpload"
+             class="mb-3 p-3 border rounded bg-white shadow-sm"
+
+             th:style="${block.blockType != null
+                         and (
+                             block.blockType.name() == 'JUMBO_DEMO_1'
+                             or
+                             block.blockType.name() == 'JUMBO_DEMO_2'
+                         )}
+                         ? ''
+                         : 'display:none;'">
+
+
+            <label class="form-label fw-bold text-primary">
+
+                <i class="bi bi-upload"></i>
+
+                Carica Immagine Principale Riga
+                (Jumbo / Demo 1 / Demo 2)
+
+            </label>
+
+
+            <div class="form-text mb-2">
+
+                Disponibile esclusivamente per
+                <strong>Demo 1</strong> e
+                <strong>Demo 2</strong>.
+
+                Non disponibile per il modello a colonne,
+                Cards o Carosello.
+
             </div>
-        </form>
 
-        <!-- GESTIONE CARDS / CAROSELLO -->
-        <div id="itemsSection" class="card shadow-sm p-4 mb-4"
-             th:style="${block.blockType != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')} ? '' : 'display:none;'">
 
-            <div class="d-flex align-items-center mb-4">
+            <input type="file"
+                   name="imageFile"
+                   class="form-control mb-2"
+                   accept="image/*" />
+
+
+            <input type="hidden"
+                   th:field="*{imageUrl}" />
+
+
+            <!-- =================================================
+                 ANTEPRIMA IMMAGINE PRINCIPALE
+                 ================================================= -->
+
+            <div th:if="${block.imageUrl != null
+                         and !block.imageUrl.empty}"
+                 class="mt-2">
+
+
+                <small class="text-muted d-block mb-1">
+
+                    Immagine Attualmente Caricata:
+
+                </small>
+
+
+                <!-- FIX: URL DIRETTO -->
+
+                <img th:src="${block.imageUrl}"
+                     alt="Anteprima"
+                     class="img-thumbnail"
+                     style="
+                         max-height: 120px;
+                         width: auto;
+                         object-fit: contain;
+                     " />
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ====================================================
+             EDITOR PRINCIPALE
+             NASCOSTO PER CARDS / CAROUSEL
+             ==================================================== -->
+
+        <div id="mainEditorSection"
+             class="mb-3">
+
+
+            <label class="form-label fw-bold">
+
+                Testo / Contenuto Principale
+                (Editor Avanzato TinyMCE)
+
+            </label>
+
+
+            <textarea class="wysiwyg-editor"
+                      th:field="*{contentHtml}">
+            </textarea>
+
+
+        </div>
+
+
+        <!-- ====================================================
+             SALVA RIGA
+             ==================================================== -->
+
+        <div class="text-end">
+
+            <button type="submit"
+                    class="btn btn-primary btn-lg">
+
+                <i class="bi bi-save"></i>
+
+                Salva Configurazione Riga
+
+            </button>
+
+        </div>
+
+
+    </form>
+
+
+    <!-- ========================================================
+         GESTIONE CARDS / CAROSELLO
+         ======================================================== -->
+
+    <div id="itemsSection"
+         class="card shadow-sm p-4 mb-4"
+
+         th:style="${block.blockType != null
+                     and (
+                         block.blockType.name() == 'CARDS'
+                         or
+                         block.blockType.name() == 'CAROUSEL'
+                     )}
+                     ? ''
+                     : 'display:none;'">
+
+
+        <!-- ====================================================
+             INTESTAZIONE
+             ==================================================== -->
+
+        <div class="d-flex align-items-center mb-4">
+
+            <div class="me-3">
+
+                <div id="itemsIcon"
+                     class="rounded-circle bg-primary bg-opacity-10
+                            d-flex align-items-center justify-content-center"
+                     style="
+                         width: 55px;
+                         height: 55px;
+                     ">
+
+                    <i class="bi bi-grid-3x3-gap fs-4 text-primary"></i>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <h4 id="itemsSectionTitle"
+                    class="mb-1">
+
+                    Gestione Griglia Cards
+
+                </h4>
+
+
+                <div id="itemsSectionDescription"
+                     class="text-muted">
+
+                    Gestisci le Card di questa riga.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ====================================================
+             NUOVA RIGA: SALVA PRIMA
+             ==================================================== -->
+
+        <div th:if="${block.id == null}"
+             id="newBlockItemsMessage"
+             class="alert alert-info">
+
+
+            <div class="d-flex align-items-start">
+
                 <div class="me-3">
-                    <div id="itemsIcon" class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
-                        <i class="bi bi-grid-3x3-gap fs-4 text-success"></i>
-                    </div>
+
+                    <i class="bi bi-info-circle-fill fs-4"></i>
+
                 </div>
+
+
                 <div>
-                    <h4 id="itemsSectionTitle" class="mb-1">Gestione Griglia Cards</h4>
-                    <div id="itemsSectionDescription" class="text-muted">Gestisci le Card di questa riga.</div>
+
+                    <strong>
+
+                        Salva prima la riga.
+
+                    </strong>
+
+
+                    <div class="mt-1">
+
+                        Il modello è stato selezionato correttamente.
+
+                        Salva la configurazione della riga
+                        utilizzando il pulsante
+                        <strong>“Salva Configurazione Riga”</strong>.
+
+                        Dopo il salvataggio rimarrai in questa pagina
+                        e potrai aggiungere immediatamente la prima
+                        Card o la prima Slide.
+
+                    </div>
+
                 </div>
+
             </div>
 
-            <div th:if="${block.id == null}" id="newBlockItemsMessage" class="alert alert-info border-0">
-                <div class="d-flex align-items-start">
-                    <div class="me-3"><i class="bi bi-info-circle-fill fs-4"></i></div>
-                    <div>
-                        <strong>Salva prima la riga.</strong>
-                        <div class="mt-1">Il modello è stato selezionato. Salva la configurazione della riga per aggiungere elementi.</div>
-                    </div>
+        </div>
+
+
+        <!-- ====================================================
+             CONTENUTO SOLO DOPO IL SALVATAGGIO
+             ==================================================== -->
+
+        <div th:if="${block.id != null}">
+
+
+            <!-- =================================================
+                 ELEMENTI ESISTENTI
+                 ================================================= -->
+
+            <div th:if="${block.items != null
+                         and !block.items.empty}">
+
+
+                <div class="d-flex justify-content-between
+                            align-items-center mb-3">
+
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-collection text-primary"></i>
+
+                        <span id="existingItemsTitle">
+
+                            Card inserite
+
+                        </span>
+
+                    </h5>
+
+
+                    <span class="badge bg-primary"
+                          th:text="${#lists.size(block.items)}">
+
+                        0
+
+                    </span>
+
                 </div>
-            </div>
 
-            <div th:if="${block.id != null}">
-                <div th:if="${block.items != null and !block.items.empty}">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0"><i class="bi bi-collection text-success"></i> <span id="existingItemsTitle">Card inserite</span></h5>
-                        <span class="badge bg-success" th:text="${#lists.size(block.items)}">0</span>
-                    </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-4 mb-4" th:each="item : ${block.items}">
-                            <div class="card h-100 border shadow-sm">
-                                <div th:if="${item.imageUrl != null and !item.imageUrl.empty}" class="position-relative">
-                                    <img th:src="${item.imageUrl}" class="card-img-top" th:alt="${item.title}" style="height: 180px; object-fit: cover;">
-                                    <span class="position-absolute top-0 end-0 m-2 badge bg-dark bg-opacity-75"><i class="bi bi-image"></i></span>
-                                </div>
-                                <div th:unless="${item.imageUrl != null and !item.imageUrl.empty}" class="d-flex align-items-center justify-content-center" style="height: 180px; background: rgba(0,0,0,0.2);">
-                                    <div class="text-center text-muted"><i class="bi bi-image fs-1"></i><div class="small mt-2">Nessuna immagine</div></div>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${item.title}">Titolo Card</h5>
-                                    <div th:if="${item.contentHtml != null and !item.contentHtml.empty}" class="card-text small text-muted" th:utext="${item.contentHtml}"></div>
-                                    <div th:if="${item.buttonText != null and !item.buttonText.empty}" class="mt-3">
-                                        <a th:if="${item.buttonUrl != null and !item.buttonUrl.empty}" th:href="${item.buttonUrl}" class="btn btn-sm btn-outline-success" target="_blank">
-                                            <span th:text="${item.buttonText}">Scopri</span> <i class="bi bi-box-arrow-up-right"></i>
-                                        </a>
-                                        <span th:unless="${item.buttonUrl != null and !item.buttonUrl.empty}" class="btn btn-sm btn-outline-secondary" th:text="${item.buttonText}">Pulsante</span>
+                <div class="row mb-4">
+
+
+                    <!-- =================================================
+                         ANTEPRIMA CARD / SLIDE
+                         ================================================= -->
+
+                    <div class="col-md-4 mb-4"
+                         th:each="item : ${block.items}">
+
+
+                        <div class="card h-100 border shadow-sm">
+
+
+                            <!-- ==============================
+                                 IMMAGINE
+                                 ============================== -->
+
+                            <div th:if="${item.imageUrl != null
+                                         and !item.imageUrl.empty}"
+                                 class="position-relative">
+
+
+                                <!-- FIX: URL DIRETTO -->
+
+                                <img th:src="${item.imageUrl}"
+
+                                     class="card-img-top"
+
+                                     th:alt="${item.title}"
+
+                                     style="
+                                         height: 180px;
+                                         object-fit: cover;
+                                     ">
+
+
+                                <span class="position-absolute
+                                             top-0 end-0
+                                             m-2 badge bg-dark bg-opacity-75">
+
+                                    <i class="bi bi-image"></i>
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- ==============================
+                                 NESSUNA IMMAGINE
+                                 ============================== -->
+
+                            <div th:unless="${item.imageUrl != null
+                                             and !item.imageUrl.empty}"
+
+                                 class="bg-light d-flex
+                                        align-items-center
+                                        justify-content-center"
+
+                                 style="
+                                     height: 180px;
+                                 ">
+
+
+                                <div class="text-center text-muted">
+
+                                    <i class="bi bi-image fs-1"></i>
+
+
+                                    <div class="small mt-2">
+
+                                        Nessuna immagine
+
                                     </div>
+
                                 </div>
-                                <div class="card-footer bg-transparent d-flex justify-content-end gap-1">
-                                    <a th:href="@{/admin/block/{bId}/item/edit/{iId}(bId=${block.id}, iId=${item.id})}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i> Modifica</a>
-                                    <a th:href="@{/admin/block/{bId}/item/delete/{iId}(bId=${block.id}, iId=${item.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Vuoi davvero rimuovere questo elemento?');"><i class="bi bi-trash"></i> Rimuovi</a>
-                                </div>
+
                             </div>
+
+
+                            <!-- ==============================
+                                 CORPO CARD
+                                 ============================== -->
+
+                            <div class="card-body">
+
+
+                                <h5 class="card-title"
+                                    th:text="${item.title}">
+
+                                    Titolo Card
+
+                                </h5>
+
+
+                                <!-- DESCRIZIONE -->
+
+                                <div th:if="${item.contentHtml != null
+                                             and !item.contentHtml.empty}"
+
+                                     class="card-text small text-muted"
+
+                                     th:utext="${item.contentHtml}">
+
+                                </div>
+
+
+                                <!-- ==========================
+                                     PULSANTE
+                                     ========================== -->
+
+                                <div th:if="${item.buttonText != null
+                                             and !item.buttonText.empty}"
+
+                                     class="mt-3">
+
+
+                                    <a th:if="${item.buttonUrl != null
+                                               and !item.buttonUrl.empty}"
+
+                                       th:href="${item.buttonUrl}"
+
+                                       class="btn btn-sm btn-outline-primary"
+
+                                       target="_blank">
+
+
+                                        <span th:text="${item.buttonText}">
+
+                                            Scopri
+
+                                        </span>
+
+
+                                        <i class="bi bi-box-arrow-up-right"></i>
+
+
+                                    </a>
+
+
+                                    <span th:unless="${item.buttonUrl != null
+                                                      and !item.buttonUrl.empty}"
+
+                                          class="btn btn-sm btn-outline-secondary"
+
+                                          th:text="${item.buttonText}">
+
+                                        Pulsante
+
+                                    </span>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- ==============================
+                                 FOOTER
+                                 ============================== -->
+
+                            <div class="card-footer bg-transparent
+                                        d-flex justify-content-end gap-1">
+
+
+                                <a th:href="@{/admin/block/{bId}/item/edit/{iId}
+                                              (bId=${block.id},
+                                               iId=${item.id})}"
+
+                                   class="btn btn-sm btn-outline-primary">
+
+
+                                    <i class="bi bi-pencil"></i>
+
+                                    Modifica
+
+                                </a>
+
+
+                                <a th:href="@{/admin/block/{bId}/item/delete/{iId}
+                                              (bId=${block.id},
+                                               iId=${item.id})}"
+
+                                   class="btn btn-sm btn-outline-danger"
+
+                                   onclick="return confirm('Vuoi davvero rimuovere questo elemento?');">
+
+
+                                    <i class="bi bi-trash"></i>
+
+                                    Rimuovi
+
+                                </a>
+
+
+                            </div>
+
+
                         </div>
+
                     </div>
+
+
                 </div>
 
-                <div th:if="${block.items == null or block.items.empty}" class="alert alert-warning border-0">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3"><i class="bi bi-stars fs-3"></i></div>
-                        <div>
-                            <strong>Nessun elemento inserito.</strong>
-                            <div>Utilizza il modulo qui sotto per aggiungere il primo elemento.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FORM ELEMENTO -->
-                <div class="border-top border-secondary border-opacity-25 pt-4 mt-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="me-2">
-                            <i th:class="${editingItem != null} ? 'bi bi-pencil-square text-warning fs-4' : 'bi bi-plus-circle-fill text-success fs-4'"></i>
-                        </div>
-                        <h5 id="addItemTitle" class="mb-0" th:text="${editingItem != null ? 'Modifica Elemento' : 'Aggiungi Card'}">Aggiungi Card</h5>
-                    </div>
-
-                    <div class="card border-0 p-3" style="background-color: #0b1329 !important;">
-                        <form th:action="${editingItem != null} ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} : @{/admin/block/{id}/item/add(id=${block.id})}"
-                              method="post" enctype="multipart/form-data" class="row g-3">
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold"><span id="itemTitleLabel">Titolo Card</span></label>
-                                <input type="text" name="title" class="form-control" placeholder="Titolo Card" th:value="${editingItem != null ? editingItem.title : ''}" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold"><i class="bi bi-image"></i> <span id="itemImageLabel">Carica Immagine Card</span></label>
-                                <input type="file" name="itemImageFile" class="form-control" accept="image/*" />
-                                <div class="form-text">Formati immagine supportati dal server.</div>
-                                <div th:if="${editingItem != null and editingItem.imageUrl != null and !editingItem.imageUrl.empty}" class="mt-2">
-                                    <small class="text-muted d-block mb-1">Immagine attuale:</small>
-                                    <img th:src="${editingItem.imageUrl}" alt="Anteprima" class="img-thumbnail" style="max-height: 100px; max-width: 200px; object-fit: contain;" />
-                                    <small class="text-muted d-block mt-1" th:text="${editingItem.imageUrl}"></small>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Descrizione Elemento</label>
-                                <textarea name="contentHtml" class="wysiwyg-editor" placeholder="Testo descrittivo..." th:text="${editingItem != null ? editingItem.contentHtml : ''}"></textarea>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Testo Pulsante <span class="text-muted">(opzionale)</span></label>
-                                <input type="text" name="buttonText" class="form-control" placeholder="es. Scopri di più" th:value="${editingItem != null ? editingItem.buttonText : ''}" />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Link Pulsante <span class="text-muted">(opzionale)</span></label>
-                                <input type="text" name="buttonUrl" class="form-control" placeholder="https://..." th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
-                            </div>
-
-                            <div class="col-12 text-end d-flex justify-content-end gap-2">
-                                <a th:if="${editingItem != null}" th:href="@{/admin/block/edit/{id}(id=${block.id})}" class="btn btn-outline-light btn-lg">Annulla Modifica</a>
-                                <button type="submit" th:class="${editingItem != null} ? 'btn btn-warning btn-lg' : 'btn btn-success btn-lg'">
-                                    <i th:class="${editingItem != null} ? 'bi bi-check-lg' : 'bi bi-plus-lg'"></i>
-                                    <span id="addItemButtonText" th:text="${editingItem != null ? 'Salva Modifiche Elemento' : 'Aggiungi Card'}">Aggiungi Card</span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div>
+
+
+            <!-- =================================================
+                 NESSUN ELEMENTO
+                 ================================================= -->
+
+            <div th:if="${block.items == null
+                         or block.items.empty}"
+
+                 class="alert alert-warning">
+
+
+                <div class="d-flex align-items-center">
+
+
+                    <div class="me-3">
+
+                        <i class="bi bi-stars fs-3"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+
+                            Nessun elemento inserito.
+
+                        </strong>
+
+
+                        <div>
+
+                            Utilizza il modulo qui sotto per aggiungere
+                            il primo elemento.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM AGGIUNTA / MODIFICA CARD / SLIDE
+                 ================================================= -->
+
+            <div class="border-top pt-4 mt-4">
+
+
+                <div class="d-flex align-items-center mb-3">
+
+
+                    <div class="me-2">
+
+                        <i th:class="${editingItem != null}
+                                   ? 'bi bi-pencil-square text-warning fs-4'
+                                   : 'bi bi-plus-circle-fill text-success fs-4'">
+                        </i>
+
+                    </div>
+
+
+                    <h5 id="addItemTitle"
+                        class="mb-0"
+                        th:text="${editingItem != null
+                                  ? 'Modifica Elemento'
+                                  : 'Aggiungi Card'}">
+
+                        Aggiungi Card
+
+                    </h5>
+
+                </div>
+
+
+                <div class="card bg-light border-0 p-3">
+
+
+                    <form th:action="${editingItem != null}
+                                     ? @{/admin/block/{bId}/item/update/{iId}
+                                         (bId=${block.id},
+                                          iId=${editingItem.id})}
+                                     : @{/admin/block/{id}/item/add
+                                         (id=${block.id})}"
+
+                          method="post"
+
+                          enctype="multipart/form-data"
+
+                          class="row g-3">
+
+
+                        <!-- =========================================
+                             TITOLO
+                             ========================================= -->
+
+                        <div class="col-md-6">
+
+
+                            <label class="form-label fw-bold">
+
+                                <span id="itemTitleLabel">
+
+                                    Titolo Card
+
+                                </span>
+
+                            </label>
+
+
+                            <input type="text"
+
+                                   name="title"
+
+                                   class="form-control"
+
+                                   placeholder="Titolo Card"
+
+                                   th:value="${editingItem != null
+                                              ? editingItem.title
+                                              : ''}"
+
+                                   required />
+
+                        </div>
+
+
+                        <!-- =========================================
+                             IMMAGINE
+                             ========================================= -->
+
+                        <div class="col-md-6">
+
+
+                            <label class="form-label fw-bold">
+
+                                <i class="bi bi-image"></i>
+
+
+                                <span id="itemImageLabel">
+
+                                    Carica Immagine Card
+
+                                </span>
+
+                            </label>
+
+
+                            <input type="file"
+
+                                   name="itemImageFile"
+
+                                   class="form-control"
+
+                                   accept="image/*" />
+
+
+                            <div class="form-text">
+
+                                Formati immagine supportati dal server.
+
+                            </div>
+
+
+                            <!-- =====================================
+                                 IMMAGINE ATTUALE
+                                 ===================================== -->
+
+                            <div th:if="${editingItem != null
+                                         and editingItem.imageUrl != null
+                                         and !editingItem.imageUrl.empty}"
+
+                                 class="mt-2">
+
+
+                                <small class="text-muted d-block mb-1">
+
+                                    Immagine attuale:
+
+                                </small>
+
+
+                                <!-- FIX PRINCIPALE:
+                                     URL DIRETTO, NON @{...}
+                                -->
+
+                                <img th:src="${editingItem.imageUrl}"
+
+                                     alt="Anteprima"
+
+                                     class="img-thumbnail"
+
+                                     style="
+                                         max-height: 100px;
+                                         max-width: 200px;
+                                         width: auto;
+                                         height: auto;
+                                         object-fit: contain;
+                                     " />
+
+
+                                <!-- URL DEBUG VISIVO -->
+
+                                <small class="text-muted d-block mt-1"
+                                       th:text="${editingItem.imageUrl}">
+
+                                </small>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- =========================================
+                             DESCRIZIONE
+                             ========================================= -->
+
+                        <div class="col-12">
+
+
+                            <label class="form-label fw-bold">
+
+                                Descrizione Elemento
+
+                            </label>
+
+
+                            <textarea name="contentHtml"
+
+                                      class="wysiwyg-editor"
+
+                                      placeholder="Testo descrittivo..."
+
+                                      th:text="${editingItem != null
+                                                ? editingItem.contentHtml
+                                                : ''}">
+                            </textarea>
+
+
+                        </div>
+
+
+                        <!-- =========================================
+                             PULSANTE
+                             ========================================= -->
+
+                        <div class="col-md-6">
+
+
+                            <label class="form-label">
+
+                                Testo Pulsante
+
+                                <span class="text-muted">
+
+                                    (opzionale)
+
+                                </span>
+
+                            </label>
+
+
+                            <input type="text"
+
+                                   name="buttonText"
+
+                                   class="form-control"
+
+                                   placeholder="es. Scopri di più"
+
+                                   th:value="${editingItem != null
+                                              ? editingItem.buttonText
+                                              : ''}" />
+
+                        </div>
+
+
+                        <!-- =========================================
+                             URL
+                             ========================================= -->
+
+                        <div class="col-md-6">
+
+
+                            <label class="form-label">
+
+                                Link Pulsante
+
+                                <span class="text-muted">
+
+                                    (opzionale)
+
+                                </span>
+
+                            </label>
+
+
+                            <input type="text"
+
+                                   name="buttonUrl"
+
+                                   class="form-control"
+
+                                   placeholder="https://..."
+
+                                   th:value="${editingItem != null
+                                              ? editingItem.buttonUrl
+                                              : ''}" />
+
+                        </div>
+
+
+                        <!-- =========================================
+                             PULSANTE AGGIUNTA / MODIFICA
+                             ========================================= -->
+
+                        <div class="col-12 text-end
+                                    d-flex justify-content-end gap-2">
+
+
+                            <a th:if="${editingItem != null}"
+
+                               th:href="@{/admin/block/edit/{id}
+                                         (id=${block.id})}"
+
+                               class="btn btn-secondary btn-lg">
+
+                                Annulla Modifica
+
+                            </a>
+
+
+                            <button type="submit"
+
+                                    th:class="${editingItem != null}
+                                              ? 'btn btn-warning btn-lg'
+                                              : 'btn btn-success btn-lg'">
+
+
+                                <i th:class="${editingItem != null}
+                                              ? 'bi bi-check-lg'
+                                              : 'bi bi-plus-lg'">
+                                </i>
+
+
+                                <span id="addItemButtonText"
+
+                                      th:text="${editingItem != null
+                                                ? 'Salva Modifiche Elemento'
+                                                : 'Aggiungi Card'}">
+
+                                    Aggiungi Card
+
+                                </span>
+
+
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
         </div>
 
     </div>
 
-    <!-- JS MODELLO -->
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const blockTypeSelect = document.getElementById("blockTypeSelect");
-        const mainImageUpload = document.getElementById("mainImageUpload");
-        const mainEditorSection = document.getElementById("mainEditorSection");
-        const itemsSection = document.getElementById("itemsSection");
-        const itemsSectionTitle = document.getElementById("itemsSectionTitle");
-        const itemsSectionDescription = document.getElementById("itemsSectionDescription");
-        const itemsIcon = document.getElementById("itemsIcon");
-        const addItemTitle = document.getElementById("addItemTitle");
-        const itemTitleLabel = document.getElementById("itemTitleLabel");
-        const itemImageLabel = document.getElementById("itemImageLabel");
-        const addItemButtonText = document.getElementById("addItemButtonText");
-        const existingItemsTitle = document.getElementById("existingItemsTitle");
 
-        if (!blockTypeSelect) return;
+</div>
+
+
+<!-- ============================================================
+     JAVASCRIPT GESTIONE MODELLO
+     ============================================================ -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =====================================================
+           ELEMENTI
+           ===================================================== */
+
+        const blockTypeSelect =
+            document.getElementById(
+                "blockTypeSelect"
+            );
+
+
+        const mainImageUpload =
+            document.getElementById(
+                "mainImageUpload"
+            );
+
+
+        const mainEditorSection =
+            document.getElementById(
+                "mainEditorSection"
+            );
+
+
+        const itemsSection =
+            document.getElementById(
+                "itemsSection"
+            );
+
+
+        const itemsSectionTitle =
+            document.getElementById(
+                "itemsSectionTitle"
+            );
+
+
+        const itemsSectionDescription =
+            document.getElementById(
+                "itemsSectionDescription"
+            );
+
+
+        const itemsIcon =
+            document.getElementById(
+                "itemsIcon"
+            );
+
+
+        const addItemTitle =
+            document.getElementById(
+                "addItemTitle"
+            );
+
+
+        const itemTitleLabel =
+            document.getElementById(
+                "itemTitleLabel"
+            );
+
+
+        const itemImageLabel =
+            document.getElementById(
+                "itemImageLabel"
+            );
+
+
+        const addItemButtonText =
+            document.getElementById(
+                "addItemButtonText"
+            );
+
+
+        const existingItemsTitle =
+            document.getElementById(
+                "existingItemsTitle"
+            );
+
+
+        if (!blockTypeSelect) {
+
+            return;
+
+        }
+
+
+        /* =====================================================
+           AGGIORNA INTERFACCIA
+           ===================================================== */
 
         function aggiornaInterfaccia() {
-            const tipo = blockTypeSelect.value;
-            const mostraImmaginePrincipale = tipo === "JUMBO_DEMO_1" || tipo === "JUMBO_DEMO_2";
 
-            if (mainImageUpload) mainImageUpload.style.display = mostraImmaginePrincipale ? "" : "none";
 
-            const isCards = tipo === "CARDS";
-            const isCarousel = tipo === "CAROUSEL";
-            const isItemsBlock = isCards || isCarousel;
+            const tipo =
+                blockTypeSelect.value;
 
-            if (mainEditorSection) mainEditorSection.style.display = isItemsBlock ? "none" : "";
-            if (itemsSection) itemsSection.style.display = isItemsBlock ? "" : "none";
+
+            /* =================================================
+               IMMAGINE PRINCIPALE
+               ================================================= */
+
+            const mostraImmaginePrincipale =
+                tipo === "JUMBO_DEMO_1"
+                ||
+                tipo === "JUMBO_DEMO_2";
+
+
+            if (mainImageUpload) {
+
+                mainImageUpload.style.display =
+                    mostraImmaginePrincipale
+                        ? ""
+                        : "none";
+
+            }
+
+
+            /* =================================================
+               CARDS
+               ================================================= */
+
+            const isCards =
+                tipo === "CARDS";
+
+
+            /* =================================================
+               CAROUSEL
+               ================================================= */
+
+            const isCarousel =
+                tipo === "CAROUSEL";
+
+
+            /* =================================================
+               BLOCCO CON ELEMENTI
+               ================================================= */
+
+            const isItemsBlock =
+                isCards
+                ||
+                isCarousel;
+
+
+            /* =================================================
+               EDITOR PRINCIPALE
+               ================================================= */
+
+            if (mainEditorSection) {
+
+                mainEditorSection.style.display =
+                    isItemsBlock
+                        ? "none"
+                        : "";
+
+            }
+
+
+            /* =================================================
+               PANNELLO ELEMENTI
+               ================================================= */
+
+            if (itemsSection) {
+
+                itemsSection.style.display =
+                    isItemsBlock
+                        ? ""
+                        : "none";
+
+            }
+
+
+            /* =================================================
+               CONFIGURAZIONE CARDS
+               ================================================= */
 
             if (isCards) {
-                if (itemsSectionTitle) itemsSectionTitle.textContent = "Gestione Griglia Cards";
-                if (itemsSectionDescription) itemsSectionDescription.textContent = "Gestisci le Card che compongono questa riga.";
-                if (addItemTitle && (!editingMode() || addItemTitle.textContent.trim() !== "Modifica Elemento")) addItemTitle.textContent = "Aggiungi Card";
-                if (itemTitleLabel) itemTitleLabel.textContent = "Titolo Card";
-                if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Card";
-                if (addItemButtonText && !editingMode()) addItemButtonText.textContent = "Aggiungi Card";
-                if (existingItemsTitle) existingItemsTitle.textContent = "Card inserite";
-                if (itemsIcon) itemsIcon.innerHTML = '<i class="bi bi-grid-3x3-gap fs-4 text-success"></i>';
+
+
+                if (itemsSectionTitle) {
+
+                    itemsSectionTitle.textContent =
+                        "Gestione Griglia Cards";
+
+                }
+
+
+                if (itemsSectionDescription) {
+
+                    itemsSectionDescription.textContent =
+                        "Gestisci le Card che compongono questa riga.";
+
+                }
+
+
+                if (addItemTitle) {
+
+                    if (
+                        !editingMode() ||
+                        addItemTitle.textContent.trim() !==
+                        "Modifica Elemento"
+                    ) {
+
+                        addItemTitle.textContent =
+                            "Aggiungi Card";
+
+                    }
+
+                }
+
+
+                if (itemTitleLabel) {
+
+                    itemTitleLabel.textContent =
+                        "Titolo Card";
+
+                }
+
+
+                if (itemImageLabel) {
+
+                    itemImageLabel.textContent =
+                        "Carica Immagine Card";
+
+                }
+
+
+                if (addItemButtonText) {
+
+                    if (!editingMode()) {
+
+                        addItemButtonText.textContent =
+                            "Aggiungi Card";
+
+                    }
+
+                }
+
+
+                if (existingItemsTitle) {
+
+                    existingItemsTitle.textContent =
+                        "Card inserite";
+
+                }
+
+
+                if (itemsIcon) {
+
+                    itemsIcon.innerHTML =
+                        '<i class="bi bi-grid-3x3-gap fs-4 text-primary"></i>';
+
+                }
+
             }
+
+
+            /* =================================================
+               CONFIGURAZIONE CAROUSEL
+               ================================================= */
 
             if (isCarousel) {
-                if (itemsSectionTitle) itemsSectionTitle.textContent = "Gestione Carosello";
-                if (itemsSectionDescription) itemsSectionDescription.textContent = "Gestisci le Slide che compongono questo carosello.";
-                if (addItemTitle && (!editingMode() || addItemTitle.textContent.trim() !== "Modifica Elemento")) addItemTitle.textContent = "Aggiungi Slide";
-                if (itemTitleLabel) itemTitleLabel.textContent = "Titolo Slide";
-                if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Slide";
-                if (addItemButtonText && !editingMode()) addItemButtonText.textContent = "Aggiungi Slide";
-                if (existingItemsTitle) existingItemsTitle.textContent = "Slide inserite";
-                if (itemsIcon) itemsIcon.innerHTML = '<i class="bi bi-images fs-4 text-success"></i>';
+
+
+                if (itemsSectionTitle) {
+
+                    itemsSectionTitle.textContent =
+                        "Gestione Carosello";
+
+                }
+
+
+                if (itemsSectionDescription) {
+
+                    itemsSectionDescription.textContent =
+                        "Gestisci le Slide che compongono questo carosello.";
+
+                }
+
+
+                if (addItemTitle) {
+
+                    if (
+                        !editingMode() ||
+                        addItemTitle.textContent.trim() !==
+                        "Modifica Elemento"
+                    ) {
+
+                        addItemTitle.textContent =
+                            "Aggiungi Slide";
+
+                    }
+
+                }
+
+
+                if (itemTitleLabel) {
+
+                    itemTitleLabel.textContent =
+                        "Titolo Slide";
+
+                }
+
+
+                if (itemImageLabel) {
+
+                    itemImageLabel.textContent =
+                        "Carica Immagine Slide";
+
+                }
+
+
+                if (addItemButtonText) {
+
+                    if (!editingMode()) {
+
+                        addItemButtonText.textContent =
+                            "Aggiungi Slide";
+
+                    }
+
+                }
+
+
+                if (existingItemsTitle) {
+
+                    existingItemsTitle.textContent =
+                        "Slide inserite";
+
+                }
+
+
+                if (itemsIcon) {
+
+                    itemsIcon.innerHTML =
+                        '<i class="bi bi-images fs-4 text-primary"></i>';
+
+                }
+
             }
+
         }
+
+
+        /* =====================================================
+           VERIFICA MODALITÀ MODIFICA
+           ===================================================== */
 
         function editingMode() {
-            const button = document.getElementById("addItemButtonText");
-            return button ? button.textContent.trim() === "Salva Modifiche Elemento" : false;
+
+            const button =
+                document.getElementById(
+                    "addItemButtonText"
+                );
+
+            if (!button) {
+
+                return false;
+
+            }
+
+            return button.textContent.trim() ===
+                   "Salva Modifiche Elemento";
+
         }
 
-        blockTypeSelect.addEventListener("change", aggiornaInterfaccia);
+
+        /* =====================================================
+           CAMBIO MODELLO
+           ===================================================== */
+
+        blockTypeSelect.addEventListener(
+            "change",
+            aggiornaInterfaccia
+        );
+
+
+        /* =====================================================
+           STATO INIZIALE
+           ===================================================== */
+
         aggiornaInterfaccia();
-    });
-    </script>
 
-    <!-- SCRIPT ANIMAZIONE SFONDO -->
-    <script>
-        const canvas = document.getElementById('tech-bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
+    }
+);
 
-        class Circuit {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.length = Math.floor(Math.random() * 8) + 4;
-                this.currentStep = 0;
-                this.dir = Math.floor(Math.random() * 4);
-                this.path = [{ x: this.x, y: this.y }];
-                this.speed = Math.random() * 1.5 + 0.5;
-                this.alpha = Math.random() * 0.4 + 0.1;
-                this.size = 20;
-            }
-            update() {
-                if (this.currentStep < this.length) {
-                    let last = this.path[this.path.length - 1];
-                    let nx = last.x, ny = last.y;
-                    if (Math.random() < 0.3) {
-                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
-                    }
-                    switch (this.dir) {
-                        case 0: ny -= this.size; break;
-                        case 1: nx += this.size; break;
-                        case 2: ny += this.size; break;
-                        case 3: nx -= this.size; break;
-                    }
-                    this.path.push({ x: nx, y: ny });
-                    this.currentStep++;
-                } else {
-                    this.alpha -= 0.005;
-                    if (this.alpha <= 0) this.reset();
-                }
-            }
-            draw() {
-                if (this.path.length < 2) return;
-                ctx.beginPath();
-                ctx.moveTo(this.path[0].x, this.path[0].y);
-                for (let i = 1; i < this.path.length; i++) {
-                    ctx.lineTo(this.path[i].x, this.path[i].y);
-                }
-                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
+</script>
 
-                let last = this.path[this.path.length - 1];
-                ctx.beginPath();
-                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-                ctx.fill();
-            }
-        }
 
-        const codeSnippets = [
-            "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
-            "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
-            "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
-            "npm run build", "docker-compose up -d", "mvn clean install"
-        ];
-
-        class CodeText {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * (width - 200);
-                this.y = Math.random() * height;
-                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-                this.alpha = 0;
-                this.maxAlpha = Math.random() * 0.3 + 0.1;
-                this.fadeIn = true;
-                this.speed = Math.random() * 0.3 + 0.1;
-            }
-            update() {
-                this.y -= this.speed;
-                if (this.fadeIn) {
-                    this.alpha += 0.008;
-                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
-                } else {
-                    this.alpha -= 0.005;
-                    if (this.alpha <= 0) this.reset();
-                }
-            }
-            draw() {
-                ctx.font = '12px "Fira Code", monospace';
-                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
-                ctx.fillText(this.text, this.x, this.y);
-            }
-        }
-
-        const circuits = Array.from({ length: 18 }, () => new Circuit());
-        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            circuits.forEach(c => { c.update(); c.draw(); });
-            codeTexts.forEach(ct => { ct.update(); ct.draw(); });
-            requestAnimationFrame(animate);
-        }
-        animate();
-    </script>
 </body>
+
 </html>

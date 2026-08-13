@@ -4,825 +4,389 @@
 <head>
 
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Gestione Pagina - Eco Skill Factory</title>
 
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- ============================================================
-         BOOTSTRAP
+         STILI SFONDO ANIMATO (SENZA VETRO/GLASS SUI FORM)
          ============================================================ -->
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f1f5f9;
+            background-color: #080c14 !important;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+        /* Canvas fisso solo per lo sfondo */
+        #tech-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
 
+        /* I form e le card mantengono lo sfondo solido opaco */
+        .card, .bg-light, .alert-light {
+            background-color: #0f172a !important;
+            border: 1px solid #1e293b !important;
+            color: #f1f5f9 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+        }
 
-    <!-- ============================================================
-         BOOTSTRAP ICONS
-         ============================================================ -->
+        label, h2, h4, h5, .form-label, .form-text, .text-muted {
+            color: #cbd5e1 !important;
+        }
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        .form-control {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #ffffff !important;
+        }
 
+        .form-control:focus {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+            border-color: #00dc82 !important;
+            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25) !important;
+        }
+
+        .input-group-text {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #00dc82 !important;
+        }
+
+        code {
+            color: #36e4da !important;
+        }
+    </style>
 
     <!-- ============================================================
          TINYMCE
          ============================================================ -->
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
-        referrerpolicy="origin">
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
+            referrerpolicy="origin">
     </script>
 
-
-    <!-- ============================================================
-         TINYMCE CONFIGURAZIONE
-         ============================================================ -->
-
     <script>
-
         document.addEventListener("DOMContentLoaded", function () {
-
             tinymce.init({
-
                 selector: '.wysiwyg-editor',
-
                 language: 'it',
-
                 language_url: '/tinymce/langs/it.js',
-
                 content_language: 'it',
-
                 min_height: 500,
-
                 menubar: true,
-
                 branding: false,
-
                 promotion: false,
-
                 license_key: 'gpl',
-
                 statusbar: true,
-
                 elementpath: true,
-
+                skin: 'oxide-dark',
                 image_advtab: true,
-
                 image_title: true,
-
                 image_caption: true,
-
                 automatic_uploads: true,
-
                 object_resizing: 'img',
-
                 resize_img_proportional: true,
 
-
-                /* =================================================
-                   URL IMMAGINI
-                   ================================================= */
-
                 relative_urls: false,
-
                 remove_script_host: false,
-
                 convert_urls: false,
-
                 document_base_url: window.location.origin + '/',
-
-
-                /* =================================================
-                   DIMENSIONE FONT
-                   ================================================= */
 
                 font_size_formats:
                     '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
-
                 font_size_input_default_unit: 'px',
 
-
-                /* =================================================
-                   PLUGIN
-                   ================================================= */
-
                 plugins: [
-
-                    'advlist',
-
-                    'autolink',
-
-                    'lists',
-
-                    'link',
-
-                    'image',
-
-                    'charmap',
-
-                    'anchor',
-
-                    'searchreplace',
-
-                    'visualblocks',
-
-                    'code',
-
-                    'fullscreen',
-
-                    'media',
-
-                    'table',
-
-                    'wordcount',
-
-                    'help',
-
-                    'emoticons'
-
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'media', 'table', 'wordcount', 'help', 'emoticons'
                 ],
-
-
-                /* =================================================
-                   TOOLBAR
-                   ================================================= */
 
                 toolbar:
                     'undo redo | blocks fontfamily fontsize | ' +
-
                     'bold italic underline | ' +
-
                     'forecolor backcolor | ' +
-
                     'alignleft aligncenter alignright alignjustify | ' +
-
                     'bullist numlist | ' +
-
                     'link image media table emoticons | ' +
-
                     'code fullscreen | help',
 
-
-                /* =================================================
-                   STILE CONTENUTO EDITOR
-                   ================================================= */
-
                 content_style: `
-
                     body {
-
                         font-family: Arial, sans-serif;
-
                         font-size: 18px;
-
                         line-height: 1.6;
-
-                        color: #333;
-
+                        background-color: #0d1b2a !important;
+                        color: #ffffff !important;
                         padding: 15px;
-
                     }
-
-
-                    p {
-
-                        font-size: 18px;
-
-                    }
-
-
-                    img {
-
-                        max-width: 100%;
-
-                        height: auto;
-
-                    }
-
-
-                    figure.image.align-left {
-
-                        float: left;
-
-                        margin: 0 15px 10px 0;
-
-                    }
-
-
-                    figure.image.align-center {
-
-                        display: block;
-
-                        text-align: center;
-
-                        margin: 10px auto;
-
-                    }
-
-
-                    figure.image.align-right {
-
-                        float: right;
-
-                        margin: 0 0 10px 15px;
-
-                    }
-
-
-                    figure.image {
-
-                        display: inline-block;
-
-                        margin: 0 2px 0 1px;
-
-                    }
-
-
-                    figure.image img {
-
-                        max-width: 100%;
-
-                        height: auto;
-
-                    }
-
+                    p { font-size: 18px; color: #ffffff !important; }
+                    h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
+                    a { color: #36e4da !important; }
+                    img { max-width: 100%; height: auto; }
+                    figure.image.align-left { float: left; margin: 0 15px 10px 0; }
+                    figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
+                    figure.image.align-right { float: right; margin: 0 0 10px 15px; }
+                    figure.image { display: inline-block; margin: 0 2px 0 1px; }
+                    figure.image img { max-width: 100%; height: auto; }
                 `,
 
-
-                /* =================================================
-                   STILI IMMAGINI
-                   ================================================= */
-
                 style_formats: [
-
-                    {
-
-                        title: 'Immagine a sinistra',
-
-                        selector: 'img',
-
-                        styles: {
-
-                            'float': 'left',
-
-                            'margin': '0 15px 10px 0'
-
-                        }
-
-                    },
-
-
-                    {
-
-                        title: 'Immagine centrata',
-
-                        selector: 'img',
-
-                        styles: {
-
-                            'display': 'block',
-
-                            'float': 'none',
-
-                            'margin-left': 'auto',
-
-                            'margin-right': 'auto'
-
-                        }
-
-                    },
-
-
-                    {
-
-                        title: 'Immagine a destra',
-
-                        selector: 'img',
-
-                        styles: {
-
-                            'float': 'right',
-
-                            'margin': '0 0 10px 15px'
-
-                        }
-
-                    },
-
-
-                    {
-
-                        title: 'Immagine normale',
-
-                        selector: 'img',
-
-                        styles: {
-
-                            'float': 'none',
-
-                            'display': 'inline',
-
-                            'margin': '0'
-
-                        }
-
-                    }
-
+                    { title: 'Immagine a sinistra', selector: 'img', styles: { 'float': 'left', 'margin': '0 15px 10px 0' } },
+                    { title: 'Immagine centrata', selector: 'img', styles: { 'display': 'block', 'float': 'none', 'margin-left': 'auto', 'margin-right': 'auto' } },
+                    { title: 'Immagine a destra', selector: 'img', styles: { 'float': 'right', 'margin': '0 0 10px 15px' } },
+                    { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
                 ],
 
-
-                /* =================================================
-                   UPLOAD IMMAGINI
-                   ================================================= */
-
                 images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
-
                     const formData = new FormData();
-
-
-                    formData.append(
-
-                        'file',
-
-                        blobInfo.blob(),
-
-                        blobInfo.filename()
-
-                    );
-
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
 
                     fetch('/api/uploads/immagine', {
-
                         method: 'POST',
-
                         body: formData
-
                     })
-
                     .then(response => {
-
                         if (!response.ok) {
-
                             return response.text().then(text => {
-
-                                throw new Error(
-
-                                    'Errore HTTP ' +
-
-                                    response.status +
-
-                                    ': ' +
-
-                                    text
-
-                                );
-
+                                throw new Error('Errore HTTP ' + response.status + ': ' + text);
                             });
-
                         }
-
                         return response.json();
-
                     })
-
                     .then(data => {
-
-                        console.log(
-
-                            'Risposta upload TinyMCE:',
-
-                            data
-
-                        );
-
-
-                        const imageUrl =
-
-                            data.location ||
-
-                            data.url;
-
-
+                        const imageUrl = data.location || data.url;
                         if (!imageUrl) {
-
-                            throw new Error(
-
-                                'Il server non ha restituito ' +
-
-                                'location oppure url.'
-
-                            );
-
+                            throw new Error('Il server non ha restituito location oppure url.');
                         }
-
-
-                        console.log(
-
-                            'URL immagine utilizzato:',
-
-                            imageUrl
-
-                        );
-
-
                         resolve(imageUrl);
-
                     })
-
                     .catch(error => {
-
-                        console.error(
-
-                            'Upload fallito:',
-
-                            error
-
-                        );
-
-
-                        reject({
-
-                            message:
-
-                                'Caricamento immagine non riuscito: ' +
-
-                                error.message,
-
-                            remove: true
-
-                        });
-
+                        console.error('Upload fallito:', error);
+                        reject({ message: 'Caricamento immagine non riuscito: ' + error.message, remove: true });
                     });
-
                 })
-
             });
-
         });
-
     </script>
-
 </head>
 
+<body>
 
-<body class="bg-light">
+    <!-- Canvas Sfondo Animato -->
+    <canvas id="tech-bg-canvas"></canvas>
 
+    <div class="container py-4">
 
-<!-- ============================================================
-     CONTENITORE PRINCIPALE
-     ============================================================ -->
-
-<div class="container py-4">
-
-
-    <!-- ============================================================
-         INTESTAZIONE
-         ============================================================ -->
-
-    <div
-        class="d-flex justify-content-between align-items-center mb-4">
-
-
-        <!-- TITOLO -->
-
-        <div>
-
-            <h2
-                class="mb-1"
-                th:text="${page.id == null
-                          ? 'Nuova Pagina'
-                          : 'Modifica Pagina #' + page.id}">
-
-                Nuova Pagina
-
-            </h2>
-
-
-            <p class="text-muted mb-0">
-
-                Crea o modifica il contenuto della pagina.
-
-            </p>
-
+        <!-- INTESTAZIONE -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova Pagina</h2>
+                <p class="text-muted mb-0">Crea o modifica il contenuto della pagina.</p>
+            </div>
+            <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
+                <i class="bi bi-arrow-left me-1"></i> Torna alla Dashboard
+            </a>
         </div>
 
+        <!-- FORM PAGINA -->
+        <form th:action="@{/admin/pages/save}" th:object="${page}" method="post" class="card shadow-sm border-0">
+            <div class="card-body p-4">
 
-        <!-- ========================================================
-             RITORNO DASHBOARD
-             ======================================================== -->
+                <input type="hidden" th:field="*{id}">
 
-        <a
-            th:href="@{/admin/dashboard}"
-            class="btn btn-secondary">
+                <!-- TITOLO -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Titolo Pagina</label>
+                    <input type="text" th:field="*{title}" class="form-control form-control-lg" placeholder="es. Chi Siamo" required>
+                    <div class="form-text">Il titolo verrà utilizzato come titolo amministrativo della pagina.</div>
+                </div>
 
-            <i class="bi bi-arrow-left me-1"></i>
+                <!-- SLUG -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Slug URL</label>
+                    <input type="text" th:field="*{slug}" class="form-control" placeholder="es. chi-siamo" required>
+                    <div class="form-text">La pagina sarà disponibile all'indirizzo: <code>/p/chi-siamo</code></div>
+                </div>
 
-            Torna alla Dashboard
+                <!-- LARGHEZZA BLOCCO -->
+                <div class="mb-4">
+                    <label for="widthPercent" class="form-label fw-bold">Larghezza Blocco (%)</label>
+                    <div class="input-group">
+                        <input id="widthPercent" type="number" th:field="*{widthPercent}" class="form-control" min="10" max="100" step="1" placeholder="100">
+                        <span class="input-group-text">%</span>
+                    </div>
+                    <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
+                </div>
 
-        </a>
+                <!-- CONTENUTO -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Contenuto Pagina</label>
+                    <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e formattazione avanzata.</div>
+                    <textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
+                </div>
+
+                <!-- INFORMAZIONI URL -->
+                <div class="alert alert-light border mb-4">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle-fill text-success fs-4 me-3"></i>
+                        <div>
+                            <strong>URL della pagina</strong>
+                            <div class="mt-1">
+                                <code>/p/<span th:text="${page.slug}">slug-pagina</span></code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTONI -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
+                        <i class="bi bi-arrow-left me-1"></i> Annulla
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle me-1"></i> Salva Pagina
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+        <footer class="text-center text-muted small py-4">
+            <i class="bi bi-cpu me-1"></i> Eco Skill Factory CMS
+        </footer>
 
     </div>
 
-
-
-    <!-- ============================================================
-         FORM PAGINA
-         ============================================================ -->
-
-    <form
-        th:action="@{/admin/pages/save}"
-        th:object="${page}"
-        method="post"
-        class="card shadow-sm border-0">
-
-
-        <div class="card-body p-4">
-
-
-            <!-- ====================================================
-                 ID
-                 ==================================================== -->
-
-            <input
-                type="hidden"
-                th:field="*{id}">
-
-
-
-            <!-- ====================================================
-                 TITOLO
-                 ==================================================== -->
-
-            <div class="mb-4">
-
-                <label
-                    class="form-label fw-bold">
-
-                    Titolo Pagina
-
-                </label>
-
-
-                <input
-                    type="text"
-                    th:field="*{title}"
-                    class="form-control form-control-lg"
-                    placeholder="es. Chi Siamo"
-                    required>
-
-
-                <div class="form-text">
-
-                    Il titolo verrà utilizzato come titolo amministrativo
-                    della pagina.
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ====================================================
-                 SLUG
-                 ==================================================== -->
-
-            <div class="mb-4">
-
-                <label
-                    class="form-label fw-bold">
-
-                    Slug URL
-
-                </label>
-
-
-                <input
-                    type="text"
-                    th:field="*{slug}"
-                    class="form-control"
-                    placeholder="es. chi-siamo"
-                    required>
-
-
-                <div class="form-text">
-
-                    La pagina sarà disponibile all'indirizzo:
-
-                    <code>/p/chi-siamo</code>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ====================================================
-                 LARGHEZZA BLOCCO
-                 ==================================================== -->
-
-            <div class="mb-4">
-
-                <label
-                    for="widthPercent"
-                    class="form-label fw-bold">
-
-                    Larghezza Blocco (%)
-
-                </label>
-
-
-                <div class="input-group">
-
-                    <input
-                        id="widthPercent"
-                        type="number"
-                        th:field="*{widthPercent}"
-                        class="form-control"
-                        min="10"
-                        max="100"
-                        step="1"
-                        placeholder="100">
-
-                    <span class="input-group-text">
-
-                        %
-
-                    </span>
-
-                </div>
-
-
-                <div class="form-text">
-
-                    Imposta la larghezza del contenuto della pagina
-                    rispetto alla larghezza disponibile.
-
-                    Il valore predefinito è
-                    <strong>100%</strong>.
-
-                    Puoi utilizzare valori compresi tra
-                    <strong>10%</strong> e
-                    <strong>100%</strong>.
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ====================================================
-                 CONTENUTO
-                 ==================================================== -->
-
-            <div class="mb-4">
-
-
-                <label
-                    class="form-label fw-bold">
-
-                    Contenuto Pagina
-
-                </label>
-
-
-                <div class="form-text mb-2">
-
-                    Utilizza l'editor per inserire testo, immagini,
-                    link, tabelle, video e formattazione avanzata.
-
-                </div>
-
-
-                <!-- =================================================
-                     TINYMCE
-                     ================================================= -->
-
-                <textarea
-                    class="wysiwyg-editor"
-                    th:field="*{contentHtml}">
-                </textarea>
-
-
-            </div>
-
-
-
-            <!-- ====================================================
-                 INFORMAZIONI URL
-                 ==================================================== -->
-
-            <div class="alert alert-light border mb-4">
-
-                <div class="d-flex align-items-start">
-
-                    <i
-                        class="bi bi-info-circle-fill text-primary fs-4 me-3">
-                    </i>
-
-
-                    <div>
-
-                        <strong>
-
-                            URL della pagina
-
-                        </strong>
-
-
-                        <div class="mt-1">
-
-                            <code>
-
-                                /p/<span th:text="${page.slug}">
-                                    slug-pagina
-                                </span>
-
-                            </code>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ====================================================
-                 BOTTONI
-                 ==================================================== -->
-
-            <div
-                class="d-flex justify-content-between align-items-center">
-
-
-                <!-- ANNULLA -->
-
-                <a
-                    th:href="@{/admin/dashboard}"
-                    class="btn btn-outline-secondary">
-
-                    <i class="bi bi-arrow-left me-1"></i>
-
-                    Annulla
-
-                </a>
-
-
-                <!-- SALVA -->
-
-                <button
-                    type="submit"
-                    class="btn btn-success btn-lg">
-
-                    <i class="bi bi-check-circle me-1"></i>
-
-                    Salva Pagina
-
-                </button>
-
-            </div>
-
-
-        </div>
-
-    </form>
-
-
-
-    <!-- ============================================================
-         FOOTER
-         ============================================================ -->
-
-    <footer
-        class="text-center text-muted small py-4">
-
-        <i class="bi bi-cpu me-1"></i>
-
-        Eco Skill Factory CMS
-
-    </footer>
-
-
-</div>
-
-
-
-<!-- ============================================================
-     BOOTSTRAP JS
-     ============================================================ -->
-
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
-</script>
-
-
+    <!-- SCRIPT ANIMAZIONE SFONDO -->
+    <script>
+        const canvas = document.getElementById('tech-bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Circuit {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.length = Math.floor(Math.random() * 8) + 4;
+                this.currentStep = 0;
+                this.dir = Math.floor(Math.random() * 4);
+                this.path = [{ x: this.x, y: this.y }];
+                this.speed = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.4 + 0.1;
+                this.size = 20;
+            }
+            update() {
+                if (this.currentStep < this.length) {
+                    let last = this.path[this.path.length - 1];
+                    let nx = last.x, ny = last.y;
+                    if (Math.random() < 0.3) {
+                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+                    }
+                    switch (this.dir) {
+                        case 0: ny -= this.size; break;
+                        case 1: nx += this.size; break;
+                        case 2: ny += this.size; break;
+                        case 3: nx -= this.size; break;
+                    }
+                    this.path.push({ x: nx, y: ny });
+                    this.currentStep++;
+                } else {
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
+                }
+            }
+            draw() {
+                if (this.path.length < 2) return;
+                ctx.beginPath();
+                ctx.moveTo(this.path[0].x, this.path[0].y);
+                for (let i = 1; i < this.path.length; i++) {
+                    ctx.lineTo(this.path[i].x, this.path[i].y);
+                }
+                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                let last = this.path[this.path.length - 1];
+                ctx.beginPath();
+                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+                ctx.fill();
+            }
+        }
+
+        const codeSnippets = [
+            "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
+            "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
+            "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
+            "npm run build", "docker-compose up -d", "mvn clean install"
+        ];
+
+        class CodeText {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * (width - 200);
+                this.y = Math.random() * height;
+                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                this.alpha = 0;
+                this.maxAlpha = Math.random() * 0.3 + 0.1;
+                this.fadeIn = true;
+                this.speed = Math.random() * 0.3 + 0.1;
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.fadeIn) {
+                    this.alpha += 0.008;
+                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+                } else {
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
+                }
+            }
+            draw() {
+                ctx.font = '12px "Fira Code", monospace';
+                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.fillText(this.text, this.x, this.y);
+            }
+        }
+
+        const circuits = Array.from({ length: 18 }, () => new Circuit());
+        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            circuits.forEach(c => { c.update(); c.draw(); });
+            codeTexts.forEach(ct => { ct.update(); ct.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
 </body>
-
 </html>

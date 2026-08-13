@@ -17,8 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
             .authorizeHttpRequests(auth -> auth
@@ -28,10 +27,10 @@ public class SecurityConfig {
                  * RISORSE PUBBLICHE
                  * =====================================================
                  */
-
                 .requestMatchers(
                     "/",
                     "/login",
+                    "/error", // <--- FONDAMENTALE: evita il loop ERR_TOO_MANY_REDIRECTS se si verifica un eccezione
                     "/css/**",
                     "/js/**",
                     "/images/**",
@@ -47,10 +46,7 @@ public class SecurityConfig {
                  * =====================================================
                  * AREA AMMINISTRATIVA
                  * =====================================================
-                 *
-                 * Tutto /admin/** richiede ruolo ADMIN.
                  */
-
                 .requestMatchers("/admin/**")
                 .hasRole("ADMIN")
 
@@ -60,7 +56,6 @@ public class SecurityConfig {
                  * TUTTO IL RESTO
                  * =====================================================
                  */
-
                 .anyRequest()
                 .authenticated()
             )
@@ -71,16 +66,9 @@ public class SecurityConfig {
              * LOGIN
              * =========================================================
              */
-
             .formLogin(form -> form
-
                 .loginPage("/login")
-
-                .defaultSuccessUrl(
-                    "/admin/dashboard",
-                    true
-                )
-
+                .defaultSuccessUrl("/admin/dashboard", true)
                 .permitAll()
             )
 
@@ -90,35 +78,19 @@ public class SecurityConfig {
              * LOGOUT
              * =========================================================
              */
-
             .logout(logout -> logout
-
                 .logoutUrl("/logout")
-
                 .logoutSuccessUrl("/")
-
                 .permitAll()
             )
 
 
             /*
              * =========================================================
-             * CSRF
+             * CSRF & HEADERS
              * =========================================================
-             *
-             * Attualmente disabilitato perché il tuo upload TinyMCE
-             * utilizza una POST verso /api/uploads/immagine senza
-             * passare il token CSRF.
              */
-
             .csrf(csrf -> csrf.disable())
-
-
-            /*
-             * =========================================================
-             * IFRAME / TINYMCE
-             * =========================================================
-             */
 
             .headers(headers -> headers
                 .frameOptions(frame -> frame.sameOrigin())
@@ -131,22 +103,17 @@ public class SecurityConfig {
 
     /*
      * =============================================================
-     * UTENTE ADMIN
+     * UTENTE ADMIN IN-MEMORY
      * =============================================================
      */
-
     @Bean
-    public UserDetailsService userDetailsService(
-            PasswordEncoder encoder) {
+    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
 
-        UserDetails admin =
-                User.builder()
-                    .username("admin")
-                    .password(
-                        encoder.encode("admin")
-                    )
-                    .roles("ADMIN")
-                    .build();
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password(encoder.encode("admin"))
+                .roles("ADMIN")
+                .build();
 
         return new InMemoryUserDetailsManager(admin);
     }
@@ -157,10 +124,8 @@ public class SecurityConfig {
      * PASSWORD ENCODER
      * =============================================================
      */
-
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 }

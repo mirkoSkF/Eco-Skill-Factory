@@ -21,8 +21,20 @@ public class NavbarAdminController {
     @GetMapping
     public String index(Model model) {
         model.addAttribute("navItems", navItemRepository.findByParentIsNullOrderByItemOrderAsc());
-        model.addAttribute("pages", pageRepository.findAll()); // Popola la lista delle pagine nel select
+        model.addAttribute("pages", pageRepository.findAll());
         model.addAttribute("newItem", new NavItem());
+        return "admin/navbar-management";
+    }
+
+    // NUOVO ENDPOINT: Carica i dati della voce scelta nel form
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, Model model) {
+        NavItem item = navItemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ID non valido: " + id));
+
+        model.addAttribute("navItems", navItemRepository.findByParentIsNullOrderByItemOrderAsc());
+        model.addAttribute("pages", pageRepository.findAll());
+        model.addAttribute("newItem", item); // Passa l'elemento da modificare al form
         return "admin/navbar-management";
     }
 

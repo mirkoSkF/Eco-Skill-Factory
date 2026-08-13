@@ -237,7 +237,8 @@
             <div class="col-lg-5">
                 <div class="card card-custom">
                     <div class="card-header fw-bold text-white fs-5 py-3">
-                        <i class="bi bi-plus-square me-2 text-success"></i>Aggiungi / Modifica Voce
+                        <i class="bi me-2 text-success" th:classappend="${newItem.id != null} ? 'bi-pencil-square' : 'bi-plus-square'"></i>
+                        <span th:text="${newItem.id != null} ? 'Modifica Voce' : 'Aggiungi Nuova Voce'">Aggiungi / Modifica Voce</span>
                     </div>
                     <div class="card-body p-4">
                         <form th:action="@{/admin/navbar/save}" th:object="${newItem}" method="post">
@@ -252,7 +253,7 @@
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-light">Tipo di Link</label>
                                 <select id="linkTypeSelect" class="form-select" onchange="toggleLinkInput()">
-                                    <option value="PAGE" th:selected="${newItem.page != null}">Pagina CMS</option>
+                                    <option value="PAGE" th:selected="${newItem.page != null || (newItem.url == null || #strings.isEmpty(newItem.url))}">Pagina CMS</option>
                                     <option value="URL" th:selected="${newItem.url != null and !#strings.isEmpty(newItem.url)}">URL Personalizzato</option>
                                 </select>
                             </div>
@@ -276,7 +277,12 @@
                                 <label class="form-label fw-bold text-light">Menu Padre (Per Dropdown)</label>
                                 <select class="form-select" th:field="*{parent}">
                                     <option value="">-- Nessuno (Voce Principale) --</option>
-                                    <option th:each="parentItem : ${navItems}" th:value="${parentItem.id}" th:text="${parentItem.label}"></option>
+                                    <!-- Evita di impostare se stesso come padre in fase di modifica -->
+                                    <option th:each="parentItem : ${navItems}" 
+                                            th:if="${newItem.id == null || newItem.id != parentItem.id}"
+                                            th:value="${parentItem.id}" 
+                                            th:text="${parentItem.label}">
+                                    </option>
                                 </select>
                             </div>
 
@@ -285,9 +291,14 @@
                                 <input type="number" class="form-control" th:field="*{itemOrder}" required />
                             </div>
 
-                            <button type="submit" class="btn btn-brand w-100 py-2">
-                                <i class="bi bi-save me-1"></i> Salva Voce
-                            </button>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-brand flex-grow-1 py-2">
+                                    <i class="bi bi-save me-1"></i> Salva
+                                </button>
+                                <a th:if="${newItem.id != null}" th:href="@{/admin/navbar}" class="btn btn-outline-secondary py-2">
+                                    Annulla
+                                </a>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -304,16 +315,17 @@
                                         <th class="text-center" style="width: 70px;">Ordine</th>
                                         <th>Etichetta</th>
                                         <th>Tipo / Destinazione</th>
-                                        <th class="text-end" style="width: 100px;">Azioni</th>
+                                        <th class="text-end" style="width: 110px;">Azioni</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <th:block th:each="item : ${navItems}">
-                                        <tr>
+                                        <tr th:classappend="${newItem.id != null and newItem.id == item.id} ? 'table-active' : ''">
                                             <td class="fw-bold text-center text-success" th:text="${item.itemOrder}">1</td>
                                             <td class="fw-semibold text-white" th:text="${item.label}">Home</td>
                                             <td>
-                                                <span th:if="${item.dropdown}" class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-25">Dropdown</span>
+                                                <span th:if="${(item.children != null and !item.children.isEmpty()) or (item.page == null and (item.url == null or #strings.isEmpty(item.url)))}" 
+                                                      class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-25">Dropdown</span>
                                                 <a th:if="${item.page != null}" 
                                                    th:href="@{'/p/' + ${item.page.slug}}" 
                                                    target="_blank" 
@@ -328,13 +340,20 @@
                                                 </a>
                                             </td>
                                             <td class="text-end">
-                                                <a th:href="@{/admin/navbar/delete/{id}(id=${item.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Eliminare questa voce e le sue sottovoci?');">
-                                                    <i class="bi bi-trash"></i>
-                                                </a>
+                                                <div class="btn-group btn-group-sm">
+                                                    <!-- PULSANTE MODIFICA PADRE -->
+                                                    <a th:href="@{/admin/navbar/edit/{id}(id=${item.id})}" class="btn btn-outline-warning" title="Modifica">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                    <!-- PULSANTE ELIMINA PADRE -->
+                                                    <a th:href="@{/admin/navbar/delete/{id}(id=${item.id})}" class="btn btn-outline-danger" onclick="return confirm('Eliminare questa voce e le sue sottovoci?');" title="Elimina">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                         <!-- SOTTOVOCI DROPDOWN -->
-                                        <tr th:each="child : ${item.children}">
+                                        <tr th:each="child : ${item.children}" th:classappend="${newItem.id != null and newItem.id == child.id} ? 'table-active' : ''">
                                             <td class="text-center text-secondary ps-4">└ <span th:text="${child.itemOrder}">1</span></td>
                                             <td class="ps-4 text-secondary" th:text="${child.label}">Sottovoce</td>
                                             <td>
@@ -352,9 +371,16 @@
                                                 </a>
                                             </td>
                                             <td class="text-end">
-                                                <a th:href="@{/admin/navbar/delete/{id}(id=${child.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Eliminare questa sottovoce?');">
-                                                    <i class="bi bi-trash"></i>
-                                                </a>
+                                                <div class="btn-group btn-group-sm">
+                                                    <!-- PULSANTE MODIFICA FIGLIO -->
+                                                    <a th:href="@{/admin/navbar/edit/{id}(id=${child.id})}" class="btn btn-outline-warning" title="Modifica">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                    <!-- PULSANTE ELIMINA FIGLIO -->
+                                                    <a th:href="@{/admin/navbar/delete/{id}(id=${child.id})}" class="btn btn-outline-danger" onclick="return confirm('Eliminare questa sottovoce?');" title="Elimina">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                     </th:block>
@@ -380,11 +406,9 @@ function toggleLinkInput() {
     if (linkType === 'PAGE') {
         pageGroup.classList.remove('d-none');
         urlGroup.classList.add('d-none');
-        urlInput.value = '';
     } else {
         urlGroup.classList.remove('d-none');
         pageGroup.classList.add('d-none');
-        pageSelect.value = '';
     }
 }
 

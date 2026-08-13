@@ -17,42 +17,150 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http) throws Exception {
+
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/css/**", "/js/**", "/uploads/**", "/favicon.ico").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+
+                /*
+                 * =====================================================
+                 * RISORSE PUBBLICHE
+                 * =====================================================
+                 */
+
+                .requestMatchers(
+                    "/",
+                    "/login",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
+                    "/tinymce/**",
+                    "/uploads/**",
+                    "/api/uploads/**",
+                    "/favicon.ico",
+                    "/p/**"
+                ).permitAll()
+
+
+                /*
+                 * =====================================================
+                 * AREA AMMINISTRATIVA
+                 * =====================================================
+                 *
+                 * Tutto /admin/** richiede ruolo ADMIN.
+                 */
+
+                .requestMatchers("/admin/**")
+                .hasRole("ADMIN")
+
+
+                /*
+                 * =====================================================
+                 * TUTTO IL RESTO
+                 * =====================================================
+                 */
+
+                .anyRequest()
+                .authenticated()
             )
+
+
+            /*
+             * =========================================================
+             * LOGIN
+             * =========================================================
+             */
+
             .formLogin(form -> form
+
                 .loginPage("/login")
-                .defaultSuccessUrl("/admin/dashboard", true)
+
+                .defaultSuccessUrl(
+                    "/admin/dashboard",
+                    true
+                )
+
                 .permitAll()
             )
+
+
+            /*
+             * =========================================================
+             * LOGOUT
+             * =========================================================
+             */
+
             .logout(logout -> logout
+
                 .logoutUrl("/logout")
+
                 .logoutSuccessUrl("/")
+
                 .permitAll()
             )
-            .csrf(csrf -> csrf.disable()); // Utile per upload o chiamate AJAX da TinyMCE
+
+
+            /*
+             * =========================================================
+             * CSRF
+             * =========================================================
+             *
+             * Attualmente disabilitato perché il tuo upload TinyMCE
+             * utilizza una POST verso /api/uploads/immagine senza
+             * passare il token CSRF.
+             */
+
+            .csrf(csrf -> csrf.disable())
+
+
+            /*
+             * =========================================================
+             * IFRAME / TINYMCE
+             * =========================================================
+             */
+
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
+            );
+
 
         return http.build();
     }
 
+
+    /*
+     * =============================================================
+     * UTENTE ADMIN
+     * =============================================================
+     */
+
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        // Unico utente Admin per la piattaforma
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(encoder.encode("admin")) // Sostituisci con la tua password desiderata
-                .roles("ADMIN")
-                .build();
+    public UserDetailsService userDetailsService(
+            PasswordEncoder encoder) {
+
+        UserDetails admin =
+                User.builder()
+                    .username("admin")
+                    .password(
+                        encoder.encode("admin")
+                    )
+                    .roles("ADMIN")
+                    .build();
 
         return new InMemoryUserDetailsManager(admin);
     }
 
+
+    /*
+     * =============================================================
+     * PASSWORD ENCODER
+     * =============================================================
+     */
+
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 }

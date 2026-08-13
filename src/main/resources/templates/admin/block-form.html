@@ -63,10 +63,33 @@
 
                 resize_img_proportional: true,
 
+
+                /* =================================================
+                   GESTIONE URL IMMAGINI
+                   ================================================= */
+
+                relative_urls: false,
+
+                remove_script_host: false,
+
+                convert_urls: false,
+
+                document_base_url: window.location.origin + '/',
+
+
+                /* =================================================
+                   DIMENSIONI FONT
+                   ================================================= */
+
                 font_size_formats:
                     '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
 
                 font_size_input_default_unit: 'px',
+
+
+                /* =================================================
+                   PLUGIN
+                   ================================================= */
 
                 plugins: [
                     'advlist',
@@ -87,6 +110,11 @@
                     'emoticons'
                 ],
 
+
+                /* =================================================
+                   TOOLBAR
+                   ================================================= */
+
                 toolbar:
                     'undo redo | blocks fontfamily fontsize | ' +
                     'bold italic underline | ' +
@@ -95,6 +123,11 @@
                     'bullist numlist | ' +
                     'link image media table emoticons | ' +
                     'code fullscreen | help',
+
+
+                /* =================================================
+                   STILE EDITOR
+                   ================================================= */
 
                 content_style: `
 
@@ -143,6 +176,11 @@
 
                 `,
 
+
+                /* =================================================
+                   STILI IMMAGINE
+                   ================================================= */
+
                 style_formats: [
 
                     {
@@ -186,6 +224,11 @@
 
                 ],
 
+
+                /* =================================================
+                   UPLOAD IMMAGINI TINYMCE
+                   ================================================= */
+
                 images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
 
                     const formData = new FormData();
@@ -221,9 +264,33 @@
 
                     .then(data => {
 
-                        resolve(
-                            data.location || data.url
-                        );
+                        const imageUrl =
+                            data.location ||
+                            data.url;
+
+                        if (!imageUrl) {
+
+                            throw new Error(
+                                'Il server non ha restituito l\'URL dell\'immagine.'
+                            );
+
+                        }
+
+                        /*
+                         * Se il server restituisce:
+                         *
+                         * /uploads/foto.jpg
+                         *
+                         * lo manteniamo così.
+                         *
+                         * Se restituisce un URL completo:
+                         *
+                         * https://dominio.it/uploads/foto.jpg
+                         *
+                         * manteniamo anche quello.
+                         */
+
+                        resolve(imageUrl);
 
                     })
 
@@ -235,7 +302,8 @@
                         );
 
                         reject({
-                            message: 'Caricamento immagine non riuscito',
+                            message:
+                                'Caricamento immagine non riuscito',
                             remove: true
                         });
 
@@ -313,7 +381,6 @@
 
             <div class="col-md-6">
 
-
                 <label class="form-label fw-bold">
 
                     Titolo Riga
@@ -328,14 +395,12 @@
                        required
                        placeholder="es. Banner Iniziale / Sezione Servizi" />
 
-
             </div>
 
 
             <!-- POSIZIONE -->
 
             <div class="col-md-2">
-
 
                 <label class="form-label fw-bold">
 
@@ -349,14 +414,12 @@
                        th:field="*{position}"
                        required />
 
-
             </div>
 
 
             <!-- MODELLO -->
 
             <div class="col-md-4">
-
 
                 <label class="form-label fw-bold">
 
@@ -369,19 +432,14 @@
                         class="form-select"
                         th:field="*{blockType}">
 
-
                     <option th:each="type : ${blockTypes}"
                             th:value="${type}"
                             th:text="${type.label}">
-
                     </option>
-
 
                 </select>
 
-
             </div>
-
 
         </div>
 
@@ -393,39 +451,9 @@
         <div class="row g-3 mb-3">
 
 
-            <!-- CONTAINER -->
-
-           <!-- <div class="col-md-4">
-
-  
-                <label class="form-label fw-bold">
-
-                    Larghezza Container
-
-                </label>
-
-
-                <select class="form-select"
-                        th:field="*{containerType}">
-
-
-                    <option th:each="ct : ${containerTypes}"
-                            th:value="${ct}"
-                            th:text="${ct.name()}">
-
-                    </option>
-
-
-                </select>
-
-
-            </div>-->
-
-
             <!-- LARGHEZZA -->
 
             <div class="col-md-4">
-
 
                 <label class="form-label fw-bold">
 
@@ -448,14 +476,12 @@
 
                 </div>
 
-
             </div>
 
 
             <!-- ALTEZZA -->
 
             <div class="col-md-4">
-
 
                 <label class="form-label fw-bold">
 
@@ -478,19 +504,14 @@
 
                 </div>
 
-
             </div>
-
 
         </div>
 
 
         <!-- ====================================================
              IMMAGINE PRINCIPALE
-             
-             SOLO:
-             JUMBO_DEMO_1
-             JUMBO_DEMO_2
+             SOLO JUMBO_DEMO_1 / JUMBO_DEMO_2
              ==================================================== -->
 
         <div id="mainImageUpload"
@@ -499,7 +520,8 @@
              th:style="${block.blockType != null
                          and (
                              block.blockType.name() == 'JUMBO_DEMO_1'
-                             or block.blockType.name() == 'JUMBO_DEMO_2'
+                             or
+                             block.blockType.name() == 'JUMBO_DEMO_2'
                          )}
                          ? ''
                          : 'display:none;'">
@@ -537,7 +559,9 @@
                    th:field="*{imageUrl}" />
 
 
-            <!-- ANTEPRIMA IMMAGINE PRINCIPALE -->
+            <!-- =================================================
+                 ANTEPRIMA IMMAGINE PRINCIPALE
+                 ================================================= -->
 
             <div th:if="${block.imageUrl != null
                          and !block.imageUrl.empty}"
@@ -551,11 +575,14 @@
                 </small>
 
 
+                <!-- FIX: URL DIRETTO -->
+
                 <img th:src="${block.imageUrl}"
                      alt="Anteprima"
                      class="img-thumbnail"
                      style="
                          max-height: 120px;
+                         width: auto;
                          object-fit: contain;
                      " />
 
@@ -568,10 +595,7 @@
 
         <!-- ====================================================
              EDITOR PRINCIPALE
-             
-             VIENE NASCOSTO PER:
-             CARDS
-             CAROUSEL
+             NASCOSTO PER CARDS / CAROUSEL
              ==================================================== -->
 
         <div id="mainEditorSection"
@@ -600,7 +624,6 @@
 
         <div class="text-end">
 
-
             <button type="submit"
                     class="btn btn-primary btn-lg">
 
@@ -610,7 +633,6 @@
 
             </button>
 
-
         </div>
 
 
@@ -619,19 +641,6 @@
 
     <!-- ========================================================
          GESTIONE CARDS / CAROSELLO
-         
-         IMPORTANTE:
-         QUESTA SEZIONE NON HA th:if SUL DIV PRINCIPALE.
-
-         Così JavaScript può mostrarla immediatamente quando
-         l'utente cambia modello.
-
-         Quando la riga è nuova:
-         - mostriamo il messaggio "salva prima la riga"
-
-         Quando la riga ha un ID:
-         - mostriamo anteprime
-         - mostriamo form aggiunta / modifica
          ======================================================== -->
 
     <div id="itemsSection"
@@ -640,7 +649,8 @@
          th:style="${block.blockType != null
                      and (
                          block.blockType.name() == 'CARDS'
-                         or block.blockType.name() == 'CAROUSEL'
+                         or
+                         block.blockType.name() == 'CAROUSEL'
                      )}
                      ? ''
                      : 'display:none;'">
@@ -652,9 +662,7 @@
 
         <div class="d-flex align-items-center mb-4">
 
-
             <div class="me-3">
-
 
                 <div id="itemsIcon"
                      class="rounded-circle bg-primary bg-opacity-10
@@ -664,18 +672,14 @@
                          height: 55px;
                      ">
 
-
                     <i class="bi bi-grid-3x3-gap fs-4 text-primary"></i>
 
-
                 </div>
-
 
             </div>
 
 
             <div>
-
 
                 <h4 id="itemsSectionTitle"
                     class="mb-1">
@@ -692,9 +696,7 @@
 
                 </div>
 
-
             </div>
-
 
         </div>
 
@@ -710,7 +712,6 @@
 
             <div class="d-flex align-items-start">
 
-
                 <div class="me-3">
 
                     <i class="bi bi-info-circle-fill fs-4"></i>
@@ -719,7 +720,6 @@
 
 
                 <div>
-
 
                     <strong>
 
@@ -742,12 +742,9 @@
 
                     </div>
 
-
                 </div>
 
-
             </div>
-
 
         </div>
 
@@ -773,16 +770,13 @@
 
                     <h5 class="mb-0">
 
-
                         <i class="bi bi-collection text-primary"></i>
-
 
                         <span id="existingItemsTitle">
 
                             Card inserite
 
                         </span>
-
 
                     </h5>
 
@@ -793,7 +787,6 @@
                         0
 
                     </span>
-
 
                 </div>
 
@@ -821,6 +814,8 @@
                                  class="position-relative">
 
 
+                                <!-- FIX: URL DIRETTO -->
+
                                 <img th:src="${item.imageUrl}"
 
                                      class="card-img-top"
@@ -840,7 +835,6 @@
                                     <i class="bi bi-image"></i>
 
                                 </span>
-
 
                             </div>
 
@@ -873,7 +867,6 @@
                                     </div>
 
                                 </div>
-
 
                             </div>
 
@@ -963,6 +956,7 @@
                             <div class="card-footer bg-transparent
                                         d-flex justify-content-end gap-1">
 
+
                                 <a th:href="@{/admin/block/{bId}/item/edit/{iId}
                                               (bId=${block.id},
                                                iId=${item.id})}"
@@ -973,7 +967,6 @@
                                     <i class="bi bi-pencil"></i>
 
                                     Modifica
-
 
                                 </a>
 
@@ -991,7 +984,6 @@
 
                                     Rimuovi
 
-
                                 </a>
 
 
@@ -1000,12 +992,10 @@
 
                         </div>
 
-
                     </div>
 
 
                 </div>
-
 
             </div>
 
@@ -1032,7 +1022,6 @@
 
                     <div>
 
-
                         <strong>
 
                             Nessun elemento inserito.
@@ -1047,12 +1036,9 @@
 
                         </div>
 
-
                     </div>
 
-
                 </div>
-
 
             </div>
 
@@ -1069,23 +1055,23 @@
 
                     <div class="me-2">
 
-
-                        <i th:class="${editingItem != null} 
-                                   ? 'bi bi-pencil-square text-warning fs-4' 
-                                   : 'bi bi-plus-circle-fill text-success fs-4'"></i>
-
+                        <i th:class="${editingItem != null}
+                                   ? 'bi bi-pencil-square text-warning fs-4'
+                                   : 'bi bi-plus-circle-fill text-success fs-4'">
+                        </i>
 
                     </div>
 
 
                     <h5 id="addItemTitle"
                         class="mb-0"
-                        th:text="${editingItem != null ? 'Modifica Elemento' : 'Aggiungi Card'}">
+                        th:text="${editingItem != null
+                                  ? 'Modifica Elemento'
+                                  : 'Aggiungi Card'}">
 
                         Aggiungi Card
 
                     </h5>
-
 
                 </div>
 
@@ -1093,9 +1079,12 @@
                 <div class="card bg-light border-0 p-3">
 
 
-                    <form th:action="${editingItem != null} 
-                                     ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} 
-                                     : @{/admin/block/{id}/item/add(id=${block.id})}"
+                    <form th:action="${editingItem != null}
+                                     ? @{/admin/block/{bId}/item/update/{iId}
+                                         (bId=${block.id},
+                                          iId=${editingItem.id})}
+                                     : @{/admin/block/{id}/item/add
+                                         (id=${block.id})}"
 
                           method="post"
 
@@ -1119,7 +1108,6 @@
 
                                 </span>
 
-
                             </label>
 
 
@@ -1131,10 +1119,11 @@
 
                                    placeholder="Titolo Card"
 
-                                   th:value="${editingItem != null ? editingItem.title : ''}"
+                                   th:value="${editingItem != null
+                                              ? editingItem.title
+                                              : ''}"
 
                                    required />
-
 
                         </div>
 
@@ -1148,7 +1137,6 @@
 
                             <label class="form-label fw-bold">
 
-
                                 <i class="bi bi-image"></i>
 
 
@@ -1157,7 +1145,6 @@
                                     Carica Immagine Card
 
                                 </span>
-
 
                             </label>
 
@@ -1177,17 +1164,51 @@
 
                             </div>
 
-                            <div th:if="${editingItem != null and editingItem.imageUrl != null and !editingItem.imageUrl.empty}"
+
+                            <!-- =====================================
+                                 IMMAGINE ATTUALE
+                                 ===================================== -->
+
+                            <div th:if="${editingItem != null
+                                         and editingItem.imageUrl != null
+                                         and !editingItem.imageUrl.empty}"
+
                                  class="mt-2">
 
+
                                 <small class="text-muted d-block mb-1">
+
                                     Immagine attuale:
+
                                 </small>
 
+
+                                <!-- FIX PRINCIPALE:
+                                     URL DIRETTO, NON @{...}
+                                -->
+
                                 <img th:src="${editingItem.imageUrl}"
+
                                      alt="Anteprima"
+
                                      class="img-thumbnail"
-                                     style="max-height: 80px; object-fit: contain;" />
+
+                                     style="
+                                         max-height: 100px;
+                                         max-width: 200px;
+                                         width: auto;
+                                         height: auto;
+                                         object-fit: contain;
+                                     " />
+
+
+                                <!-- URL DEBUG VISIVO -->
+
+                                <small class="text-muted d-block mt-1"
+                                       th:text="${editingItem.imageUrl}">
+
+                                </small>
+
 
                             </div>
 
@@ -1215,8 +1236,9 @@
 
                                       placeholder="Testo descrittivo..."
 
-                                      th:text="${editingItem != null ? editingItem.contentHtml : ''}">
-
+                                      th:text="${editingItem != null
+                                                ? editingItem.contentHtml
+                                                : ''}">
                             </textarea>
 
 
@@ -1233,8 +1255,11 @@
                             <label class="form-label">
 
                                 Testo Pulsante
+
                                 <span class="text-muted">
+
                                     (opzionale)
+
                                 </span>
 
                             </label>
@@ -1248,8 +1273,9 @@
 
                                    placeholder="es. Scopri di più"
 
-                                   th:value="${editingItem != null ? editingItem.buttonText : ''}" />
-
+                                   th:value="${editingItem != null
+                                              ? editingItem.buttonText
+                                              : ''}" />
 
                         </div>
 
@@ -1264,8 +1290,11 @@
                             <label class="form-label">
 
                                 Link Pulsante
+
                                 <span class="text-muted">
+
                                     (opzionale)
+
                                 </span>
 
                             </label>
@@ -1279,8 +1308,9 @@
 
                                    placeholder="https://..."
 
-                                   th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
-
+                                   th:value="${editingItem != null
+                                              ? editingItem.buttonUrl
+                                              : ''}" />
 
                         </div>
 
@@ -1289,11 +1319,15 @@
                              PULSANTE AGGIUNTA / MODIFICA
                              ========================================= -->
 
-                        <div class="col-12 text-end d-flex justify-content-end gap-2">
+                        <div class="col-12 text-end
+                                    d-flex justify-content-end gap-2">
 
 
                             <a th:if="${editingItem != null}"
-                               th:href="@{/admin/block/edit/{id}(id=${block.id})}"
+
+                               th:href="@{/admin/block/edit/{id}
+                                         (id=${block.id})}"
+
                                class="btn btn-secondary btn-lg">
 
                                 Annulla Modifica
@@ -1303,14 +1337,22 @@
 
                             <button type="submit"
 
-                                    th:class="${editingItem != null} ? 'btn btn-warning btn-lg' : 'btn btn-success btn-lg'">
+                                    th:class="${editingItem != null}
+                                              ? 'btn btn-warning btn-lg'
+                                              : 'btn btn-success btn-lg'">
 
 
-                                <i th:class="${editingItem != null} ? 'bi bi-check-lg' : 'bi bi-plus-lg'"></i>
+                                <i th:class="${editingItem != null}
+                                              ? 'bi bi-check-lg'
+                                              : 'bi bi-plus-lg'">
+                                </i>
 
 
                                 <span id="addItemButtonText"
-                                      th:text="${editingItem != null ? 'Salva Modifiche Elemento' : 'Aggiungi Card'}">
+
+                                      th:text="${editingItem != null
+                                                ? 'Salva Modifiche Elemento'
+                                                : 'Aggiungi Card'}">
 
                                     Aggiungi Card
 
@@ -1325,15 +1367,12 @@
 
                     </form>
 
-
                 </div>
-
 
             </div>
 
 
         </div>
-
 
     </div>
 
@@ -1448,8 +1487,6 @@ document.addEventListener(
 
             /* =================================================
                IMMAGINE PRINCIPALE
-
-               SOLO DEMO 1 / DEMO 2
                ================================================= */
 
             const mostraImmaginePrincipale =
@@ -1496,8 +1533,6 @@ document.addEventListener(
 
             /* =================================================
                EDITOR PRINCIPALE
-
-               NASCOSTO PER CARDS / CAROUSEL
                ================================================= */
 
             if (mainEditorSection) {
@@ -1547,10 +1582,18 @@ document.addEventListener(
                 }
 
 
-                if (addItemTitle && addItemTitle.textContent.trim() === "Aggiungi Card") {
+                if (addItemTitle) {
 
-                    addItemTitle.textContent =
-                        "Aggiungi Card";
+                    if (
+                        !editingMode() ||
+                        addItemTitle.textContent.trim() !==
+                        "Modifica Elemento"
+                    ) {
+
+                        addItemTitle.textContent =
+                            "Aggiungi Card";
+
+                    }
 
                 }
 
@@ -1571,10 +1614,14 @@ document.addEventListener(
                 }
 
 
-                if (addItemButtonText && addItemButtonText.textContent.trim() === "Aggiungi Card") {
+                if (addItemButtonText) {
 
-                    addItemButtonText.textContent =
-                        "Aggiungi Card";
+                    if (!editingMode()) {
+
+                        addItemButtonText.textContent =
+                            "Aggiungi Card";
+
+                    }
 
                 }
 
@@ -1620,10 +1667,18 @@ document.addEventListener(
                 }
 
 
-                if (addItemTitle && addItemTitle.textContent.trim() === "Aggiungi Card") {
+                if (addItemTitle) {
 
-                    addItemTitle.textContent =
-                        "Aggiungi Slide";
+                    if (
+                        !editingMode() ||
+                        addItemTitle.textContent.trim() !==
+                        "Modifica Elemento"
+                    ) {
+
+                        addItemTitle.textContent =
+                            "Aggiungi Slide";
+
+                    }
 
                 }
 
@@ -1644,10 +1699,14 @@ document.addEventListener(
                 }
 
 
-                if (addItemButtonText && addItemButtonText.textContent.trim() === "Aggiungi Card") {
+                if (addItemButtonText) {
 
-                    addItemButtonText.textContent =
-                        "Aggiungi Slide";
+                    if (!editingMode()) {
+
+                        addItemButtonText.textContent =
+                            "Aggiungi Slide";
+
+                    }
 
                 }
 
@@ -1669,6 +1728,28 @@ document.addEventListener(
 
             }
 
+        }
+
+
+        /* =====================================================
+           VERIFICA MODALITÀ MODIFICA
+           ===================================================== */
+
+        function editingMode() {
+
+            const button =
+                document.getElementById(
+                    "addItemButtonText"
+                );
+
+            if (!button) {
+
+                return false;
+
+            }
+
+            return button.textContent.trim() ===
+                   "Salva Modifiche Elemento";
 
         }
 

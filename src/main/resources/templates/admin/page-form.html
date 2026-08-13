@@ -85,6 +85,19 @@
 
 
                 /* =================================================
+                   URL IMMAGINI
+                   ================================================= */
+
+                relative_urls: false,
+
+                remove_script_host: false,
+
+                convert_urls: false,
+
+                document_base_url: window.location.origin + '/',
+
+
+                /* =================================================
                    DIMENSIONE FONT
                    ================================================= */
 
@@ -355,12 +368,21 @@
 
                         if (!response.ok) {
 
-                            throw new Error(
+                            return response.text().then(text => {
 
-                                'Errore durante il caricamento ' +
-                                'dell\'immagine nel server.'
+                                throw new Error(
 
-                            );
+                                    'Errore HTTP ' +
+
+                                    response.status +
+
+                                    ': ' +
+
+                                    text
+
+                                );
+
+                            });
 
                         }
 
@@ -370,11 +392,45 @@
 
                     .then(data => {
 
-                        resolve(
+                        console.log(
 
-                            data.location || data.url
+                            'Risposta upload TinyMCE:',
+
+                            data
 
                         );
+
+
+                        const imageUrl =
+
+                            data.location ||
+
+                            data.url;
+
+
+                        if (!imageUrl) {
+
+                            throw new Error(
+
+                                'Il server non ha restituito ' +
+
+                                'location oppure url.'
+
+                            );
+
+                        }
+
+
+                        console.log(
+
+                            'URL immagine utilizzato:',
+
+                            imageUrl
+
+                        );
+
+
+                        resolve(imageUrl);
 
                     })
 
@@ -392,7 +448,10 @@
                         reject({
 
                             message:
-                                'Caricamento immagine non riuscito',
+
+                                'Caricamento immagine non riuscito: ' +
+
+                                error.message,
 
                             remove: true
 
@@ -587,7 +646,6 @@
                         min="10"
                         max="100"
                         step="1"
-                        value="100"
                         placeholder="100">
 
                     <span class="input-group-text">

@@ -50,8 +50,9 @@ public class PageAdminController {
 
         Page page = new Page();
 
-        // Larghezza predefinita
         page.setWidthPercent(100);
+
+        page.setContentHtml("");
 
         model.addAttribute(
                 "page",
@@ -79,12 +80,20 @@ public class PageAdminController {
                                 )
                         );
 
-        // Compatibilità con pagine create prima
-        // dell'introduzione di widthPercent
+
+        // Compatibilità con pagine vecchie
+
         if (page.getWidthPercent() == null) {
 
             page.setWidthPercent(100);
         }
+
+
+        if (page.getContentHtml() == null) {
+
+            page.setContentHtml("");
+        }
+
 
         model.addAttribute(
                 "page",
@@ -107,7 +116,7 @@ public class PageAdminController {
         try {
 
             // ====================================================
-            // CONTROLLO TITOLO
+            // TITOLO
             // ====================================================
 
             if (page.getTitle() == null ||
@@ -118,12 +127,19 @@ public class PageAdminController {
                         "Il titolo della pagina è obbligatorio."
                 );
 
+                preparaFormErrore(model, page);
+
                 return "admin/page-form";
             }
 
 
+            page.setTitle(
+                    page.getTitle().trim()
+            );
+
+
             // ====================================================
-            // CONTROLLO SLUG
+            // SLUG
             // ====================================================
 
             if (page.getSlug() == null ||
@@ -133,6 +149,8 @@ public class PageAdminController {
                         "error",
                         "Lo slug della pagina è obbligatorio."
                 );
+
+                preparaFormErrore(model, page);
 
                 return "admin/page-form";
             }
@@ -144,16 +162,71 @@ public class PageAdminController {
 
             String formattedSlug =
                     page.getSlug()
-                        .toLowerCase()
-                        .trim()
-                        .replaceAll("[^a-z0-9]+", "-")
-                        .replaceAll("^-+|-+$", "");
+                            .toLowerCase()
+                            .trim()
+                            .replaceAll("[^a-z0-9]+", "-")
+                            .replaceAll("^-+|-+$", "");
+
+
+            // ====================================================
+            // CONTROLLO SLUG
+            // ====================================================
+
+            if (formattedSlug.isEmpty()) {
+
+                model.addAttribute(
+                        "error",
+                        "Lo slug inserito non è valido."
+                );
+
+                preparaFormErrore(model, page);
+
+                return "admin/page-form";
+            }
+
 
             page.setSlug(formattedSlug);
 
 
             // ====================================================
-            // CONTROLLO CONTENUTO
+            // CONTROLLO SLUG DUPLICATO
+            // ====================================================
+
+            boolean slugEsistente;
+
+            if (page.getId() == null) {
+
+                slugEsistente =
+                        pageRepository.existsBySlug(
+                                page.getSlug()
+                        );
+
+            } else {
+
+                slugEsistente =
+                        pageRepository.existsBySlugAndIdNot(
+                                page.getSlug(),
+                                page.getId()
+                        );
+            }
+
+
+            if (slugEsistente) {
+
+                model.addAttribute(
+                        "error",
+                        "Esiste già una pagina con lo slug: "
+                        + page.getSlug()
+                );
+
+                preparaFormErrore(model, page);
+
+                return "admin/page-form";
+            }
+
+
+            // ====================================================
+            // CONTENUTO
             // ====================================================
 
             if (page.getContentHtml() == null) {
@@ -163,29 +236,30 @@ public class PageAdminController {
 
 
             // ====================================================
-            // LARGHEZZA BLOCCO
+            // LARGHEZZA
             // ====================================================
 
             Integer width =
                     page.getWidthPercent();
 
-            // Se non specificata
+
             if (width == null) {
 
                 width = 100;
             }
 
-            // Minimo 10%
+
             if (width < 10) {
 
                 width = 10;
             }
 
-            // Massimo 100%
+
             if (width > 100) {
 
                 width = 100;
             }
+
 
             page.setWidthPercent(width);
 
@@ -194,13 +268,44 @@ public class PageAdminController {
             // SALVATAGGIO
             // ====================================================
 
-            pageRepository.save(page);
+            Page savedPage =
+                    pageRepository.save(page);
 
+
+            // ====================================================
+            // LOG
+            // ====================================================
+
+            System.out.println("=================================");
+            System.out.println("PAGINA SALVATA");
+            System.out.println("ID: " + savedPage.getId());
+            System.out.println("TITOLO: " + savedPage.getTitle());
+            System.out.println("SLUG: " + savedPage.getSlug());
+            System.out.println("WIDTH: " + savedPage.getWidthPercent());
+            System.out.println("=================================");
+
+
+            // ====================================================
+            // RITORNO ALLA DASHBOARD
+            // ====================================================
 
             return "redirect:/admin/pages";
 
 
         } catch (Exception e) {
+
+            e.printStackTrace();
+
+
+            // ====================================================
+            // VALORI NECESSARI AL FORM
+            // ====================================================
+
+            preparaFormErrore(
+                    model,
+                    page
+            );
+
 
             model.addAttribute(
                     "error",
@@ -208,10 +313,36 @@ public class PageAdminController {
                     + e.getMessage()
             );
 
-            return "admin/page-form";
 
+            return "admin/page-form";
+        }
+    }
+
+
+    // ============================================================
+    // PREPARAZIONE FORM IN CASO DI ERRORE
+    // ============================================================
+
+    private void preparaFormErrore(
+            Model model,
+            Page page) {
+
+        if (page.getWidthPercent() == null) {
+
+            page.setWidthPercent(100);
         }
 
+
+        if (page.getContentHtml() == null) {
+
+            page.setContentHtml("");
+        }
+
+
+        model.addAttribute(
+                "page",
+                page
+        );
     }
 
 

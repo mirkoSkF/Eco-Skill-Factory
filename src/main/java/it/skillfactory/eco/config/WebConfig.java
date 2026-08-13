@@ -12,10 +12,43 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        Path uploadDir = Paths.get("uploads");
-        String uploadPath = uploadDir.toFile().getAbsolutePath();
 
+        /*
+         * Cartella fisica dove AdminController salva le immagini:
+         *
+         * uploads/
+         *
+         * Esempio:
+         * C:/mio-progetto/uploads/
+         *
+         * oppure:
+         * /home/user/mio-progetto/uploads/
+         */
+        Path uploadDir = Paths.get("uploads")
+                .toAbsolutePath()
+                .normalize();
+
+        /*
+         * Converte il percorso fisico in URI file:///
+         *
+         * Esempio Windows:
+         * file:///C:/mio-progetto/uploads/
+         *
+         * Esempio Linux:
+         * file:///home/user/mio-progetto/uploads/
+         */
+        String uploadPath = uploadDir.toUri().toString();
+
+        /*
+         * URL pubblico:
+         *
+         * /uploads/nome-file.jpg
+         *
+         * viene cercato fisicamente dentro:
+         *
+         * uploads/nome-file.jpg
+         */
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadPath + "/");
+                .addResourceLocations(uploadPath);
     }
 }

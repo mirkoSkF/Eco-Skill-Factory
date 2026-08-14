@@ -141,26 +141,12 @@ public class AdminController {
             MultipartFile imageFile) {
 
 
-        // ========================================================
-        // IMPORTANTE:
-        //
-        // true  = stiamo creando una nuova riga
-        // false = stiamo modificando una riga esistente
-        //
-        // Questa informazione ci serve SOLO per decidere
-        // il redirect finale.
-        // ========================================================
-
         boolean isNewBlock =
                 formBlock.getId() == null;
 
 
         PageBlock block;
 
-
-        // ========================================================
-        // RECUPERA BLOCCO ESISTENTE
-        // ========================================================
 
         if (formBlock.getId() != null) {
 
@@ -177,44 +163,24 @@ public class AdminController {
 
         } else {
 
-            // ====================================================
-            // CREA NUOVO BLOCCO
-            // ====================================================
-
             block = new PageBlock();
         }
 
-
-        // ========================================================
-        // TITOLO ADMIN
-        // ========================================================
 
         block.setTitleAdmin(
                 formBlock.getTitleAdmin()
         );
 
 
-        // ========================================================
-        // POSIZIONE
-        // ========================================================
-
         block.setPosition(
                 formBlock.getPosition()
         );
 
 
-        // ========================================================
-        // TIPO CONTENITORE
-        // ========================================================
-
         block.setContainerType(
                 formBlock.getContainerType()
         );
 
-
-        // ========================================================
-        // ALTEZZA
-        // ========================================================
 
         String customHeight =
                 formBlock.getCustomHeight();
@@ -234,10 +200,6 @@ public class AdminController {
                 customHeight
         );
 
-
-        // ========================================================
-        // LARGHEZZA
-        // ========================================================
 
         Integer width =
                 formBlock.getWidthPercent();
@@ -262,36 +224,20 @@ public class AdminController {
         );
 
 
-        // ========================================================
-        // TIPO BLOCCO
-        // ========================================================
-
         block.setBlockType(
                 formBlock.getBlockType()
         );
 
-
-        // ========================================================
-        // CONTENUTO HTML
-        // ========================================================
 
         block.setContentHtml(
                 formBlock.getContentHtml()
         );
 
 
-        // ========================================================
-        // CONTENUTI AUTOMATICI DEMO
-        // ========================================================
-
         applyDefaultDemoContent(
                 block
         );
 
-
-        // ========================================================
-        // COLORE SFONDO
-        // ========================================================
 
         if (formBlock.getBackgroundColor() != null) {
 
@@ -300,10 +246,6 @@ public class AdminController {
             );
         }
 
-
-        // ========================================================
-        // IMMAGINE PRINCIPALE
-        // ========================================================
 
         boolean imageAllowed =
                 block.getBlockType()
@@ -318,14 +260,10 @@ public class AdminController {
             if (imageFile != null
                     && !imageFile.isEmpty()) {
 
-                // Cancella immagine precedente
-
                 deleteUploadedFile(
                         block.getImageUrl()
                 );
 
-
-                // Salva nuova immagine
 
                 String imageUrl =
                         saveUploadedFile(
@@ -349,32 +287,11 @@ public class AdminController {
         }
 
 
-        // ========================================================
-        // SALVATAGGIO
-        // ========================================================
-
         PageBlock savedBlock =
                 blockRepository.save(
                         block
                 );
 
-
-        // ========================================================
-        // REDIRECT DOPO IL SALVATAGGIO
-        // ========================================================
-        //
-        // QUI C'È LA LOGICA IMPORTANTE.
-        //
-        // SOLO se:
-        //
-        // 1. è una NUOVA riga
-        // 2. il tipo è GRIGLIA CARD oppure
-        //    CAROSELLO DYNAMIC
-        //
-        // allora apriamo direttamente la modifica.
-        //
-        // Tutto il resto torna alla dashboard.
-        // ========================================================
 
         if (isNewBlock
                 && shouldOpenEditorAfterCreate(
@@ -386,34 +303,9 @@ public class AdminController {
         }
 
 
-        // ========================================================
-        // TUTTI GLI ALTRI CASI
-        // ========================================================
-
         return "redirect:/admin/dashboard";
     }
 
-
-    // ============================================================
-    // CONTROLLA SE IL BLOCCO DEVE APRIRE DIRETTAMENTE L'EDITOR
-    // ============================================================
-    //
-    // Questa funzione riconosce:
-    //
-    // - Griglia Card
-    // - Carosello Dynamic
-    //
-    // Utilizziamo sia il nome dell'enum sia la label.
-    //
-    // In questo modo funziona anche se nel tuo BlockType
-    // i nomi tecnici sono ad esempio:
-    //
-    // CARD_GRID
-    // GRID_CARD
-    // CAROUSEL_DYNAMIC
-    // CAROSELLO_DYNAMIC
-    //
-    // ============================================================
 
     private boolean shouldOpenEditorAfterCreate(
             BlockType blockType) {
@@ -425,18 +317,10 @@ public class AdminController {
         }
 
 
-        // ========================================================
-        // NOME TECNICO ENUM
-        // ========================================================
-
         String enumName =
                 blockType.name()
                         .toUpperCase();
 
-
-        // ========================================================
-        // LABEL VISUALIZZATA NEL CMS
-        // ========================================================
 
         String label = "";
 
@@ -450,15 +334,8 @@ public class AdminController {
             }
 
         } catch (Exception ignored) {
-
-            // Se getLabel non fosse disponibile
-            // usiamo solamente il nome dell'enum.
         }
 
-
-        // ========================================================
-        // GRIGLIA CARD
-        // ========================================================
 
         boolean isCardGrid =
                 (
@@ -471,10 +348,6 @@ public class AdminController {
                                 && label.contains("CARD")
                 );
 
-
-        // ========================================================
-        // CAROSELLO DYNAMIC
-        // ========================================================
 
         boolean isDynamicCarousel =
                 (
@@ -490,7 +363,6 @@ public class AdminController {
                         (
                                 label.contains("CAROUSEL")
                                         || label.contains("CAROSELLO")
-                                        || label.contains("CAROSELLO")
                         )
                                 &&
                                 label.contains("DYNAMIC")
@@ -502,18 +374,9 @@ public class AdminController {
     }
 
 
-    // ============================================================
-    // CONTENUTI AUTOMATICI
-    // ============================================================
-
     private void applyDefaultDemoContent(
             PageBlock block) {
 
-
-        /*
-         * Se contentHtml contiene già qualcosa,
-         * non sovrascriverlo.
-         */
 
         if (block.getContentHtml() != null
                 && !block.getContentHtml()
@@ -523,10 +386,6 @@ public class AdminController {
             return;
         }
 
-
-        // ========================================================
-        // JUMBO DEMO 1
-        // ========================================================
 
         if (block.getBlockType()
                 == BlockType.JUMBO_DEMO_1) {
@@ -565,11 +424,6 @@ public class AdminController {
             );
         }
 
-
-        // ========================================================
-        // JUMBO DEMO 2
-        // ========================================================
-
         else if (block.getBlockType()
                 == BlockType.JUMBO_DEMO_2) {
 
@@ -605,11 +459,6 @@ public class AdminController {
                     "</p>"
             );
         }
-
-
-        // ========================================================
-        // JUMBO 2 COLONNE
-        // ========================================================
 
         else if (block.getBlockType()
                 == BlockType.JUMBO_2_COL) {
@@ -700,10 +549,6 @@ public class AdminController {
     }
 
 
-    // ============================================================
-    // UPLOAD FILE
-    // ============================================================
-
     private String saveUploadedFile(
             MultipartFile file) {
 
@@ -765,10 +610,6 @@ public class AdminController {
     }
 
 
-    // ============================================================
-    // DELETE FILE
-    // ============================================================
-
     private void deleteUploadedFile(
             String relativeUrl) {
 
@@ -828,7 +669,7 @@ public class AdminController {
 
 
     // ============================================================
-    // AGGIUNGI CARD / SLIDE
+    // AGGIUNGI CARD / SLIDE (CORRETTO)
     // ============================================================
 
     @PostMapping("/block/{id}/item/add")
@@ -839,6 +680,12 @@ public class AdminController {
 
             @RequestParam("title")
             String title,
+
+            @RequestParam(
+                    value = "backgroundColor",
+                    required = false
+            )
+            String backgroundColor, // <--- AGGIUNTO
 
             @RequestParam(
                     value = "itemImageFile",
@@ -884,6 +731,11 @@ public class AdminController {
         );
 
 
+        item.setBackgroundColor(
+                backgroundColor
+        ); // <--- SETTATO IL COLORE DI SFONDO
+
+
         item.setContentHtml(
                 contentHtml
         );
@@ -904,10 +756,6 @@ public class AdminController {
         );
 
 
-        // ========================================================
-        // IMMAGINE CARD / SLIDE
-        // ========================================================
-
         if (imageFile != null
                 && !imageFile.isEmpty()) {
 
@@ -926,19 +774,10 @@ public class AdminController {
         }
 
 
-        // ========================================================
-        // SALVA CARD / SLIDE
-        // ========================================================
-
         itemRepository.save(
                 item
         );
 
-
-        // ========================================================
-        // DOPO AVER AGGIUNTO CARD / SLIDE
-        // RIMANI SEMPRE NELLA MODIFICA DELLA RIGA
-        // ========================================================
 
         return "redirect:/admin/block/edit/"
                 + id;
@@ -1014,7 +853,7 @@ public class AdminController {
 
 
     // ============================================================
-    // SALVA MODIFICA CARD / SLIDE
+    // SALVA MODIFICA CARD / SLIDE (CORRETTO)
     // ============================================================
 
     @PostMapping(
@@ -1028,6 +867,12 @@ public class AdminController {
 
             @RequestParam("title")
             String title,
+
+            @RequestParam(
+                    value = "backgroundColor",
+                    required = false
+            )
+            String backgroundColor, // <--- AGGIUNTO
 
             @RequestParam(
                     value = "itemImageFile",
@@ -1071,6 +916,11 @@ public class AdminController {
         );
 
 
+        item.setBackgroundColor(
+                backgroundColor
+        ); // <--- SETTATO IL COLORE DI SFONDO
+
+
         item.setContentHtml(
                 contentHtml
         );
@@ -1085,10 +935,6 @@ public class AdminController {
                 buttonUrl
         );
 
-
-        // ========================================================
-        // NUOVA IMMAGINE
-        // ========================================================
 
         if (imageFile != null
                 && !imageFile.isEmpty()) {
@@ -1114,18 +960,10 @@ public class AdminController {
         }
 
 
-        // ========================================================
-        // SALVA
-        // ========================================================
-
         itemRepository.save(
                 item
         );
 
-
-        // ========================================================
-        // RIMANI NELLA MODIFICA DELLA RIGA
-        // ========================================================
 
         return "redirect:/admin/block/edit/"
                 + blockId;

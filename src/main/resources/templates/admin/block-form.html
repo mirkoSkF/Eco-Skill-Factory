@@ -649,7 +649,8 @@
                         <div class="col-md-4 mb-4"
                              th:each="item : ${block.items}">
 
-                            <div class="card h-100 border shadow-sm">
+                            <div class="card h-100 border shadow-sm"
+                                 th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
 
                                 <div th:if="${item.imageUrl != null and !item.imageUrl.empty}"
                                      class="position-relative">
@@ -843,6 +844,41 @@
                                        name="itemImageFile"
                                        class="form-control"
                                        accept="image/*" />
+
+                            </div>
+
+
+                            <!-- COLORE SFONDO SINGOLA CARD -->
+                            <div class="col-md-12">
+
+                                <label class="form-label fw-bold">
+
+                                    <i class="bi bi-palette text-success"></i>
+                                    Sfondo Card
+
+                                </label>
+
+                                <div class="color-picker-wrapper">
+
+                                    <input type="color"
+                                           class="form-control form-control-color"
+                                           id="itemBgPicker"
+                                           th:value="${editingItem != null and editingItem.backgroundColor != null and !#strings.isEmpty(editingItem.backgroundColor) ? editingItem.backgroundColor : '#0f172a'}"
+                                           oninput="document.getElementById('itemBgColorInput').value = this.value">
+
+                                    <input type="text"
+                                           name="backgroundColor"
+                                           id="itemBgColorInput"
+                                           class="form-control"
+                                           placeholder="es. #1e293b, rgba(30,41,59,0.8) o transparent"
+                                           th:value="${editingItem != null ? editingItem.backgroundColor : ''}"
+                                           oninput="if(/^#[0-9A-F]{6}$/i.test(this.value)) document.getElementById('itemBgPicker').value = this.value" />
+
+                                </div>
+
+                                <div class="form-text">
+                                    Scegli il colore di sfondo per questa singola card (es. esadecimale `#1e293b`, `rgba(...)` o lascia vuoto).
+                                </div>
 
                             </div>
 

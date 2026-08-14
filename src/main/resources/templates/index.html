@@ -287,7 +287,7 @@
 
 
         /* ========================================================
-           CARD (TRASPARENTE SENZA BORDI)
+           CARD (DIPENDE DAL COLORE IMPOSTATO DALL'UTENTE)
            ======================================================== */
 
         .card-custom {
@@ -296,7 +296,7 @@
 
             border-radius: 1.25rem;
 
-            background: transparent !important;
+            background: transparent;
 
             backdrop-filter: none !important;
 
@@ -939,7 +939,8 @@
                          class="col-12 col-md-6 col-lg-4 d-flex">
 
 
-                        <div class="card card-custom w-100 d-flex flex-column overflow-hidden">
+                        <div class="card card-custom w-100 d-flex flex-column overflow-hidden"
+                             th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : 'background-color: transparent !important;'">
 
 
                             <div th:if="${item.imageUrl != null
@@ -955,7 +956,7 @@
                                      alt="Card Image"
 
                                      style="
-                                         height: 220px;
+                                         height: 420px;
                                          object-fit: cover;
                                      ">
 
@@ -1098,7 +1099,8 @@
 
 
                         <div class="carousel-caption carousel-caption-custom
-                                    text-start mx-auto">
+                                    text-start mx-auto"
+                             th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
 
 
                             <h2 class="fw-extrabold text-white mb-2"

@@ -20,6 +20,8 @@ public class BlockItem {
 
     private String buttonUrl;
 
+    private String backgroundColor;
+
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String contentHtml;
@@ -50,6 +52,9 @@ public class BlockItem {
 
     public String getButtonUrl() { return buttonUrl; }
     public void setButtonUrl(String buttonUrl) { this.buttonUrl = buttonUrl; }
+
+    public String getBackgroundColor() { return backgroundColor; }
+    public void setBackgroundColor(String backgroundColor) { this.backgroundColor = backgroundColor; }
 
     public String getContentHtml() { return contentHtml; }
     public void setContentHtml(String contentHtml) { this.contentHtml = contentHtml; }

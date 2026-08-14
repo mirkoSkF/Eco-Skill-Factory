@@ -94,15 +94,15 @@
             text-align: center;
         }
 
-        #bgOpacityRange {
+        #bgOpacityRange, #itemBgOpacityRange {
             accent-color: #00dc82;
         }
 
-        #bgOpacityRange::-webkit-slider-thumb {
+        #bgOpacityRange::-webkit-slider-thumb, #itemBgOpacityRange::-webkit-slider-thumb {
             background: #00dc82;
         }
 
-        #bgOpacityRange::-moz-range-thumb {
+        #bgOpacityRange::-moz-range-thumb, #itemBgOpacityRange::-moz-range-thumb {
             background: #00dc82;
             border: none;
         }
@@ -845,10 +845,25 @@
                                        class="form-control"
                                        accept="image/*" />
 
+                                <!-- ANTEPRIMA IMMAGINE CARD ATTUALE -->
+                                <div th:if="${editingItem != null and editingItem.imageUrl != null and !editingItem.imageUrl.empty}"
+                                     class="mt-2">
+
+                                    <small class="text-muted d-block mb-1">
+                                        Immagine Attualmente Caricata:
+                                    </small>
+
+                                    <img th:src="${editingItem.imageUrl}"
+                                         alt="Anteprima Card"
+                                         class="img-thumbnail"
+                                         style="max-height: 100px; width: auto; object-fit: contain;" />
+
+                                </div>
+
                             </div>
 
 
-                            <!-- COLORE SFONDO SINGOLA CARD -->
+                            <!-- COLORE SFONDO SINGOLA CARD (CON TRASPARENZA E OPACITÀ) -->
                             <div class="col-md-12">
 
                                 <label class="form-label fw-bold">
@@ -858,26 +873,86 @@
 
                                 </label>
 
+                                <!-- SWITCH TRASPARENZA CARD -->
+                                <div class="form-check form-switch mb-2">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           id="itemIsTransparentSwitch"
+                                           onchange="toggleItemBackgroundType()">
+
+                                    <label class="form-check-label text-warning"
+                                           for="itemIsTransparentSwitch">
+
+                                        <i class="bi bi-droplet"></i>
+                                        Sfondo Trasparente
+
+                                    </label>
+
+                                </div>
+
+                                <!-- PICKER E CAMPO TESTO -->
                                 <div class="color-picker-wrapper">
 
                                     <input type="color"
                                            class="form-control form-control-color"
                                            id="itemBgPicker"
                                            th:value="${editingItem != null and editingItem.backgroundColor != null and !#strings.isEmpty(editingItem.backgroundColor) ? editingItem.backgroundColor : '#0f172a'}"
-                                           oninput="document.getElementById('itemBgColorInput').value = this.value">
+                                           oninput="syncItemColorText(this.value)">
 
                                     <input type="text"
                                            name="backgroundColor"
                                            id="itemBgColorInput"
                                            class="form-control"
                                            placeholder="es. #1e293b, rgba(30,41,59,0.8) o transparent"
-                                           th:value="${editingItem != null ? editingItem.backgroundColor : ''}"
-                                           oninput="if(/^#[0-9A-F]{6}$/i.test(this.value)) document.getElementById('itemBgPicker').value = this.value" />
+                                           th:value="${editingItem != null ? editingItem.backgroundColor : ''}" />
 
                                 </div>
 
-                                <div class="form-text">
-                                    Scegli il colore di sfondo per questa singola card (es. esadecimale `#1e293b`, `rgba(...)` o lascia vuoto).
+                                <!-- SLIDER OPACITÀ CARD -->
+                                <div class="opacity-control-wrapper">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+
+                                        <label class="form-label fw-bold mb-0">
+
+                                            <i class="bi bi-circle-half"></i>
+                                            Opacità Sfondo Card
+
+                                        </label>
+
+                                        <span id="itemBgOpacityValue"
+                                              class="badge bg-success opacity-value">
+                                            100%
+                                        </span>
+
+                                    </div>
+
+                                    <input type="range"
+                                           class="form-range"
+                                           id="itemBgOpacityRange"
+                                           min="0"
+                                           max="100"
+                                           step="1"
+                                           value="100"
+                                           oninput="syncItemOpacity(this.value)">
+
+                                    <div class="d-flex justify-content-between">
+
+                                        <small class="text-muted">
+                                            0% - Trasparente
+                                        </small>
+
+                                        <small class="text-muted">
+                                            100% - Opaco
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-text mt-2">
+                                    Scegli il colore di sfondo per questa singola card e regolane l'opacità o imposta lo sfondo trasparente.
                                 </div>
 
                             </div>
@@ -1021,10 +1096,11 @@
 
 
         /* ========================================================
-           INIZIALIZZAZIONE SFONDO
+           INIZIALIZZAZIONE SFONDI
            ======================================================== */
 
         initBgColor();
+        initItemBgColor();
 
 
         if (blockTypeSelect) {
@@ -1198,7 +1274,7 @@
 
 
     /* ============================================================
-       GESTIONE COLORE / OPACITÀ
+       GESTIONE COLORE / OPACITÀ RIGA
        ============================================================ */
 
 
@@ -1234,11 +1310,6 @@
             bgInput.value.trim();
 
 
-        /*
-         * CASO 1:
-         * backgroundColor = transparent
-         */
-
         if (value === "transparent") {
 
             transparentSwitch.checked =
@@ -1260,11 +1331,6 @@
 
         }
 
-
-        /*
-         * CASO 2:
-         * rgba(...)
-         */
 
         const rgbaMatch =
             value.match(
@@ -1324,11 +1390,6 @@
         }
 
 
-        /*
-         * CASO 3:
-         * HEX normale
-         */
-
         if (
             /^#[0-9A-F]{6}$/i.test(value)
         ) {
@@ -1338,11 +1399,6 @@
 
         }
 
-
-        /*
-         * Se non esiste un valore,
-         * usiamo il colore standard.
-         */
 
         if (!value) {
 
@@ -1363,10 +1419,6 @@
 
     }
 
-
-    /* ============================================================
-       CAMBIO OPACITÀ
-       ============================================================ */
 
     function syncOpacity(value) {
 
@@ -1399,10 +1451,6 @@
             value + "%";
 
 
-        /*
-         * OPACITÀ 0%
-         */
-
         if (parseInt(value) === 0) {
 
             bgInput.value =
@@ -1423,10 +1471,6 @@
 
         }
 
-
-        /*
-         * OPACITÀ > 0%
-         */
 
         bgPicker.disabled =
             false;
@@ -1452,10 +1496,6 @@
 
     }
 
-
-    /* ============================================================
-       CAMBIO COLORE
-       ============================================================ */
 
     function syncColorText(val) {
 
@@ -1503,10 +1543,6 @@
 
     }
 
-
-    /* ============================================================
-       TOGGLE TRASPARENZA
-       ============================================================ */
 
     function toggleBackgroundType() {
 
@@ -1601,7 +1637,273 @@
 
 
     /* ============================================================
-       CONVERSIONI COLORE
+       GESTIONE COLORE / OPACITÀ CARD
+       ============================================================ */
+
+    function initItemBgColor() {
+
+        const bgInput =
+            document.getElementById("itemBgColorInput");
+
+        const bgPicker =
+            document.getElementById("itemBgPicker");
+
+        const transparentSwitch =
+            document.getElementById("itemIsTransparentSwitch");
+
+        const opacityRange =
+            document.getElementById("itemBgOpacityRange");
+
+        const opacityValue =
+            document.getElementById("itemBgOpacityValue");
+
+
+        if (!bgInput)
+            return;
+
+
+        let value =
+            bgInput.value.trim();
+
+
+        if (value === "transparent") {
+
+            if (transparentSwitch) transparentSwitch.checked = true;
+
+            if (bgPicker) bgPicker.disabled = true;
+
+            if (bgInput) bgInput.readOnly = true;
+
+            if (opacityRange) opacityRange.value = 0;
+
+            if (opacityValue) opacityValue.textContent = "0%";
+
+            return;
+
+        }
+
+
+        const rgbaMatch =
+            value.match(
+                /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([0-9.]+)\s*\)$/i
+            );
+
+
+        if (rgbaMatch) {
+
+            const r = parseInt(rgbaMatch[1]);
+            const g = parseInt(rgbaMatch[2]);
+            const b = parseInt(rgbaMatch[3]);
+            const alpha = parseFloat(rgbaMatch[4]);
+
+            const hex = rgbToHex(r, g, b);
+
+            if (bgPicker) bgPicker.value = hex;
+
+            const percentage = Math.round(alpha * 100);
+
+            if (opacityRange) opacityRange.value = percentage;
+            if (opacityValue) opacityValue.textContent = percentage + "%";
+
+            if (transparentSwitch) transparentSwitch.checked = (percentage === 0);
+            if (bgPicker) bgPicker.disabled = (percentage === 0);
+            if (bgInput) bgInput.readOnly = (percentage === 0);
+
+            return;
+
+        }
+
+
+        if (/^#[0-9A-F]{6}$/i.test(value)) {
+
+            if (bgPicker) bgPicker.value = value;
+
+        }
+
+
+        if (!value) {
+
+            if (bgPicker) bgPicker.value = "#0f172a";
+
+        }
+
+
+        if (opacityRange) opacityRange.value = 100;
+        if (opacityValue) opacityValue.textContent = "100%";
+
+    }
+
+
+    function syncItemOpacity(value) {
+
+        const bgInput =
+            document.getElementById("itemBgColorInput");
+
+        const bgPicker =
+            document.getElementById("itemBgPicker");
+
+        const transparentSwitch =
+            document.getElementById("itemIsTransparentSwitch");
+
+        const opacityValue =
+            document.getElementById("itemBgOpacityValue");
+
+
+        const opacity = parseInt(value) / 100;
+
+        if (opacityValue) opacityValue.textContent = value + "%";
+
+
+        if (parseInt(value) === 0) {
+
+            const rgb = getItemRgbFromPicker();
+
+            bgInput.value = "rgba(" + rgb.join(",") + ",0)";
+
+            if (bgPicker) bgPicker.disabled = true;
+            if (bgInput) bgInput.readOnly = true;
+            if (transparentSwitch) transparentSwitch.checked = true;
+
+            return;
+
+        }
+
+
+        if (bgPicker) bgPicker.disabled = false;
+        if (bgInput) bgInput.readOnly = false;
+        if (transparentSwitch) transparentSwitch.checked = false;
+
+
+        const rgb = getItemRgbFromPicker();
+
+        bgInput.value =
+            "rgba(" +
+            rgb[0] + "," +
+            rgb[1] + "," +
+            rgb[2] + "," +
+            opacity.toFixed(2) +
+            ")";
+
+    }
+
+
+    function syncItemColorText(val) {
+
+        const bgInput =
+            document.getElementById("itemBgColorInput");
+
+        const opacityRange =
+            document.getElementById("itemBgOpacityRange");
+
+        const transparentSwitch =
+            document.getElementById("itemIsTransparentSwitch");
+
+
+        const rgb = hexToRgb(val);
+
+        if (!rgb) return;
+
+
+        const opacity =
+            parseInt(opacityRange ? opacityRange.value : 100) / 100;
+
+
+        bgInput.value =
+            "rgba(" +
+            rgb.r + "," +
+            rgb.g + "," +
+            rgb.b + "," +
+            opacity.toFixed(2) +
+            ")";
+
+
+        if (transparentSwitch && opacityRange) {
+            transparentSwitch.checked = (parseInt(opacityRange.value) === 0);
+        }
+
+    }
+
+
+    function toggleItemBackgroundType() {
+
+        const transparentSwitch =
+            document.getElementById("itemIsTransparentSwitch");
+
+        const bgInput =
+            document.getElementById("itemBgColorInput");
+
+        const bgPicker =
+            document.getElementById("itemBgPicker");
+
+        const opacityRange =
+            document.getElementById("itemBgOpacityRange");
+
+        const opacityValue =
+            document.getElementById("itemBgOpacityValue");
+
+
+        if (transparentSwitch.checked) {
+
+            if (opacityRange) opacityRange.value = 0;
+            if (opacityValue) opacityValue.textContent = "0%";
+
+
+            const rgb = getItemRgbFromPicker();
+
+
+            bgInput.value = "rgba(" + rgb.join(",") + ",0)";
+
+            bgInput.readOnly = true;
+            if (bgPicker) bgPicker.disabled = true;
+
+        }
+        else {
+
+            const previousOpacity =
+                opacityRange ? parseInt(opacityRange.value) : 0;
+
+
+            const newOpacity =
+                previousOpacity === 0 ? 100 : previousOpacity;
+
+
+            if (opacityRange) opacityRange.value = newOpacity;
+            if (opacityValue) opacityValue.textContent = newOpacity + "%";
+
+
+            bgInput.readOnly = false;
+            if (bgPicker) bgPicker.disabled = false;
+
+
+            syncItemOpacity(newOpacity);
+
+        }
+
+    }
+
+
+    function getItemRgbFromPicker() {
+
+        const bgPicker =
+            document.getElementById("itemBgPicker");
+
+
+        const rgb =
+            hexToRgb(bgPicker ? bgPicker.value : "#0f172a");
+
+
+        if (!rgb) {
+            return [15, 23, 42];
+        }
+
+
+        return [rgb.r, rgb.g, rgb.b];
+
+    }
+
+
+    /* ============================================================
+       CONVERSIONI COLORE UTILS
        ============================================================ */
 
     function hexToRgb(hex) {

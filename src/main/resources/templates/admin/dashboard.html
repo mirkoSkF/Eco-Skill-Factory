@@ -221,48 +221,9 @@
 <div class="admin-layout">
 
     <!-- ============================================================
-         NAVBAR ADMIN LATERALE (SIDEBAR)
+         NAVBAR ADMIN LATERALE (SIDEBAR FRAGMENT)
          ============================================================ -->
-    <aside class="sidebar-nav p-3">
-
-        <!-- LOGO -->
-        <a class="navbar-brand fw-extrabold fs-5 d-flex align-items-center gap-2 mb-4 px-2 py-2" th:href="@{/admin/dashboard}">
-            <i class="bi bi-cpu-fill text-success fs-3"></i>
-            <div>
-                <span class="brand-text fw-bold">Eco</span>
-                <span class="brand-accent fw-bold">Skill</span>
-                <div class="small text-uppercase text-secondary fs-6 tracking-wider">CMS Admin</div>
-            </div>
-        </a>
-
-        <!-- MENU PRINCIPALE -->
-        <div class="sidebar-menu flex-grow-1">
-            <a class="nav-link active" th:href="@{/admin/dashboard}">
-                <i class="bi bi-layers-half me-2"></i>
-                Righe Home Page
-            </a>
-
-            <a class="nav-link" th:href="@{/admin/navbar}">
-                <i class="bi bi-menu-button-wide me-2"></i>
-                Gestione Navbar
-            </a>
-        </div>
-
-        <!-- AZIONI BOTTOM SIDEBAR -->
-        <div class="pt-3 border-top border-secondary border-opacity-25 d-flex flex-column gap-2">
-            <a th:href="@{/}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light btn-sm w-100 rounded-3 text-start">
-                <i class="bi bi-eye me-2"></i>
-                Vedi Sito
-                <i class="bi bi-box-arrow-up-right ms-auto float-end"></i>
-            </a>
-
-            <a th:href="@{/logout}" class="btn btn-danger btn-sm w-100 rounded-3 text-start bg-opacity-75">
-                <i class="bi bi-box-arrow-right me-2"></i>
-                Logout
-            </a>
-        </div>
-
-    </aside>
+    <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
 
     <!-- ============================================================
          CONTENITORE PRINCIPALE

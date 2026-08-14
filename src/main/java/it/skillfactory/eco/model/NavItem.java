@@ -19,6 +19,9 @@ public class NavItem {
 
     private Integer itemOrder = 0;
 
+    @Column(name = "open_in_new_tab")
+    private Boolean openInNewTab = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "page_id")
     private Page page;
@@ -49,6 +52,19 @@ public class NavItem {
 
     public Integer getItemOrder() { return itemOrder; }
     public void setItemOrder(Integer itemOrder) { this.itemOrder = itemOrder; }
+
+    // METODI PER IL CHECKBOX E SPRING BINDING
+    public Boolean getOpenInNewTab() { 
+        return openInNewTab != null && openInNewTab; 
+    }
+    
+    public boolean isOpenInNewTab() { 
+        return openInNewTab != null && openInNewTab; 
+    }
+
+    public void setOpenInNewTab(Boolean openInNewTab) { 
+        this.openInNewTab = openInNewTab != null ? openInNewTab : false; 
+    }
 
     public Page getPage() { return page; }
     public void setPage(Page page) { this.page = page; }

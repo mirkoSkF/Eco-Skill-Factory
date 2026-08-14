@@ -242,6 +242,8 @@
 
             box-sizing: border-box !important;
 
+            transition: background-color 0.3s ease;
+
         }
 
 
@@ -264,50 +266,47 @@
 
 
         /* ========================================================
-           JUMBOTRON
+           JUMBOTRON (TRASPARENTE SENZA BORDI)
            ======================================================== */
 
         .custom-jumbotron {
 
-            background: rgba(15, 23, 42, 0.65);
+            background: transparent !important;
 
-            backdrop-filter: blur(16px);
+            backdrop-filter: none !important;
 
-            -webkit-backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: none !important;
 
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: none !important;
 
             color: #f1f5f9;
 
-            box-shadow:
-                0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            box-shadow: none !important;
 
         }
 
 
         /* ========================================================
-           CARD
+           CARD (TRASPARENTE SENZA BORDI)
            ======================================================== */
 
         .card-custom {
 
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: none !important;
 
             border-radius: 1.25rem;
 
-            background: rgba(15, 23, 42, 0.65);
+            background: transparent !important;
 
-            backdrop-filter: blur(16px);
+            backdrop-filter: none !important;
 
-            -webkit-backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: none !important;
 
             color: #f1f5f9;
 
-            transition:
-                all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 
-            box-shadow:
-                0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            box-shadow: none !important;
 
         }
 
@@ -316,11 +315,9 @@
 
             transform: translateY(-8px);
 
-            box-shadow:
-                0 20px 25px -5px rgba(0, 220, 130, 0.2);
+            box-shadow: none !important;
 
-            border-color:
-                rgba(0, 220, 130, 0.6);
+            border-color: transparent !important;
 
         }
 
@@ -349,17 +346,14 @@
 
             overflow: hidden;
 
-            border-top-left-radius: 1.25rem;
-
-            border-top-right-radius: 1.25rem;
+            border-radius: 1.25rem;
 
         }
 
 
         .card-img-wrapper img {
 
-            transition:
-                transform 0.5s ease;
+            transition: transform 0.5s ease;
 
         }
 
@@ -427,8 +421,7 @@
 
             font-size: 1.05rem;
 
-            transition:
-                transform 0.25s ease;
+            transition: transform 0.25s ease;
 
         }
 
@@ -441,20 +434,18 @@
 
 
         /* ========================================================
-           CAROSELLO
+           CAROSELLO (SENZA BORDIS/SFONDI AGGIUNTIVI)
            ======================================================== */
 
         .carousel-custom {
 
             border-radius: 1.5rem;
 
-            box-shadow:
-                0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: none !important;
 
-            border:
-                1px solid rgba(255, 255, 255, 0.1);
+            border: none !important;
 
-            background: #0f172a;
+            background: transparent !important;
 
         }
 
@@ -478,7 +469,9 @@
 
             min-height: 350px;
 
-            filter: brightness(0.72);
+            filter: brightness(0.85);
+
+            border-radius: 1.5rem;
 
         }
 
@@ -495,8 +488,7 @@
 
             -webkit-backdrop-filter: blur(16px);
 
-            border:
-                1px solid rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.14);
 
             border-radius: 1rem;
 
@@ -551,8 +543,7 @@
 
             padding: 0.55rem 1rem;
 
-            border:
-                1px solid rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.35);
 
             border-radius: 999px;
 
@@ -602,8 +593,7 @@
 
         .carousel-button i {
 
-            transition:
-                transform 0.25s ease;
+            transition: transform 0.25s ease;
 
         }
 
@@ -633,16 +623,17 @@
 
         .hero-fallback {
 
-            background: rgba(15, 23, 42, 0.7);
+            background: transparent !important;
 
-            backdrop-filter: blur(16px);
+            backdrop-filter: none !important;
 
-            border:
-                1px solid rgba(255, 255, 255, 0.1);
+            border: none !important;
 
             border-radius: 2rem;
 
             color: #ffffff;
+
+            box-shadow: none !important;
 
         }
 
@@ -669,11 +660,9 @@
 
             padding: 0.75rem 1.5rem;
 
-            transition:
-                all 0.3s ease;
+            transition: all 0.3s ease;
 
-            box-shadow:
-                0 4px 12px rgba(0, 220, 130, 0.25);
+            box-shadow: 0 4px 12px rgba(0, 220, 130, 0.25);
 
         }
 
@@ -682,8 +671,7 @@
 
             transform: translateY(-2px);
 
-            box-shadow:
-                0 6px 20px rgba(0, 220, 130, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
 
             color: #0f172a;
 
@@ -726,8 +714,7 @@
 
                 padding: 1.25rem;
 
-                background:
-                    rgba(15, 23, 42, 0.95);
+                background: rgba(15, 23, 42, 0.95);
 
             }
 
@@ -898,10 +885,8 @@
              th:class="${block.containerType.cssClass}
                        + ' py-5 block-container'"
 
-             th:style="'height:' +
-                       ${block.customHeight != null
-                           ? block.customHeight
-                           : 'auto'}">
+             th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'} 
+                       + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent') + ';'">
 
 
             <!-- =================================================
@@ -910,12 +895,9 @@
 
             <div th:if="${block.blockType.name() == 'JUMBOTRON'}"
 
-                 class="p-4 p-md-5 rounded-4 custom-jumbotron mx-auto"
+                 class="p-4 p-md-5 custom-jumbotron mx-auto"
 
-                 th:style="${block.widthPercent != null
-                            and block.widthPercent > 0}
-                            ? 'width: ' + ${block.widthPercent} + '%;'
-                            : 'width: 100%;'">
+                 th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
 
 
                 <div class="container-fluid py-2"
@@ -1264,12 +1246,9 @@
 
             <div th:if="${block.blockType.name() == 'JUMBO_DEMO_1'}"
 
-                 class="p-4 p-md-5 rounded-4 custom-jumbotron mx-auto"
+                 class="p-4 p-md-5 custom-jumbotron mx-auto"
 
-                 th:style="${block.widthPercent != null
-                            and block.widthPercent > 0}
-                            ? 'width: ' + ${block.widthPercent} + '%;'
-                            : 'width: 100%;'">
+                 th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
 
 
                 <div class="row align-items-center g-5">
@@ -1286,12 +1265,12 @@
                         <div th:if="${block.imageUrl != null
                                      and !block.imageUrl.empty}"
 
-                             class="overflow-hidden rounded-4 shadow-lg border border-secondary border-opacity-25">
+                             class="overflow-hidden rounded-4">
 
 
                             <img th:src="${block.imageUrl}"
 
-                                 class="img-fluid w-100 object-fit-cover"
+                                 class="img-fluid w-100 object-fit-cover rounded-4"
 
                                  style="max-height: 450px;"
 
@@ -1304,7 +1283,7 @@
                         <div th:unless="${block.imageUrl != null
                                          and !block.imageUrl.empty}"
 
-                             class="p-5 border border-dashed rounded-4 text-center text-muted bg-dark bg-opacity-50">
+                             class="p-5 rounded-4 text-center text-muted">
 
 
                             <i class="bi bi-image fs-1 opacity-50"></i>
@@ -1336,12 +1315,9 @@
 
             <div th:if="${block.blockType.name() == 'JUMBO_DEMO_2'}"
 
-                 class="p-4 p-md-5 rounded-4 custom-jumbotron mx-auto"
+                 class="p-4 p-md-5 custom-jumbotron mx-auto"
 
-                 th:style="${block.widthPercent != null
-                            and block.widthPercent > 0}
-                            ? 'width: ' + ${block.widthPercent} + '%;'
-                            : 'width: 100%;'">
+                 th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
 
 
                 <div class="row align-items-center g-5">
@@ -1353,12 +1329,12 @@
                         <div th:if="${block.imageUrl != null
                                      and !block.imageUrl.empty}"
 
-                             class="overflow-hidden rounded-4 shadow-lg border border-secondary border-opacity-25">
+                             class="overflow-hidden rounded-4">
 
 
                             <img th:src="${block.imageUrl}"
 
-                                 class="img-fluid w-100 object-fit-cover"
+                                 class="img-fluid w-100 object-fit-cover rounded-4"
 
                                  style="max-height: 450px;"
 
@@ -1371,7 +1347,7 @@
                         <div th:unless="${block.imageUrl != null
                                          and !block.imageUrl.empty}"
 
-                             class="p-5 border border-dashed rounded-4 text-center text-muted bg-dark bg-opacity-50">
+                             class="p-5 rounded-4 text-center text-muted">
 
 
                             <i class="bi bi-image fs-1 opacity-50"></i>
@@ -1408,12 +1384,9 @@
 
             <div th:if="${block.blockType.name() == 'JUMBO_2_COL'}"
 
-                 class="p-4 p-md-5 rounded-4 custom-jumbotron mx-auto"
+                 class="p-4 p-md-5 custom-jumbotron mx-auto"
 
-                 th:style="${block.widthPercent != null
-                            and block.widthPercent > 0}
-                            ? 'width: ' + ${block.widthPercent} + '%;'
-                            : 'width: 100%;'">
+                 th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
 
 
                 <div class="text-light"
@@ -1438,7 +1411,7 @@
          class="container py-5 my-5">
 
 
-        <div class="p-5 hero-fallback text-center shadow-lg position-relative overflow-hidden">
+        <div class="p-5 hero-fallback text-center position-relative overflow-hidden">
 
 
             <div class="position-relative z-1 py-4">

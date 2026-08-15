@@ -33,18 +33,16 @@
          BOOTSTRAP
          ======================================================== -->
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
 
     <!-- ========================================================
          BOOTSTRAP ICONS
          ======================================================== -->
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 
     <!-- ========================================================
@@ -112,7 +110,6 @@
 
         /* =====================================================
            NAVBAR GLASS
-           IDENTICA ALLA HOMEPAGE ORIGINALE
            ===================================================== */
 
         .glass-header {
@@ -271,11 +268,6 @@
 
         /* =====================================================
            PAGE CONTAINER
-
-           La larghezza viene gestita direttamente da
-           th:style utilizzando page.widthPercent.
-
-           NON impostiamo max-width.
            ===================================================== */
 
         .page-container {
@@ -288,7 +280,7 @@
 
 
         /* =====================================================
-           PAGE BOX (SFONDO E BORDI RIMOSSI)
+           PAGE BOX
            ===================================================== */
 
         .page-box {
@@ -348,14 +340,7 @@
 
         .content-body h1,
         .content-body h2,
-        .content-body h3 {
-
-            color:
-                #ffffff;
-
-        }
-
-
+        .content-body h3,
         .content-body h4,
         .content-body h5,
         .content-body h6 {
@@ -421,7 +406,7 @@
 
 
         /* =====================================================
-           IMMAGINI INSERITE CON TINYMCE
+           IMMAGINI
            ===================================================== */
 
         .content-body img {
@@ -527,7 +512,7 @@
 
 
         /* =====================================================
-           ALERT NESSUN CONTENUTO
+           ALERT
            ===================================================== */
 
         .empty-content {
@@ -664,321 +649,52 @@
 
 
 <!-- =========================================================
-     NAVBAR
-     IDENTICA ALLA HOMEPAGE ORIGINALE
+     NAVBAR CONDIVISA
      ========================================================= -->
 
-<header
-    class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3">
-
-
-    <div class="container">
-
-
-        <!-- =================================================
-             LOGO
-             ================================================= -->
-
-        <a
-            class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2"
-            th:href="@{/}">
-
-
-            <i
-                class="bi bi-cpu-fill text-success fs-3">
-            </i>
-
-
-            <span
-                class="brand-text fw-bold">
-
-                Eco
-
-            </span>
-
-
-            <span
-                class="brand-accent fw-bold">
-
-                Skill Factory
-
-            </span>
-
-
-        </a>
-
-
-        <!-- =================================================
-             MOBILE MENU BUTTON
-             ================================================= -->
-
-        <button
-            class="navbar-toggler border-0"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarContent"
-            aria-controls="navbarContent"
-            aria-expanded="false"
-            aria-label="Apri menu">
-
-
-            <span
-                class="navbar-toggler-icon">
-            </span>
-
-
-        </button>
-
-
-        <!-- =================================================
-             NAVBAR CONTENT
-             ================================================= -->
-
-        <div
-            class="collapse navbar-collapse"
-            id="navbarContent">
-
-
-            <!-- =================================================
-                 MENU DINAMICO DA DATABASE
-                 ================================================= -->
-
-            <ul
-                class="navbar-nav mx-auto mb-2 mb-lg-0"
-                th:if="${navItems != null}">
-
-
-                <li
-                    th:each="item : ${navItems}"
-
-                    th:class="${(item.children != null and !item.children.isEmpty())
-                               ? 'nav-item dropdown'
-                               : 'nav-item'}">
-
-
-                    <!-- =========================================
-                         VOCE SINGOLA
-                         ========================================= -->
-
-                    <a
-                        th:if="${item.children == null or item.children.isEmpty()}"
-
-                        class="nav-link px-3 text-light opacity-75 opacity-100-hover"
-
-                        th:href="${item.page != null
-                                  ? '/p/' + item.page.slug
-                                  : (item.url != null
-                                     and !#strings.isEmpty(item.url)
-                                     ? item.url
-                                     : 'javascript:void(0);')}"
-
-                        rel="noopener noreferrer"
-
-                        th:text="${item.label}">
-
-
-                        Menu Item
-
-
-                    </a>
-
-
-                    <!-- =========================================
-                         VOCE DROPDOWN
-                         ========================================= -->
-
-                    <a
-                        th:if="${item.children != null and !item.children.isEmpty()}"
-
-                        class="nav-link dropdown-toggle px-3 text-light opacity-75 opacity-100-hover"
-
-                        href="javascript:void(0);"
-
-                        role="button"
-
-                        data-bs-toggle="dropdown"
-
-                        aria-expanded="false"
-
-                        th:text="${item.label}">
-
-
-                        Dropdown
-
-
-                    </a>
-
-
-                    <!-- =========================================
-                         SOTTO-VOCI DROPDOWN
-                         ========================================= -->
-
-                    <ul
-                        th:if="${item.children != null and !item.children.isEmpty()}"
-
-                        class="dropdown-menu dropdown-menu-dark bg-dark border-secondary p-2">
-
-
-                        <li
-                            th:each="child : ${item.children}">
-
-
-                            <a
-                                class="dropdown-item"
-
-                                th:href="${child.page != null
-                                          ? '/p/' + child.page.slug
-                                          : (child.url != null
-                                             and !#strings.isEmpty(child.url)
-                                             ? child.url
-                                             : 'javascript:void(0);')}"
-
-                                rel="noopener noreferrer"
-
-                                th:text="${child.label}">
-
-
-                                Sub Item
-
-
-                            </a>
-
-
-                        </li>
-
-
-                    </ul>
-
-
-                </li>
-
-
-            </ul>
-
-
-            <!-- =================================================
-                 AUTENTICAZIONE / DASHBOARD
-                 ================================================= -->
-
-            <div class="ms-auto">
-
-
-                <!-- =============================================
-                     UTENTE NON AUTENTICATO
-                     ============================================= -->
-
-                <a
-                    sec:authorize="!isAuthenticated()"
-
-                    th:href="@{/login}"
-
-                    class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
-
-
-                    <i
-                        class="bi bi-shield-lock-fill me-1">
-                    </i>
-
-
-                    Area Admin
-
-
-                </a>
-
-
-                <!-- =============================================
-                     UTENTE AUTENTICATO
-                     ============================================= -->
-
-                <a
-                    sec:authorize="isAuthenticated()"
-
-                    th:href="@{/admin/dashboard}"
-
-                    class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
-
-
-                    <i
-                        class="bi bi-speedometer2 me-1">
-                    </i>
-
-
-                    Dashboard
-
-
-                </a>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-</header>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 
 <!-- =========================================================
      PAGINA
      ========================================================= -->
 
-<main
-    class="container-fluid py-5">
+<main class="container-fluid py-5">
+
+    <div class="page-container"
+
+         th:style="'width: ' +
+                   ${page.widthPercent != null
+                       ? page.widthPercent
+                       : 100}
+                   + '%;'">
 
 
-    <!-- =====================================================
-         CONTENITORE CON LARGHEZZA DINAMICA
-         ===================================================== -->
-
-    <div
-        class="page-container"
-
-        th:style="'width: ' +
-                  ${page.widthPercent != null
-                      ? page.widthPercent
-                      : 100}
-                  + '%;'">
-
-
-        <!-- =================================================
-             BOX PAGINA
-             ================================================= -->
-
-        <div
-            class="page-box">
+        <div class="page-box">
 
 
             <!-- =================================================
                  TITOLO
                  ================================================= -->
 
-            <h1
-                class="page-title"
-
+            <h1 class="page-title"
                 th:text="${page.title}">
 
-
                 Titolo pagina
-
 
             </h1>
 
 
             <!-- =================================================
-                 CONTENUTO HTML
+                 CONTENUTO
                  ================================================= -->
 
-            <div
-                class="content-body"
+            <div class="content-body"
 
-                th:if="${page.contentHtml != null
-                        and !#strings.isEmpty(page.contentHtml)}"
+                 th:if="${page.contentHtml != null
+                         and !#strings.isEmpty(page.contentHtml)}"
 
-                th:utext="${page.contentHtml}">
-
+                 th:utext="${page.contentHtml}">
 
             </div>
 
@@ -987,29 +703,20 @@
                  NESSUN CONTENUTO
                  ================================================= -->
 
-            <div
-                th:if="${page.contentHtml == null
-                        or #strings.isEmpty(page.contentHtml)}"
+            <div th:if="${page.contentHtml == null
+                         or #strings.isEmpty(page.contentHtml)}"
 
-                class="alert empty-content">
+                 class="alert empty-content">
 
-
-                <i
-                    class="bi bi-info-circle me-2">
-                </i>
-
+                <i class="bi bi-info-circle me-2"></i>
 
                 Questa pagina non contiene ancora contenuto.
 
-
             </div>
-
 
         </div>
 
-
     </div>
-
 
 </main>
 
@@ -1018,27 +725,18 @@
      FOOTER
      ========================================================= -->
 
-<footer
-    class="page-footer text-center text-secondary py-4 mt-auto">
+<footer class="page-footer text-center text-secondary py-4 mt-auto">
 
+    <div class="container">
 
-    <div
-        class="container">
-
-
-        <p
-            class="mb-0 small">
-
+        <p class="mb-0 small">
 
             &copy; 2026 Eco Skill Factory.
             Tutti i diritti riservati.
 
-
         </p>
 
-
     </div>
-
 
 </footer>
 
@@ -1047,8 +745,7 @@
      BOOTSTRAP JS
      ========================================================= -->
 
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
 </script>
 
 
@@ -1066,7 +763,6 @@
 
 
     let width;
-
     let height;
 
 
@@ -1097,7 +793,6 @@
        ======================================================== */
 
     class Circuit {
-
 
         constructor() {
 
@@ -1146,109 +841,66 @@
 
         update() {
 
-
-            if (
-                this.currentStep
-                <
-                this.length
-            ) {
-
+            if (this.currentStep < this.length) {
 
                 let last =
                     this.path[
                         this.path.length - 1
                     ];
 
-
-                let nx =
-                    last.x;
-
-                let ny =
-                    last.y;
+                let nx = last.x;
+                let ny = last.y;
 
 
-                if (
-                    Math.random()
-                    <
-                    0.3
-                ) {
-
+                if (Math.random() < 0.3) {
 
                     this.dir =
                         (
-                            this.dir
-                            +
+                            this.dir +
                             (
                                 Math.random() < 0.5
                                     ? 1
                                     : 3
                             )
-                        )
-                        %
-                        4;
+                        ) % 4;
 
                 }
 
 
                 switch (this.dir) {
 
-
                     case 0:
-
                         ny -= this.size;
-
                         break;
-
 
                     case 1:
-
                         nx += this.size;
-
                         break;
-
 
                     case 2:
-
                         ny += this.size;
-
                         break;
 
-
                     case 3:
-
                         nx -= this.size;
-
                         break;
 
                 }
 
 
                 this.path.push({
-
                     x: nx,
-
                     y: ny
-
                 });
-
 
                 this.currentStep++;
 
-
-            }
-
-            else {
-
+            } else {
 
                 this.alpha -= 0.005;
 
-
-                if (
-                    this.alpha <= 0
-                ) {
-
+                if (this.alpha <= 0) {
                     this.reset();
-
                 }
 
             }
@@ -1258,18 +910,12 @@
 
         draw() {
 
-
-            if (
-                this.path.length < 2
-            ) {
-
+            if (this.path.length < 2) {
                 return;
-
             }
 
 
             ctx.beginPath();
-
 
             ctx.moveTo(
                 this.path[0].x,
@@ -1283,7 +929,6 @@
                 i++
             ) {
 
-
                 ctx.lineTo(
                     this.path[i].x,
                     this.path[i].y
@@ -1295,9 +940,7 @@
             ctx.strokeStyle =
                 `rgba(0, 220, 130, ${this.alpha})`;
 
-
             ctx.lineWidth = 1.5;
-
 
             ctx.stroke();
 
@@ -1310,7 +953,6 @@
 
             ctx.beginPath();
 
-
             ctx.arc(
                 last.x,
                 last.y,
@@ -1322,7 +964,6 @@
 
             ctx.fillStyle =
                 `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-
 
             ctx.fill();
 
@@ -1337,36 +978,23 @@
 
     const codeSnippets = [
 
-
         "class BlockManager {}",
-
         "import spring.boot.*;",
-
         "<div class='eco'>",
-
         "SELECT * FROM blocks;",
-
         "const init = () => {};",
-
         "return new PageBlock();",
-
         "01000101 01000011 01001111",
-
         "public static void main()",
-
         "async fetch('/api')",
-
         "npm run build",
-
         "docker-compose up -d",
-
         "mvn clean install"
 
     ];
 
 
     class CodeText {
-
 
         constructor() {
 
@@ -1377,38 +1005,28 @@
 
         reset() {
 
-
             this.x =
                 Math.random()
-                *
-                (width - 200);
-
+                * (width - 200);
 
             this.y =
                 Math.random()
-                *
-                height;
-
+                * height;
 
             this.text =
                 codeSnippets[
                     Math.floor(
                         Math.random()
-                        *
-                        codeSnippets.length
+                        * codeSnippets.length
                     )
                 ];
 
-
             this.alpha = 0;
-
 
             this.maxAlpha =
                 Math.random() * 0.3 + 0.1;
 
-
             this.fadeIn = true;
-
 
             this.speed =
                 Math.random() * 0.3 + 0.1;
@@ -1418,42 +1036,27 @@
 
         update() {
 
-
-            this.y -=
-                this.speed;
+            this.y -= this.speed;
 
 
-            if (
-                this.fadeIn
-            ) {
+            if (this.fadeIn) {
 
-
-                this.alpha +=
-                    0.008;
-
+                this.alpha += 0.008;
 
                 if (
                     this.alpha >=
                     this.maxAlpha
                 ) {
 
-                    this.fadeIn =
-                        false;
+                    this.fadeIn = false;
 
                 }
 
-            }
+            } else {
 
-            else {
+                this.alpha -= 0.005;
 
-
-                this.alpha -=
-                    0.005;
-
-
-                if (
-                    this.alpha <= 0
-                ) {
+                if (this.alpha <= 0) {
 
                     this.reset();
 
@@ -1466,14 +1069,11 @@
 
         draw() {
 
-
             ctx.font =
                 '12px "Fira Code", monospace';
 
-
             ctx.fillStyle =
                 `rgba(0, 220, 130, ${this.alpha})`;
-
 
             ctx.fillText(
                 this.text,
@@ -1487,7 +1087,7 @@
 
 
     /* ========================================================
-       OGGETTI SFONDO
+       OGGETTI
        ======================================================== */
 
     const circuits =
@@ -1513,7 +1113,6 @@
        ======================================================== */
 
     function animate() {
-
 
         ctx.clearRect(
             0,

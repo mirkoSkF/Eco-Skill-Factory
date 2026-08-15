@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+
+<!-- ========================================================
+     NAVBAR FRAGMENT
+     Condivisa da index.html e pagina.html
+
+     COMPORTAMENTO LINK:
+     - item.openInNewTab == true  -> _blank (nuova finestra)
+     - item.openInNewTab == false -> _self (stessa finestra)
+     ======================================================== -->
+
+<header th:fragment="navbar"
+        class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3">
+
+    <div class="container">
+
+        <!-- =================================================
+             LOGO
+             ================================================= -->
+
+        <a class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2"
+           th:href="@{/}">
+
+            <i class="bi bi-cpu-fill text-success fs-3"></i>
+
+            <span class="brand-text fw-bold">
+                Eco
+            </span>
+
+            <span class="brand-accent fw-bold">
+                Skill Factory
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             MOBILE MENU BUTTON
+             ================================================= -->
+
+        <button class="navbar-toggler border-0"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
+                aria-expanded="false"
+                aria-label="Apri menu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+
+        <!-- =================================================
+             NAVBAR CONTENT
+             ================================================= -->
+
+        <div class="collapse navbar-collapse"
+             id="navbarContent">
+
+            <!-- =================================================
+                 MENU DINAMICO DA DATABASE
+                 ================================================= -->
+
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0"
+                th:if="${navItems != null}">
+
+                <li th:each="item : ${navItems}"
+                    th:class="${(item.children != null and !item.children.isEmpty())
+                               ? 'nav-item dropdown'
+                               : 'nav-item'}">
+
+
+                    <!-- =========================================
+                         VOCE SINGOLA - PAGINA INTERNA
+                         ========================================= -->
+
+                    <a th:if="${(item.children == null or item.children.isEmpty())
+                               and item.page != null}"
+
+                       class="nav-link px-3 text-light opacity-75 opacity-100-hover"
+
+                       th:href="@{'/p/' + ${item.page.slug}}"
+
+                       th:target="${item.openInNewTab ? '_blank' : '_self'}"
+
+                       th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
+
+                       th:text="${item.label}">
+
+                        Menu Item
+
+                    </a>
+
+
+                    <!-- =========================================
+                         VOCE SINGOLA - URL ESTERNO
+                         ========================================= -->
+
+                    <a th:if="${(item.children == null or item.children.isEmpty())
+                               and item.page == null
+                               and item.url != null
+                               and !#strings.isEmpty(item.url)}"
+
+                       class="nav-link px-3 text-light opacity-75 opacity-100-hover"
+
+                       th:href="${item.url}"
+
+                       th:target="${item.openInNewTab ? '_blank' : '_self'}"
+
+                       th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
+
+                       th:text="${item.label}">
+
+                        Menu Item
+
+                    </a>
+
+
+                    <!-- =========================================
+                         VOCE SINGOLA - SENZA DESTINAZIONE
+                         ========================================= -->
+
+                    <a th:if="${(item.children == null or item.children.isEmpty())
+                               and item.page == null
+                               and (item.url == null or #strings.isEmpty(item.url))}"
+
+                       class="nav-link px-3 text-light opacity-75 opacity-100-hover"
+
+                       href="javascript:void(0);"
+
+                       th:text="${item.label}">
+
+                        Menu Item
+
+                    </a>
+
+
+                    <!-- =========================================
+                         VOCE DROPDOWN
+                         ========================================= -->
+
+                    <a th:if="${item.children != null and !item.children.isEmpty()}"
+
+                       class="nav-link dropdown-toggle px-3 text-light opacity-75 opacity-100-hover"
+
+                       href="#"
+
+                       role="button"
+
+                       data-bs-toggle="dropdown"
+
+                       aria-expanded="false"
+
+                       th:text="${item.label}">
+
+                        Dropdown
+
+                    </a>
+
+
+                    <!-- =========================================
+                         SOTTO-VOCI DROPDOWN
+                         ========================================= -->
+
+                    <ul th:if="${item.children != null and !item.children.isEmpty()}"
+
+                        class="dropdown-menu dropdown-menu-dark bg-dark border-secondary p-2">
+
+
+                        <li th:each="child : ${item.children}">
+
+
+                            <!-- =================================
+                                 CHILD - PAGINA INTERNA
+                                 ================================= -->
+
+                            <a th:if="${child.page != null}"
+
+                               class="dropdown-item"
+
+                               th:href="@{'/p/' + ${child.page.slug}}"
+
+                               th:target="${child.openInNewTab ? '_blank' : '_self'}"
+
+                               th:rel="${child.openInNewTab ? 'noopener noreferrer' : null}"
+
+                               th:text="${child.label}">
+
+                                Sub Item
+
+                            </a>
+
+
+                            <!-- =================================
+                                 CHILD - URL ESTERNO
+                                 ================================= -->
+
+                            <a th:if="${child.page == null
+                                       and child.url != null
+                                       and !#strings.isEmpty(child.url)}"
+
+                               class="dropdown-item"
+
+                               th:href="${child.url}"
+
+                               th:target="${child.openInNewTab ? '_blank' : '_self'}"
+
+                               th:rel="${child.openInNewTab ? 'noopener noreferrer' : null}"
+
+                               th:text="${child.label}">
+
+                                Sub Item
+
+                            </a>
+
+
+                            <!-- =================================
+                                 CHILD - SENZA DESTINAZIONE
+                                 ================================= -->
+
+                            <a th:if="${child.page == null
+                                       and (child.url == null
+                                            or #strings.isEmpty(child.url))}"
+
+                               class="dropdown-item"
+
+                               href="javascript:void(0);"
+
+                               th:text="${child.label}">
+
+                                Sub Item
+
+                            </a>
+
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+            </ul>
+
+
+            <!-- =================================================
+                 AUTENTICAZIONE / DASHBOARD
+                 ================================================= -->
+
+            <div class="ms-auto">
+
+
+                <!-- =============================================
+                     UTENTE NON AUTENTICATO
+                     ============================================= -->
+
+                <a sec:authorize="!isAuthenticated()"
+
+                   th:href="@{/login}"
+
+                   class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
+
+                    <i class="bi bi-shield-lock-fill me-1"></i>
+
+                    Area Admin
+
+                </a>
+
+
+                <!-- =============================================
+                     UTENTE AUTENTICATO
+                     ============================================= -->
+
+                <a sec:authorize="isAuthenticated()"
+
+                   th:href="@{/admin/dashboard}"
+
+                   class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
+
+                    <i class="bi bi-speedometer2 me-1"></i>
+
+                    Dashboard
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+</body>
+</html>

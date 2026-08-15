@@ -56,19 +56,6 @@
 
 
         /* ========================================================
-           RESET E SICUREZZA LAYOUT RESPONSIVE
-           ======================================================== */
-
-        html, body {
-
-            max-width: 100%;
-
-            overflow-x: hidden;
-
-        }
-
-
-        /* ========================================================
            BODY
            ======================================================== */
 
@@ -79,6 +66,10 @@
             color: #334155;
 
             background-color: #080c14;
+
+            min-height: 100vh;
+
+            overflow-x: hidden;
 
             position: relative;
 
@@ -113,6 +104,12 @@
            ======================================================== */
 
         .glass-header {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1030;
 
             background: rgba(15, 23, 42, 0.75) !important;
 
@@ -839,8 +836,6 @@
 
         @media (max-width: 991.98px) {
 
-            /* Annulla larghezze ed altezze fisse impostate da CMS per tablet/mobile */
-
             .block-container {
 
                 height: auto !important;
@@ -1475,23 +1470,10 @@
 
 
 <!-- ========================================================
-     FOOTER
+     FOOTER CONDIVISO
      ======================================================== -->
 
-<footer class="bg-dark text-white py-5 mt-auto border-top border-secondary border-opacity-10">
-
-    <div class="container text-center">
-
-        <p class="mb-0 small text-secondary">
-
-            &copy; 2026 Eco Skill Factory.
-            Tutti i diritti riservati.
-
-        </p>
-
-    </div>
-
-</footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 
 <!-- ========================================================

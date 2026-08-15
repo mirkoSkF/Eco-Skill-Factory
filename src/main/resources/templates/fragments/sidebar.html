@@ -40,6 +40,11 @@
                 <i class="bi bi-menu-button-wide me-2"></i>
                 Gestione Navbar
             </a>
+
+            <a class="nav-link" th:classappend="${activeMenu == 'footer'} ? 'active' : ''" th:href="@{/admin/footer}">
+                <i class="bi bi-border-bottom me-2"></i>
+                Gestione Footer
+            </a>
         </div>
     </aside>
 </body>

@@ -271,10 +271,10 @@
 
         /* =====================================================
            PAGE CONTAINER
-           
+
            La larghezza viene gestita direttamente da
            th:style utilizzando page.widthPercent.
-           
+
            NON impostiamo max-width.
            ===================================================== */
 
@@ -772,12 +772,6 @@
                                      ? item.url
                                      : 'javascript:void(0);')}"
 
-                        th:target="${item.page != null
-                                    or (item.url != null
-                                        and !#strings.isEmpty(item.url))
-                                    ? '_blank'
-                                    : '_self'}"
-
                         rel="noopener noreferrer"
 
                         th:text="${item.label}">
@@ -838,12 +832,6 @@
                                              and !#strings.isEmpty(child.url)
                                              ? child.url
                                              : 'javascript:void(0);')}"
-
-                                th:target="${child.page != null
-                                            or (child.url != null
-                                                and !#strings.isEmpty(child.url))
-                                            ? '_blank'
-                                            : '_self'}"
 
                                 rel="noopener noreferrer"
 

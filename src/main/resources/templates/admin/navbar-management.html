@@ -1,20 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Gestione Navbar - Eco Skill Factory</title>
-    
+
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
 
-    <!-- BOOTSTRAP & ICONS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- BOOTSTRAP ICONS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 
     <style>
+
+        /* =========================================================
+           VARIABILI
+           ========================================================= */
+
         :root {
             --brand-primary: #00dc82;
             --brand-primary-hover: #00b368;
@@ -22,482 +36,1863 @@
             --sidebar-width: 280px;
         }
 
+
+        /* =========================================================
+           BODY
+           ========================================================= */
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
+
             color: #f1f5f9;
+
             background-color: #080c14;
+
             overflow-x: hidden;
+
             position: relative;
+
             min-height: 100vh;
         }
 
+
+        /* =========================================================
+           CANVAS BACKGROUND
+           IMPORTANTE: DEVE STARE DIETRO AL CONTENUTO
+           ========================================================= */
+
         #tech-bg-canvas {
+
             position: fixed;
+
             top: 0;
             left: 0;
+
             width: 100vw;
             height: 100vh;
-            z-index: -1;
+
+            z-index: 0;
+
             pointer-events: none;
         }
 
+
+        /* =========================================================
+           LAYOUT PRINCIPALE
+           ========================================================= */
+
         .admin-layout {
+
+            position: relative;
+
+            z-index: 1;
+
             display: flex;
+
             min-height: 100vh;
+
+            width: 100%;
         }
 
+
+        /* =========================================================
+           SIDEBAR
+           ========================================================= */
+
         .sidebar-nav {
+
             width: var(--sidebar-width);
+
             min-width: var(--sidebar-width);
-            background: rgba(15, 23, 42, 0.85);
+
+            background: rgba(15, 23, 42, 0.92);
+
             backdrop-filter: blur(16px);
+
             -webkit-backdrop-filter: blur(16px);
+
             border-right: 1px solid rgba(255, 255, 255, 0.08);
+
             display: flex;
+
             flex-direction: column;
+
             position: fixed;
+
             top: 0;
             bottom: 0;
             left: 0;
+
             z-index: 1000;
         }
 
+
+        /* =========================================================
+           MAIN
+           ========================================================= */
+
         .main-wrapper {
+
             margin-left: var(--sidebar-width);
-            flex-grow: 1;
-            padding: 2.5rem;
+
+            flex: 1 1 auto;
+
             width: calc(100% - var(--sidebar-width));
+
+            min-width: 0;
+
+            padding: 2.5rem;
+
+            position: relative;
+
+            z-index: 2;
         }
 
+
+        /* =========================================================
+           BRAND
+           ========================================================= */
+
         .brand-text {
-            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+
+            background: linear-gradient(
+                135deg,
+                #ffffff 0%,
+                #cbd5e1 100%
+            );
+
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .brand-accent {
-            background: linear-gradient(135deg, #00dc82 0%, #36e4da 100%);
+
+            background: linear-gradient(
+                135deg,
+                #00dc82 0%,
+                #36e4da 100%
+            );
+
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+
+        /* =========================================================
+           SIDEBAR MENU
+           ========================================================= */
+
         .sidebar-menu .nav-link {
+
             color: #94a3b8;
+
             font-weight: 500;
+
             padding: 0.8rem 1.25rem;
+
             border-radius: 0.5rem;
+
             margin-bottom: 0.35rem;
+
             transition: all 0.25s ease;
+
             display: flex;
+
             align-items: center;
         }
 
         .sidebar-menu .nav-link:hover,
         .sidebar-menu .nav-link.active {
+
             color: #00dc82 !important;
+
             background: rgba(0, 220, 130, 0.1);
+
             transform: translateX(4px);
         }
 
+
+        /* =========================================================
+           CARD
+           ========================================================= */
+
         .card-custom {
+
             border: 1px solid rgba(255, 255, 255, 0.1);
+
             border-radius: 1.25rem;
-            background: rgba(15, 23, 42, 0.65);
+
+            background: rgba(15, 23, 42, 0.88);
+
             backdrop-filter: blur(16px);
+
             -webkit-backdrop-filter: blur(16px);
+
             color: #f1f5f9;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+
+            box-shadow:
+                0 10px 25px -5px rgba(0, 0, 0, 0.3);
+
+            position: relative;
+
+            z-index: 3;
         }
 
         .card-custom .card-header {
+
             background: rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.08);
         }
 
+
+        /* =========================================================
+           TABELLA
+           ========================================================= */
+
         .table-custom {
+
             color: #cbd5e1;
+
             margin-bottom: 0;
+
+            width: 100%;
         }
 
         .table-custom thead th {
-            background: rgba(15, 23, 42, 0.9) !important;
+
+            background: rgba(15, 23, 42, 0.95) !important;
+
             color: #f8fafc;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.12);
+
             font-weight: 600;
+
             padding: 1rem 0.75rem;
+
+            white-space: nowrap;
         }
 
         .table-custom tbody tr {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: background 0.2s ease;
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.05);
+
+            transition:
+                background 0.2s ease;
         }
 
         .table-custom tbody tr:hover {
-            background: rgba(0, 220, 130, 0.04) !important;
+
+            background:
+                rgba(0, 220, 130, 0.04) !important;
         }
 
         .table-custom td {
+
             padding: 0.9rem 0.75rem;
+
             background: transparent !important;
+
             color: #cbd5e1;
+
+            vertical-align: middle;
         }
 
-        .form-control, .form-select {
-            background-color: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+
+        /* =========================================================
+           FORM
+           ========================================================= */
+
+        .form-control,
+        .form-select {
+
+            background-color:
+                rgba(15, 23, 42, 0.9);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.15);
+
             color: #f8fafc;
+
             border-radius: 0.5rem;
         }
 
-        .form-control:focus, .form-select:focus {
-            background-color: rgba(15, 23, 42, 0.95);
+        .form-control:focus,
+        .form-select:focus {
+
+            background-color:
+                rgba(15, 23, 42, 0.98);
+
             border-color: #00dc82;
+
             color: #ffffff;
-            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25);
+
+            box-shadow:
+                0 0 0 0.25rem rgba(0, 220, 130, 0.25);
         }
+
+        .form-control::placeholder {
+
+            color: #64748b;
+        }
+
+
+        /* =========================================================
+           CHECKBOX
+           ========================================================= */
+
+        .form-check {
+
+            min-height: 1.5rem;
+
+            padding-left: 1.8rem;
+        }
+
+        .form-check-input {
+
+            width: 1.15rem;
+            height: 1.15rem;
+
+            margin-left: -1.8rem;
+
+            margin-top: 0.15rem;
+
+            background-color:
+                rgba(15, 23, 42, 0.9);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.25);
+
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+
+            background-color: #00dc82;
+
+            border-color: #00dc82;
+        }
+
+        .form-check-input:focus {
+
+            border-color: #00dc82;
+
+            box-shadow:
+                0 0 0 0.25rem rgba(0, 220, 130, 0.25);
+        }
+
+        .form-check-label {
+
+            color: #f1f5f9;
+
+            cursor: pointer;
+        }
+
+        .new-tab-help {
+
+            color: #64748b;
+
+            font-size: 0.75rem;
+
+            margin-top: 0.35rem;
+        }
+
+
+        /* =========================================================
+           BADGE NUOVA SCHEDA
+           ========================================================= */
+
+        .new-tab-badge {
+
+            font-size: 0.68rem;
+
+            margin-left: 0.35rem;
+
+            color: #00dc82;
+
+            border:
+                1px solid rgba(0, 220, 130, 0.25);
+
+            background:
+                rgba(0, 220, 130, 0.08);
+
+            border-radius: 0.3rem;
+
+            padding: 0.15rem 0.35rem;
+        }
+
+
+        /* =========================================================
+           PULSANTE BRAND
+           ========================================================= */
 
         .btn-brand {
-            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00dc82 0%,
+                    #00b368 100%
+                );
+
             color: #0f172a;
+
             font-weight: 700;
+
             border: none;
+
             border-radius: 0.5rem;
+
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 220, 130, 0.25);
+
+            box-shadow:
+                0 4px 12px rgba(0, 220, 130, 0.25);
         }
 
         .btn-brand:hover {
+
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
+
+            box-shadow:
+                0 6px 20px rgba(0, 220, 130, 0.4);
+
             color: #0f172a;
         }
 
-        @media (max-width: 991.98px) {
-            .sidebar-nav {
-                position: relative;
-                width: 100%;
-                min-width: 100%;
-                height: auto;
-                border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+        /* =========================================================
+           CONTENITORE TABELLA
+           ========================================================= */
+
+        .table-container {
+
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        /* =========================================================
+           LAYOUT DESKTOP
+           
+           Usiamo 768px invece di 992px.
+           In questo modo con la tua finestra da 1024px
+           FORM + TABELLA rimangono affiancati.
+           ========================================================= */
+
+        @media (min-width: 768px) {
+
+            .navbar-content-row {
+
+                display: flex;
+
+                flex-wrap: nowrap;
+
+                align-items: flex-start;
             }
-            .admin-layout {
-                flex-direction: column;
+
+            .navbar-form-column {
+
+                flex: 0 0 42%;
+
+                max-width: 42%;
             }
-            .main-wrapper {
-                margin-left: 0;
-                width: 100%;
-                padding: 1.5rem;
+
+            .navbar-table-column {
+
+                flex: 0 0 58%;
+
+                max-width: 58%;
             }
         }
+
+
+        /* =========================================================
+           TABLET / MOBILE
+           ========================================================= */
+
+        @media (max-width: 767.98px) {
+
+            .sidebar-nav {
+
+                position: relative;
+
+                width: 100%;
+
+                min-width: 100%;
+
+                height: auto;
+
+                border-right: none;
+
+                border-bottom:
+                    1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .admin-layout {
+
+                flex-direction: column;
+            }
+
+            .main-wrapper {
+
+                margin-left: 0;
+
+                width: 100%;
+
+                padding: 1.5rem;
+            }
+
+            .navbar-form-column,
+            .navbar-table-column {
+
+                width: 100%;
+            }
+        }
+
+
+        /* =========================================================
+           SCHERMI MOLTO PICCOLI
+           ========================================================= */
+
+        @media (max-width: 575.98px) {
+
+            .main-wrapper {
+
+                padding: 1rem;
+            }
+
+            .card-custom {
+
+                border-radius: 0.9rem;
+            }
+
+            .card-body {
+
+                padding: 1rem !important;
+            }
+        }
+
     </style>
+
 </head>
+
+
 <body>
+
+<!-- =========================================================
+     CANVAS BACKGROUND
+     ========================================================= -->
 
 <canvas id="tech-bg-canvas"></canvas>
 
+
+<!-- =========================================================
+     ADMIN LAYOUT
+     ========================================================= -->
+
 <div class="admin-layout">
 
-    <!-- NAVBAR LATERALE (SIDEBAR FRAGMENT) -->
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
     <div th:replace="~{fragments/sidebar :: sidebar('navbar')}"></div>
 
-    <!-- MAIN CONTENT -->
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
     <main class="main-wrapper">
-        <h2 class="mb-4 fw-bold text-white">Gestione Voci di Navigazione</h2>
 
-        <div class="row g-4">
-            <!-- FORM CREAZIONE/MODIFICA -->
-            <div class="col-lg-5">
+
+        <!-- TITOLO -->
+
+        <h2 class="mb-4 fw-bold text-white">
+            Gestione Voci di Navigazione
+        </h2>
+
+
+        <!-- =================================================
+             CONTENITORE FORM + TABELLA
+             ================================================= -->
+
+        <div class="row g-4 navbar-content-row">
+
+
+            <!-- =================================================
+                 FORM CREAZIONE / MODIFICA
+                 ================================================= -->
+
+            <div class="navbar-form-column">
+
+
                 <div class="card card-custom">
+
+
+                    <!-- HEADER -->
+
                     <div class="card-header fw-bold text-white fs-5 py-3">
-                        <i class="bi me-2 text-success" th:classappend="${newItem.id != null} ? 'bi-pencil-square' : 'bi-plus-square'"></i>
-                        <span th:text="${newItem.id != null} ? 'Modifica Voce' : 'Aggiungi Nuova Voce'">Aggiungi / Modifica Voce</span>
+
+                        <i class="bi me-2 text-success"
+                           th:classappend="${newItem.id != null}
+                           ? 'bi-pencil-square'
+                           : 'bi-plus-square'">
+                        </i>
+
+                        <span th:text="${newItem.id != null}
+                            ? 'Modifica Voce'
+                            : 'Aggiungi Nuova Voce'">
+
+                            Aggiungi / Modifica Voce
+
+                        </span>
+
                     </div>
+
+
+                    <!-- BODY -->
+
                     <div class="card-body p-4">
-                        <form th:action="@{/admin/navbar/save}" th:object="${newItem}" method="post">
-                            <input type="hidden" th:field="*{id}" />
+
+
+                        <form th:action="@{/admin/navbar/save}"
+                              th:object="${newItem}"
+                              method="post">
+
+
+                            <!-- ID -->
+
+                            <input type="hidden"
+                                   th:field="*{id}" />
+
+
+                            <!-- =================================================
+                                 ETICHETTA
+                                 ================================================= -->
 
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-light">Etichetta Menu (Label)</label>
-                                <input type="text" class="form-control" th:field="*{label}" placeholder="es. Chi Siamo" required />
+
+                                <label class="form-label fw-bold text-light">
+
+                                    Etichetta Menu (Label)
+
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       th:field="*{label}"
+                                       placeholder="es. Chi Siamo"
+                                       required />
+
                             </div>
 
-                            <!-- SELETTORE TIPO LINK -->
+
+                            <!-- =================================================
+                                 TIPO LINK
+                                 ================================================= -->
+
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-light">Tipo di Link</label>
-                                <select id="linkTypeSelect" class="form-select" onchange="toggleLinkInput()">
-                                    <option value="PAGE" th:selected="${newItem.page != null || (newItem.url == null || #strings.isEmpty(newItem.url))}">Pagina CMS</option>
-                                    <option value="URL" th:selected="${newItem.url != null and !#strings.isEmpty(newItem.url)}">URL Personalizzato</option>
+
+                                <label class="form-label fw-bold text-light">
+
+                                    Tipo di Link
+
+                                </label>
+
+                                <select id="linkTypeSelect"
+                                        class="form-select"
+                                        onchange="toggleLinkInput()">
+
+
+                                    <option value="PAGE"
+                                            th:selected="${newItem.page != null
+                                            || (newItem.url == null
+                                            || #strings.isEmpty(newItem.url))}">
+
+                                        Pagina CMS
+
+                                    </option>
+
+
+                                    <option value="URL"
+                                            th:selected="${newItem.url != null
+                                            and !#strings.isEmpty(newItem.url)}">
+
+                                        URL Personalizzato
+
+                                    </option>
+
+
                                 </select>
+
                             </div>
 
-                            <!-- SELEZIONE PAGINA CMS -->
-                            <div class="mb-3" id="pageSelectGroup">
-                                <label class="form-label fw-bold text-light">Pagina Collegata</label>
-                                <select id="pageSelect" class="form-select" th:field="*{page}">
-                                    <option value="">-- Nessuna (Menu Categoria / Dropdown) --</option>
-                                    <option th:each="p : ${pages}" th:value="${p.id}" th:text="${p.title}"></option>
+
+                            <!-- =================================================
+                                 PAGINA CMS
+                                 ================================================= -->
+
+                            <div class="mb-3"
+                                 id="pageSelectGroup">
+
+
+                                <label class="form-label fw-bold text-light">
+
+                                    Pagina Collegata
+
+                                </label>
+
+
+                                <select id="pageSelect"
+                                        class="form-select"
+                                        th:field="*{page}">
+
+
+                                    <option value="">
+
+                                        -- Nessuna (Menu Categoria / Dropdown) --
+
+                                    </option>
+
+
+                                    <option th:each="p : ${pages}"
+                                            th:value="${p.id}"
+                                            th:text="${p.title}">
+                                    </option>
+
+
                                 </select>
+
                             </div>
 
-                            <!-- INPUT URL PERSONALIZZATO -->
-                            <div class="mb-3 d-none" id="urlInputGroup">
-                                <label class="form-label fw-bold text-light">URL Personalizzato</label>
-                                <input type="text" id="urlInput" class="form-control" th:field="*{url}" placeholder="https://google.com o /contatti" />
+
+                            <!-- =================================================
+                                 URL PERSONALIZZATO
+                                 ================================================= -->
+
+                            <div class="mb-3 d-none"
+                                 id="urlInputGroup">
+
+
+                                <label class="form-label fw-bold text-light">
+
+                                    URL Personalizzato
+
+                                </label>
+
+
+                                <input type="text"
+                                       id="urlInput"
+                                       class="form-control"
+                                       th:field="*{url}"
+                                       placeholder="https://google.com o /contatti" />
+
+
                             </div>
+
+
+                            <!-- =================================================
+                                 MENU PADRE
+                                 ================================================= -->
 
                             <div class="mb-3">
-                                <label class="form-label fw-bold text-light">Menu Padre (Per Dropdown)</label>
-                                <select class="form-select" th:field="*{parent}">
-                                    <option value="">-- Nessuno (Voce Principale) --</option>
-                                    <!-- Evita di impostare se stesso come padre in fase di modifica -->
-                                    <option th:each="parentItem : ${navItems}" 
-                                            th:if="${newItem.id == null || newItem.id != parentItem.id}"
-                                            th:value="${parentItem.id}" 
+
+
+                                <label class="form-label fw-bold text-light">
+
+                                    Menu Padre (Per Dropdown)
+
+                                </label>
+
+
+                                <select class="form-select"
+                                        th:field="*{parent}">
+
+
+                                    <option value="">
+
+                                        -- Nessuno (Voce Principale) --
+
+                                    </option>
+
+
+                                    <!--
+                                        Evita che una voce possa
+                                        diventare padre di se stessa.
+                                    -->
+
+                                    <option th:each="parentItem : ${navItems}"
+                                            th:if="${newItem.id == null
+                                            || newItem.id != parentItem.id}"
+                                            th:value="${parentItem.id}"
                                             th:text="${parentItem.label}">
                                     </option>
+
+
                                 </select>
+
                             </div>
+
+
+                            <!-- =================================================
+                                 ORDINE
+                                 ================================================= -->
+
+                            <div class="mb-3">
+
+
+                                <label class="form-label fw-bold text-light">
+
+                                    Ordine di Visualizzazione
+
+                                </label>
+
+
+                                <input type="number"
+                                       class="form-control"
+                                       th:field="*{itemOrder}"
+                                       required />
+
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 CHECKBOX NUOVA SCHEDA
+                                 ================================================= -->
 
                             <div class="mb-4">
-                                <label class="form-label fw-bold text-light">Ordine di Visualizzazione</label>
-                                <input type="number" class="form-control" th:field="*{itemOrder}" required />
+
+
+                                <div class="form-check">
+
+
+                                    <input type="checkbox"
+                                           class="form-check-input"
+                                           id="openInNewTab"
+                                           th:field="*{openInNewTab}" />
+
+
+                                    <label class="form-check-label fw-semibold"
+                                           for="openInNewTab">
+
+                                        <i class="bi bi-box-arrow-up-right text-success me-1"></i>
+
+                                        Apri in una nuova scheda/finestra
+
+                                    </label>
+
+
+                                </div>
+
+
+                                <div class="new-tab-help">
+
+                                    Se non selezionato, la voce verrà aperta
+                                    nella stessa finestra.
+
+                                </div>
+
+
                             </div>
+
+
+                            <!-- =================================================
+                                 PULSANTI
+                                 ================================================= -->
 
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-brand flex-grow-1 py-2">
-                                    <i class="bi bi-save me-1"></i> Salva
+
+
+                                <button type="submit"
+                                        class="btn btn-brand flex-grow-1 py-2">
+
+                                    <i class="bi bi-save me-1"></i>
+
+                                    Salva
+
                                 </button>
-                                <a th:if="${newItem.id != null}" th:href="@{/admin/navbar}" class="btn btn-outline-secondary py-2">
+
+
+                                <a th:if="${newItem.id != null}"
+                                   th:href="@{/admin/navbar}"
+                                   class="btn btn-outline-secondary py-2">
+
                                     Annulla
+
                                 </a>
+
+
                             </div>
+
+
                         </form>
+
+
                     </div>
+
                 </div>
+
             </div>
 
-            <!-- TABELLA VOCE E SOTTOVOCI -->
-            <div class="col-lg-7">
+
+            <!-- =================================================
+                 TABELLA
+                 ================================================= -->
+
+            <div class="navbar-table-column">
+
+
                 <div class="card card-custom">
+
+
                     <div class="card-body p-0">
-                        <div class="table-responsive">
+
+
+                        <div class="table-container">
+
+
                             <table class="table table-custom align-middle">
+
+
+                                <!-- =================================================
+                                     HEADER TABELLA
+                                     ================================================= -->
+
                                 <thead>
-                                    <tr>
-                                        <th class="text-center" style="width: 70px;">Ordine</th>
-                                        <th>Etichetta</th>
-                                        <th>Tipo / Destinazione</th>
-                                        <th class="text-end" style="width: 110px;">Azioni</th>
-                                    </tr>
+
+                                <tr>
+
+                                    <th class="text-center"
+                                        style="width: 70px;">
+
+                                        Ordine
+
+                                    </th>
+
+
+                                    <th>
+
+                                        Etichetta
+
+                                    </th>
+
+
+                                    <th>
+
+                                        Tipo / Destinazione
+
+                                    </th>
+
+
+                                    <th class="text-end"
+                                        style="width: 110px;">
+
+                                        Azioni
+
+                                    </th>
+
+                                </tr>
+
                                 </thead>
+
+
+                                <!-- =================================================
+                                     BODY
+                                     ================================================= -->
+
                                 <tbody>
-                                    <th:block th:each="item : ${navItems}">
-                                        <tr th:classappend="${newItem.id != null and newItem.id == item.id} ? 'table-active' : ''">
-                                            <td class="fw-bold text-center text-success" th:text="${item.itemOrder}">1</td>
-                                            <td class="fw-semibold text-white" th:text="${item.label}">Home</td>
-                                            <td>
-                                                <span th:if="${(item.children != null and !item.children.isEmpty()) or (item.page == null and (item.url == null or #strings.isEmpty(item.url)))}" 
-                                                      class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-25">Dropdown</span>
-                                                <a th:if="${item.page != null}" 
-                                                   th:href="@{'/p/' + ${item.page.slug}}" 
-                                                   target="_blank" 
-                                                   class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 text-decoration-none">
-                                                    <i class="bi bi-box-arrow-up-right me-1"></i>/p/[[${item.page.slug}]]
+
+
+                                <!--
+                                    VOCI PRINCIPALI
+                                -->
+
+                                <th:block th:each="item : ${navItems}">
+
+
+                                    <!-- =================================================
+                                         VOCE PRINCIPALE
+                                         ================================================= -->
+
+                                    <tr th:classappend="${newItem.id != null
+                                        and newItem.id == item.id}
+                                        ? 'table-active'
+                                        : ''">
+
+
+                                        <!-- ORDINE -->
+
+                                        <td class="fw-bold text-center text-success"
+                                            th:text="${item.itemOrder}">
+
+                                            1
+
+                                        </td>
+
+
+                                        <!-- ETICHETTA -->
+
+                                        <td class="fw-semibold text-white"
+                                            th:text="${item.label}">
+
+                                            Home
+
+                                        </td>
+
+
+                                        <!-- DESTINAZIONE -->
+
+                                        <td>
+
+
+                                            <!-- DROPDOWN -->
+
+                                            <span th:if="${(item.children != null
+                                                and !item.children.isEmpty())
+                                                or
+                                                (item.page == null
+                                                and
+                                                (item.url == null
+                                                or
+                                                #strings.isEmpty(item.url)))}"
+
+                                                  class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-25">
+
+                                                <i class="bi bi-list me-1"></i>
+
+                                                Dropdown
+
+                                            </span>
+
+
+                                            <!-- =================================================
+                                                 PAGINA CMS
+                                                 ================================================= -->
+
+                                            <a th:if="${item.page != null}"
+
+                                               th:href="@{'/p/' + ${item.page.slug}}"
+
+                                               th:target="${item.openInNewTab}
+                                                   ? '_blank'
+                                                   : '_self'"
+
+                                               class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 text-decoration-none">
+
+
+                                                <i class="bi"
+                                                   th:classappend="${item.openInNewTab}
+                                                       ? 'bi-box-arrow-up-right'
+                                                       : 'bi-link-45deg'">
+                                                </i>
+
+
+                                                /p/[[${item.page.slug}]]
+
+
+                                                <span th:if="${item.openInNewTab}"
+                                                      class="new-tab-badge">
+
+                                                    nuova scheda
+
+                                                </span>
+
+
+                                            </a>
+
+
+                                            <!-- =================================================
+                                                 URL PERSONALIZZATO
+                                                 ================================================= -->
+
+                                            <a th:if="${item.url != null
+                                                and !#strings.isEmpty(item.url)}"
+
+                                               th:href="${item.url}"
+
+                                               th:target="${item.openInNewTab}
+                                                   ? '_blank'
+                                                   : '_self'"
+
+                                               class="badge bg-secondary bg-opacity-50 text-light border border-secondary border-opacity-25 text-decoration-none">
+
+
+                                                <i class="bi"
+                                                   th:classappend="${item.openInNewTab}
+                                                       ? 'bi-box-arrow-up-right'
+                                                       : 'bi-link-45deg'">
+                                                </i>
+
+
+                                                [[${item.url}]]
+
+
+                                                <span th:if="${item.openInNewTab}"
+                                                      class="new-tab-badge">
+
+                                                    nuova scheda
+
+                                                </span>
+
+
+                                            </a>
+
+
+                                        </td>
+
+
+                                        <!-- AZIONI -->
+
+                                        <td class="text-end">
+
+
+                                            <div class="btn-group btn-group-sm">
+
+
+                                                <!-- MODIFICA -->
+
+                                                <a th:href="@{/admin/navbar/edit/{id}(id=${item.id})}"
+                                                   class="btn btn-outline-warning"
+                                                   title="Modifica">
+
+                                                    <i class="bi bi-pencil-square"></i>
+
                                                 </a>
-                                                <a th:if="${item.url != null and !#strings.isEmpty(item.url)}" 
-                                                   th:href="${item.url}" 
-                                                   target="_blank" 
-                                                   class="badge bg-secondary bg-opacity-50 text-light border border-secondary border-opacity-25 text-decoration-none">
-                                                    <i class="bi bi-box-arrow-up-right me-1"></i>[[${item.url}]]
+
+
+                                                <!-- ELIMINA -->
+
+                                                <a th:href="@{/admin/navbar/delete/{id}(id=${item.id})}"
+
+                                                   class="btn btn-outline-danger"
+
+                                                   onclick="return confirm('Eliminare questa voce e le sue sottovoci?');"
+
+                                                   title="Elimina">
+
+                                                    <i class="bi bi-trash"></i>
+
                                                 </a>
-                                            </td>
-                                            <td class="text-end">
-                                                <div class="btn-group btn-group-sm">
-                                                    <!-- PULSANTE MODIFICA PADRE -->
-                                                    <a th:href="@{/admin/navbar/edit/{id}(id=${item.id})}" class="btn btn-outline-warning" title="Modifica">
-                                                        <i class="bi bi-pencil-square"></i>
-                                                    </a>
-                                                    <!-- PULSANTE ELIMINA PADRE -->
-                                                    <a th:href="@{/admin/navbar/delete/{id}(id=${item.id})}" class="btn btn-outline-danger" onclick="return confirm('Eliminare questa voce e le sue sottovoci?');" title="Elimina">
-                                                        <i class="bi bi-trash"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <!-- SOTTOVOCI DROPDOWN -->
-                                        <tr th:each="child : ${item.children}" th:classappend="${newItem.id != null and newItem.id == child.id} ? 'table-active' : ''">
-                                            <td class="text-center text-secondary ps-4">└ <span th:text="${child.itemOrder}">1</span></td>
-                                            <td class="ps-4 text-secondary" th:text="${child.label}">Sottovoce</td>
-                                            <td>
-                                                <a th:if="${child.page != null}" 
-                                                   th:href="@{'/p/' + ${child.page.slug}}" 
-                                                   target="_blank" 
-                                                   class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 text-decoration-none">
-                                                    <i class="bi bi-box-arrow-up-right me-1"></i>/p/[[${child.page.slug}]]
+
+
+                                            </div>
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                    <!-- =================================================
+                                         SOTTOVOCI
+                                         ================================================= -->
+
+                                    <tr th:each="child : ${item.children}"
+
+                                        th:classappend="${newItem.id != null
+                                            and newItem.id == child.id}
+                                            ? 'table-active'
+                                            : ''">
+
+
+                                        <!-- ORDINE -->
+
+                                        <td class="text-center text-secondary ps-4">
+
+                                            └
+
+                                            <span th:text="${child.itemOrder}">
+
+                                                1
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- ETICHETTA -->
+
+                                        <td class="ps-4 text-secondary"
+                                            th:text="${child.label}">
+
+                                            Sottovoce
+
+                                        </td>
+
+
+                                        <!-- DESTINAZIONE -->
+
+                                        <td>
+
+
+                                            <!-- PAGINA CMS FIGLIO -->
+
+                                            <a th:if="${child.page != null}"
+
+                                               th:href="@{'/p/' + ${child.page.slug}}"
+
+                                               th:target="${child.openInNewTab}
+                                                   ? '_blank'
+                                                   : '_self'"
+
+                                               class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 text-decoration-none">
+
+
+                                                <i class="bi"
+                                                   th:classappend="${child.openInNewTab}
+                                                       ? 'bi-box-arrow-up-right'
+                                                       : 'bi-link-45deg'">
+                                                </i>
+
+
+                                                /p/[[${child.page.slug}]]
+
+
+                                                <span th:if="${child.openInNewTab}"
+                                                      class="new-tab-badge">
+
+                                                    nuova scheda
+
+                                                </span>
+
+
+                                            </a>
+
+
+                                            <!-- URL PERSONALIZZATO FIGLIO -->
+
+                                            <a th:if="${child.url != null
+                                                and !#strings.isEmpty(child.url)}"
+
+                                               th:href="${child.url}"
+
+                                               th:target="${child.openInNewTab}
+                                                   ? '_blank'
+                                                   : '_self'"
+
+                                               class="badge bg-secondary bg-opacity-50 text-light border border-secondary border-opacity-25 text-decoration-none">
+
+
+                                                <i class="bi"
+                                                   th:classappend="${child.openInNewTab}
+                                                       ? 'bi-box-arrow-up-right'
+                                                       : 'bi-link-45deg'">
+                                                </i>
+
+
+                                                [[${child.url}]]
+
+
+                                                <span th:if="${child.openInNewTab}"
+                                                      class="new-tab-badge">
+
+                                                    nuova scheda
+
+                                                </span>
+
+
+                                            </a>
+
+
+                                        </td>
+
+
+                                        <!-- AZIONI -->
+
+                                        <td class="text-end">
+
+
+                                            <div class="btn-group btn-group-sm">
+
+
+                                                <!-- MODIFICA -->
+
+                                                <a th:href="@{/admin/navbar/edit/{id}(id=${child.id})}"
+
+                                                   class="btn btn-outline-warning"
+
+                                                   title="Modifica">
+
+                                                    <i class="bi bi-pencil-square"></i>
+
                                                 </a>
-                                                <a th:if="${child.url != null and !#strings.isEmpty(child.url)}" 
-                                                   th:href="${child.url}" 
-                                                   target="_blank" 
-                                                   class="badge bg-secondary bg-opacity-50 text-light border border-secondary border-opacity-25 text-decoration-none">
-                                                    <i class="bi bi-box-arrow-up-right me-1"></i>[[${child.url}]]
+
+
+                                                <!-- ELIMINA -->
+
+                                                <a th:href="@{/admin/navbar/delete/{id}(id=${child.id})}"
+
+                                                   class="btn btn-outline-danger"
+
+                                                   onclick="return confirm('Eliminare questa sottovoce?');"
+
+                                                   title="Elimina">
+
+                                                    <i class="bi bi-trash"></i>
+
                                                 </a>
-                                            </td>
-                                            <td class="text-end">
-                                                <div class="btn-group btn-group-sm">
-                                                    <!-- PULSANTE MODIFICA FIGLIO -->
-                                                    <a th:href="@{/admin/navbar/edit/{id}(id=${child.id})}" class="btn btn-outline-warning" title="Modifica">
-                                                        <i class="bi bi-pencil-square"></i>
-                                                    </a>
-                                                    <!-- PULSANTE ELIMINA FIGLIO -->
-                                                    <a th:href="@{/admin/navbar/delete/{id}(id=${child.id})}" class="btn btn-outline-danger" onclick="return confirm('Eliminare questa sottovoce?');" title="Elimina">
-                                                        <i class="bi bi-trash"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </th:block>
+
+
+                                            </div>
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                </th:block>
+
+
                                 </tbody>
+
+
                             </table>
+
+
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
+
+
         </div>
+
+
     </main>
+
 </div>
 
-<!-- JAVASCRIPT DINAMICO LOGICA -->
+
+<!-- =========================================================
+     JAVASCRIPT LINK TYPE
+     ========================================================= -->
+
 <script>
+
 function toggleLinkInput() {
-    const linkType = document.getElementById('linkTypeSelect').value;
-    const pageGroup = document.getElementById('pageSelectGroup');
-    const urlGroup = document.getElementById('urlInputGroup');
-    const pageSelect = document.getElementById('pageSelect');
-    const urlInput = document.getElementById('urlInput');
+
+    const linkType =
+        document.getElementById('linkTypeSelect').value;
+
+    const pageGroup =
+        document.getElementById('pageSelectGroup');
+
+    const urlGroup =
+        document.getElementById('urlInputGroup');
+
 
     if (linkType === 'PAGE') {
+
         pageGroup.classList.remove('d-none');
+
         urlGroup.classList.add('d-none');
+
     } else {
+
         urlGroup.classList.remove('d-none');
+
         pageGroup.classList.add('d-none');
+
     }
+
 }
 
-document.addEventListener('DOMContentLoaded', toggleLinkInput);
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        toggleLinkInput();
+
+    }
+);
+
 </script>
 
-<!-- CANVAS ANIMATO -->
+
+<!-- =========================================================
+     CANVAS ANIMATO
+     ========================================================= -->
+
 <script>
-    const canvas = document.getElementById('tech-bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
 
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+const canvas =
+    document.getElementById('tech-bg-canvas');
+
+const ctx =
+    canvas.getContext('2d');
+
+let width;
+let height;
+
+
+function resize() {
+
+    width =
+        canvas.width =
+        window.innerWidth;
+
+    height =
+        canvas.height =
+        window.innerHeight;
+
+}
+
+
+window.addEventListener(
+    'resize',
+    resize
+);
+
+resize();
+
+
+/* =========================================================
+   CIRCUITI
+   ========================================================= */
+
+class Circuit {
+
+    constructor() {
+
+        this.reset();
+
     }
-    window.addEventListener('resize', resize);
-    resize();
 
-    class Circuit {
-        constructor() { this.reset(); }
-        reset() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.length = Math.floor(Math.random() * 8) + 4;
-            this.currentStep = 0;
-            this.dir = Math.floor(Math.random() * 4);
-            this.path = [{ x: this.x, y: this.y }];
-            this.speed = Math.random() * 1.5 + 0.5;
-            this.alpha = Math.random() * 0.4 + 0.1;
-            this.size = 20;
-        }
-        update() {
-            if (this.currentStep < this.length) {
-                let last = this.path[this.path.length - 1];
-                let nx = last.x, ny = last.y;
-                if (Math.random() < 0.3) {
-                    this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
-                }
-                switch (this.dir) {
-                    case 0: ny -= this.size; break;
-                    case 1: nx += this.size; break;
-                    case 2: ny += this.size; break;
-                    case 3: nx -= this.size; break;
-                }
-                this.path.push({ x: nx, y: ny });
-                this.currentStep++;
-            } else {
-                this.alpha -= 0.005;
-                if (this.alpha <= 0) this.reset();
+
+    reset() {
+
+        this.x =
+            Math.random() * width;
+
+        this.y =
+            Math.random() * height;
+
+        this.length =
+            Math.floor(
+                Math.random() * 8
+            ) + 4;
+
+        this.currentStep = 0;
+
+        this.dir =
+            Math.floor(
+                Math.random() * 4
+            );
+
+        this.path = [
+            {
+                x: this.x,
+                y: this.y
             }
-        }
-        draw() {
-            if (this.path.length < 2) return;
-            ctx.beginPath();
-            ctx.moveTo(this.path[0].x, this.path[0].y);
-            for (let i = 1; i < this.path.length; i++) {
-                ctx.lineTo(this.path[i].x, this.path[i].y);
+        ];
+
+        this.speed =
+            Math.random() * 1.5 + 0.5;
+
+        this.alpha =
+            Math.random() * 0.4 + 0.1;
+
+        this.size = 20;
+
+    }
+
+
+    update() {
+
+        if (this.currentStep < this.length) {
+
+            let last =
+                this.path[
+                    this.path.length - 1
+                ];
+
+            let nx = last.x;
+            let ny = last.y;
+
+
+            if (Math.random() < 0.3) {
+
+                this.dir =
+                    (
+                        this.dir +
+                        (
+                            Math.random() < 0.5
+                                ? 1
+                                : 3
+                        )
+                    ) % 4;
+
             }
-            ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-            let last = this.path[this.path.length - 1];
-            ctx.beginPath();
-            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-            ctx.fill();
-        }
-    }
 
-    const codeSnippets = [
-        "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
-        "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
-        "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
-        "npm run build", "docker-compose up -d", "mvn clean install"
-    ];
 
-    class CodeText {
-        constructor() { this.reset(); }
-        reset() {
-            this.x = Math.random() * (width - 200);
-            this.y = Math.random() * height;
-            this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-            this.alpha = 0;
-            this.maxAlpha = Math.random() * 0.3 + 0.1;
-            this.fadeIn = true;
-            this.speed = Math.random() * 0.3 + 0.1;
-        }
-        update() {
-            this.y -= this.speed;
-            if (this.fadeIn) {
-                this.alpha += 0.008;
-                if (this.alpha >= this.maxAlpha) this.fadeIn = false;
-            } else {
-                this.alpha -= 0.005;
-                if (this.alpha <= 0) this.reset();
+            switch (this.dir) {
+
+                case 0:
+
+                    ny -= this.size;
+
+                    break;
+
+
+                case 1:
+
+                    nx += this.size;
+
+                    break;
+
+
+                case 2:
+
+                    ny += this.size;
+
+                    break;
+
+
+                case 3:
+
+                    nx -= this.size;
+
+                    break;
+
             }
+
+
+            this.path.push({
+
+                x: nx,
+
+                y: ny
+
+            });
+
+
+            this.currentStep++;
+
+        } else {
+
+            this.alpha -= 0.005;
+
+
+            if (this.alpha <= 0) {
+
+                this.reset();
+
+            }
+
         }
-        draw() {
-            ctx.font = '12px "Fira Code", monospace';
-            ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
-            ctx.fillText(this.text, this.x, this.y);
-        }
+
     }
 
-    const circuits = Array.from({ length: 18 }, () => new Circuit());
-    const codeTexts = Array.from({ length: 12 }, () => new CodeText());
 
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-        circuits.forEach(c => { c.update(); c.draw(); });
-        codeTexts.forEach(ct => { ct.update(); ct.draw(); });
-        requestAnimationFrame(animate);
+    draw() {
+
+        if (this.path.length < 2) {
+
+            return;
+
+        }
+
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            this.path[0].x,
+            this.path[0].y
+        );
+
+
+        for (
+            let i = 1;
+            i < this.path.length;
+            i++
+        ) {
+
+            ctx.lineTo(
+                this.path[i].x,
+                this.path[i].y
+            );
+
+        }
+
+
+        ctx.strokeStyle =
+            `rgba(
+                0,
+                220,
+                130,
+                ${this.alpha}
+            )`;
+
+        ctx.lineWidth = 1.5;
+
+        ctx.stroke();
+
+
+        let last =
+            this.path[
+                this.path.length - 1
+            ];
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+            last.x,
+            last.y,
+            3,
+            0,
+            Math.PI * 2
+        );
+
+
+        ctx.fillStyle =
+            `rgba(
+                54,
+                228,
+                218,
+                ${this.alpha + 0.2}
+            )`;
+
+
+        ctx.fill();
+
     }
-    animate();
+
+}
+
+
+/* =========================================================
+   TESTI
+   ========================================================= */
+
+const codeSnippets = [
+
+    "class BlockManager {}",
+
+    "import spring.boot.*;",
+
+    "<div class='eco'>",
+
+    "SELECT * FROM blocks;",
+
+    "const init = () => {};",
+
+    "return new PageBlock();",
+
+    "01000101 01000011 01001111",
+
+    "public static void main()",
+
+    "async fetch('/api')",
+
+    "npm run build",
+
+    "docker-compose up -d",
+
+    "mvn clean install"
+
+];
+
+
+class CodeText {
+
+    constructor() {
+
+        this.reset();
+
+    }
+
+
+    reset() {
+
+        this.x =
+            Math.random() *
+            Math.max(
+                1,
+                width - 200
+            );
+
+        this.y =
+            Math.random() * height;
+
+
+        this.text =
+            codeSnippets[
+                Math.floor(
+                    Math.random() *
+                    codeSnippets.length
+                )
+            ];
+
+
+        this.alpha = 0;
+
+        this.maxAlpha =
+            Math.random() * 0.3 + 0.1;
+
+        this.fadeIn = true;
+
+        this.speed =
+            Math.random() * 0.3 + 0.1;
+
+    }
+
+
+    update() {
+
+        this.y -= this.speed;
+
+
+        if (this.fadeIn) {
+
+            this.alpha += 0.008;
+
+
+            if (
+                this.alpha >=
+                this.maxAlpha
+            ) {
+
+                this.fadeIn = false;
+
+            }
+
+        } else {
+
+            this.alpha -= 0.005;
+
+
+            if (this.alpha <= 0) {
+
+                this.reset();
+
+            }
+
+        }
+
+    }
+
+
+    draw() {
+
+        ctx.font =
+            '12px "Fira Code", monospace';
+
+
+        ctx.fillStyle =
+            `rgba(
+                0,
+                220,
+                130,
+                ${this.alpha}
+            )`;
+
+
+        ctx.fillText(
+            this.text,
+            this.x,
+            this.y
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ISTANZE
+   ========================================================= */
+
+const circuits =
+    Array.from(
+        {
+            length: 18
+        },
+        () => new Circuit()
+    );
+
+
+const codeTexts =
+    Array.from(
+        {
+            length: 12
+        },
+        () => new CodeText()
+    );
+
+
+/* =========================================================
+   ANIMAZIONE
+   ========================================================= */
+
+function animate() {
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    circuits.forEach(
+        c => {
+
+            c.update();
+
+            c.draw();
+
+        }
+    );
+
+
+    codeTexts.forEach(
+        ct => {
+
+            ct.update();
+
+            ct.draw();
+
+        }
+    );
+
+
+    requestAnimationFrame(
+        animate
+    );
+
+}
+
+
+animate();
+
 </script>
+
 
 </body>
+
 </html>

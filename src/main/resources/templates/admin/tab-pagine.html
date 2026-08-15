@@ -5,7 +5,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Eco Skill Factory</title>
+    <title>Gestione Pagine Dinamiche - Eco Skill Factory</title>
 
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,11 +120,6 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
-        .card-custom .card-header {
-            background: rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
         .table-custom {
             color: #cbd5e1;
             margin-bottom: 0;
@@ -183,11 +178,45 @@
             color: #475569;
         }
 
-        /* MODAL CUSTOM */
-        .modal-content-dark {
-            background: #0f172a;
+        /* INPUT CUSTOM DI RICERCA */
+        .search-input-group .form-control {
+            background: rgba(15, 23, 42, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #f1f5f9;
+        }
+
+        .search-input-group .form-control:focus {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: #00dc82;
+            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.15);
+            color: #fff;
+        }
+
+        /* PAGINAZIONE STILE VETRO */
+        .pagination .page-link {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 0.5rem 0.85rem;
+        }
+
+        .pagination .page-link:hover {
+            background: rgba(0, 220, 130, 0.2);
+            color: #00dc82;
+            border-color: rgba(0, 220, 130, 0.3);
+        }
+
+        .pagination .page-item.active .page-link {
+            background: #00dc82;
+            border-color: #00dc82;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background: rgba(15, 23, 42, 0.4);
+            border-color: rgba(255, 255, 255, 0.05);
+            color: #475569;
         }
 
         /* RESPONSIVE LATERALE */
@@ -221,93 +250,87 @@
 <div class="admin-layout">
 
     <!-- NAVBAR ADMIN LATERALE (SIDEBAR FRAGMENT) -->
-    <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
+    <div th:replace="~{fragments/sidebar :: sidebar('pages')}"></div>
 
     <!-- CONTENITORE PRINCIPALE -->
     <main class="main-wrapper">
 
-        <!-- SEZIONE: RIGHE HOME PAGE -->
+        <!-- INTESTAZIONE SEZIONE -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <div>
                 <h2 class="section-title mb-1 fw-bold text-white">
-                    Gestione Righe Home Page
+                    Pagine Dinamiche
                 </h2>
                 <p class="text-secondary mb-0">
-                    Organizza i blocchi di contenuto della pagina principale.
+                    Crea, cerca e gestisci le pagine del sito.
                 </p>
             </div>
 
-            <!-- NUOVA RIGA -->
-            <a th:href="@{/admin/block/new}" class="btn btn-brand px-3 py-2">
-                <i class="bi bi-plus-circle me-1"></i>
-                Aggiungi Nuova Riga
+            <a th:href="@{/admin/pages/new}" class="btn btn-brand px-3 py-2">
+                <i class="bi bi-file-earmark-plus me-1"></i>Crea Nuova Pagina
             </a>
         </div>
 
-        <!-- TABELLA RIGHE HOME -->
-        <div class="card card-custom mb-5">
+        <!-- FORM DI RICERCA IN TEMPO REALE -->
+        <div class="card card-custom mb-4 p-3">
+            <form id="searchForm" th:action="@{/admin/pages}" method="get" class="row g-2 align-items-center">
+                <!-- Parametro per forzare massimo 10 righe per pagina -->
+                <input type="hidden" name="size" value="10">
+
+                <div class="col-md-8 col-lg-6">
+                    <div class="input-group search-input-group">
+                        <span class="input-group-text bg-transparent text-secondary border-secondary border-opacity-25">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" name="search" th:value="${search}" class="form-control" placeholder="Cerca per slug o titolo pagina..." autocomplete="off">
+                        <a th:if="${search != null and !#strings.isEmpty(search)}" th:href="@{/admin/pages(size=10)}" class="btn btn-outline-secondary" title="Azzera filtri">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- TABELLA PAGINE -->
+        <div class="card card-custom mb-4">
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-custom align-middle">
                         <thead>
                             <tr>
-                                <th style="width: 80px;" class="text-center">Pos.</th>
                                 <th style="width: 70px;">ID</th>
-                                <th>Titolo Amministrativo</th>
-                                <th>Tipo Blocco</th>
-                                <th>Larghezza</th>
-                                <th>Altezza Min.</th>
-                                <th class="text-end" style="width: 220px;">Azioni</th>
+                                <th>Titolo Pagina</th>
+                                <th>Slug (URL)</th>
+                                <th>Tipo</th>
+                                <th class="text-end" style="width: 250px;">Azioni</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="b : ${blocks}">
-                                <td class="text-center fw-bold text-success">
-                                    <span th:text="${b.position}">1</span>
-                                </td>
-                                <td class="text-secondary">
-                                    <span th:text="${b.id}">1</span>
-                                </td>
-                                <td class="fw-semibold text-white">
-                                    <span th:text="${b.titleAdmin}">Header Principale</span>
-                                </td>
-                                <td>
-                                    <span th:if="${b.blockType != null}" class="badge bg-primary bg-opacity-75 text-white" th:text="${b.blockType.label}">
-                                        Jumbotron
-                                    </span>
-                                    <span th:unless="${b.blockType != null}" class="badge bg-secondary">
-                                        Non definito
-                                    </span>
-                                </td>
-                                <td>
-                                    <span th:if="${b.containerType != null}" th:text="${b.containerType.name()}">
-                                        CONTAINER
-                                    </span>
-                                    <span th:unless="${b.containerType != null}" class="text-secondary">-</span>
-                                </td>
-                                <td>
-                                    <span th:if="${b.customHeight != null and !#strings.isEmpty(b.customHeight)}" th:text="${b.customHeight}">
-                                        auto
-                                    </span>
-                                    <span th:unless="${b.customHeight != null and !#strings.isEmpty(b.customHeight)}" class="text-secondary">
-                                        auto
-                                    </span>
-                                </td>
+                            <tr th:each="p : ${pages}">
+                                <td class="text-secondary"><span th:text="${p.id}">1</span></td>
+                                <td class="fw-semibold text-white"><span th:text="${p.title}">Chi Siamo</span></td>
+                                <td><code th:text="'/p/' + ${p.slug}">/p/semo</code></td>
+                                <td><span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25">Pagina dinamica</span></td>
                                 <td class="text-end text-nowrap">
-                                    <a th:href="@{/admin/block/edit/{id}(id=${b.id})}" class="btn btn-sm btn-outline-info me-1" title="Modifica Riga">
+                                    <a th:href="@{'/p/' + ${p.slug}}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light me-1" title="Apri pagina">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a th:href="@{/admin/pages/edit/{id}(id=${p.id})}" class="btn btn-sm btn-outline-info me-1" title="Modifica Pagina">
                                         <i class="bi bi-pencil me-1"></i>Modifica
                                     </a>
-                                    <a th:href="@{/admin/block/delete/{id}(id=${b.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Sicuro di voler eliminare questa riga?');" title="Elimina Riga">
+                                    <a th:href="@{/admin/pages/delete/{id}(id=${p.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Sicuro di voler eliminare questa pagina?');" title="Elimina Pagina">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
                             </tr>
 
-                            <tr th:if="${blocks == null or #lists.isEmpty(blocks)}">
-                                <td colspan="7" class="text-center py-5 text-secondary">
-                                    <i class="bi bi-inbox empty-icon d-block mb-3"></i>
-                                    <div class="fw-semibold mb-2 text-light">Nessuna riga presente.</div>
-                                    <div>Clicca su <strong>"Aggiungi Nuova Riga"</strong> per iniziare.</div>
+                            <tr th:if="${pages == null or #lists.isEmpty(pages)}">
+                                <td colspan="5" class="text-center py-5 text-secondary">
+                                    <i class="bi bi-folder-x empty-icon d-block mb-3"></i>
+                                    <div class="fw-semibold mb-3 text-light">Nessuna pagina trovata.</div>
+                                    <a th:href="@{/admin/pages/new}" class="btn btn-brand btn-sm">
+                                        <i class="bi bi-plus-circle me-1"></i>Crea Nuova Pagina
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>
@@ -316,7 +339,37 @@
             </div>
         </div>
 
-        <footer class="text-center text-secondary small py-4">
+        <!-- PAGINAZIONE (LIMITATA A MAX 10 ELEMENTI PER PAGINA) -->
+        <div th:if="${totalPages > 1}" class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+            <div class="text-secondary small">
+                Mostrando <span class="text-white fw-bold" th:text="${pages.size()}">0</span> di <span class="text-white fw-bold" th:text="${totalItems}">0</span> pagine complessive
+            </div>
+
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <!-- PRECEDENTE -->
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/pages(page=${currentPage - 1}, size=10, search=${search})}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    <!-- PAGINE NUMERATE -->
+                    <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/admin/pages(page=${i}, size=10, search=${search})}" th:text="${i}">1</a>
+                    </li>
+
+                    <!-- SUCCESSIVO -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a class="page-link" th:href="@{/admin/pages(page=${currentPage + 1}, size=10, search=${search})}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <footer class="text-center text-secondary small py-4 mt-4">
             <i class="bi bi-cpu me-1"></i>Eco Skill Factory CMS
         </footer>
 
@@ -324,42 +377,11 @@
 
 </div>
 
-<!-- MODAL POPUP DI AVVISO / ERRORE -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content modal-content-dark">
-            <div class="modal-header border-bottom border-danger bg-danger bg-opacity-25 text-white">
-                <h5 class="modal-title fw-bold" id="errorModalLabel">
-                    <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>Impossibile Eliminare
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body py-4">
-                <p class="mb-0 fs-6 text-light" th:text="${errorMessage}">
-                    Messaggio di errore predefinito.
-                </p>
-            </div>
-            <div class="modal-footer border-top border-secondary border-opacity-25">
-                <a th:href="@{/admin/navbar}" class="btn btn-outline-info">
-                    <i class="bi bi-menu-button-wide me-1"></i> Vai alla Navbar
-                </a>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- BOOTSTRAP JS & SCRIPT ANIMAZIONE SFONDO -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script th:if="${errorMessage != null}">
-    document.addEventListener('DOMContentLoaded', function () {
-        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-        errorModal.show();
-    });
-</script>
-
 <script>
+    /* SCRIPT SFONDO ANIMATO */
     const canvas = document.getElementById('tech-bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -423,8 +445,8 @@
     }
 
     const codeSnippets = [
-        "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
-        "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
+        "class PageManager {}", "import spring.boot.*;", "<div class='eco'>",
+        "SELECT * FROM pages;", "const init = () => {};", "return new Page();",
         "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
         "npm run build", "docker-compose up -d", "mvn clean install"
     ];
@@ -467,6 +489,39 @@
         requestAnimationFrame(animate);
     }
     animate();
+
+    /* SCRIPT GESTIONE FILTRO IN TEMPO REALE */
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchInput');
+        if (!searchInput) return;
+
+        // Mantiene il focus e posiziona il cursore in fondo al ricaricamento
+        if (searchInput.value) {
+            searchInput.focus();
+            const val = searchInput.value;
+            searchInput.value = '';
+            searchInput.value = val;
+        }
+
+        let debounceTimer;
+        searchInput.addEventListener('input', function () {
+            const filter = this.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.table-custom tbody tr');
+
+            // 1. Filtro immediato in DOM per feedback istantaneo
+            rows.forEach(row => {
+                if (row.querySelector('.empty-icon')) return;
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+
+            // 2. Invio automatico del form per interrogare il DB (debounce 500ms)
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                this.form.submit();
+            }, 500);
+        });
+    });
 </script>
 
 </body>

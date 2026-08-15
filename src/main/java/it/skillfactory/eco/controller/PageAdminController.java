@@ -1,13 +1,16 @@
 package it.skillfactory.eco.controller;
 
 import it.skillfactory.eco.model.Page;
-import it.skillfactory.eco.repository.PageBlockRepository;
 import it.skillfactory.eco.repository.PageRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/pages")
@@ -16,28 +19,57 @@ public class PageAdminController {
     @Autowired
     private PageRepository pageRepository;
 
-    @Autowired
-    private PageBlockRepository pageBlockRepository;
-
 
     // ============================================================
-    // DASHBOARD PAGINE
+    // TABELLA PAGINE CON RICERCA E PAGINAZIONE
     // ============================================================
 
     @GetMapping
-    public String listPages(Model model) {
+    public String listPages(
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size,
+            Model model) {
 
-        model.addAttribute(
-                "pages",
-                pageRepository.findAll()
-        );
+        List<Page> allPages = pageRepository.findAll();
 
-        model.addAttribute(
-                "blocks",
-                pageBlockRepository.findAllByOrderByPositionAsc()
-        );
+        // FILTRAGGIO PER RICERCA (SU SLUG O TITOLO)
+        if (search != null && !search.trim().isEmpty()) {
+            String term = search.trim().toLowerCase();
+            allPages = allPages.stream()
+                    .filter(p -> (p.getSlug() != null && p.getSlug().toLowerCase().contains(term))
+                              || (p.getTitle() != null && p.getTitle().toLowerCase().contains(term)))
+                    .collect(Collectors.toList());
+        }
 
-        return "admin/dashboard";
+        // CALCOLO PAGINAZIONE
+        int totalItems = allPages.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+        if (totalPages < 1) {
+            totalPages = 1;
+        }
+
+        if (page < 1) {
+            page = 1;
+        } else if (page > totalPages) {
+            page = totalPages;
+        }
+
+        int start = (page - 1) * size;
+        int end = Math.min(start + size, totalItems);
+
+        List<Page> paginatedPages = (start <= totalItems && start >= 0)
+                ? allPages.subList(start, end)
+                : Collections.emptyList();
+
+        model.addAttribute("pages", paginatedPages);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("search", search != null ? search.trim() : "");
+
+        return "admin/tab-pagine";
     }
 
 
@@ -286,7 +318,7 @@ public class PageAdminController {
 
 
             // ====================================================
-            // RITORNO ALLA DASHBOARD
+            // RITORNO ALLA GESTIONE PAGINE
             // ====================================================
 
             return "redirect:/admin/pages";
@@ -323,26 +355,17 @@ public class PageAdminController {
     // PREPARAZIONE FORM IN CASO DI ERRORE
     // ============================================================
 
-    private void preparaFormErrore(
-            Model model,
-            Page page) {
+    private void preparaFormErrore(Model model, Page page) {
 
         if (page.getWidthPercent() == null) {
-
             page.setWidthPercent(100);
         }
 
-
         if (page.getContentHtml() == null) {
-
-            page.setContentHtml("");
+            page.setContentHtml(""); // Correretto: setContentHtml invece di getContentHtml
         }
 
-
-        model.addAttribute(
-                "page",
-                page
-        );
+        model.addAttribute("page", page);
     }
 
 

@@ -7,12 +7,12 @@
             <i class="bi bi-cpu-fill text-success fs-3"></i>
             <div>
                 <span class="brand-text fw-bold">Eco</span>
-                <span class="brand-accent fw-bold">Skill</span>
+                <span class="brand-accent fw-bold">Skill Factory</span>
                 <div class="small text-uppercase text-secondary fs-6 tracking-wider">CMS Admin</div>
             </div>
         </a>
 
-        <!-- AZIONI VEDI SITO & LOGOUT (SPOSTATE SOPRA) -->
+        <!-- AZIONI VEDI SITO & LOGOUT -->
         <div class="pb-3 mb-3 border-bottom border-secondary border-opacity-25 d-flex flex-column gap-2">
             <a th:href="@{/}" class="btn btn-outline-success btn-sm w-100 rounded-3 text-start d-flex align-items-center justify-content-between py-2 fw-semibold">
                 <span><i class="bi bi-eye me-2"></i>Vedi Sito</span>
@@ -29,6 +29,11 @@
             <a class="nav-link" th:classappend="${activeMenu == 'dashboard'} ? 'active' : ''" th:href="@{/admin/dashboard}">
                 <i class="bi bi-layers-half me-2"></i>
                 Righe Home Page
+            </a>
+
+            <a class="nav-link" th:classappend="${activeMenu == 'pages'} ? 'active' : ''" th:href="@{/admin/pages}">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                Pagine Dinamiche
             </a>
 
             <a class="nav-link" th:classappend="${activeMenu == 'navbar'} ? 'active' : ''" th:href="@{/admin/navbar}">

@@ -53,11 +53,6 @@ public class AdminController {
                 blockRepository.findAllByOrderByPositionAsc()
         );
 
-        model.addAttribute(
-                "pages",
-                pageRepository.findAll()
-        );
-
         return "admin/dashboard";
     }
 
@@ -669,7 +664,7 @@ public class AdminController {
 
 
     // ============================================================
-    // AGGIUNGI CARD / SLIDE (CORRETTO)
+    // AGGIUNGI CARD / SLIDE
     // ============================================================
 
     @PostMapping("/block/{id}/item/add")
@@ -685,7 +680,7 @@ public class AdminController {
                     value = "backgroundColor",
                     required = false
             )
-            String backgroundColor, // <--- AGGIUNTO
+            String backgroundColor,
 
             @RequestParam(
                     value = "itemImageFile",
@@ -733,7 +728,7 @@ public class AdminController {
 
         item.setBackgroundColor(
                 backgroundColor
-        ); // <--- SETTATO IL COLORE DI SFONDO
+        );
 
 
         item.setContentHtml(
@@ -853,7 +848,7 @@ public class AdminController {
 
 
     // ============================================================
-    // SALVA MODIFICA CARD / SLIDE (CORRETTO)
+    // SALVA MODIFICA CARD / SLIDE
     // ============================================================
 
     @PostMapping(
@@ -872,7 +867,7 @@ public class AdminController {
                     value = "backgroundColor",
                     required = false
             )
-            String backgroundColor, // <--- AGGIUNTO
+            String backgroundColor,
 
             @RequestParam(
                     value = "itemImageFile",
@@ -918,7 +913,7 @@ public class AdminController {
 
         item.setBackgroundColor(
                 backgroundColor
-        ); // <--- SETTATO IL COLORE DI SFONDO
+        );
 
 
         item.setContentHtml(

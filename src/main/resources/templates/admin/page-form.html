@@ -203,8 +203,8 @@
                 <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova Pagina</h2>
                 <p class="text-muted mb-0">Crea o modifica il contenuto della pagina.</p>
             </div>
-            <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
-                <i class="bi bi-arrow-left me-1"></i> Torna alla Dashboard
+            <a th:href="@{/admin/pages}" class="btn btn-outline-light">
+                <i class="bi bi-arrow-left me-1"></i> Torna alla Gestione Pagine
             </a>
         </div>
 
@@ -260,7 +260,7 @@
 
                 <!-- BOTTONI -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
+                    <a th:href="@{/admin/pages}" class="btn btn-outline-light">
                         <i class="bi bi-arrow-left me-1"></i> Annulla
                     </a>
                     <button type="submit" class="btn btn-success btn-lg">

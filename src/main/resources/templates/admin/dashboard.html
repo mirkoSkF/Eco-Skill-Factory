@@ -252,10 +252,8 @@
                         <thead>
                             <tr>
                                 <th style="width: 80px;" class="text-center">Pos.</th>
-                                <th style="width: 70px;">ID</th>
                                 <th>Titolo Amministrativo</th>
                                 <th>Tipo Blocco</th>
-                                <th>Larghezza</th>
                                 <th>Altezza Min.</th>
                                 <th class="text-end" style="width: 220px;">Azioni</th>
                             </tr>
@@ -264,9 +262,6 @@
                             <tr th:each="b : ${blocks}">
                                 <td class="text-center fw-bold text-success">
                                     <span th:text="${b.position}">1</span>
-                                </td>
-                                <td class="text-secondary">
-                                    <span th:text="${b.id}">1</span>
                                 </td>
                                 <td class="fw-semibold text-white">
                                     <span th:text="${b.titleAdmin}">Header Principale</span>
@@ -278,12 +273,6 @@
                                     <span th:unless="${b.blockType != null}" class="badge bg-secondary">
                                         Non definito
                                     </span>
-                                </td>
-                                <td>
-                                    <span th:if="${b.containerType != null}" th:text="${b.containerType.name()}">
-                                        CONTAINER
-                                    </span>
-                                    <span th:unless="${b.containerType != null}" class="text-secondary">-</span>
                                 </td>
                                 <td>
                                     <span th:if="${b.customHeight != null and !#strings.isEmpty(b.customHeight)}" th:text="${b.customHeight}">

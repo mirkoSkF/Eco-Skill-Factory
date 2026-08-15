@@ -298,19 +298,15 @@
                     <table class="table table-custom align-middle">
                         <thead>
                             <tr>
-                                <th style="width: 70px;">ID</th>
                                 <th>Titolo Pagina</th>
                                 <th>Slug (URL)</th>
-                                <th>Tipo</th>
                                 <th class="text-end" style="width: 250px;">Azioni</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="p : ${pages}">
-                                <td class="text-secondary"><span th:text="${p.id}">1</span></td>
                                 <td class="fw-semibold text-white"><span th:text="${p.title}">Chi Siamo</span></td>
                                 <td><code th:text="'/p/' + ${p.slug}">/p/semo</code></td>
-                                <td><span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25">Pagina dinamica</span></td>
                                 <td class="text-end text-nowrap">
                                     <a th:href="@{'/p/' + ${p.slug}}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light me-1" title="Apri pagina">
                                         <i class="bi bi-eye"></i>

@@ -669,7 +669,8 @@
                     <div class="card-body p-4">
 
 
-                        <form th:action="@{/admin/navbar/save}"
+                        <form id="navItemForm"
+                              th:action="@{/admin/navbar/save}"
                               th:object="${newItem}"
                               method="post">
 
@@ -918,8 +919,9 @@
                             <div class="d-flex gap-2">
 
 
-                                <button type="submit"
-                                        class="btn btn-brand flex-grow-1 py-2">
+                                <button type="button"
+                                        class="btn btn-brand flex-grow-1 py-2"
+                                        onclick="showSaveModal()">
 
                                     <i class="bi bi-save me-1"></i>
 
@@ -1382,6 +1384,29 @@
 
 
 <!-- =========================================================
+     MODAL DI CONFERMA SALVATAGGIO
+     ========================================================= -->
+
+<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-custom border-0">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title text-white"><i class="bi bi-floppy-fill text-success me-2"></i>Conferma Salvataggio</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-light">
+                Sei sicuro di voler salvare le modifiche a questa voce di navigazione?
+            </div>
+            <div class="modal-footer border-top border-secondary">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-brand fw-bold" onclick="document.getElementById('navItemForm').submit();">Conferma e Salva</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================================
      MODAL DI CONFERMA ELIMINAZIONE
      ========================================================= -->
 
@@ -1443,6 +1468,16 @@ function toggleLinkInput() {
 
     }
 
+}
+
+function showSaveModal() {
+    const form = document.getElementById('navItemForm');
+    if (form.checkValidity()) {
+        const modal = new bootstrap.Modal(document.getElementById('saveConfirmModal'));
+        modal.show();
+    } else {
+        form.reportValidity();
+    }
 }
 
 function showDeleteModal(url, text) {

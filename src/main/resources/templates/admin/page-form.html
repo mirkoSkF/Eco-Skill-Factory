@@ -110,6 +110,13 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
         }
+
+        /* Personalizzazione Validazione Form */
+        .was-validated .form-control:invalid {
+            border-color: #ea580c !important;
+            background-image: none !important;
+            box-shadow: 0 0 0 0.25rem rgba(234, 88, 12, 0.25) !important;
+        }
     </style>
 
     <!-- ============================================================
@@ -259,21 +266,21 @@
         </div>
 
         <!-- FORM PAGINA -->
-        <form id="pageForm" th:action="@{/admin/pages/save}" th:object="${page}" method="post" class="card shadow-sm border-0">
+        <form id="pageForm" th:action="@{/admin/pages/save}" th:object="${page}" method="post" class="card shadow-sm border-0" novalidate>
             <div class="card-body p-4">
 
                 <input type="hidden" th:field="*{id}">
 
                 <!-- TITOLO -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Titolo Pagina</label>
+                    <label class="form-label fw-bold">Titolo Pagina <span class="text-danger">*</span></label>
                     <input type="text" th:field="*{title}" class="form-control form-control-lg" placeholder="es. Chi Siamo" required>
                     <div class="form-text">Il titolo verrà utilizzato come titolo amministrativo della pagina.</div>
                 </div>
 
                 <!-- SLUG -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Slug URL</label>
+                    <label class="form-label fw-bold">Slug URL <span class="text-danger">*</span></label>
                     <input type="text" th:field="*{slug}" class="form-control" placeholder="es. chi-siamo" required>
                     <div class="form-text">La pagina sarà disponibile all'indirizzo: <code>/p/chi-siamo</code></div>
                 </div>
@@ -371,6 +378,24 @@
 
     </div>
 
+    <!-- MODAL DI AVVISO CAMPI MANCANTI -->
+    <div class="modal fade" id="warningModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content card border-0">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i>Campi Obbligatori Mancanti</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Compilare tutti i campi obbligatori prima di salvare la pagina (es. <strong>Titolo Pagina</strong> e <strong>Slug URL</strong>).
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-warning fw-bold text-dark" data-bs-dismiss="modal">Ho Capito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DI CONFERMA SALVATAGGIO -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -398,6 +423,21 @@
             if (window.tinymce) {
                 tinymce.triggerSave();
             }
+
+            const pageForm = document.getElementById('pageForm');
+
+            // Controlla se tutti i campi obbligatori del form sono validi
+            if (!pageForm.checkValidity()) {
+                pageForm.classList.add('was-validated');
+                pageForm.reportValidity(); // Mostra il messaggio nativo del browser sul campo errato
+                
+                // Mostra il popup di avviso
+                const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
+                warningModal.show();
+                return;
+            }
+
+            // Se tutto è valido apre la modale di conferma
             const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
             modal.show();
         }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Creato il: Ago 16, 2026 alle 20:12
+-- Creato il: Ago 16, 2026 alle 23:34
 -- Versione del server: 5.7.24
 -- Versione PHP: 8.3.1
 
@@ -119,12 +119,13 @@ CREATE TABLE `footer_items` (
 
 INSERT INTO `footer_items` (`id`, `item_order`, `label`, `open_in_new_tab`, `url`, `page_id`, `parent_id`, `column_position`) VALUES
 (1, 0, 'Chi siamo', b'0', '', 2, NULL, 'SX'),
-(2, 0, 'Eventi', b'0', '', 1, NULL, 'SX'),
-(3, 0, 'Offerta', b'0', '', NULL, NULL, 'SX'),
-(4, 0, 'Magazine', b'1', 'https://magazine.skillfactory.it', NULL, NULL, 'CENTRO'),
-(5, 0, 'Training', b'1', 'https://training.skillfactory.it', NULL, NULL, 'CENTRO'),
-(6, 2, 'Privacy Policy', b'0', '', 6, NULL, 'DX'),
-(7, 1, 'Contattaci', b'0', '', 7, NULL, 'DX');
+(2, 2, 'Eventi', b'0', '', 1, NULL, 'SX'),
+(3, 1, 'Offerta', b'0', '', NULL, NULL, 'SX'),
+(4, 3, 'Magazine', b'1', 'https://magazine.skillfactory.it', NULL, NULL, 'CENTRO'),
+(5, 4, 'Training', b'1', 'https://training.skillfactory.it', NULL, NULL, 'CENTRO'),
+(6, 7, 'Privacy Policy', b'0', '', 6, NULL, 'DX'),
+(7, 6, 'Contattaci', b'0', '', 7, NULL, 'DX'),
+(8, 5, 'Diario professionale', b'1', 'https://slog.skillfactory.it', NULL, NULL, 'CENTRO');
 
 -- --------------------------------------------------------
 
@@ -153,6 +154,25 @@ INSERT INTO `form_configs` (`id`, `access_description`, `access_title`, `active`
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `navbar_config`
+--
+
+CREATE TABLE `navbar_config` (
+  `id` bigint(20) NOT NULL,
+  `background_color` varchar(255) NOT NULL,
+  `opacity` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `navbar_config`
+--
+
+INSERT INTO `navbar_config` (`id`, `background_color`, `opacity`) VALUES
+(1, '#88f00a', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `nav_items`
 --
 
@@ -163,20 +183,25 @@ CREATE TABLE `nav_items` (
   `url` varchar(255) DEFAULT NULL,
   `page_id` bigint(20) DEFAULT NULL,
   `parent_id` bigint(20) DEFAULT NULL,
-  `open_in_new_tab` bit(1) DEFAULT NULL
+  `open_in_new_tab` bit(1) DEFAULT NULL,
+  `icon` varchar(255) DEFAULT NULL,
+  `required_role` varchar(255) DEFAULT NULL,
+  `background_color` varchar(255) DEFAULT NULL,
+  `opacity` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `nav_items`
 --
 
-INSERT INTO `nav_items` (`id`, `item_order`, `label`, `url`, `page_id`, `parent_id`, `open_in_new_tab`) VALUES
-(5, 3, 'Magazine', 'https://magazine.skillfactory.it', NULL, NULL, b'1'),
-(6, 4, 'Training', 'https://training.skillfactory.it', NULL, NULL, b'1'),
-(7, 0, 'Chi siamo', '', 2, NULL, b'0'),
-(8, 1, 'Offerta', '', NULL, NULL, b'0'),
-(9, 2, 'Eventi', '', 1, NULL, b'0'),
-(10, 5, 'Contattaci', '', 7, NULL, b'0');
+INSERT INTO `nav_items` (`id`, `item_order`, `label`, `url`, `page_id`, `parent_id`, `open_in_new_tab`, `icon`, `required_role`, `background_color`, `opacity`) VALUES
+(5, 3, 'Magazine', 'https://magazine.skillfactory.it', NULL, NULL, b'1', NULL, NULL, NULL, NULL),
+(6, 4, 'Training', 'https://training.skillfactory.it', NULL, NULL, b'1', NULL, NULL, NULL, NULL),
+(7, 0, 'Chi siamo', '', 2, NULL, b'0', NULL, NULL, NULL, NULL),
+(8, 1, 'Offerta', '', NULL, NULL, b'0', NULL, NULL, NULL, NULL),
+(9, 2, 'Eventi', '', 1, NULL, b'0', NULL, NULL, NULL, NULL),
+(10, 6, 'Contattaci', '', 7, NULL, b'0', NULL, NULL, NULL, NULL),
+(11, 5, 'Crea CV', 'https://slog.skillfactory.it', NULL, NULL, b'1', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -212,8 +237,7 @@ INSERT INTO `pages` (`id`, `content_html`, `slug`, `title`, `width_percent`, `co
 (6, '<p><span style=\"font-size: 24px;\">Gentile Utente, ai sensi dell&rsquo;art. 13 del regolamento (UE) n.2016/679 del Parlamento Europeo e del Consiglio del 27/04/2016, di seguito GDPR, la Societ&agrave; SKILL FACTORY S.R.L., La informa di quanto segue:</span></p>\r\n<h3><span style=\"font-size: 24px;\">A) Finalit&agrave; del trattamento dei dati e base giuridica</span></h3>\r\n<p><span style=\"font-size: 24px;\">I Suoi dati personali sono trattati dalla SKILL FACTORY S.R.L. in qualit&agrave; di Titolare del trattamento per le seguenti Finalit&agrave; di Servizio:</span></p>\r\n<p><span style=\"font-size: 24px;\"><strong>A1)</strong>&nbsp;Acquisizione, trattamento e conservazione anche digitale di dati personali ai fini della navigazione sul sito www.skillfactory.it onde garantire la sicurezza del Sito e delle informazioni sullo stesso scambiate. Il sito si avvale inoltre del servizio di analisi statistica Google Analytics (fornito da Google Ireland Limited) per raccogliere dati aggregati sul traffico e sull\'utilizzo delle pagine, attivato esclusivamente previo esplicito consenso dell\'utente;</span></p>\r\n<p><span style=\"font-size: 24px;\"><strong>A2)</strong>&nbsp;Acquisizione, trattamento e conservazione anche digitale di dati personali degli interessati (quali dati anagrafici, numero di telefono ed indirizzo e-mail) per consentire l&rsquo;erogazione dei servizi da lei richiesti...</span></p>\r\n<p><span style=\"font-size: 24px;\"><strong>A3)</strong>&nbsp;Acquisizione, trattamento e conservazione anche digitale di dati personali degli utenti, quali dati anagrafici, codice fiscale, cv per l&rsquo;esecuzione di un contratto di cui l&rsquo;interessato &egrave; parte o all&rsquo;esecuzione di misure precontrattuali dettate su richiesta dello stesso, per l&rsquo;iscrizione e partecipazione a corsi di formazione di potenziali risorse con inserimento sulla piattaforma Skillbook nella sezione utenti e conseguente inserimento lavorativo;</span></p>\r\n<p><span style=\"font-size: 24px;\"><strong>A4)</strong>&nbsp;Acquisizione, trattamento e conservazione anche digitale di dati personali dei discenti, quali dati anagrafici, numero di telefono ed indirizzo e-mail per consentire l&rsquo;erogazione del servizio di newsletter, attivabile con la sua espressa indicazione al momento della compilazione del relativo form;</span></p>\r\n<p><span style=\"font-size: 24px;\"><strong>A5)</strong>&nbsp;Acquisizione, trattamento e conservazione anche digitale di dati personali per attivit&agrave; di mail marketing, social media marketing, digital marketing, servizi, news, blogging, attivit&agrave; promozionali ed eventi;</span></p>\r\n<p><span style=\"font-size: 24px;\"><strong>A6)</strong>&nbsp;I dati degli utenti sono gestiti dalla piattaforma Skillbook cui si accede automaticamente dopo la registrazione sul sito www.skillfactory.it, e possono essere ceduti a terzi e ad aziende per facilitare l&rsquo;inserimento lavorativo;</span></p>\r\n<p><span style=\"font-size: 24px;\"><strong>A7)</strong>&nbsp;Adempiere agli obblighi previsti dalla legge, da un regolamento, dalla normativa comunitaria o da un ordine dell&rsquo;Autorit&agrave;...</span></p>\r\n<p><span style=\"font-size: 24px;\"><strong>A8)</strong>&nbsp;Esercitare i diritti del Titolare, ad esempio il diritto di difesa in giudizio (es. art. 24 Cost.);</span></p>\r\n<p><span style=\"font-size: 24px;\">Le informazioni che seguono riguardano esclusivamente il predetto Sito. Non riguardano canali diversi dal Sito e, nella specie, non riguardano altri siti internet, pagine e/o servizi raggiungibili tramite link ipertestuali pubblicati in questo Sito.</span></p>\r\n<h3><span style=\"font-size: 24px;\">B) Natura del conferimento dei dati</span></h3>\r\n<p><span style=\"font-size: 24px;\">I Suoi dati personali oggetto del trattamento sono raccolti direttamente dal soggetto interessato. La base giuridica per il trattamento dei dati tecnici di navigazione di cui al punto A1) &egrave; il legittimo interesse del Titolare ai sensi dell&rsquo;art. 6, comma 1 lett. f del Regolamento. L\'attivazione dei cookie analitici di Google Analytics per le finalit&agrave; di analisi del traffico di cui al punto A1) richiede invece il Suo consenso espresso ai sensi dell\'art. 6, par. 1, lett. a del Regolamento, prestabile e revocabile in qualsiasi momento tramite il banner cookie o la voce \"Gestisci Cookie\". La base giuridica per il trattamento dei dati per le finalit&agrave; di cui ai punti A2), A3) e A4) &egrave; l&rsquo;art. 6 comma 1 lett. b del Regolamento...</span></p>\r\n<p><span style=\"font-size: 24px;\">La base giuridica per il trattamento dei dati per le finalit&agrave; di cui al punto A5) e A6) &egrave; l&rsquo;art.6. par.1 lett. a del Regolamento, in quanto i suoi dati potranno essere trattati lecitamente solo previo suo consenso, specifico, separato, espresso, documentato, preventivo e del tutto facoltativo...</span></p>\r\n<p><span style=\"font-size: 24px;\">La base giuridica per il trattamento dei dati per le finalit&agrave; di cui ai punti A7) e A8) &egrave; l&rsquo; adempimento di un obbligo legale ai sensi dell&rsquo;art. 6, comma 1 lett. c del Regolamento.</span></p>\r\n<h3><span style=\"font-size: 24px;\">C) Modalit&agrave; di trattamento dei dati</span></h3>\r\n<p><span style=\"font-size: 24px;\">Il trattamento dei suoi Dati Personali &egrave; realizzato per mezzo delle operazioni indicate all&rsquo;art. 4 punto 2 del GDPR e precisely: raccolta, registrazione, organizzazione, conservazione, consultazione, elaborazione, estrazione, utilizzo, cancellazione e distruzione dei dati...</span></p>\r\n<h3><span style=\"font-size: 24px;\">E) Periodo di conservazione</span></h3>\r\n<p><span style=\"font-size: 24px;\">In ogni caso, si prevede la conservazione dei dati per un periodo massimo di:</span></p>\r\n<ul>\r\n<li style=\"font-size: 24px;\"><span style=\"font-size: 24px;\">Dati relativi alla formazione = 2 anni</span></li>\r\n<li style=\"font-size: 24px;\"><span style=\"font-size: 24px;\">CV su Skillbook = 2 anni</span></li>\r\n<li style=\"font-size: 24px;\"><span style=\"font-size: 24px;\">Newsletter = 2 anni</span></li>\r\n<li style=\"font-size: 24px;\"><span style=\"font-size: 24px;\">Marketing e Cookie analitici = 2 anni</span></li>\r\n</ul>\r\n<h3><span style=\"font-size: 24px;\">G) Titolare del trattamento e responsabile della protezione dei dati personali</span></h3>\r\n<p><span style=\"font-size: 24px;\"><strong>Il Titolare del Trattamento</strong>&nbsp;&egrave; SKILL FACTORY S.R.L., con sede legale in Via Sedivola n. 30 - 80059 - Torre del Greco (Na) e sede operativa in Centro Direzionale di Napoli is. E2 scala A &ndash; 80143 Napoli (Na).</span><br><span style=\"font-size: 24px;\"><strong>DPO:</strong> Silvio Tortora Maione, email: silvio@itadvice.it</span></p>', 'info-privacy', 'INFORMATIVA SUL TRATTAMENTO DEI DATI PERSONALI DI COLORO CHE CONSULTANO IL SITO INTERNET', 70, '', '', '', b'0', '', NULL, NULL),
 (7, '<h1 class=\"post-description-title\" style=\"line-height: 1;\"><span style=\"font-size: 60px;\">Formiamo i professionisti </span></h1>\r\n<h1 class=\"post-description-title\" style=\"line-height: 1;\"><span style=\"font-size: 60px;\">dell&rsquo;innovazione digitale</span></h1>\r\n<p>&nbsp;</p>\r\n<h3 class=\"sub-claim-contacts\"><span style=\"color: #f1c40f;\">Per gli Studenti</span></h3>\r\n<h1 class=\"text-contact\"><span style=\"color: #f1c40f;\">Sei uno studente e vuoi ricevere informazioni per partecipare ad uno dei nostri corsi?</span></h1>\r\n<p><a href=\"/p/modulo-info\">Vai al form di richiesta informazioni</a></p>\r\n<p>&nbsp;</p>\r\n<h3 class=\"sub-claim-contacts\"><span style=\"color: #3598db;\">Per le Aziende ed Istituti</span></h3>\r\n<h1 class=\"text-contact\"><span style=\"color: #3598db;\">Sei un\'Azienda o un Istituto e vuoi conoscere i nostri servizi di formazione?</span></h1>\r\n<p><a href=\"/p/info-contatti-org\">Vai al form di richiesta informazioni</a></p>\r\n<p>&nbsp;</p>\r\n<h1 class=\"text-contact\">Contatti utili</h1>\r\n<div class=\"text-corsibrevi line-higher\">Mail: selezione@skillfactory.it<br>Referente: Amelia Milone<br>Cell: +39 3270870141<br>Tel: 081 18181361</div>\r\n<div class=\"text-corsibrevi line-higher\">&nbsp;</div>\r\n<div class=\"text-corsibrevi line-higher\">\r\n<h1 class=\"text-contact\">Sede operativa</h1>\r\n<div class=\"text-corsibrevi line-higher\">Via G. Porzio Isola E2 Scala A (1&deg; piano)<br>80143 Napoli (NA)<br>Skill Factory</div>\r\n</div>', 'info', 'Richiesta informazioni', 100, '', '', '', b'0', '', NULL, 'NONE'),
 (9, '<div class=\"text-corsibrevi\"><span style=\"font-size: 24px;\">Compila il form. Ti contatteremo al pi&ugrave; presto.</span></div>', 'modulo-info', 'Modulo di contatto per richiesta informazioni.', 90, '', '', '', b'1', 'mirko.onorato@gmail.com', NULL, 'INFO'),
-(10, '<p><span style=\"font-size: 24px;\">Compila il form. Ti contatteremo al pi&ugrave; presto.</span></p>', 'info-contatti-org', 'Modulo di contatto per Organizzazioni (IFP / IFP+)', 90, '', '', '', b'1', 'mirko.onorato@gmail.com', NULL, 'ORG_INFO'),
-(11, '', 'ghghg', 'ghghghg', 100, 'rtrt', 'rtr', 'trt', b'1', 'mirko.onorato@gmail.com', NULL, 'BOOKING');
+(10, '<p><span style=\"font-size: 24px;\">Compila il form. Ti contatteremo al pi&ugrave; presto.</span></p>', 'info-contatti-org', 'Modulo di contatto per Organizzazioni (IFP / IFP+)', 90, '', '', '', b'1', 'mirko.onorato@gmail.com', NULL, 'ORG_INFO');
 
 -- --------------------------------------------------------
 
@@ -292,6 +316,12 @@ ALTER TABLE `form_configs`
   ADD UNIQUE KEY `UK_1o28xw8i0jdhgb0kmyppylpcq` (`page_id`);
 
 --
+-- Indici per le tabelle `navbar_config`
+--
+ALTER TABLE `navbar_config`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indici per le tabelle `nav_items`
 --
 ALTER TABLE `nav_items`
@@ -338,7 +368,7 @@ ALTER TABLE `footer_config`
 -- AUTO_INCREMENT per la tabella `footer_items`
 --
 ALTER TABLE `footer_items`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT per la tabella `form_configs`
@@ -347,10 +377,16 @@ ALTER TABLE `form_configs`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT per la tabella `navbar_config`
+--
+ALTER TABLE `navbar_config`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT per la tabella `nav_items`
 --
 ALTER TABLE `nav_items`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT per la tabella `pages`

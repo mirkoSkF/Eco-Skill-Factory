@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- ============================================================
-         STILI SFONDO ANIMATO (SENZA VETRO/GLASS SUI FORM)
+         STILI SFONDO ANIMATO
          ============================================================ -->
     <style>
         body {
@@ -30,7 +30,6 @@
             position: relative;
         }
 
-        /* Canvas fisso solo per lo sfondo */
         #tech-bg-canvas {
             position: fixed;
             top: 0;
@@ -41,7 +40,6 @@
             pointer-events: none;
         }
 
-        /* I form e le card mantengono lo sfondo solido opaco */
         .card, .bg-light, .alert-light {
             background-color: #0f172a !important;
             border: 1px solid #1e293b !important;
@@ -53,13 +51,13 @@
             color: #cbd5e1 !important;
         }
 
-        .form-control {
+        .form-control, .form-select {
             background-color: #1e293b !important;
             border: 1px solid #334155 !important;
             color: #ffffff !important;
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             background-color: #1e293b !important;
             color: #ffffff !important;
             border-color: #00dc82 !important;
@@ -70,6 +68,19 @@
             background-color: #1e293b !important;
             border: 1px solid #334155 !important;
             color: #00dc82 !important;
+        }
+
+        .form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+            background-color: #334155;
+            border-color: #475569;
+            cursor: pointer;
+        }
+
+        .form-switch .form-check-input:checked {
+            background-color: #00dc82;
+            border-color: #00dc82;
         }
 
         code {
@@ -90,6 +101,14 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
             color: #0f172a;
+        }
+
+        .course-config-box {
+            background-color: rgba(15, 23, 42, 0.8) !important;
+            border: 1px solid rgba(0, 220, 130, 0.3) !important;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
         }
     </style>
 
@@ -202,7 +221,22 @@
                     });
                 })
             });
+            
+            // Inizializza visibilità pannello form
+            toggleCourseForm();
         });
+
+        function toggleCourseForm() {
+            const hasFormSwitch = document.getElementById('hasFormSwitch');
+            const courseConfigBox = document.getElementById('courseConfigBox');
+            if (hasFormSwitch && courseConfigBox) {
+                if (hasFormSwitch.checked) {
+                    courseConfigBox.style.display = 'block';
+                } else {
+                    courseConfigBox.style.display = 'none';
+                }
+            }
+        }
     </script>
 </head>
 
@@ -254,9 +288,53 @@
                     <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
                 </div>
 
+                <!-- LEVETTA FORM CORSO -->
+                <div class="mb-4 p-3 border rounded bg-dark">
+                    <div class="form-check form-switch d-flex align-items-center gap-3 ps-0">
+                        <input class="form-check-input ms-0" type="checkbox" role="switch" id="hasFormSwitch" th:field="*{hasForm}" onchange="toggleCourseForm()">
+                        <label class="form-check-label fw-bold text-white fs-5 mb-0" for="hasFormSwitch">
+                            <i class="bi bi-ui-checks me-2 text-success"></i>Includi Form di Prenotazione Corso in questa pagina
+                        </label>
+                    </div>
+                    <div class="form-text ms-1 mt-2">Se attivo, sotto il contenuto principale verrà mostrato il modulo di prenotazione del corso.</div>
+                </div>
+
+                <!-- CONFIGURAZIONE FORM CORSO (MOSTRATO/NASCOSTO) -->
+                <div id="courseConfigBox" class="course-config-box mb-4" style="display: none;">
+                    <h5 class="text-success mb-3 fw-bold">
+                        <i class="bi bi-sliders me-2"></i>Dati del Corso e Destinazione
+                    </h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Tipologia Corso</label>
+                            <input type="text" th:field="*{courseType}" class="form-control" placeholder="es. Corso di Formazione">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Codice Corso</label>
+                            <input type="text" th:field="*{courseCode}" class="form-control" placeholder="es. JAVA-2026-01">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Nome Corso</label>
+                            <input type="text" th:field="*{courseName}" class="form-control" placeholder="es. Corso Java Developer">
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label class="form-label fw-bold">Email Destinazione Dati</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
+                                <input type="email" th:field="*{recipientEmail}" class="form-control" placeholder="es. iscrizioni@ecoskillfactory.it">
+                            </div>
+                            <div class="form-text">Indirizzo email a cui verranno inoltrati i dati immessi dagli utenti registrati.</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- CONTENUTO -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Contenuto Pagina</label>
+                    <label class="form-label fw-bold">Contenuto Pagina (Editor)</label>
                     <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e formattazione avanzata.</div>
                     <textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
                 </div>

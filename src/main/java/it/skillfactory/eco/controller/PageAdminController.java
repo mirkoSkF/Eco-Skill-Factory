@@ -21,14 +21,14 @@ public class PageAdminController {
 
 
     // ============================================================
-    // TABELLA PAGINE CON RICERCA E PAGINAZIONE
+    // TABELLA PAGINE CON RICERCA E PAGINAZIONE (MAX 10 RIGHE)
     // ============================================================
 
     @GetMapping
     public String listPages(
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "5") int size,
+            @RequestParam(name = "size", defaultValue = "10") int size,
             Model model) {
 
         List<Page> allPages = pageRepository.findAll();
@@ -86,6 +86,8 @@ public class PageAdminController {
 
         page.setContentHtml("");
 
+        page.setHasForm(false);
+
         model.addAttribute(
                 "page",
                 page
@@ -124,6 +126,11 @@ public class PageAdminController {
         if (page.getContentHtml() == null) {
 
             page.setContentHtml("");
+        }
+
+        if (page.getHasForm() == null) {
+
+            page.setHasForm(false);
         }
 
 
@@ -258,12 +265,17 @@ public class PageAdminController {
 
 
             // ====================================================
-            // CONTENUTO
+            // CONTENUTO & FORM SETTINGS
             // ====================================================
 
             if (page.getContentHtml() == null) {
 
                 page.setContentHtml("");
+            }
+
+            if (page.getHasForm() == null) {
+
+                page.setHasForm(false);
             }
 
 
@@ -313,7 +325,8 @@ public class PageAdminController {
             System.out.println("ID: " + savedPage.getId());
             System.out.println("TITOLO: " + savedPage.getTitle());
             System.out.println("SLUG: " + savedPage.getSlug());
-            System.out.println("WIDTH: " + savedPage.getWidthPercent());
+            System.out.println("HAS FORM: " + savedPage.getHasForm());
+            System.out.println("DESTINAZIONE MAIL: " + savedPage.getRecipientEmail());
             System.out.println("=================================");
 
 
@@ -362,7 +375,11 @@ public class PageAdminController {
         }
 
         if (page.getContentHtml() == null) {
-            page.setContentHtml(""); // Correretto: setContentHtml invece di getContentHtml
+            page.setContentHtml("");
+        }
+
+        if (page.getHasForm() == null) {
+            page.setHasForm(false);
         }
 
         model.addAttribute("page", page);
@@ -374,8 +391,7 @@ public class PageAdminController {
     // ============================================================
 
     @GetMapping("/delete/{id}")
-    public String deletePage(
-            @PathVariable Long id) {
+    public String deletePage(@PathVariable Long id) {
 
         pageRepository.deleteById(id);
 

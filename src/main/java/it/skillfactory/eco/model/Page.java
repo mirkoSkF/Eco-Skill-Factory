@@ -37,22 +37,27 @@ public class Page {
 
 
     // ============================================================
-    // LARGHEZZA BLOCCO
-    // ============================================================
-    //
-    // Valore espresso in percentuale.
-    //
-    // Esempi:
-    // 100 = larghezza completa
-    // 90  = 90%
-    // 75  = 75%
-    // 50  = 50%
-    //
-    // Default: 100%
+    // LARGHEZZA BLOCCO (%)
     // ============================================================
 
     @Column(nullable = false)
     private Integer widthPercent = 100;
+
+
+    // ============================================================
+    // IMPOSTAZIONI FORM PRENOTAZIONE CORSO
+    // ============================================================
+
+    @Column(nullable = false)
+    private Boolean hasForm = false;
+
+    private String courseType;      // Tipologia (es. Corso di Formazione)
+
+    private String courseCode;      // Codice Corso (es. JAVA-2026-01)
+
+    private String courseName;      // Nome Corso (es. Corso Java Developer)
+
+    private String recipientEmail;  // Email a cui inoltrare le iscrizioni
 
 
     // ============================================================
@@ -61,11 +66,12 @@ public class Page {
 
     public Page() {
         this.widthPercent = 100;
+        this.hasForm = false;
     }
 
 
     // ============================================================
-    // COSTRUTTORE COMPLETO
+    // COSTRUTTORE COMPLETO BASE
     // ============================================================
 
     public Page(
@@ -77,106 +83,96 @@ public class Page {
         this.slug = slug;
         this.contentHtml = contentHtml;
         this.widthPercent = 100;
+        this.hasForm = false;
     }
 
 
     // ============================================================
-    // GET ID
+    // GETTERS E SETTERS BASE
     // ============================================================
 
     public Long getId() {
-
         return id;
     }
 
-
-    // ============================================================
-    // SET ID
-    // ============================================================
-
     public void setId(Long id) {
-
         this.id = id;
     }
 
-
-    // ============================================================
-    // GET TITOLO
-    // ============================================================
-
     public String getTitle() {
-
         return title;
     }
 
-
-    // ============================================================
-    // SET TITOLO
-    // ============================================================
-
     public void setTitle(String title) {
-
         this.title = title;
     }
 
-
-    // ============================================================
-    // GET SLUG
-    // ============================================================
-
     public String getSlug() {
-
         return slug;
     }
 
-
-    // ============================================================
-    // SET SLUG
-    // ============================================================
-
     public void setSlug(String slug) {
-
         this.slug = slug;
     }
 
-
-    // ============================================================
-    // GET CONTENUTO HTML
-    // ============================================================
-
     public String getContentHtml() {
-
         return contentHtml;
     }
 
-
-    // ============================================================
-    // SET CONTENUTO HTML
-    // ============================================================
-
     public void setContentHtml(String contentHtml) {
-
         this.contentHtml = contentHtml;
     }
 
-
-    // ============================================================
-    // GET LARGHEZZA
-    // ============================================================
-
     public Integer getWidthPercent() {
-
         return widthPercent;
     }
 
-
-    // ============================================================
-    // SET LARGHEZZA
-    // ============================================================
-
     public void setWidthPercent(Integer widthPercent) {
-
         this.widthPercent = widthPercent;
     }
 
+
+    // ============================================================
+    // GETTERS E SETTERS FORM PRENOTAZIONE CORSO
+    // ============================================================
+
+    public Boolean getHasForm() {
+        return hasForm != null ? hasForm : false;
+    }
+
+    public void setHasForm(Boolean hasForm) {
+        this.hasForm = hasForm;
+    }
+
+    public String getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(String courseType) {
+        this.courseType = courseType;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
 }

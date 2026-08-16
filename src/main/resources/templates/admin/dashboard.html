@@ -255,6 +255,7 @@
                                 <th>Titolo Amministrativo</th>
                                 <th>Tipo Blocco</th>
                                 <th>Altezza Min.</th>
+                                <th>Stato</th>
                                 <th class="text-end" style="width: 220px;">Azioni</th>
                             </tr>
                         </thead>
@@ -281,6 +282,21 @@
                                     <span th:unless="${b.customHeight != null and !#strings.isEmpty(b.customHeight)}" class="text-secondary">
                                         auto
                                     </span>
+                                </td>
+                                <td>
+                                    <!-- LEVETTA STATO BOZZA -->
+                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                        <input class="form-check-input style-switch" type="checkbox" role="switch"
+                                               th:id="'draftSwitch-' + ${b.id}"
+                                               th:checked="${b.draft}"
+                                               th:onchange="|window.location.href='@{/admin/block/toggle-draft/}${b.id}'|">
+                                        <label class="form-check-label small mb-0 fw-semibold"
+                                               th:for="'draftSwitch-' + ${b.id}"
+                                               th:classappend="${b.draft} ? 'text-warning' : 'text-success'"
+                                               th:text="${b.draft} ? 'Bozza' : 'Pubblicato'">
+                                            Bozza
+                                        </label>
+                                    </div>
                                 </td>
                                 <td class="text-end text-nowrap">
                                     <a th:href="@{/admin/block/edit/{id}(id=${b.id})}" class="btn btn-sm btn-outline-info me-1" title="Modifica Riga">

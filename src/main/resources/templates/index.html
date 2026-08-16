@@ -1024,11 +1024,22 @@
 
     <div th:each="block : ${blocks}"
 
+         th:if="${!block.draft or #authorization.expression('isAuthenticated()')}"
+
          th:class="${block.containerType.cssClass}
-                   + ' py-5 block-container'"
+                   + ' py-5 block-container position-relative'"
 
          th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'}
                    + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent') + ';'">
+
+
+        <!-- TAG BOZZA VISIBILE SOLO DALL'ADMIN SE IL BLOCCO È IN BOZZA -->
+        <div sec:authorize="isAuthenticated()" th:if="${block.draft}" 
+             class="position-absolute top-0 start-0 m-3 z-3">
+            <span class="badge bg-warning text-dark fs-6 px-3 py-2 shadow border border-warning border-2">
+                <i class="bi bi-pencil-square me-1"></i> Bozza (Visibile solo all'Admin)
+            </span>
+        </div>
 
 
         <!-- =================================================

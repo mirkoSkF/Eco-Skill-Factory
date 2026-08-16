@@ -58,6 +58,23 @@ public class AdminController {
 
 
     // ============================================================
+    // TOGGLE BOZZA (LEVETTA AMMINISTRATIVA)
+    // ============================================================
+
+    @GetMapping("/block/toggle-draft/{id}")
+    public String toggleDraft(@PathVariable Long id) {
+
+        PageBlock block = blockRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ID Riga non valido: " + id));
+
+        block.setDraft(!block.isDraft());
+        blockRepository.save(block);
+
+        return "redirect:/admin/dashboard";
+    }
+
+
+    // ============================================================
     // NUOVA RIGA
     // ============================================================
 
@@ -174,6 +191,11 @@ public class AdminController {
 
         block.setContainerType(
                 formBlock.getContainerType()
+        );
+
+
+        block.setDraft(
+                formBlock.isDraft()
         );
 
 

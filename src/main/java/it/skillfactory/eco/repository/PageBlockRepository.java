@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface PageBlockRepository extends JpaRepository<PageBlock, Long> {
 
-    // Recupera tutte le righe ordinate in sequenza per il rendering dell'Index
     List<PageBlock> findAllByOrderByPositionAsc();
+
+    List<PageBlock> findByDraftFalseOrderByPositionAsc();
 }

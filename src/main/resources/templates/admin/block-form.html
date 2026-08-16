@@ -106,6 +106,12 @@
             background: #00dc82;
             border: none;
         }
+
+        .modal-content-dark {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f1f5f9;
+        }
     </style>
 
     <!-- ========================================================
@@ -249,7 +255,8 @@
 
         <!-- FORM PRINCIPALE RIGA -->
 
-        <form th:action="@{/admin/block/save}"
+        <form id="blockForm"
+              th:action="@{/admin/block/save}"
               th:object="${block}"
               method="post"
               enctype="multipart/form-data"
@@ -535,8 +542,9 @@
 
             <div class="text-end">
 
-                <button type="submit"
-                        class="btn btn-success btn-lg">
+                <button type="button"
+                        class="btn btn-success btn-lg"
+                        onclick="showSaveBlockModal()">
 
                     <i class="bi bi-save"></i>
                     Salva Configurazione Riga
@@ -733,7 +741,7 @@
 
                                     <a th:href="@{/admin/block/{bId}/item/delete/{iId}(bId=${block.id}, iId=${item.id})}"
                                        class="btn btn-sm btn-outline-danger"
-                                       onclick="return confirm('Vuoi davvero rimuovere questo elemento?');">
+                                       onclick="confirmDeleteItem(this.href); return false;">
 
                                         <i class="bi bi-trash"></i>
                                         Rimuovi
@@ -803,7 +811,8 @@
                     <div class="card border-0 p-3"
                          style="background-color: #0b1329 !important;">
 
-                        <form th:action="${editingItem != null} ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} : @{/admin/block/{id}/item/add(id=${block.id})}"
+                        <form id="itemForm"
+                              th:action="${editingItem != null} ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} : @{/admin/block/{id}/item/add(id=${block.id})}"
                               method="post"
                               enctype="multipart/form-data"
                               class="row g-3">
@@ -1020,7 +1029,8 @@
                                 </a>
 
 
-                                <button type="submit"
+                                <button type="button"
+                                        onclick="showSaveItemModal()"
                                         th:class="${editingItem != null} ? 'btn btn-warning btn-lg' : 'btn btn-success btn-lg'">
 
                                     <i th:class="${editingItem != null} ? 'bi bi-check-lg' : 'bi bi-plus-lg'">
@@ -1049,12 +1059,90 @@
 
     </div>
 
+    <!-- ========================================================
+         MODALI DI CONFERMA
+         ======================================================== -->
+    
+    <!-- MODALE SALVATAGGIO RIGA -->
+    <div class="modal fade" id="saveBlockModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header border-bottom border-success">
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-save text-success me-2"></i>Conferma Salvataggio Riga</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Sei sicuro di voler salvare la configurazione di questa riga?
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-success" onclick="document.getElementById('blockForm').submit()">Conferma e Salva</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE SALVATAGGIO ELEMENTO -->
+    <div class="modal fade" id="saveItemModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header border-bottom border-success">
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-check-circle text-success me-2"></i>Conferma Salvataggio Elemento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Sei sicuro di voler salvare i dati di questo elemento?
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-success" onclick="document.getElementById('itemForm').submit()">Conferma e Salva</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE RIMOZIONE ELEMENTO -->
+    <div class="modal fade" id="deleteItemModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header border-bottom border-danger bg-danger bg-opacity-25 text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Conferma Rimozione</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Vuoi davvero rimuovere questo elemento? L'azione non potrà essere annullata.
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <a id="btnConfirmDeleteItem" href="#" class="btn btn-danger">Rimuovi</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- ========================================================
          JS GESTIONE MODELLO E SFONDO
          ======================================================== -->
 
     <script>
+
+    function showSaveBlockModal() {
+        const modal = new bootstrap.Modal(document.getElementById('saveBlockModal'));
+        modal.show();
+    }
+
+    function showSaveItemModal() {
+        const modal = new bootstrap.Modal(document.getElementById('saveItemModal'));
+        modal.show();
+    }
+
+    function confirmDeleteItem(deleteUrl) {
+        document.getElementById('btnConfirmDeleteItem').href = deleteUrl;
+        const modal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
+        modal.show();
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
 

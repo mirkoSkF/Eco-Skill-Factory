@@ -48,11 +48,12 @@ public class PublicPageController {
     }
 
     // ============================================================
-    // RICEZIONE E INVIO EMAIL PRENOTAZIONE CORSO (POST /p/prenota)
+    // RICEZIONE E INVIO EMAIL FORM (POST /p/prenota)
     // ============================================================
 
     @PostMapping("/p/prenota")
     public String handleBooking(
+            @RequestParam(required = false) String formType,
             @RequestParam(required = false) String pageSlug,
             @RequestParam(required = false) String courseType,
             @RequestParam(required = false) String courseCode,
@@ -62,19 +63,28 @@ public class PublicPageController {
             @RequestParam String cognome,
             @RequestParam String email,
             @RequestParam String telefono,
-            @RequestParam String codiceFiscale,
+            @RequestParam(required = false) String codiceFiscale,
             @RequestParam(required = false) String citta,
+            @RequestParam(required = false) String organizzazione,
+            @RequestParam(required = false) String ruolo,
             @RequestParam(required = false) String note,
             @RequestParam(required = false) Boolean privacyCheck,   // 1. Informativa Privacy (Obbligatorio)
             @RequestParam(required = false) Boolean marketingCheck, // 2. Marketing / Promo (Opzionale)
             @RequestParam(value = "thirdPartyCheck", required = false) Boolean profilingCheck, // 3. Mappato sull'attributo name="thirdPartyCheck" dell'HTML
             RedirectAttributes redirectAttributes) {
 
+        String mode = (formType != null && !formType.trim().isEmpty()) ? formType : "BOOKING";
+
         System.out.println("=================================");
-        System.out.println("NUOVA RICHIESTA DI PRENOTAZIONE");
-        System.out.println("Corso: " + courseName + " (" + courseCode + ")");
-        System.out.println("Candidato: " + nome + " " + cognome);
-        System.out.println("Email Candidato: " + email);
+        System.out.println("NUOVA RICHIESTA FORM (" + mode + ")");
+        if ("BOOKING".equalsIgnoreCase(mode)) {
+            System.out.println("Corso: " + courseName + " (" + courseCode + ")");
+        }
+        System.out.println("Utente: " + nome + " " + cognome);
+        if ("ORG_INFO".equalsIgnoreCase(mode)) {
+            System.out.println("Organizzazione: " + organizzazione + " | Ruolo: " + ruolo);
+        }
+        System.out.println("Email Utente: " + email);
         System.out.println("Destinatario Email: " + recipientEmail);
         System.out.println("=================================");
 
@@ -82,38 +92,51 @@ public class PublicPageController {
         if (recipientEmail != null && !recipientEmail.trim().isEmpty()) {
             try {
                 SimpleMailMessage message = new SimpleMailMessage();
-                
                 message.setFrom("selezione@skillfactory.it");
                 message.setTo(recipientEmail);
-                message.setSubject("Nuova prenotazione: " + courseName);
-                
-                String testoEmail = String.format(
-                    "Hai ricevuto una nuova iscrizione al corso!\n\n" +
-                    "Dettagli Corso:\n" +
-                    "- Tipologia: %s\n" +
-                    "- Codice: %s\n" +
-                    "- Nome: %s\n\n" +
-                    "Dati Candidato:\n" +
-                    "- Nome: %s %s\n" +
-                    "- Email: %s\n" +
-                    "- Telefono: %s\n" +
-                    "- Codice Fiscale: %s\n" +
-                    "- Città: %s\n" +
-                    "- Note: %s\n\n" +
-                    "Consensi Privacy Espressi:\n" +
-                    "- Informativa Privacy (Obbligatorio): %s\n" +
-                    "- Comunicazioni Marketing (Opzionale): %s\n" +
-                    "- Profilazione / Terze Parti (Opzionale): %s\n",
-                    courseType, courseCode, courseName,
-                    nome, cognome, email, telefono, codiceFiscale,
-                    (citta != null ? citta : "-"),
-                    (note != null ? note : "-"),
-                    (Boolean.TRUE.equals(privacyCheck) ? "ACCETTATO" : "NON ACCETTATO"),
-                    (Boolean.TRUE.equals(marketingCheck) ? "ACCONSENTITO" : "NON ACCONSENTITO"),
-                    (Boolean.TRUE.equals(profilingCheck) ? "ACCONSENTITO" : "NON ACCONSENTITO")
-                );
 
-                message.setText(testoEmail);
+                String subject;
+                StringBuilder body = new StringBuilder();
+
+                if ("ORG_INFO".equalsIgnoreCase(mode)) {
+                    subject = "Nuova richiesta informazioni aziendale da: " + (organizzazione != null ? organizzazione : nome + " " + cognome);
+                    body.append("Hai ricevuto una nuova richiesta informazioni per organizzazioni!\n\n");
+                    body.append("Dati Referente e Organizzazione:\n");
+                    body.append("- Nome e Cognome: ").append(nome).append(" ").append(cognome).append("\n");
+                    body.append("- Email: ").append(email).append("\n");
+                    body.append("- Telefono: ").append(telefono).append("\n");
+                    body.append("- Organizzazione: ").append(organizzazione != null ? organizzazione : "-").append("\n");
+                    body.append("- Ruolo: ").append(ruolo != null ? ruolo : "-").append("\n");
+                } else if ("INFO".equalsIgnoreCase(mode)) {
+                    subject = "Nuova richiesta informazioni da: " + nome + " " + cognome;
+                    body.append("Hai ricevuto una nuova richiesta di informazioni!\n\n");
+                    body.append("Dati Utente:\n");
+                    body.append("- Nome e Cognome: ").append(nome).append(" ").append(cognome).append("\n");
+                    body.append("- Email: ").append(email).append("\n");
+                    body.append("- Telefono: ").append(telefono).append("\n");
+                } else {
+                    subject = "Nuova prenotazione: " + (courseName != null ? courseName : "Corso");
+                    body.append("Hai ricevuto una nuova iscrizione al corso!\n\n");
+                    body.append("Dettagli Corso:\n");
+                    body.append("- Tipologia: ").append(courseType != null ? courseType : "-").append("\n");
+                    body.append("- Codice: ").append(courseCode != null ? courseCode : "-").append("\n");
+                    body.append("- Nome: ").append(courseName != null ? courseName : "-").append("\n\n");
+                    body.append("Dati Candidato:\n");
+                    body.append("- Nome: ").append(nome).append(" ").append(cognome).append("\n");
+                    body.append("- Email: ").append(email).append("\n");
+                    body.append("- Telefono: ").append(telefono).append("\n");
+                    body.append("- Codice Fiscale: ").append(codiceFiscale != null ? codiceFiscale : "-").append("\n");
+                    body.append("- Città: ").append(citta != null ? citta : "-").append("\n");
+                }
+
+                body.append("- Note: ").append(note != null ? note : "-").append("\n\n");
+                body.append("Consensi Privacy Espressi:\n");
+                body.append("- Informativa Privacy (Obbligatorio): ").append(Boolean.TRUE.equals(privacyCheck) ? "ACCETTATO" : "NON ACCETTATO").append("\n");
+                body.append("- Comunicazioni Marketing (Opzionale): ").append(Boolean.TRUE.equals(marketingCheck) ? "ACCONSENTITO" : "NON ACCONSENTITO").append("\n");
+                body.append("- Profilazione / Terze Parti (Opzionale): ").append(Boolean.TRUE.equals(profilingCheck) ? "ACCONSENTITO" : "NON ACCONSENTITO").append("\n");
+
+                message.setSubject(subject);
+                message.setText(body.toString());
                 mailSender.send(message);
 
                 System.out.println("Email inviata con successo a " + recipientEmail);
@@ -124,7 +147,7 @@ public class PublicPageController {
 
         redirectAttributes.addFlashAttribute(
                 "successMessage",
-                "Richiesta di prenotazione inviata con successo! Ti ricontatteremo a breve."
+                "Richiesta inviata con successo! Ti ricontatteremo a breve."
         );
 
         if (pageSlug != null && !pageSlug.trim().isEmpty()) {

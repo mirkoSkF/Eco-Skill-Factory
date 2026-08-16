@@ -203,7 +203,7 @@
             border-radius: 12px;
         }
 
-        /* STILI PRENOTAZIONE CORSO */
+        /* STILI FORM */
         .booking-card {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(0, 220, 130, 0.3);
@@ -296,20 +296,39 @@
                      th:utext="${page.contentHtml}"></div>
 
                 <!-- NESSUN CONTENUTO -->
-                <div th:if="${(page.contentHtml == null or #strings.isEmpty(page.contentHtml)) and (page.hasForm == null or !page.hasForm)}"
+                <div th:if="${(page.contentHtml == null or #strings.isEmpty(page.contentHtml)) and (page.getFormType() == 'NONE')}"
                      class="alert empty-content">
                     <i class="bi bi-info-circle me-2"></i> Questa pagina non contiene ancora contenuto.
                 </div>
 
-                <!-- BLOCCO FORM DI PRENOTAZIONE CORSO -->
-                <div th:if="${page.hasForm != null and page.hasForm}" class="mt-5">
+                <!-- BLOCCO FORM DINAMICO -->
+                <div th:if="${page.getFormType() != 'NONE'}" class="mt-5">
                     <div class="booking-card p-4 p-md-5">
 
                         <div class="border-bottom border-secondary pb-3 mb-4">
-                            <h3 class="text-white fw-bold mb-2">
-                                <i class="bi bi-pencil-square text-success me-2"></i>Modulo di Prenotazione
-                            </h3>
-                            <p class="text-secondary mb-0">Compila la tua anagrafica per richiedere l'iscrizione al corso.</p>
+                            <!-- INTESTAZIONE PER PRENOTAZIONE CORSO -->
+                            <th:block th:if="${page.getFormType() == 'BOOKING'}">
+                                <h3 class="text-white fw-bold mb-2">
+                                    <i class="bi bi-pencil-square text-success me-2"></i>Modulo di Prenotazione Corso
+                                </h3>
+                                <p class="text-secondary mb-0">Compila la tua anagrafica per richiedere l'iscrizione al corso.</p>
+                            </th:block>
+
+                            <!-- INTESTAZIONE PER RICHIESTA INFORMAZIONI -->
+                            <th:block th:if="${page.getFormType() == 'INFO'}">
+                                <h3 class="text-white fw-bold mb-2">
+                                    <i class="bi bi-envelope-paper text-success me-2"></i>Richiesta Informazioni
+                                </h3>
+                                <p class="text-secondary mb-0">Compila il modulo sottostante per richiedere maggiori dettagli.</p>
+                            </th:block>
+
+                            <!-- INTESTAZIONE PER RICHIESTA INFORMAZIONI ORGANIZZAZIONI -->
+                            <th:block th:if="${page.getFormType() == 'ORG_INFO'}">
+                                <h3 class="text-white fw-bold mb-2">
+                                    <i class="bi bi-building text-success me-2"></i>Richiesta Informazioni per Organizzazioni
+                                </h3>
+                                <p class="text-secondary mb-0">Compila il modulo con i dati aziendali per richiedere informazioni dedicate.</p>
+                            </th:block>
                         </div>
 
                         <!-- NOTIFICA ESITO INLINE (Opzionale) -->
@@ -321,14 +340,15 @@
                         <form id="bookingForm" th:action="@{/p/prenota}" method="post">
 
                             <!-- CAMPI HIDDEN -->
+                            <input type="hidden" name="formType" th:value="${page.getFormType()}">
                             <input type="hidden" name="courseType" th:value="${page.courseType}">
                             <input type="hidden" name="courseCode" th:value="${page.courseCode}">
                             <input type="hidden" name="courseName" th:value="${page.courseName}">
                             <input type="hidden" name="recipientEmail" th:value="${page.recipientEmail}">
                             <input type="hidden" name="pageSlug" th:value="${page.slug}">
 
-                            <!-- RIEPILOGO CORSO SELEZIONATO -->
-                            <div class="row g-3 mb-4 p-3 rounded bg-dark border border-secondary border-opacity-50">
+                            <!-- RIEPILOGO CORSO SELEZIONATO (SOLO PER PRENOTAZIONE CORSO) -->
+                            <div th:if="${page.getFormType() == 'BOOKING'}" class="row g-3 mb-4 p-3 rounded bg-dark border border-secondary border-opacity-50">
                                 <div class="col-md-4">
                                     <span class="text-secondary d-block small">Tipologia:</span>
                                     <strong class="text-info fs-6" th:text="${page.courseType != null ? page.courseType : 'Corso'}">Tipologia</strong>
@@ -345,7 +365,8 @@
 
                             <!-- ANAGRAFICA UTENTE -->
                             <h5 class="text-white mb-3">
-                                <i class="bi bi-person-vcard me-2 text-success"></i>I tuoi Dati Personali
+                                <i class="bi bi-person-vcard me-2 text-success"></i>
+                                <span th:text="${page.getFormType() == 'ORG_INFO' ? 'I tuoi Dati e Rif. Aziendali' : 'I tuoi Dati Personali'}">I tuoi Dati Personali</span>
                             </h5>
 
                             <div class="row g-3">
@@ -369,15 +390,31 @@
                                     <input type="tel" name="telefono" class="form-control" placeholder="+39 333 1234567" required>
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Codice Fiscale *</label>
-                                    <input type="text" name="codiceFiscale" class="form-control" placeholder="AAAAAA00A00A000A" required>
-                                </div>
+                                <!-- CAMPI SOLO PER PRENOTAZIONE CORSO -->
+                                <th:block th:if="${page.getFormType() == 'BOOKING'}">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Codice Fiscale *</label>
+                                        <input type="text" name="codiceFiscale" class="form-control" placeholder="AAAAAA00A00A000A" required>
+                                    </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Città di Residenza</label>
-                                    <input type="text" name="citta" class="form-control" placeholder="es. Napoli">
-                                </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Città di Residenza</label>
+                                        <input type="text" name="citta" class="form-control" placeholder="es. Napoli">
+                                    </div>
+                                </th:block>
+
+                                <!-- CAMPI SOLO PER RICHIESTA INFORMAZIONI ORGANIZZAZIONI -->
+                                <th:block th:if="${page.getFormType() == 'ORG_INFO'}">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Organizzazione / Azienda *</label>
+                                        <input type="text" name="organizzazione" class="form-control" placeholder="es. Nome Azienda / Ente" required>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ruolo Aziendale *</label>
+                                        <input type="text" name="ruolo" class="form-control" placeholder="es. HR Manager, Responsabile Formazione" required>
+                                    </div>
+                                </th:block>
 
                                 <div class="col-12 mb-4">
                                     <label class="form-label">Note / Richieste Particolari</label>
@@ -413,7 +450,7 @@
 
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-booking px-4 py-2">
-                                        <i class="bi bi-send me-2"></i>Invia Prenotazione
+                                        <i class="bi bi-send me-2"></i>Invia Richiesta
                                     </button>
                                 </div>
                             </div>
@@ -440,7 +477,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
                 </div>
                 <div class="modal-body text-secondary fs-6">
-                    Sei sicuro di voler procedere con l'invio della richiesta di prenotazione per questo corso?
+                    Sei sicuro di voler procedere con l'invio della richiesta?
                 </div>
                 <div class="modal-footer border-secondary border-opacity-50">
                     <button type="button" class="btn btn-outline-secondary text-white" data-bs-dismiss="modal">Annulla</button>
@@ -465,7 +502,7 @@
                 <div class="modal-body text-light fs-6 py-4 text-center">
                     <i class="bi bi-envelope-check text-success display-3 d-block mb-3"></i>
                     <p class="mb-0 fs-5 fw-semibold text-white" th:text="${successMessage}">
-                        La tua prenotazione è stata inviata con successo.
+                        La tua richiesta è stata inviata con successo.
                     </p>
                     <p class="text-secondary small mt-2 mb-0">Ti ricontatteremo al più presto ai recapiti forniti.</p>
                 </div>
@@ -505,16 +542,16 @@
                 document.cookie = `${name}=${value}; max-age=${seconds}; path=/; SameSite=Lax`;
             }
 
-            // Controllo presenza cookie Antispam all'avvio con BLOCCO BLU SCURO
+            // Controllo presenza cookie Antispam all'avvio
             const bookingCard = document.querySelector('.booking-card');
             if (getCookie('booking_cooldown')) {
                 if (bookingCard) {
                     bookingCard.innerHTML = `
                         <div class="p-4 p-md-5 text-center rounded-4 shadow-lg" style="background: rgba(11, 25, 44, 0.95); border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(12px);">
                             <i class="bi bi-clock-history display-4 text-info d-block mb-3"></i>
-                            <h3 class="fw-bold text-white mb-2">Prenotazione già inviata</h3>
+                            <h3 class="fw-bold text-white mb-2">Richiesta già inviata</h3>
                             <p class="text-light mb-0 fs-6" style="color: #cbd5e1 !important; line-height: 1.6;">
-                                Hai già inviato una richiesta di prenotazione di recente.<br>
+                                Hai già inviato una richiesta di recente.<br>
                                 Per evitare invii duplicati, attendi circa 10 minuti prima di poter compilare un nuovo modulo.
                             </p>
                         </div>

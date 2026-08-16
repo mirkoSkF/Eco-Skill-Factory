@@ -45,11 +45,13 @@ public class Page {
 
 
     // ============================================================
-    // IMPOSTAZIONI FORM PRENOTAZIONE CORSO
+    // IMPOSTAZIONI FORM
     // ============================================================
 
     @Column(nullable = false)
     private Boolean hasForm = false;
+
+    private String formType = "NONE"; // NONE, BOOKING, INFO, ORG_INFO
 
     private String courseType;      // Tipologia (es. Corso di Formazione)
 
@@ -57,33 +59,26 @@ public class Page {
 
     private String courseName;      // Nome Corso (es. Corso Java Developer)
 
-    private String recipientEmail;  // Email a cui inoltrare le iscrizioni
+    private String recipientEmail;  // Email a cui inoltrare le iscrizioni / richieste
 
 
     // ============================================================
-    // COSTRUTTORE VUOTO
+    // COSTRUTTORI
     // ============================================================
 
     public Page() {
         this.widthPercent = 100;
         this.hasForm = false;
+        this.formType = "NONE";
     }
 
-
-    // ============================================================
-    // COSTRUTTORE COMPLETO BASE
-    // ============================================================
-
-    public Page(
-            String title,
-            String slug,
-            String contentHtml) {
-
+    public Page(String title, String slug, String contentHtml) {
         this.title = title;
         this.slug = slug;
         this.contentHtml = contentHtml;
         this.widthPercent = 100;
         this.hasForm = false;
+        this.formType = "NONE";
     }
 
 
@@ -133,15 +128,35 @@ public class Page {
 
 
     // ============================================================
-    // GETTERS E SETTERS FORM PRENOTAZIONE CORSO
+    // GETTERS E SETTERS FORM E MODALITÀ
     // ============================================================
 
     public Boolean getHasForm() {
+        if (formType != null && !"NONE".equalsIgnoreCase(formType)) {
+            return true;
+        }
         return hasForm != null ? hasForm : false;
     }
 
     public void setHasForm(Boolean hasForm) {
         this.hasForm = hasForm;
+        if (Boolean.TRUE.equals(hasForm) && ("NONE".equalsIgnoreCase(this.formType) || this.formType == null)) {
+            this.formType = "BOOKING";
+        } else if (Boolean.FALSE.equals(hasForm)) {
+            this.formType = "NONE";
+        }
+    }
+
+    public String getFormType() {
+        if (formType == null || formType.trim().isEmpty()) {
+            return (hasForm != null && hasForm) ? "BOOKING" : "NONE";
+        }
+        return formType;
+    }
+
+    public void setFormType(String formType) {
+        this.formType = formType;
+        this.hasForm = !"NONE".equalsIgnoreCase(formType) && formType != null;
     }
 
     public String getCourseType() {

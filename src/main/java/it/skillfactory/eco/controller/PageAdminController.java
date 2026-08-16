@@ -86,7 +86,7 @@ public class PageAdminController {
 
         page.setContentHtml("");
 
-        page.setHasForm(false);
+        page.setFormType("NONE");
 
         model.addAttribute(
                 "page",
@@ -128,9 +128,9 @@ public class PageAdminController {
             page.setContentHtml("");
         }
 
-        if (page.getHasForm() == null) {
+        if (page.getFormType() == null) {
 
-            page.setHasForm(false);
+            page.setFormType("NONE");
         }
 
 
@@ -273,9 +273,9 @@ public class PageAdminController {
                 page.setContentHtml("");
             }
 
-            if (page.getHasForm() == null) {
+            if (page.getFormType() == null) {
 
-                page.setHasForm(false);
+                page.setFormType("NONE");
             }
 
 
@@ -325,7 +325,7 @@ public class PageAdminController {
             System.out.println("ID: " + savedPage.getId());
             System.out.println("TITOLO: " + savedPage.getTitle());
             System.out.println("SLUG: " + savedPage.getSlug());
-            System.out.println("HAS FORM: " + savedPage.getHasForm());
+            System.out.println("FORM TYPE: " + savedPage.getFormType());
             System.out.println("DESTINAZIONE MAIL: " + savedPage.getRecipientEmail());
             System.out.println("=================================");
 
@@ -378,8 +378,8 @@ public class PageAdminController {
             page.setContentHtml("");
         }
 
-        if (page.getHasForm() == null) {
-            page.setHasForm(false);
+        if (page.getFormType() == null) {
+            page.setFormType("NONE");
         }
 
         model.addAttribute("page", page);

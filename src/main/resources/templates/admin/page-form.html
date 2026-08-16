@@ -70,19 +70,6 @@
             color: #00dc82 !important;
         }
 
-        .form-switch .form-check-input {
-            width: 3em;
-            height: 1.5em;
-            background-color: #334155;
-            border-color: #475569;
-            cursor: pointer;
-        }
-
-        .form-switch .form-check-input:checked {
-            background-color: #00dc82;
-            border-color: #00dc82;
-        }
-
         code {
             color: #36e4da !important;
         }
@@ -112,7 +99,7 @@
         }
 
         /* Personalizzazione Validazione Form */
-        .was-validated .form-control:invalid {
+        .was-validated .form-control:invalid, .was-validated .form-select:invalid {
             border-color: #ea580c !important;
             background-image: none !important;
             box-shadow: 0 0 0 0.25rem rgba(234, 88, 12, 0.25) !important;
@@ -234,13 +221,22 @@
         });
 
         function toggleCourseForm() {
-            const hasFormSwitch = document.getElementById('hasFormSwitch');
+            const formTypeSelect = document.getElementById('formTypeSelect');
             const courseConfigBox = document.getElementById('courseConfigBox');
-            if (hasFormSwitch && courseConfigBox) {
-                if (hasFormSwitch.checked) {
-                    courseConfigBox.style.display = 'block';
-                } else {
+            const courseFields = document.querySelectorAll('.course-specific-field');
+
+            if (formTypeSelect && courseConfigBox) {
+                const selectedVal = formTypeSelect.value;
+                if (selectedVal === 'NONE') {
                     courseConfigBox.style.display = 'none';
+                } else {
+                    courseConfigBox.style.display = 'block';
+                    if (selectedVal === 'BOOKING') {
+                        courseFields.forEach(el => el.style.display = 'block');
+                    } else {
+                        // INFO e ORG_INFO escludono Tipologia, Codice e Nome Corso
+                        courseFields.forEach(el => el.style.display = 'none');
+                    }
                 }
             }
         }
@@ -295,35 +291,38 @@
                     <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
                 </div>
 
-                <!-- LEVETTA FORM CORSO -->
+                <!-- SELEZIONE MODALITÀ FORM -->
                 <div class="mb-4 p-3 border rounded bg-dark">
-                    <div class="form-check form-switch d-flex align-items-center gap-3 ps-0">
-                        <input class="form-check-input ms-0" type="checkbox" role="switch" id="hasFormSwitch" th:field="*{hasForm}" onchange="toggleCourseForm()">
-                        <label class="form-check-label fw-bold text-white fs-5 mb-0" for="hasFormSwitch">
-                            <i class="bi bi-ui-checks me-2 text-success"></i>Includi Form di Prenotazione Corso in questa pagina
-                        </label>
-                    </div>
-                    <div class="form-text ms-1 mt-2">Se attivo, sotto il contenuto principale verrà mostrato il modulo di prenotazione del corso.</div>
+                    <label for="formTypeSelect" class="form-label fw-bold text-white fs-5 mb-2">
+                        <i class="bi bi-ui-checks me-2 text-success"></i>Integrazione Form nella Pagina
+                    </label>
+                    <select id="formTypeSelect" th:field="*{formType}" class="form-select form-select-lg" onchange="toggleCourseForm()">
+                        <option value="NONE">Nessun Form</option>
+                        <option value="BOOKING">Includi Form di Prenotazione Corso in questa pagina</option>
+                        <option value="INFO">Includi Form di richiesta informazioni</option>
+                        <option value="ORG_INFO">Includi Form di richiesta informazioni per organizzazioni</option>
+                    </select>
+                    <div class="form-text ms-1 mt-2">Seleziona la modalità di form che si desidera mostrare in fondo al contenuto della pagina.</div>
                 </div>
 
-                <!-- CONFIGURAZIONE FORM CORSO (MOSTRATO/NASCOSTO) -->
+                <!-- CONFIGURAZIONE FORM CORSO / DESTINAZIONE -->
                 <div id="courseConfigBox" class="course-config-box mb-4" style="display: none;">
                     <h5 class="text-success mb-3 fw-bold">
-                        <i class="bi bi-sliders me-2"></i>Dati del Corso e Destinazione
+                        <i class="bi bi-sliders me-2"></i>Impostazioni Form e Destinazione
                     </h5>
                     
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-4 course-specific-field">
                             <label class="form-label fw-bold">Tipologia Corso</label>
                             <input type="text" th:field="*{courseType}" class="form-control" placeholder="es. Corso di Formazione">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 course-specific-field">
                             <label class="form-label fw-bold">Codice Corso</label>
                             <input type="text" th:field="*{courseCode}" class="form-control" placeholder="es. JAVA-2026-01">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 course-specific-field">
                             <label class="form-label fw-bold">Nome Corso</label>
                             <input type="text" th:field="*{courseName}" class="form-control" placeholder="es. Corso Java Developer">
                         </div>

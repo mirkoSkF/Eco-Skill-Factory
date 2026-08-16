@@ -65,8 +65,9 @@ public class PublicPageController {
             @RequestParam String codiceFiscale,
             @RequestParam(required = false) String citta,
             @RequestParam(required = false) String note,
-            @RequestParam(required = false) Boolean privacyCheck,
-            @RequestParam(required = false) Boolean marketingCheck,
+            @RequestParam(required = false) Boolean privacyCheck,   // 1. Informativa Privacy (Obbligatorio)
+            @RequestParam(required = false) Boolean marketingCheck, // 2. Marketing / Promo (Opzionale)
+            @RequestParam(value = "thirdPartyCheck", required = false) Boolean profilingCheck, // 3. Mappato sull'attributo name="thirdPartyCheck" dell'HTML
             RedirectAttributes redirectAttributes) {
 
         System.out.println("=================================");
@@ -81,6 +82,8 @@ public class PublicPageController {
         if (recipientEmail != null && !recipientEmail.trim().isEmpty()) {
             try {
                 SimpleMailMessage message = new SimpleMailMessage();
+                
+                message.setFrom("selezione@skillfactory.it");
                 message.setTo(recipientEmail);
                 message.setSubject("Nuova prenotazione: " + courseName);
                 
@@ -96,11 +99,18 @@ public class PublicPageController {
                     "- Telefono: %s\n" +
                     "- Codice Fiscale: %s\n" +
                     "- Città: %s\n" +
-                    "- Note: %s\n",
+                    "- Note: %s\n\n" +
+                    "Consensi Privacy Espressi:\n" +
+                    "- Informativa Privacy (Obbligatorio): %s\n" +
+                    "- Comunicazioni Marketing (Opzionale): %s\n" +
+                    "- Profilazione / Terze Parti (Opzionale): %s\n",
                     courseType, courseCode, courseName,
                     nome, cognome, email, telefono, codiceFiscale,
                     (citta != null ? citta : "-"),
-                    (note != null ? note : "-")
+                    (note != null ? note : "-"),
+                    (Boolean.TRUE.equals(privacyCheck) ? "ACCETTATO" : "NON ACCETTATO"),
+                    (Boolean.TRUE.equals(marketingCheck) ? "ACCONSENTITO" : "NON ACCONSENTITO"),
+                    (Boolean.TRUE.equals(profilingCheck) ? "ACCONSENTITO" : "NON ACCONSENTITO")
                 );
 
                 message.setText(testoEmail);

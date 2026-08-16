@@ -1,1074 +1,478 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${page.title}">Eco Skill Factory</title>
 
-<meta charset="UTF-8">
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BOOTSTRAP & ICONS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-<title th:text="${page.title}">Eco Skill Factory</title>
+    <!-- STILI -->
+    <style>
+        :root {
+            --brand-primary: #00dc82;
+            --brand-primary-hover: #00b368;
+            --brand-dark: #0f172a;
+        }
 
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #080c14;
+            color: #f1f5f9;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-<!-- ========================================================
-         GOOGLE FONTS
-         ======================================================== -->
+        #tech-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+        .glass-header {
+            background: rgba(15, 23, 42, 0.75) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        .brand-text {
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
 
-<link
-	href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
-	rel="stylesheet">
+        .brand-accent {
+            background: linear-gradient(135deg, #00dc82 0%, #36e4da 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
+        .navbar-nav .nav-link {
+            position: relative;
+            transition: color 0.3s ease, transform 0.2s ease;
+            font-weight: 500;
+        }
 
-<!-- ========================================================
-         BOOTSTRAP
-         ======================================================== -->
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00dc82, #36e4da);
+            transition: width 0.3s ease, left 0.3s ease;
+            border-radius: 2px;
+        }
 
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+        .navbar-nav .nav-link:hover {
+            color: #00dc82 !important;
+            opacity: 1 !important;
+            transform: translateY(-1px);
+        }
 
+        .navbar-nav .nav-link:hover::after {
+            width: 80%;
+            left: 10%;
+        }
 
-<!-- ========================================================
-         BOOTSTRAP ICONS
-         ======================================================== -->
+        .dropdown-menu-dark .dropdown-item {
+            transition: background-color 0.25s ease, color 0.25s ease, padding-left 0.25s ease;
+            border-radius: 0.375rem;
+        }
 
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        .dropdown-menu-dark .dropdown-item:hover {
+            background-color: rgba(0, 220, 130, 0.15) !important;
+            color: #00dc82 !important;
+            padding-left: 1.5rem;
+        }
 
+        .page-container {
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-<!-- ========================================================
-         STILI
-         ======================================================== -->
+        .page-box {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
 
-<style>
-:root { -
-	-brand-primary: #00dc82; -
-	-brand-primary-hover: #00b368; -
-	-brand-dark: #0f172a;
-}
+        .page-title {
+            color: #00dc82;
+            font-weight: 800;
+            margin-bottom: 35px;
+        }
 
-body {
-	font-family: 'Plus Jakarta Sans', sans-serif;
-	background: #080c14;
-	color: #f1f5f9;
-	min-height: 100vh;
-	overflow-x: hidden;
-	position: relative;
-}
+        .content-body {
+            color: #cbd5e1;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
 
-#tech-bg-canvas {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	z-index: -1;
-	pointer-events: none;
-}
+        .content-body h1, .content-body h2, .content-body h3, .content-body h4,
+        .content-body h5, .content-body h6 {
+            color: #ffffff;
+        }
 
-.glass-header {
-	background: rgba(15, 23, 42, 0.75) !important;
-	backdrop-filter: blur(12px);
-	-webkit-backdrop-filter: blur(12px);
-	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
+        .content-body p {
+            margin-bottom: 1rem;
+        }
 
-.brand-text {
-	background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	letter-spacing: -0.5px;
-}
+        .content-body a {
+            color: #00dc82;
+            text-decoration: none;
+            transition: color 0.25s ease;
+        }
 
-.brand-accent {
-	background: linear-gradient(135deg, #00dc82 0%, #36e4da 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-}
+        .content-body a:hover {
+            color: #36e4da;
+            text-decoration: underline;
+        }
 
-.navbar-nav .nav-link {
-	position: relative;
-	transition: color 0.3s ease, transform 0.2s ease;
-	font-weight: 500;
-}
+        .content-body ul, .content-body ol {
+            padding-left: 1.5rem;
+        }
 
-.navbar-nav .nav-link::after {
-	content: '';
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	width: 0;
-	height: 2px;
-	background: linear-gradient(90deg, #00dc82, #36e4da);
-	transition: width 0.3s ease, left 0.3s ease;
-	border-radius: 2px;
-}
+        .content-body li {
+            margin-bottom: 0.5rem;
+        }
 
-.navbar-nav .nav-link:hover {
-	color: #00dc82 !important;
-	opacity: 1 !important;
-	transform: translateY(-1px);
-}
+        .content-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
 
-.navbar-nav .nav-link:hover::after {
-	width: 80%;
-	left: 10%;
-}
+        .content-body table {
+            max-width: 100%;
+            width: 100%;
+            color: #cbd5e1;
+        }
 
-.dropdown-menu-dark .dropdown-item {
-	transition: background-color 0.25s ease, color 0.25s ease, padding-left
-		0.25s ease;
-	border-radius: 0.375rem;
-}
+        .content-body table th {
+            color: #ffffff;
+        }
 
-.dropdown-menu-dark .dropdown-item:hover {
-	background-color: rgba(0, 220, 130, 0.15) !important;
-	color: #00dc82 !important;
-	padding-left: 1.5rem;
-}
+        .content-body code {
+            color: #36e4da;
+            background: rgba(0, 220, 130, 0.08);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+        }
 
-.page-container {
-	margin-left: auto;
-	margin-right: auto;
-}
+        .content-body pre {
+            background: #020617;
+            color: #cbd5e1;
+            padding: 1rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
 
-.page-box {
-	background: transparent;
-	border: none;
-	border-radius: 0;
-	padding: 0;
-	box-shadow: none;
-	backdrop-filter: none;
-	-webkit-backdrop-filter: none;
-}
+        .content-body blockquote {
+            border-left: 3px solid #00dc82;
+            padding-left: 1rem;
+            color: #94a3b8;
+        }
 
-.page-title {
-	color: #00dc82;
-	font-weight: 800;
-	margin-bottom: 35px;
-}
+        .empty-content {
+            background: rgba(71, 85, 105, 0.25);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+            border-radius: 12px;
+        }
 
-.content-body {
-	color: #cbd5e1;
-	font-size: 1.05rem;
-	line-height: 1.8;
-}
+        /* STILI PRENOTAZIONE CORSO */
+        .booking-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(0, 220, 130, 0.3);
+            border-radius: 1rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
 
-.content-body h1, .content-body h2, .content-body h3, .content-body h4,
-	.content-body h5, .content-body h6 {
-	color: #ffffff;
-}
+        .booking-card label {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
 
-.content-body p {
-	margin-bottom: 1rem;
-}
+        .booking-card .form-control {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #ffffff;
+        }
 
-.content-body a {
-	color: #00dc82;
-	text-decoration: none;
-	transition: color 0.25s ease;
-}
+        .booking-card .form-control:focus {
+            background-color: #1e293b;
+            color: #ffffff;
+            border-color: #00dc82;
+            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25);
+        }
 
-.content-body a:hover {
-	color: #36e4da;
-	text-decoration: underline;
-}
+        .btn-booking {
+            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
+            color: #0f172a;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.8rem 2rem;
+            transition: all 0.3s ease;
+        }
 
-.content-body ul, .content-body ol {
-	padding-left: 1.5rem;
-}
+        .btn-booking:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
+            color: #0f172a;
+        }
 
-.content-body li {
-	margin-bottom: 0.5rem;
-}
-
-.content-body img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 10px;
-}
-
-.content-body table {
-	max-width: 100%;
-	width: 100%;
-	color: #cbd5e1;
-}
-
-.content-body table th {
-	color: #ffffff;
-}
-
-.content-body code {
-	color: #36e4da;
-	background: rgba(0, 220, 130, 0.08);
-	padding: 0.15rem 0.35rem;
-	border-radius: 4px;
-}
-
-.content-body pre {
-	background: #020617;
-	color: #cbd5e1;
-	padding: 1rem;
-	border-radius: 10px;
-	overflow-x: auto;
-	border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.content-body blockquote {
-	border-left: 3px solid #00dc82;
-	padding-left: 1rem;
-	color: #94a3b8;
-}
-
-.empty-content {
-	background: rgba(71, 85, 105, 0.25);
-	border: 1px solid rgba(148, 163, 184, 0.2);
-	color: #cbd5e1;
-	border-radius: 12px;
-}
-
-/* STILI DEDICATI AL FORM DI PRENOTAZIONE CORSO */
-.booking-card {
-	background: rgba(15, 23, 42, 0.85);
-	border: 1px solid rgba(0, 220, 130, 0.3);
-	border-radius: 1rem;
-	backdrop-filter: blur(12px);
-	-webkit-backdrop-filter: blur(12px);
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.booking-card label {
-	color: #cbd5e1;
-	font-weight: 600;
-}
-
-.booking-card .form-control {
-	background-color: #1e293b;
-	border: 1px solid #334155;
-	color: #ffffff;
-}
-
-.booking-card .form-control:focus {
-	background-color: #1e293b;
-	color: #ffffff;
-	border-color: #00dc82;
-	box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25);
-}
-
-.btn-booking {
-	background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
-	color: #0f172a;
-	font-weight: 700;
-	border: none;
-	border-radius: 0.5rem;
-	padding: 0.8rem 2rem;
-	transition: all 0.3s ease;
-}
-
-.btn-booking:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
-	color: #0f172a;
-}
-
-.page-footer {
-	background: rgba(15, 23, 42, 0.85);
-	border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.btn-back-to-top {
-	position: fixed;
-	bottom: 30px;
-	right: 30px;
-	width: 48px;
-	height: 48px;
-	border-radius: 50%;
-	background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
-	color: #0f172a;
-	border: none;
-	outline: none;
-	box-shadow: 0 4px 15px rgba(0, 220, 130, 0.4);
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 1.5rem;
-	z-index: 9999;
-	opacity: 0;
-	visibility: hidden;
-	transform: translateY(20px);
-	transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease,
-		box-shadow 0.3s ease;
-}
-
-.btn-back-to-top.show {
-	opacity: 1;
-	visibility: visible;
-	transform: translateY(0);
-}
-
-.btn-back-to-top:hover {
-	transform: translateY(-3px);
-	box-shadow: 0 6px 20px rgba(0, 220, 130, 0.6);
-	color: #0f172a;
-}
-
-@media ( max-width : 767.98px) {
-	.page-container {
-		width: 100% !important;
-	}
-	.page-box {
-		padding: 0;
-		border-radius: 0;
-	}
-	.page-title {
-		font-size: 1.8rem;
-		margin-bottom: 25px;
-	}
-	.content-body {
-		font-size: 1rem;
-		line-height: 1.7;
-	}
-	.navbar-brand {
-		font-size: 1rem !important;
-	}
-	.navbar-brand .fs-3 {
-		font-size: 1.5rem !important;
-	}
-	.navbar-nav {
-		padding-top: 1rem;
-	}
-	.navbar-nav .nav-link::after {
-		display: none;
-	}
-	.dropdown-menu {
-		margin-top: 0.5rem;
-	}
-	.btn-back-to-top {
-		bottom: 20px;
-		right: 20px;
-		width: 42px;
-		height: 42px;
-		font-size: 1.3rem;
-	}
-}
-</style>
-
+        @media (max-width: 767.98px) {
+            .page-container {
+                width: 100% !important;
+            }
+            .page-title {
+                font-size: 1.8rem;
+                margin-bottom: 25px;
+            }
+            .content-body {
+                font-size: 1rem;
+                line-height: 1.7;
+            }
+        }
+    </style>
 </head>
-
 
 <body>
 
-
-	<!-- =========================================================
-     SFONDO ANIMATO
-     ========================================================= -->
-
-	<canvas id="tech-bg-canvas"></canvas>
-
-
-	<!-- =========================================================
-     NAVBAR CONDIVISA
-     ========================================================= -->
-
-	<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-
-	<!-- =========================================================
-     PAGINA
-     ========================================================= -->
-
-	<main class="container-fluid py-5">
-
-		<div class="page-container"
-			th:style="'width: ' +
-                   ${page.widthPercent != null
-                       ? page.widthPercent
-                       : 100}
-                   + '%;'">
-
-
-			<div class="page-box">
-
-
-				<!-- =================================================
-                 TITOLO
-                 ================================================= -->
-
-				<h1 class="page-title" th:text="${page.title}">Titolo pagina</h1>
-
-
-				<!-- =================================================
-                 CONTENUTO (TINYMCE)
-                 ================================================= -->
-
-				<div class="content-body"
-					th:if="${page.contentHtml != null
-                         and !#strings.isEmpty(page.contentHtml)}"
-					th:utext="${page.contentHtml}"></div>
-
-
-				<!-- =================================================
-                 NESSUN CONTENUTO
-                 ================================================= -->
-
-				<div
-					th:if="${(page.contentHtml == null or #strings.isEmpty(page.contentHtml)) and (page.hasForm == null or !page.hasForm)}"
-					class="alert empty-content">
-
-					<i class="bi bi-info-circle me-2"></i> Questa pagina non contiene
-					ancora contenuto.
-
-				</div>
-
-				<!-- =================================================
-                 BLOCCO FORM DI PRENOTAZIONE CORSO (SOTTOSTANTE)
-                 ================================================= -->
-
-				<div th:if="${page.hasForm != null and page.hasForm}" class="mt-5">
-
-					<div class="booking-card p-4 p-md-5">
-
-						<div class="border-bottom border-secondary pb-3 mb-4">
-							<h3 class="text-white fw-bold mb-2">
-								<i class="bi bi-pencil-square text-success me-2"></i>Modulo di
-								Prenotazione
-							</h3>
-							<p class="text-secondary mb-0">Compila la tua anagrafica per
-								richiedere l'iscrizione al corso.</p>
-						</div>
-
-						<!-- NOTIFICA DI CONFERMA / ERRORE INVIATO DALLA ACTION -->
-						<div th:if="${successMessage}"
-							class="alert alert-success border-0 shadow mb-4">
-							<i class="bi bi-check-circle-fill me-2"></i> <span
-								th:text="${successMessage}"></span>
-						</div>
-
-						<form th:action="@{/p/prenota}" method="post">
-
-							<!-- CAMPI NASCOSTI PER CONSERVARE I DATI DEL CORSO E LA DESTINAZIONE -->
-							<input type="hidden" name="courseType"
-								th:value="${page.courseType}"> <input type="hidden"
-								name="courseCode" th:value="${page.courseCode}"> <input
-								type="hidden" name="courseName" th:value="${page.courseName}">
-							<input type="hidden" name="recipientEmail"
-								th:value="${page.recipientEmail}"> <input type="hidden"
-								name="pageSlug" th:value="${page.slug}">
-
-							<!-- RIEPILOGO CORSO SELEZIONATO -->
-							<div
-								class="row g-3 mb-4 p-3 rounded bg-dark border border-secondary border-opacity-50">
-								<div class="col-md-4">
-									<span class="text-secondary d-block small">Tipologia:</span> <strong
-										class="text-info fs-6"
-										th:text="${page.courseType != null ? page.courseType : 'Corso'}">Tipologia</strong>
-								</div>
-								<div class="col-md-4">
-									<span class="text-secondary d-block small">Codice Corso:</span>
-									<strong class="text-success fs-6"
-										th:text="${page.courseCode != null ? page.courseCode : 'N/D'}">Codice</strong>
-								</div>
-								<div class="col-md-4">
-									<span class="text-secondary d-block small">Nome Corso:</span> <strong
-										class="text-white fs-6"
-										th:text="${page.courseName != null ? page.courseName : page.title}">Nome
-										Corso</strong>
-								</div>
-							</div>
-
-							<!-- ANAGRAFICA UTENTE -->
-							<h5 class="text-white mb-3">
-								<i class="bi bi-person-vcard me-2 text-success"></i>I tuoi Dati
-								Personali
-							</h5>
-
-							<div class="row g-3">
-								<div class="col-md-6 mb-3">
-									<label class="form-label">Nome *</label> <input type="text"
-										name="nome" class="form-control"
-										placeholder="Inserisci il tuo nome" required>
-								</div>
-
-								<div class="col-md-6 mb-3">
-									<label class="form-label">Cognome *</label> <input type="text"
-										name="cognome" class="form-control"
-										placeholder="Inserisci il tuo cognome" required>
-								</div>
-
-								<div class="col-md-6 mb-3">
-									<label class="form-label">Email *</label> <input type="email"
-										name="email" class="form-control"
-										placeholder="nome@esempio.it" required>
-								</div>
-
-								<div class="col-md-6 mb-3">
-									<label class="form-label">Telefono / Cellulare *</label> <input
-										type="tel" name="telefono" class="form-control"
-										placeholder="+39 333 1234567" required>
-								</div>
-
-								<div class="col-md-6 mb-3">
-									<label class="form-label">Codice Fiscale *</label> <input
-										type="text" name="codiceFiscale" class="form-control"
-										placeholder="AAAAAA00A00A000A" required>
-								</div>
-
-								<div class="col-md-6 mb-3">
-									<label class="form-label">Città di Residenza</label> <input
-										type="text" name="citta" class="form-control"
-										placeholder="es. Napoli">
-								</div>
-
-								<div class="col-12 mb-4">
-									<label class="form-label">Note / Richieste Particolari</label>
-									<textarea name="note" class="form-control" rows="3"
-										placeholder="Scrivi qui eventuali domande o note..."></textarea>
-								</div>
-							</div>
-
-							<!-- PRIVACY & CONSENSI -->
-							<div class="border-top border-secondary pt-3 mb-4">
-								<!-- 1. Privacy (Obbligatorio) -->
-								<div class="form-check mb-3">
-									<input class="form-check-input" type="checkbox"
-										id="privacyCheck" name="privacyCheck" required> <label
-										class="form-check-label text-secondary small"
-										for="privacyCheck"> Ho letto e accettato l'<a href="#"
-										class="text-success text-decoration-underline">informativa
-											sulla privacy</a> (obbligatorio) *
-									</label>
-								</div>
-
-								<!-- 2. Marketing (Facoltativo) -->
-								<div class="form-check mb-3">
-									<input class="form-check-input" type="checkbox"
-										id="marketingCheck" name="marketingCheck"> <label
-										class="form-check-label text-secondary small"
-										for="marketingCheck"> Accetto il trattamento per la
-										finalità di marketing come indicato nel punto A5) dell' <a
-										href="#" class="text-success text-decoration-underline">informativa
-											sulla privacy</a> (facoltativo)
-									</label>
-								</div>
-
-								<!-- 3. Cessione dati a terzi (Facoltativo) -->
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox"
-										id="thirdPartyCheck" name="thirdPartyCheck"> <label
-										class="form-check-label text-secondary small"
-										for="thirdPartyCheck"> Accetto il trattamento per la
-										finalità di cessione dei dati a terzi come indicato nel punto
-										A6) dell' <a href="#"
-										class="text-success text-decoration-underline">informativa
-											sulla privacy</a> (facoltativo)
-									</label>
-								</div>
-							</div>
-
-							<!-- SUBMIT -->
-							<div class="text-end">
-								<button type="submit" class="btn btn-booking fs-5">
-									<i class="bi bi-send-check me-2"></i>Invia Prenotazione Corso
-								</button>
-							</div>
-
-						</form>
-
-					</div>
-
-				</div>
-
-			</div>
-
-		</div>
-
-	</main>
-
-
-	<!-- =========================================================
-     FOOTER CONDIVISO
-     ========================================================= -->
-
-	<div th:replace="~{fragments/footer :: footer}"></div>
-
-
-	<!-- =========================================================
-     BOTTONE TORNA SU
-     ========================================================= -->
-
-	<button type="button" id="btn-back-to-top" class="btn-back-to-top"
-		aria-label="Torna su">
-
-		<i class="bi bi-arrow-up"></i>
-
-	</button>
-
-
-	<!-- =========================================================
-     BOOTSTRAP JS
-     ========================================================= -->
-
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
-</script>
-
-
-	<!-- =========================================================
-     SFONDO ANIMATO & SCRIPTS
-     ========================================================= -->
-
-	<script>
-
-    /* ========================================================
-       TORNA SU SCRIPT
-       ======================================================== */
-
-    const backToTopBtn =
-        document.getElementById('btn-back-to-top');
-
-
-    if (backToTopBtn) {
-
-        window.addEventListener('scroll', () => {
-
-            if (window.scrollY > 300) {
-
-                backToTopBtn.classList.add('show');
-
-            } else {
-
-                backToTopBtn.classList.remove('show');
-
+    <!-- SFONDO ANIMATO -->
+    <canvas id="tech-bg-canvas"></canvas>
+
+    <!-- NAVBAR CONDIVISA -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- PAGINA -->
+    <main class="container-fluid py-5">
+        <div class="page-container"
+             th:style="'width: ' + (${page.widthPercent != null ? page.widthPercent : 100}) + '%;'">
+
+            <div class="page-box">
+
+                <!-- TITOLO -->
+                <h1 class="page-title" th:text="${page.title}">Titolo pagina</h1>
+
+                <!-- CONTENUTO DALL'EDITOR TINYMCE -->
+                <div class="content-body"
+                     th:if="${page.contentHtml != null and !#strings.isEmpty(page.contentHtml)}"
+                     th:utext="${page.contentHtml}"></div>
+
+                <!-- NESSUN CONTENUTO -->
+                <div th:if="${(page.contentHtml == null or #strings.isEmpty(page.contentHtml)) and (page.hasForm == null or !page.hasForm)}"
+                     class="alert empty-content">
+                    <i class="bi bi-info-circle me-2"></i> Questa pagina non contiene ancora contenuto.
+                </div>
+
+                <!-- BLOCCO FORM DI PRENOTAZIONE CORSO -->
+                <div th:if="${page.hasForm != null and page.hasForm}" class="mt-5">
+                    <div class="booking-card p-4 p-md-5">
+
+                        <div class="border-bottom border-secondary pb-3 mb-4">
+                            <h3 class="text-white fw-bold mb-2">
+                                <i class="bi bi-pencil-square text-success me-2"></i>Modulo di Prenotazione
+                            </h3>
+                            <p class="text-secondary mb-0">Compila la tua anagrafica per richiedere l'iscrizione al corso.</p>
+                        </div>
+
+                        <!-- NOTIFICA ESITO -->
+                        <div th:if="${successMessage}" class="alert alert-success border-0 shadow mb-4">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <span th:text="${successMessage}"></span>
+                        </div>
+
+                        <form th:action="@{/p/prenota}" method="post">
+
+                            <!-- CAMPI HIDDEN -->
+                            <input type="hidden" name="courseType" th:value="${page.courseType}">
+                            <input type="hidden" name="courseCode" th:value="${page.courseCode}">
+                            <input type="hidden" name="courseName" th:value="${page.courseName}">
+                            <input type="hidden" name="recipientEmail" th:value="${page.recipientEmail}">
+                            <input type="hidden" name="pageSlug" th:value="${page.slug}">
+
+                            <!-- RIEPILOGO CORSO SELEZIONATO -->
+                            <div class="row g-3 mb-4 p-3 rounded bg-dark border border-secondary border-opacity-50">
+                                <div class="col-md-4">
+                                    <span class="text-secondary d-block small">Tipologia:</span>
+                                    <strong class="text-info fs-6" th:text="${page.courseType != null ? page.courseType : 'Corso'}">Tipologia</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="text-secondary d-block small">Codice Corso:</span>
+                                    <strong class="text-success fs-6" th:text="${page.courseCode != null ? page.courseCode : 'N/D'}">Codice</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="text-secondary d-block small">Nome Corso:</span>
+                                    <strong class="text-white fs-6" th:text="${page.courseName != null ? page.courseName : page.title}">Nome Corso</strong>
+                                </div>
+                            </div>
+
+                            <!-- ANAGRAFICA UTENTE -->
+                            <h5 class="text-white mb-3">
+                                <i class="bi bi-person-vcard me-2 text-success"></i>I tuoi Dati Personali
+                            </h5>
+
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Nome *</label>
+                                    <input type="text" name="nome" class="form-control" placeholder="Inserisci il tuo nome" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Cognome *</label>
+                                    <input type="text" name="cognome" class="form-control" placeholder="Inserisci il tuo cognome" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email *</label>
+                                    <input type="email" name="email" class="form-control" placeholder="nome@esempio.it" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Telefono / Cellulare *</label>
+                                    <input type="tel" name="telefono" class="form-control" placeholder="+39 333 1234567" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Codice Fiscale *</label>
+                                    <input type="text" name="codiceFiscale" class="form-control" placeholder="AAAAAA00A00A000A" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Città di Residenza</label>
+                                    <input type="text" name="citta" class="form-control" placeholder="es. Napoli">
+                                </div>
+
+                                <div class="col-12 mb-4">
+                                    <label class="form-label">Note / Richieste Particolari</label>
+                                    <textarea name="note" class="form-control" rows="3" placeholder="Scrivi qui eventuali domande o note..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- PRIVACY & CONSENSI -->
+                            <div class="border-top border-secondary pt-3 mb-4">
+                                <!-- 1. Privacy (Obbligatorio) -->
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="privacyCheck" id="privacyCheck" required>
+                                    <label class="form-check-label text-secondary small" for="privacyCheck">
+                                        Dichiaro di aver letto e accettato l'<strong>Informativa sulla Privacy</strong> *
+                                    </label>
+                                </div>
+
+                                <!-- 2. Marketing (Opzionale) -->
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="marketingCheck" id="marketingCheck">
+                                    <label class="form-check-label text-secondary small" for="marketingCheck">
+                                        Acconsento al trattamento dei dati per comunicazioni promozionali e newsletter (Opzionale)
+                                    </label>
+                                </div>
+
+                                <!-- 3. Profilazione / Terze Parti (Opzionale) -->
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" name="thirdPartyCheck" id="thirdPartyCheck">
+                                    <label class="form-check-label text-secondary small" for="thirdPartyCheck">
+                                        Acconsento alla comunicazione dei dati a partner per attività di profilazione e marketing (Opzionale)
+                                    </label>
+                                </div>
+
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-booking px-4 py-2">
+                                        <i class="bi bi-send me-2"></i>Invia Prenotazione
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SCRIPT SFONDO CANVAS ANIMATO -->
+    <script>
+        const canvas = document.getElementById('tech-bg-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let width, height, particles;
+
+            function init() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                particles = Array.from({ length: 45 }, () => ({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 1.8 + 1
+                }));
             }
 
-        });
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = 'rgba(0, 220, 130, 0.4)';
+                ctx.strokeStyle = 'rgba(0, 220, 130, 0.08)';
 
+                particles.forEach((p, i) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
 
-        backToTopBtn.addEventListener('click', () => {
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
 
-            window.scrollTo({
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
 
-                top: 0,
-
-                behavior: 'smooth'
-
-            });
-
-        });
-
-    }
-
-
-    /* ========================================================
-       SFONDO ANIMATO
-       ======================================================== */
-
-    const canvas =
-        document.getElementById('tech-bg-canvas');
-
-    const ctx =
-        canvas.getContext('2d');
-
-
-    let width;
-    let height;
-
-
-    function resize() {
-
-        width =
-            canvas.width =
-            window.innerWidth;
-
-        height =
-            canvas.height =
-            window.innerHeight;
-
-    }
-
-
-    window.addEventListener(
-        'resize',
-        resize
-    );
-
-
-    resize();
-
-
-    /* ========================================================
-       CIRCUIT
-       ======================================================== */
-
-    class Circuit {
-
-        constructor() {
-
-            this.reset();
-
-        }
-
-
-        reset() {
-
-            this.x =
-                Math.random() * width;
-
-            this.y =
-                Math.random() * height;
-
-            this.length =
-                Math.floor(
-                    Math.random() * 8
-                ) + 4;
-
-            this.currentStep = 0;
-
-            this.dir =
-                Math.floor(
-                    Math.random() * 4
-                );
-
-            this.path = [
-                {
-                    x: this.x,
-                    y: this.y
-                }
-            ];
-
-            this.speed =
-                Math.random() * 1.5 + 0.5;
-
-            this.alpha =
-                Math.random() * 0.4 + 0.1;
-
-            this.size = 20;
-
-        }
-
-
-        update() {
-
-            if (this.currentStep < this.length) {
-
-                let last =
-                    this.path[
-                        this.path.length - 1
-                    ];
-
-                let nx = last.x;
-                let ny = last.y;
-
-
-                if (Math.random() < 0.3) {
-
-                    this.dir =
-                        (
-                            this.dir +
-                            (
-                                Math.random() < 0.5
-                                    ? 1
-                                    : 3
-                            )
-                        ) % 4;
-
-                }
-
-
-                switch (this.dir) {
-
-                    case 0:
-                        ny -= this.size;
-                        break;
-
-                    case 1:
-                        nx += this.size;
-                        break;
-
-                    case 2:
-                        ny += this.size;
-                        break;
-
-                    case 3:
-                        nx -= this.size;
-                        break;
-
-                }
-
-
-                this.path.push({
-                    x: nx,
-                    y: ny
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if (dist < 130) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
                 });
-
-                this.currentStep++;
-
-            } else {
-
-                this.alpha -= 0.005;
-
-                if (this.alpha <= 0) {
-                    this.reset();
-                }
-
+                requestAnimationFrame(animate);
             }
 
+            window.addEventListener('resize', init);
+            init();
+            animate();
         }
-
-
-        draw() {
-
-            if (this.path.length < 2) {
-                return;
-            }
-
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                this.path[0].x,
-                this.path[0].y
-            );
-
-
-            for (
-                let i = 1;
-                i < this.path.length;
-                i++
-            ) {
-
-                ctx.lineTo(
-                    this.path[i].x,
-                    this.path[i].y
-                );
-
-            }
-
-
-            ctx.strokeStyle =
-                `rgba(0, 220, 130, ${this.alpha})`;
-
-            ctx.lineWidth = 1.5;
-
-            ctx.stroke();
-
-
-            let last =
-                this.path[
-                    this.path.length - 1
-                ];
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                last.x,
-                last.y,
-                3,
-                0,
-                Math.PI * 2
-            );
-
-
-            ctx.fillStyle =
-                `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-
-            ctx.fill();
-
-        }
-
-    }
-
-
-    /* ========================================================
-       CODE TEXT
-       ======================================================== */
-
-    const codeSnippets = [
-
-        "class BlockManager {}",
-        "import spring.boot.*;",
-        "<div class='eco'>",
-        "SELECT * FROM blocks;",
-        "const init = () => {};",
-        "return new PageBlock();",
-        "01000101 01000011 01001111",
-        "public static void main()",
-        "async fetch('/api')",
-        "npm run build",
-        "docker-compose up -d",
-        "mvn clean install"
-
-    ];
-
-
-    class CodeText {
-
-        constructor() {
-
-            this.reset();
-
-        }
-
-
-        reset() {
-
-            this.x =
-                Math.random()
-                * (width - 200);
-
-            this.y =
-                Math.random()
-                * height;
-
-            this.text =
-                codeSnippets[
-                    Math.floor(
-                        Math.random()
-                        * codeSnippets.length
-                    )
-                ];
-
-            this.alpha = 0;
-
-            this.maxAlpha =
-                Math.random() * 0.3 + 0.1;
-
-            this.fadeIn = true;
-
-            this.speed =
-                Math.random() * 0.3 + 0.1;
-
-        }
-
-
-        update() {
-
-            this.y -= this.speed;
-
-
-            if (this.fadeIn) {
-
-                this.alpha += 0.008;
-
-                if (
-                    this.alpha >=
-                    this.maxAlpha
-                ) {
-
-                    this.fadeIn = false;
-
-                }
-
-            } else {
-
-                this.alpha -= 0.005;
-
-                if (this.alpha <= 0) {
-
-                    this.reset();
-
-                }
-
-            }
-
-        }
-
-
-        draw() {
-
-            ctx.font =
-                '12px "Fira Code", monospace';
-
-            ctx.fillStyle =
-                `rgba(0, 220, 130, ${this.alpha})`;
-
-            ctx.fillText(
-                this.text,
-                this.x,
-                this.y
-            );
-
-        }
-
-    }
-
-
-    /* ========================================================
-       OGGETTI
-       ======================================================== */
-
-    const circuits =
-        Array.from(
-            {
-                length: 18
-            },
-            () => new Circuit()
-        );
-
-
-    const codeTexts =
-        Array.from(
-            {
-                length: 12
-            },
-            () => new CodeText()
-        );
-
-
-    /* ========================================================
-       ANIMAZIONE
-       ======================================================== */
-
-    function animate() {
-
-        ctx.clearRect(
-            0,
-            0,
-            width,
-            height
-        );
-
-
-        circuits.forEach(
-            c => {
-
-                c.update();
-
-                c.draw();
-
-            }
-        );
-
-
-        codeTexts.forEach(
-            ct => {
-
-                ct.update();
-
-                ct.draw();
-
-            }
-        );
-
-
-        requestAnimationFrame(
-            animate
-        );
-
-    }
-
-
-    animate();
-
-</script>
-
-
+    </script>
 </body>
-
 </html>

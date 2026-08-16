@@ -247,6 +247,15 @@
             color: #0f172a;
         }
 
+        /* STILI POPUP MODALE */
+        .modal-glass {
+            background: rgba(15, 23, 42, 0.95) !important;
+            border: 1px solid rgba(0, 220, 130, 0.3) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 1rem;
+        }
+
         @media (max-width: 767.98px) {
             .page-container {
                 width: 100% !important;
@@ -303,13 +312,13 @@
                             <p class="text-secondary mb-0">Compila la tua anagrafica per richiedere l'iscrizione al corso.</p>
                         </div>
 
-                        <!-- NOTIFICA ESITO -->
+                        <!-- NOTIFICA ESITO INLINE (Opzionale) -->
                         <div th:if="${successMessage}" class="alert alert-success border-0 shadow mb-4">
                             <i class="bi bi-check-circle-fill me-2"></i>
                             <span th:text="${successMessage}"></span>
                         </div>
 
-                        <form th:action="@{/p/prenota}" method="post">
+                        <form id="bookingForm" th:action="@{/p/prenota}" method="post">
 
                             <!-- CAMPI HIDDEN -->
                             <input type="hidden" name="courseType" th:value="${page.courseType}">
@@ -417,8 +426,124 @@
         </div>
     </main>
 
+    <!-- MODALE DI CONFERMA PRIMA DELL'INVIO -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-glass text-white shadow-lg">
+                <div class="modal-header border-secondary border-opacity-50">
+                    <h5 class="modal-title fw-bold" id="confirmModalLabel">
+                        <i class="bi bi-question-circle text-success me-2"></i>Conferma Invio
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body text-secondary fs-6">
+                    Sei sicuro di voler procedere con l'invio della richiesta di prenotazione per questo corso?
+                </div>
+                <div class="modal-footer border-secondary border-opacity-50">
+                    <button type="button" class="btn btn-outline-secondary text-white" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" id="confirmSubmitBtn" class="btn btn-booking">
+                        <i class="bi bi-check-lg me-1"></i>Conferma e Invia
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE ESITO AVVENUTO INVIO -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true" th:if="${successMessage}">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-glass text-white shadow-lg border-success border-opacity-50">
+                <div class="modal-header border-secondary border-opacity-50">
+                    <h5 class="modal-title fw-bold text-success" id="successModalLabel">
+                        <i class="bi bi-check-circle-fill me-2"></i>Richiesta Inviata!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body text-light fs-6 py-4 text-center">
+                    <i class="bi bi-envelope-check text-success display-3 d-block mb-3"></i>
+                    <p class="mb-0 fs-5 fw-semibold text-white" th:text="${successMessage}">
+                        La tua prenotazione è stata inviata con successo.
+                    </p>
+                    <p class="text-secondary small mt-2 mb-0">Ti ricontatteremo al più presto ai recapiti forniti.</p>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-50 justify-content-center">
+                    <button type="button" class="btn btn-booking px-4" data-bs-dismiss="modal">Ho Capito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- BOOTSTRAP JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SCRIPT GESTIONE MODALI E ANTISPAM COOKIE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const bookingForm = document.getElementById('bookingForm');
+            const confirmModalEl = document.getElementById('confirmModal');
+            const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+            const successModalEl = document.getElementById('successModal');
+
+            // Apertura automatica del modale di esito positivo (se presente successMessage)
+            if (successModalEl) {
+                const successModal = new bootstrap.Modal(successModalEl);
+                successModal.show();
+            }
+
+            // Funzioni helper per la gestione dei cookie
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            function setCookie(name, value, seconds) {
+                document.cookie = `${name}=${value}; max-age=${seconds}; path=/; SameSite=Lax`;
+            }
+
+            // Controllo presenza cookie Antispam all'avvio con BLOCCO BLU SCURO
+            const bookingCard = document.querySelector('.booking-card');
+            if (getCookie('booking_cooldown')) {
+                if (bookingCard) {
+                    bookingCard.innerHTML = `
+                        <div class="p-4 p-md-5 text-center rounded-4 shadow-lg" style="background: rgba(11, 25, 44, 0.95); border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(12px);">
+                            <i class="bi bi-clock-history display-4 text-info d-block mb-3"></i>
+                            <h3 class="fw-bold text-white mb-2">Prenotazione già inviata</h3>
+                            <p class="text-light mb-0 fs-6" style="color: #cbd5e1 !important; line-height: 1.6;">
+                                Hai già inviato una richiesta di prenotazione di recente.<br>
+                                Per evitare invii duplicati, attendi circa 10 minuti prima di poter compilare un nuovo modulo.
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+
+            if (bookingForm && confirmModalEl && confirmSubmitBtn) {
+                const confirmModal = new bootstrap.Modal(confirmModalEl);
+
+                bookingForm.addEventListener('submit', function (e) {
+                    if (!bookingForm.checkValidity()) {
+                        return; // Lascia gestire la validazione nativa dei campi obbligatori
+                    }
+
+                    if (!bookingForm.dataset.confirmed) {
+                        e.preventDefault(); // Blocca l'invio diretto
+                        confirmModal.show(); // Mostra il popup
+                    }
+                });
+
+                confirmSubmitBtn.addEventListener('click', function () {
+                    // Imposta il cookie con durata 600 secondi (10 minuti)
+                    setCookie('booking_cooldown', 'active', 600);
+
+                    bookingForm.dataset.confirmed = "true";
+                    confirmModal.hide();
+                    bookingForm.submit(); // Esegue l'invio effettivo del form
+                });
+            }
+        });
+    </script>
 
     <!-- SCRIPT SFONDO CANVAS ANIMATO -->
     <script>

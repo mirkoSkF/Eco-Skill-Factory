@@ -277,14 +277,6 @@
                             <input type="hidden" th:field="*{id}"/>
 
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Colore Sfondo</label>
-                                <div class="d-flex gap-2">
-                                    <input type="color" class="form-control form-control-color" id="bgColorPicker" title="Scegli colore">
-                                    <input type="text" class="form-control" id="bgColorInput" th:field="*{backgroundColor}" placeholder="#0f172a">
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
                                 <label class="form-label fw-bold">Opacità (0.0 - 1.0)</label>
                                 <input type="number" step="0.05" min="0" max="1" class="form-control" th:field="*{opacity}">
                             </div>

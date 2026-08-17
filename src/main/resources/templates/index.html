@@ -9,6 +9,8 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
+	<link th:if="${navbarSettings != null and navbarSettings.faviconUrl != null and !#strings.isEmpty(navbarSettings.faviconUrl)}" 
+      rel="icon" th:href="${navbarSettings.faviconUrl}">
     <title>Eco Skill Factory</title>
 
 

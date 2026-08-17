@@ -11,22 +11,28 @@
 <!-- ========================================================
      NAVBAR FRAGMENT
      Condivisa da index.html e pagina.html
-
-     COMPORTAMENTO LINK:
-     - item.openInNewTab == true  -> _blank (nuova finestra)
-     - item.openInNewTab == false -> _self (stessa finestra)
      ======================================================== -->
 
 <header th:fragment="navbar"
-        class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3">
+        class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3"
+        th:style="${navbarSettings != null ? 'background-color: rgba(15, 23, 42, ' + (navbarSettings.opacity / 100.0) + ') !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);' : ''}">
 
     <div class="container">
 
         <!-- =================================================
-             LOGO
+             LOGO (SOSTITUITO SE ALLEGATO, ALTRIMENTI DEFAULT)
              ================================================= -->
 
-        <a class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2"
+        <!-- SE IL LOGO È STATO ALLEGATO -->
+        <a th:if="${navbarSettings != null and navbarSettings.logoUrl != null and !#strings.isEmpty(navbarSettings.logoUrl)}"
+           class="navbar-brand d-flex align-items-center"
+           th:href="@{/}">
+            <img th:src="${navbarSettings.logoUrl}" alt="Logo" class="img-fluid" style="max-height: 45px;" />
+        </a>
+
+        <!-- SE IL LOGO NON È ALLEGATO (BLOCCO DI DEFAULT) -->
+        <a th:unless="${navbarSettings != null and navbarSettings.logoUrl != null and !#strings.isEmpty(navbarSettings.logoUrl)}"
+           class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2"
            th:href="@{/}">
 
             <i class="bi bi-cpu-fill text-success fs-3"></i>
@@ -79,168 +85,75 @@
                                : 'nav-item'}">
 
 
-                    <!-- =========================================
-                         VOCE SINGOLA - PAGINA INTERNA
-                         ========================================= -->
-
-                    <a th:if="${(item.children == null or item.children.isEmpty())
-                               and item.page != null}"
-
+                    <!-- VOCE SINGOLA - PAGINA INTERNA -->
+                    <a th:if="${(item.children == null or item.children.isEmpty()) and item.page != null}"
                        class="nav-link px-3 text-light opacity-75 opacity-100-hover"
-
                        th:href="@{'/p/' + ${item.page.slug}}"
-
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
-
                        th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
-
                        th:text="${item.label}">
-
                         Menu Item
-
                     </a>
 
-
-                    <!-- =========================================
-                         VOCE SINGOLA - URL ESTERNO
-                         ========================================= -->
-
-                    <a th:if="${(item.children == null or item.children.isEmpty())
-                               and item.page == null
-                               and item.url != null
-                               and !#strings.isEmpty(item.url)}"
-
+                    <!-- VOCE SINGOLA - URL ESTERNO -->
+                    <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and item.url != null and !#strings.isEmpty(item.url)}"
                        class="nav-link px-3 text-light opacity-75 opacity-100-hover"
-
                        th:href="${item.url}"
-
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
-
                        th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
-
                        th:text="${item.label}">
-
                         Menu Item
-
                     </a>
 
-
-                    <!-- =========================================
-                         VOCE SINGOLA - SENZA DESTINAZIONE
-                         ========================================= -->
-
-                    <a th:if="${(item.children == null or item.children.isEmpty())
-                               and item.page == null
-                               and (item.url == null or #strings.isEmpty(item.url))}"
-
+                    <!-- VOCE SINGOLA - SENZA DESTINAZIONE -->
+                    <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and (item.url == null or #strings.isEmpty(item.url))}"
                        class="nav-link px-3 text-light opacity-75 opacity-100-hover"
-
                        href="javascript:void(0);"
-
                        th:text="${item.label}">
-
                         Menu Item
-
                     </a>
 
-
-                    <!-- =========================================
-                         VOCE DROPDOWN
-                         ========================================= -->
-
+                    <!-- VOCE DROPDOWN -->
                     <a th:if="${item.children != null and !item.children.isEmpty()}"
-
                        class="nav-link dropdown-toggle px-3 text-light opacity-75 opacity-100-hover"
-
                        href="#"
-
                        role="button"
-
                        data-bs-toggle="dropdown"
-
                        aria-expanded="false"
-
                        th:text="${item.label}">
-
                         Dropdown
-
                     </a>
 
-
-                    <!-- =========================================
-                         SOTTO-VOCI DROPDOWN
-                         ========================================= -->
-
+                    <!-- SOTTO-VOCI DROPDOWN -->
                     <ul th:if="${item.children != null and !item.children.isEmpty()}"
-
                         class="dropdown-menu dropdown-menu-dark bg-dark border-secondary p-2">
-
 
                         <li th:each="child : ${item.children}">
 
-
-                            <!-- =================================
-                                 CHILD - PAGINA INTERNA
-                                 ================================= -->
-
                             <a th:if="${child.page != null}"
-
                                class="dropdown-item"
-
                                th:href="@{'/p/' + ${child.page.slug}}"
-
                                th:target="${child.openInNewTab ? '_blank' : '_self'}"
-
                                th:rel="${child.openInNewTab ? 'noopener noreferrer' : null}"
-
                                th:text="${child.label}">
-
                                 Sub Item
-
                             </a>
 
-
-                            <!-- =================================
-                                 CHILD - URL ESTERNO
-                                 ================================= -->
-
-                            <a th:if="${child.page == null
-                                       and child.url != null
-                                       and !#strings.isEmpty(child.url)}"
-
+                            <a th:if="${child.page == null and child.url != null and !#strings.isEmpty(child.url)}"
                                class="dropdown-item"
-
                                th:href="${child.url}"
-
                                th:target="${child.openInNewTab ? '_blank' : '_self'}"
-
                                th:rel="${child.openInNewTab ? 'noopener noreferrer' : null}"
-
                                th:text="${child.label}">
-
                                 Sub Item
-
                             </a>
 
-
-                            <!-- =================================
-                                 CHILD - SENZA DESTINAZIONE
-                                 ================================= -->
-
-                            <a th:if="${child.page == null
-                                       and (child.url == null
-                                            or #strings.isEmpty(child.url))}"
-
+                            <a th:if="${child.page == null and (child.url == null or #strings.isEmpty(child.url))}"
                                class="dropdown-item"
-
                                href="javascript:void(0);"
-
                                th:text="${child.label}">
-
                                 Sub Item
-
                             </a>
-
 
                         </li>
 
@@ -257,40 +170,19 @@
 
             <div class="ms-auto">
 
-
-                <!-- =============================================
-                     UTENTE NON AUTENTICATO
-                     ============================================= -->
-
                 <a sec:authorize="!isAuthenticated()"
-
                    th:href="@{/login}"
-
                    class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
-
                     <i class="bi bi-shield-lock-fill me-1"></i>
-
                     Area Admin
-
                 </a>
-
-
-                <!-- =============================================
-                     UTENTE AUTENTICATO
-                     ============================================= -->
 
                 <a sec:authorize="isAuthenticated()"
-
                    th:href="@{/admin/dashboard}"
-
                    class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
-
                     <i class="bi bi-speedometer2 me-1"></i>
-
                     Dashboard
-
                 </a>
-
 
             </div>
 

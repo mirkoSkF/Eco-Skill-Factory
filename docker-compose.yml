@@ -1,0 +1,135 @@
+services:
+
+  # ==========================================================
+  # SPRING BOOT
+  # ==========================================================
+
+  app:
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: diario-professionale
+
+    ports:
+      - "8095:8095"
+
+    environment:
+
+      # ------------------------------------------------------
+      # Spring Boot
+      # ------------------------------------------------------
+
+      SERVER_PORT: 8095
+
+      # ------------------------------------------------------
+      # MySQL
+      # ------------------------------------------------------
+
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/diario_professionale_db?useSSL=false&serverTimezone=Europe/Rome&allowPublicKeyRetrieval=true
+
+      SPRING_DATASOURCE_USERNAME: root
+
+      SPRING_DATASOURCE_PASSWORD: root
+
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+
+      # ------------------------------------------------------
+      # Hibernate
+      # ------------------------------------------------------
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+      SPRING_JPA_SHOW_SQL: "false"
+
+    depends_on:
+
+      mysql:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+
+  # ==========================================================
+  # MYSQL
+  # ==========================================================
+
+  mysql:
+
+    image: mysql:8.4
+
+    container_name: diario-professionale-mysql
+
+    ports:
+      - "3308:3306"
+
+    environment:
+
+      MYSQL_ROOT_PASSWORD: root
+
+      MYSQL_DATABASE: diario_professionale_db
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-uroot",
+          "-proot"
+        ]
+
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+    restart: unless-stopped
+
+
+  # ==========================================================
+  # PHPMYADMIN
+  # ==========================================================
+
+  phpmyadmin:
+
+    image: phpmyadmin:latest
+
+    container_name: diario-professionale-phpmyadmin
+
+    ports:
+      - "9002:80"
+
+    environment:
+
+      PMA_HOST: mysql
+
+      PMA_PORT: 3306
+
+      PMA_USER: root
+
+      PMA_PASSWORD: root
+
+      MYSQL_ROOT_PASSWORD: root
+
+    depends_on:
+
+      mysql:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+
+# ============================================================
+# VOLUMI
+# ============================================================
+
+volumes:
+
+  mysql-data:

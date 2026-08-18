@@ -36,13 +36,15 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
 
       # ------------------------------------------------------
-      # Hibernate
+      # JPA / Hibernate
       # ------------------------------------------------------
 
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
       SPRING_JPA_SHOW_SQL: "false"
 
+    # L'applicazione parte SOLO quando MySQL
+    # ha superato il controllo di salute
     depends_on:
 
       mysql:
@@ -71,9 +73,15 @@ services:
       MYSQL_DATABASE: diario_professionale_db
 
     volumes:
+
       - mysql-data:/var/lib/mysql
 
+    # --------------------------------------------------------
+    # Controllo effettivo dello stato di MySQL
+    # --------------------------------------------------------
+
     healthcheck:
+
       test:
         [
           "CMD",
@@ -86,9 +94,12 @@ services:
         ]
 
       interval: 10s
+
       timeout: 5s
+
       retries: 10
-      start_period: 20s
+
+      start_period: 30s
 
     restart: unless-stopped
 

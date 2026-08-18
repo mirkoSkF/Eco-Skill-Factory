@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile
 
-    container_name: diario-professionale
+    container_name: eco_skillfactory_c
 
     ports:
       - "8095:8095"
@@ -27,7 +27,7 @@ services:
       # MySQL
       # ------------------------------------------------------
 
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/diario_professionale_db?useSSL=false&serverTimezone=Europe/Rome&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/eco_skillfactory?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
 
       SPRING_DATASOURCE_USERNAME: root
 
@@ -41,10 +41,46 @@ services:
 
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
-      SPRING_JPA_SHOW_SQL: "false"
+      SPRING_JPA_SHOW_SQL: "true"
 
-    # L'applicazione parte SOLO quando MySQL
-    # ha superato il controllo di salute
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+
+      # ------------------------------------------------------
+      # Upload Immagini e File
+      # ------------------------------------------------------
+
+      APP_UPLOAD_DIR: /app/uploads/
+
+      # ------------------------------------------------------
+      # SMTP Gmail
+      # ------------------------------------------------------
+
+      SPRING_MAIL_HOST: smtp.gmail.com
+
+      SPRING_MAIL_PORT: 587
+
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+
+    # --------------------------------------------------------
+    # PERSISTENZA UPLOAD
+    # --------------------------------------------------------
+
+    volumes:
+
+      - ./uploads:/app/uploads
+
+    # --------------------------------------------------------
+    # L'applicazione parte SOLO quando MySQL è HEALTHY
+    # --------------------------------------------------------
+
     depends_on:
 
       mysql:
@@ -61,7 +97,7 @@ services:
 
     image: mysql:8.4
 
-    container_name: diario-professionale-mysql
+    container_name: eco_skillfactory-mysql
 
     ports:
       - "3308:3306"
@@ -70,7 +106,7 @@ services:
 
       MYSQL_ROOT_PASSWORD: root
 
-      MYSQL_DATABASE: diario_professionale_db
+      MYSQL_DATABASE: eco_skillfactory
 
     volumes:
 
@@ -112,10 +148,10 @@ services:
 
     image: phpmyadmin:latest
 
-    container_name: diario-professionale-phpmyadmin
+    container_name: eco_skillfactory-phpmyadmin
 
     ports:
-      - "9002:80"
+      - "9003:80"
 
     environment:
 
@@ -126,8 +162,6 @@ services:
       PMA_USER: root
 
       PMA_PASSWORD: root
-
-      MYSQL_ROOT_PASSWORD: root
 
     depends_on:
 

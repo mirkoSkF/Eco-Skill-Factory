@@ -127,7 +127,11 @@
         .modal-fullscreen-custom #monacoContainer {
             height: calc(100vh - 120px) !important;
         }
-        /* ===== AGGIUNTE MONACO: zoom, ricerca e minimappa ===== */
+
+        /* =========================================================
+           AGGIUNTE MONACO
+           ========================================================= */
+
         .monaco-extra-toolbar {
             display: flex;
             align-items: center;
@@ -169,16 +173,34 @@
         .monaco-editor-workspace {
             width: 100%;
             height: 550px;
-            overflow: hidden;
+            min-height: 0;
         }
 
-        /* Il popup dei suggerimenti rimane sopra la modale. */
+        .monaco-editor-workspace #monacoContainer {
+            width: 100%;
+            height: 100% !important;
+        }
+
+        /*
+         * IMPORTANTISSIMO:
+         * quando il dialog entra in fullscreen il workspace segue
+         * la nuova altezza della finestra.
+         */
+        .modal-fullscreen-custom .monaco-editor-workspace {
+            height: calc(100vh - 120px) !important;
+        }
+
+        /*
+         * Il popup dei suggerimenti deve stare sopra gli altri elementi.
+         */
         .monaco-editor .suggest-widget,
         .monaco-editor .parameter-hints-widget {
             z-index: 10000 !important;
         }
 
-        /* Evidenziazione della ricerca. */
+        /*
+         * Evidenziazione risultati ricerca.
+         */
         .monaco-search-match {
             background: rgba(255, 210, 0, 0.28);
             border-bottom: 1px solid #ffd54f;
@@ -193,7 +215,6 @@
                 flex-basis: 100%;
             }
         }
-
     </style>
 
     <!-- TINYMCE -->
@@ -292,13 +313,16 @@
                     })
                     .then(data => {
                         const imageUrl = data.location || data.url;
+
                         if (!imageUrl) {
                             throw new Error('Il server non ha restituito l\'URL dell\'immagine.');
                         }
+
                         resolve(imageUrl);
                     })
                     .catch(error => {
                         console.error('Upload fallito:', error);
+
                         reject({
                             message: 'Caricamento immagine non riuscito',
                             remove: true
@@ -321,6 +345,7 @@
             <h2 th:text="${block.id == null ? 'Nuova Riga' : 'Modifica Riga #' + block.id}">
                 Editor Riga
             </h2>
+
             <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
                 <i class="bi bi-arrow-left"></i> Torna alla Gestione Righe
             </a>
@@ -337,558 +362,1370 @@
             <input type="hidden" th:field="*{id}" />
 
             <div class="row g-3 mb-3">
+
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Titolo Riga (Uso Interno Admin)</label>
-                    <input type="text" class="form-control" th:field="*{titleAdmin}" required placeholder="es. Banner Iniziale / Sezione Servizi" />
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{titleAdmin}"
+                           required
+                           placeholder="es. Banner Iniziale / Sezione Servizi" />
                 </div>
 
                 <div class="col-md-2">
                     <label class="form-label fw-bold">Posizione Ordine</label>
-                    <input type="number" class="form-control" th:field="*{position}" required />
+                    <input type="number"
+                           class="form-control"
+                           th:field="*{position}"
+                           required />
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label fw-bold">Modello Blocco</label>
-                    <select id="blockTypeSelect" class="form-select" th:field="*{blockType}">
-                        <option th:each="type : ${blockTypes}" th:value="${type}" th:text="${type.label}"></option>
+
+                    <select id="blockTypeSelect"
+                            class="form-select"
+                            th:field="*{blockType}">
+
+                        <option th:each="type : ${blockTypes}"
+                                th:value="${type}"
+                                th:text="${type.label}">
+                        </option>
+
                     </select>
                 </div>
             </div>
 
             <!-- DIMENSIONI E SFONDO -->
             <div class="row g-3 mb-3">
+
                 <div class="col-md-4">
                     <label class="form-label fw-bold">Larghezza Blocco (%)</label>
-                    <input type="number" class="form-control" th:field="*{widthPercent}" min="10" max="100" placeholder="100" />
-                    <div class="form-text">Inserisci un valore tra 10 e 100.</div>
+
+                    <input type="number"
+                           class="form-control"
+                           th:field="*{widthPercent}"
+                           min="10"
+                           max="100"
+                           placeholder="100" />
+
+                    <div class="form-text">
+                        Inserisci un valore tra 10 e 100.
+                    </div>
                 </div>
 
                 <div class="col-md-4">
+
                     <label class="form-label fw-bold">Altezza Riga</label>
-                    <input type="text" class="form-control" th:field="*{customHeight}" placeholder="auto, 400px, 50vh, 30rem" />
-                    <div class="form-text">Usa <strong>auto</strong> per l'altezza automatica oppure un valore CSS come <strong>400px</strong>.</div>
-                </div>
 
-                <div class="col-md-4">
-                    <label class="form-label fw-bold"><i class="bi bi-palette"></i> Sfondo Riga</label>
-                    <div class="form-check form-switch mb-2">
-                        <input class="form-check-input" type="checkbox" id="isTransparentSwitch" onchange="toggleBackgroundType()">
-                        <label class="form-check-label text-warning" for="isTransparentSwitch"><i class="bi bi-droplet"></i> Sfondo Trasparente</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{customHeight}"
+                           placeholder="auto, 400px, 50vh, 30rem" />
+
+                    <div class="form-text">
+                        Usa <strong>auto</strong> per l'altezza automatica oppure
+                        un valore CSS come <strong>400px</strong>.
                     </div>
 
-                    <div id="colorPickerContainer" class="color-picker-wrapper">
-                        <input type="color" class="form-control form-control-color" id="bgPicker" value="#0f172a" oninput="syncColorText(this.value)">
-                        <input type="text" class="form-control" id="bgColorInput" th:field="*{backgroundColor}" placeholder="#0f172a o rgba(15,23,42,0.5)" />
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-palette"></i> Sfondo Riga
+                    </label>
+
+                    <div class="form-check form-switch mb-2">
+
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="isTransparentSwitch"
+                               onchange="toggleBackgroundType()">
+
+                        <label class="form-check-label text-warning"
+                               for="isTransparentSwitch">
+
+                            <i class="bi bi-droplet"></i>
+                            Sfondo Trasparente
+
+                        </label>
+
+                    </div>
+
+                    <div id="colorPickerContainer"
+                         class="color-picker-wrapper">
+
+                        <input type="color"
+                               class="form-control form-control-color"
+                               id="bgPicker"
+                               value="#0f172a"
+                               oninput="syncColorText(this.value)">
+
+                        <input type="text"
+                               class="form-control"
+                               id="bgColorInput"
+                               th:field="*{backgroundColor}"
+                               placeholder="#0f172a o rgba(15,23,42,0.5)" />
+
                     </div>
 
                     <div class="opacity-control-wrapper">
+
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label class="form-label fw-bold mb-0"><i class="bi bi-circle-half"></i> Opacità Sfondo</label>
-                            <span id="bgOpacityValue" class="badge bg-success opacity-value">100%</span>
+
+                            <label class="form-label fw-bold mb-0">
+                                <i class="bi bi-circle-half"></i>
+                                Opacità Sfondo
+                            </label>
+
+                            <span id="bgOpacityValue"
+                                  class="badge bg-success opacity-value">
+                                100%
+                            </span>
+
                         </div>
 
-                        <input type="range" class="form-range" id="bgOpacityRange" min="0" max="100" step="1" value="100" oninput="syncOpacity(this.value)">
+                        <input type="range"
+                               class="form-range"
+                               id="bgOpacityRange"
+                               min="0"
+                               max="100"
+                               step="1"
+                               value="100"
+                               oninput="syncOpacity(this.value)">
 
                         <div class="d-flex justify-content-between">
-                            <small class="text-muted">0% - Trasparente</small>
-                            <small class="text-muted">100% - Opaco</small>
+
+                            <small class="text-muted">
+                                0% - Trasparente
+                            </small>
+
+                            <small class="text-muted">
+                                100% - Opaco
+                            </small>
+
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
 
             <!-- IMMAGINE PRINCIPALE -->
-            <div id="mainImageUpload" class="mb-3 p-3 border rounded shadow-sm"
+            <div id="mainImageUpload"
+                 class="mb-3 p-3 border rounded shadow-sm"
                  th:style="${block.blockType != null and (block.blockType.name() == 'JUMBO_DEMO_1' or block.blockType.name() == 'JUMBO_DEMO_2')} ? '' : 'display:none;'">
-                <label class="form-label fw-bold text-success"><i class="bi bi-upload"></i> Carica Immagine Principale Riga (Jumbo / Demo 1 / Demo 2)</label>
-                <div class="form-text mb-2">Disponibile esclusivamente per Demo 1 e Demo 2.</div>
-                <input type="file" name="imageFile" class="form-control mb-2" accept="image/*" />
-                <input type="hidden" th:field="*{imageUrl}" />
 
-                <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="mt-2">
-                    <small class="text-muted d-block mb-1">Immagine Attualmente Caricata:</small>
-                    <img th:src="${block.imageUrl}" alt="Anteprima" class="img-thumbnail" style="max-height: 120px; width: auto; object-fit: contain;" />
+                <label class="form-label fw-bold text-success">
+                    <i class="bi bi-upload"></i>
+                    Carica Immagine Principale Riga (Jumbo / Demo 1 / Demo 2)
+                </label>
+
+                <div class="form-text mb-2">
+                    Disponibile esclusivamente per Demo 1 e Demo 2.
                 </div>
+
+                <input type="file"
+                       name="imageFile"
+                       class="form-control mb-2"
+                       accept="image/*" />
+
+                <input type="hidden"
+                       th:field="*{imageUrl}" />
+
+                <div th:if="${block.imageUrl != null and !block.imageUrl.empty}"
+                     class="mt-2">
+
+                    <small class="text-muted d-block mb-1">
+                        Immagine Attualmente Caricata:
+                    </small>
+
+                    <img th:src="${block.imageUrl}"
+                         alt="Anteprima"
+                         class="img-thumbnail"
+                         style="max-height: 120px; width: auto; object-fit: contain;" />
+
+                </div>
+
             </div>
 
             <!-- EDITOR -->
-            <div id="mainEditorSection" class="mb-3">
+            <div id="mainEditorSection"
+                 class="mb-3">
+
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <label class="form-label fw-bold mb-0">Testo / Contenuto Principale (Editor Avanzato TinyMCE)</label>
-                    <button type="button" class="btn btn-outline-info btn-sm" onclick="openMonacoModal()">
-                        <i class="bi bi-code-slash me-1"></i> Apri Monaco Editor
+
+                    <label class="form-label fw-bold mb-0">
+                        Testo / Contenuto Principale (Editor Avanzato TinyMCE)
+                    </label>
+
+                    <button type="button"
+                            class="btn btn-outline-info btn-sm"
+                            onclick="openMonacoModal()">
+
+                        <i class="bi bi-code-slash me-1"></i>
+                        Apri Monaco Editor
+
                     </button>
+
                 </div>
 
-                <textarea class="wysiwyg-editor" id="blockMainContentHtml" th:field="*{contentHtml}"></textarea>
+                <textarea class="wysiwyg-editor"
+                          id="blockMainContentHtml"
+                          th:field="*{contentHtml}">
+                </textarea>
+
             </div>
 
             <div class="text-end">
-                <button type="button" class="btn btn-success btn-lg" onclick="showSaveBlockModal()">
-                    <i class="bi bi-save"></i> Salva Configurazione Riga
+
+                <button type="button"
+                        class="btn btn-success btn-lg"
+                        onclick="showSaveBlockModal()">
+
+                    <i class="bi bi-save"></i>
+                    Salva Configurazione Riga
+
                 </button>
+
             </div>
 
         </form>
 
         <!-- CARDS SECTION -->
-        <div id="itemsSection" class="card shadow-sm p-4 mb-4"
+        <div id="itemsSection"
+             class="card shadow-sm p-4 mb-4"
              th:style="${block.blockType != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')} ? '' : 'display:none;'">
+
             <!-- ... Altri elementi immutati ... -->
+
         </div>
 
     </div>
 
     <!-- MODALE MONACO EDITOR AVANZATO -->
-    <div class="modal fade" id="monacoEditorModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" id="monacoModalDialog">
+    <div class="modal fade"
+         id="monacoEditorModal"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-xl modal-dialog-centered"
+             id="monacoModalDialog">
+
             <div class="modal-content modal-content-dark">
+
                 <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
+
                     <h5 class="modal-title fw-bold text-white mb-0">
-                        <i class="bi bi-code-square text-info me-2"></i>Monaco Code Editor
-                        <small class="text-muted fs-6 ms-2">(Emmet abilitato - Premi TAB)</small>
+
+                        <i class="bi bi-code-square text-info me-2"></i>
+                        Monaco Code Editor
+
+                        <small class="text-muted fs-6 ms-2">
+                            (Emmet abilitato - Premi TAB)
+                        </small>
+
                     </h5>
+
                     <div>
-                        <button type="button" class="btn btn-sm btn-outline-light me-2" onclick="toggleMonacoFullscreen()" id="btnToggleFullscreen" title="Schermo Intero">
-                            <i class="bi bi-arrows-angle-expand" id="fullscreenIcon"></i> Schermo Intero
+
+                        <button type="button"
+                                class="btn btn-sm btn-outline-light me-2"
+                                onclick="toggleMonacoFullscreen()"
+                                id="btnToggleFullscreen"
+                                title="Schermo Intero">
+
+                            <i class="bi bi-arrows-angle-expand"
+                               id="fullscreenIcon"></i>
+
+                            Schermo Intero
+
                         </button>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close">
+                        </button>
+
                     </div>
+
                 </div>
+
                 <div class="modal-body p-0">
-                    <!-- AGGIUNTA: barra strumenti Monaco -->
+
+                    <!-- AGGIUNTA: STRUMENTI MONACO -->
                     <div class="monaco-extra-toolbar">
+
                         <div class="input-group input-group-sm monaco-search-wrapper">
-                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+
+                            <span class="input-group-text">
+                                <i class="bi bi-search"></i>
+                            </span>
+
                             <input type="text"
                                    id="monacoSearchInput"
                                    class="form-control monaco-search-input"
                                    placeholder="Cerca nel codice..."
                                    autocomplete="off"
                                    aria-label="Cerca nel codice">
+
                             <button type="button"
                                     class="btn btn-outline-secondary"
                                     id="btnMonacoSearchClear"
                                     title="Cancella ricerca">
+
                                 <i class="bi bi-x-lg"></i>
+
                             </button>
+
                         </div>
 
-                        <div class="btn-group btn-group-sm" role="group" aria-label="Zoom editor">
+                        <div class="btn-group btn-group-sm"
+                             role="group"
+                             aria-label="Zoom editor">
+
                             <button type="button"
                                     class="btn btn-outline-light"
                                     onclick="changeMonacoFontSize(-1)"
                                     title="Riduci testo">
+
                                 <i class="bi bi-zoom-out"></i>
+
                             </button>
+
                             <span class="btn btn-outline-secondary monaco-zoom-label"
-                                  id="monacoZoomLabel">100%</span>
+                                  id="monacoZoomLabel">
+
+                                100%
+
+                            </span>
+
                             <button type="button"
                                     class="btn btn-outline-light"
                                     onclick="changeMonacoFontSize(1)"
                                     title="Ingrandisci testo">
+
                                 <i class="bi bi-zoom-in"></i>
+
                             </button>
+
                         </div>
 
-                        <!-- QUESTA è l'anteprima/minimappa verticale a destra mostrata nella foto -->
+                        <!-- SOLO LA MINIMAPPA DI MONACO -->
                         <button type="button"
                                 class="btn btn-sm btn-outline-warning"
                                 id="btnTogglePreview"
                                 onclick="toggleMonacoPreview()"
-                                title="Nascondi anteprima a destra">
-                            <i class="bi bi-map me-1" id="previewIcon"></i>
-                            <span id="previewButtonText">Nascondi anteprima</span>
+                                title="Nascondi minimappa a destra">
+
+                            <i class="bi bi-map me-1"
+                               id="previewIcon"></i>
+
+                            <span id="previewButtonText">
+                                Nascondi minimappa
+                            </span>
+
                         </button>
+
                     </div>
 
-                    <div id="monacoWorkspace" class="monaco-editor-workspace">
-                        <div id="monacoContainer" style="width:100%; height:550px;"></div>
+                    <div id="monacoWorkspace"
+                         class="monaco-editor-workspace">
+
+                        <div id="monacoContainer"
+                             style="width:100%; height:550px;">
+                        </div>
+
                     </div>
+
                 </div>
+
                 <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
+
                     <div class="text-muted small">
-                        <span class="badge bg-secondary me-1">Emmet</span> Usa scorciatoie come <code>div.card>h2</code> + TAB
+
+                        <span class="badge bg-secondary me-1">
+                            Emmet
+                        </span>
+
+                        Usa scorciatoie come
+                        <code>div.card>h2</code> + TAB
+
                     </div>
+
                     <div>
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                        <button type="button" class="btn btn-info" onclick="saveMonacoContent()">Applica Modifiche</button>
+
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">
+
+                            Annulla
+
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-info"
+                                onclick="saveMonacoContent()">
+
+                            Applica Modifiche
+
+                        </button>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
     <!-- MODALE SALVATAGGIO RIGA -->
-    <div class="modal fade" id="saveBlockModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade"
+         id="saveBlockModal"
+         tabindex="-1"
+         aria-hidden="true">
+
         <div class="modal-dialog modal-dialog-centered">
+
             <div class="modal-content modal-content-dark">
+
                 <div class="modal-header border-bottom border-success">
-                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-save text-success me-2"></i>Conferma Salvataggio Riga</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                    <h5 class="modal-title fw-bold text-white">
+
+                        <i class="bi bi-save text-success me-2"></i>
+                        Conferma Salvataggio Riga
+
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+
                 </div>
-                <div class="modal-body text-light">Sei sicuro di voler salvare la configurazione di questa riga?</div>
+
+                <div class="modal-body text-light">
+
+                    Sei sicuro di voler salvare la configurazione di questa riga?
+
+                </div>
+
                 <div class="modal-footer border-top border-secondary border-opacity-25">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                    <button type="button" class="btn btn-success" onclick="document.getElementById('blockForm').submit()">Conferma e Salva</button>
+
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+
+                        Annulla
+
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-success"
+                            onclick="document.getElementById('blockForm').submit()">
+
+                        Conferma e Salva
+
+                    </button>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
     <!-- SCRIPT GESTIONE MONACO EDITOR -->
     <script>
+
         let windowMonacoEditor = null;
 
-        let monacoFontSize = 14;
-        let monacoPreviewVisible = true;
-        let monacoSearchMatches = [];
-        let monacoSearchIndex = -1;
-        let monacoSearchDecorations = [];
-        let windowMonacoSuggestObserver = null;
-
-        require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' } });
+        require.config({
+            paths: {
+                vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'
+            }
+        });
 
         function openMonacoModal() {
-            let currentContent = tinymce.get('blockMainContentHtml') ? tinymce.get('blockMainContentHtml').getContent() : document.getElementById('blockMainContentHtml').value;
-            
-            const modalEl = document.getElementById('monacoEditorModal');
-            const modal = new bootstrap.Modal(modalEl);
+
+            let currentContent =
+                tinymce.get('blockMainContentHtml')
+                    ? tinymce.get('blockMainContentHtml').getContent()
+                    : document.getElementById('blockMainContentHtml').value;
+
+            const modalEl =
+                document.getElementById('monacoEditorModal');
+
+            const modal =
+                new bootstrap.Modal(modalEl);
+
             modal.show();
 
             modalEl.addEventListener('shown.bs.modal', function () {
+
                 if (!windowMonacoEditor) {
+
                     require(['vs/editor/editor.main'], function () {
+
                         // Inizializzazione Emmet per Monaco
                         if (window.emmetMonaco) {
+
                             window.emmetMonaco.emmetHTML(monaco);
+
                         }
 
-                        windowMonacoEditor = monaco.editor.create(document.getElementById('monacoContainer'), {
-                            value: currentContent,
-                            language: 'html',
-                            theme: 'vs-dark',
-                            automaticLayout: true,
-                            autoClosingTags: true,
-                            suggestOnTriggerCharacters: true,
-                            formatOnPaste: true,
-                            formatOnType: true,
+                        windowMonacoEditor =
+                            monaco.editor.create(
+                                document.getElementById('monacoContainer'),
+                                {
+                                    value: currentContent,
+                                    language: 'html',
+                                    theme: 'vs-dark',
+                                    automaticLayout: true,
+                                    autoClosingTags: true,
+                                    suggestOnTriggerCharacters: true,
+                                    formatOnPaste: true,
+                                    formatOnType: true,
 
-                            /* AGGIUNTA: dimensione testo regolabile */
-                            fontSize: monacoFontSize,
+                                    suggest: {
+                                        showWords: true,
+                                        showSnippets: true,
+                                        showHtml5: true
+                                    },
 
-                            /* AGGIUNTA: questa è la colonna "anteprima" a destra della foto */
-                            minimap: {
-                                enabled: monacoPreviewVisible,
-                                renderCharacters: false,
-                                showSlider: 'mouseover',
-                                side: 'right'
-                            },
+                                    quickSuggestions: {
+                                        other: true,
+                                        comments: true,
+                                        strings: true
+                                    }
+                                }
+                            );
 
-                            /* AGGIUNTA: evita il taglio dei popup Monaco */
-                            fixedOverflowWidgets: true,
-
-                            suggest: {
-                                showWords: true,
-                                showSnippets: true,
-                                showHtml5: true
-                            },
-                            quickSuggestions: {
-                                other: true,
-                                comments: true,
-                                strings: true
-                            }
-                        });
-
-                        setupMonacoExtras();
                     });
+
                 } else {
+
                     windowMonacoEditor.setValue(currentContent);
-                    windowMonacoEditor.updateOptions({
-                        fontSize: monacoFontSize,
-                        minimap: { enabled: monacoPreviewVisible }
-                    });
-                    setupMonacoExtras();
+
                 }
+
             }, { once: true });
+
         }
 
         function toggleMonacoFullscreen() {
-            const dialog = document.getElementById('monacoModalDialog');
-            const icon = document.getElementById('fullscreenIcon');
-            const btn = document.getElementById('btnToggleFullscreen');
+
+            const dialog =
+                document.getElementById('monacoModalDialog');
+
+            const icon =
+                document.getElementById('fullscreenIcon');
+
+            const btn =
+                document.getElementById('btnToggleFullscreen');
 
             dialog.classList.toggle('modal-fullscreen-custom');
 
             if (dialog.classList.contains('modal-fullscreen-custom')) {
-                icon.className = 'bi bi-arrows-angle-contract';
-                btn.classList.replace('btn-outline-light', 'btn-warning');
+
+                icon.className =
+                    'bi bi-arrows-angle-contract';
+
+                btn.classList.replace(
+                    'btn-outline-light',
+                    'btn-warning'
+                );
+
             } else {
-                icon.className = 'bi bi-arrows-angle-expand';
-                btn.classList.replace('btn-warning', 'btn-outline-light');
+
+                icon.className =
+                    'bi bi-arrows-angle-expand';
+
+                btn.classList.replace(
+                    'btn-warning',
+                    'btn-outline-light'
+                );
+
             }
 
             if (windowMonacoEditor) {
-                setTimeout(() => windowMonacoEditor.layout(), 150);
+
+                setTimeout(() => {
+
+                    windowMonacoEditor.layout();
+
+                }, 150);
+
             }
+
         }
 
         function saveMonacoContent() {
+
             if (windowMonacoEditor) {
-                const code = windowMonacoEditor.getValue();
+
+                const code =
+                    windowMonacoEditor.getValue();
+
                 if (tinymce.get('blockMainContentHtml')) {
-                    tinymce.get('blockMainContentHtml').setContent(code);
+
+                    tinymce
+                        .get('blockMainContentHtml')
+                        .setContent(code);
+
                 }
-                document.getElementById('blockMainContentHtml').value = code;
-            }
-            const modalEl = document.getElementById('monacoEditorModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            if (modal) modal.hide();
-        }
 
+                document
+                    .getElementById('blockMainContentHtml')
+                    .value = code;
 
-
-        /* ===== NUOVE FUNZIONI: ricerca, zoom, minimappa e posizione suggerimenti ===== */
-
-        function setupMonacoExtras() {
-            if (!windowMonacoEditor) return;
-
-            updateMonacoZoomLabel();
-            updateMonacoPreviewButton();
-
-            const searchInput = document.getElementById('monacoSearchInput');
-            const clearButton = document.getElementById('btnMonacoSearchClear');
-
-            if (searchInput && !searchInput.dataset.monacoReady) {
-                searchInput.dataset.monacoReady = 'true';
-
-                searchInput.addEventListener('input', function () {
-                    searchMonacoText(this.value);
-                });
-
-                searchInput.addEventListener('keydown', function (event) {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                        goToNextMonacoMatch(event.shiftKey ? -1 : 1);
-                    } else if (event.key === 'Escape') {
-                        event.preventDefault();
-                        this.value = '';
-                        searchMonacoText('');
-                        windowMonacoEditor.focus();
-                    }
-                });
-
-                clearButton.addEventListener('click', function () {
-                    searchInput.value = '';
-                    searchMonacoText('');
-                    windowMonacoEditor.focus();
-                });
             }
 
-            installMonacoSuggestPositionFix();
-        }
+            const modalEl =
+                document.getElementById('monacoEditorModal');
 
-        function changeMonacoFontSize(direction) {
-            if (!windowMonacoEditor) return;
+            const modal =
+                bootstrap.Modal.getInstance(modalEl);
 
-            monacoFontSize += direction;
-            monacoFontSize = Math.max(8, Math.min(32, monacoFontSize));
+            if (modal) {
 
-            windowMonacoEditor.updateOptions({ fontSize: monacoFontSize });
-            updateMonacoZoomLabel();
-        }
+                modal.hide();
 
-        function updateMonacoZoomLabel() {
-            const label = document.getElementById('monacoZoomLabel');
-            if (!label) return;
-
-            label.textContent = Math.round((monacoFontSize / 14) * 100) + '%';
-        }
-
-        function toggleMonacoPreview() {
-            if (!windowMonacoEditor) return;
-
-            monacoPreviewVisible = !monacoPreviewVisible;
-
-            windowMonacoEditor.updateOptions({
-                minimap: {
-                    enabled: monacoPreviewVisible
-                }
-            });
-
-            updateMonacoPreviewButton();
-
-            setTimeout(function () {
-                if (windowMonacoEditor) windowMonacoEditor.layout();
-            }, 50);
-        }
-
-        function updateMonacoPreviewButton() {
-            const icon = document.getElementById('previewIcon');
-            const text = document.getElementById('previewButtonText');
-            const button = document.getElementById('btnTogglePreview');
-
-            if (!icon || !text || !button) return;
-
-            if (monacoPreviewVisible) {
-                icon.className = 'bi bi-map me-1';
-                text.textContent = 'Nascondi anteprima';
-                button.title = 'Nascondi anteprima a destra';
-                button.classList.remove('btn-outline-success');
-                button.classList.add('btn-outline-warning');
-            } else {
-                icon.className = 'bi bi-map-fill me-1';
-                text.textContent = 'Mostra anteprima';
-                button.title = 'Mostra anteprima a destra';
-                button.classList.remove('btn-outline-warning');
-                button.classList.add('btn-outline-success');
-            }
-        }
-
-        function searchMonacoText(query) {
-            if (!windowMonacoEditor) return;
-
-            const model = windowMonacoEditor.getModel();
-
-            monacoSearchDecorations = windowMonacoEditor.deltaDecorations(
-                monacoSearchDecorations || [],
-                []
-            );
-
-            monacoSearchMatches = [];
-            monacoSearchIndex = -1;
-
-            if (!query) return;
-
-            monacoSearchMatches = model.findMatches(
-                query,
-                true,
-                false,
-                false,
-                null,
-                true
-            );
-
-            monacoSearchDecorations = windowMonacoEditor.deltaDecorations(
-                [],
-                monacoSearchMatches.map(function (match) {
-                    return {
-                        range: match.range,
-                        options: {
-                            inlineClassName: 'monaco-search-match'
-                        }
-                    };
-                })
-            );
-
-            if (monacoSearchMatches.length > 0) {
-                monacoSearchIndex = 0;
-                selectMonacoMatch();
-            }
-        }
-
-        function goToNextMonacoMatch(direction) {
-            if (!windowMonacoEditor || monacoSearchMatches.length === 0) return;
-
-            monacoSearchIndex += direction;
-
-            if (monacoSearchIndex >= monacoSearchMatches.length) {
-                monacoSearchIndex = 0;
             }
 
-            if (monacoSearchIndex < 0) {
-                monacoSearchIndex = monacoSearchMatches.length - 1;
-            }
-
-            selectMonacoMatch();
-        }
-
-        function selectMonacoMatch() {
-            if (!windowMonacoEditor || monacoSearchIndex < 0) return;
-
-            const match = monacoSearchMatches[monacoSearchIndex];
-
-            windowMonacoEditor.setSelection(match.range);
-            windowMonacoEditor.revealRangeInCenter(match.range);
-            windowMonacoEditor.focus();
-        }
-
-        /*
-         * Monaco normalmente decide automaticamente se mostrare i suggerimenti
-         * sopra o sotto il cursore.
-         *
-         * Questa aggiunta osserva il popup e, quando c'è spazio, lo posiziona
-         * sotto la riga corrente. Se la parte inferiore dello schermo non ha
-         * spazio sufficiente, viene lasciato visibile nel punto più vicino
-         * possibile per non renderlo inutilizzabile.
-         */
-        function installMonacoSuggestPositionFix() {
-            if (!windowMonacoEditor) return;
-
-            const editorContainer = document.getElementById('monacoContainer');
-            if (!editorContainer) return;
-
-            if (window.monacoSuggestObserver) {
-                window.monacoSuggestObserver.disconnect();
-            }
-
-            const reposition = function () {
-                if (!windowMonacoEditor) return;
-
-                const widget = document.querySelector(
-                    '.monaco-editor .suggest-widget.visible, .monaco-editor .suggest-widget'
-                );
-
-                if (!widget || widget.offsetParent === null) return;
-
-                const position = windowMonacoEditor.getPosition();
-                if (!position) return;
-
-                const cursorPixel = windowMonacoEditor.getScrolledVisiblePosition(position);
-                if (!cursorPixel) return;
-
-                const editorRect = editorContainer.getBoundingClientRect();
-                const widgetRect = widget.getBoundingClientRect();
-
-                const desiredTop =
-                    editorRect.top +
-                    cursorPixel.top +
-                    cursorPixel.height +
-                    4;
-
-                const maxTop = window.innerHeight - widgetRect.height - 8;
-                const finalTop = Math.min(desiredTop, maxTop);
-
-                if (finalTop >= editorRect.top) {
-                    widget.style.top = finalTop + 'px';
-                    widget.style.bottom = 'auto';
-                }
-            };
-
-            windowMonacoSuggestObserver = new MutationObserver(function () {
-                setTimeout(reposition, 0);
-            });
-
-            windowMonacoSuggestObserver.observe(document.body, {
-                subtree: true,
-                attributes: true,
-                attributeFilter: ['class', 'style']
-            });
-
-            windowMonacoEditor.onDidChangeCursorPosition(function () {
-                setTimeout(reposition, 0);
-            });
-
-            windowMonacoEditor.onDidChangeModelContent(function () {
-                setTimeout(reposition, 0);
-            });
         }
 
         function showSaveBlockModal() {
-            const modal = new bootstrap.Modal(document.getElementById('saveBlockModal'));
+
+            const modal =
+                new bootstrap.Modal(
+                    document.getElementById('saveBlockModal')
+                );
+
             modal.show();
+
         }
+
+    </script>
+
+    <!-- ============================================================
+         AGGIUNTE MONACO
+         NON SOSTITUISCONO IL CODICE ORIGINALE SOPRA
+         ============================================================ -->
+
+    <script>
+
+        (function () {
+
+            let monacoFontSize = 14;
+
+            let monacoPreviewVisible = true;
+
+            let monacoSearchMatches = [];
+
+            let monacoSearchIndex = -1;
+
+            let monacoSearchDecorations = [];
+
+            let monacoSuggestObserver = null;
+
+            function getEditor() {
+
+                return windowMonacoEditor || null;
+
+            }
+
+            function updateZoomLabel() {
+
+                const label =
+                    document.getElementById('monacoZoomLabel');
+
+                if (label) {
+
+                    label.textContent =
+                        Math.round(
+                            (monacoFontSize / 14) * 100
+                        ) + '%';
+
+                }
+
+            }
+
+            window.changeMonacoFontSize = function (direction) {
+
+                const editor = getEditor();
+
+                if (!editor) {
+                    return;
+                }
+
+                monacoFontSize += direction;
+
+                if (monacoFontSize < 8) {
+                    monacoFontSize = 8;
+                }
+
+                if (monacoFontSize > 32) {
+                    monacoFontSize = 32;
+                }
+
+                editor.updateOptions({
+                    fontSize: monacoFontSize
+                });
+
+                updateZoomLabel();
+
+            };
+
+            function updatePreviewButton() {
+
+                const button =
+                    document.getElementById('btnTogglePreview');
+
+                const icon =
+                    document.getElementById('previewIcon');
+
+                const text =
+                    document.getElementById('previewButtonText');
+
+                if (!button || !icon || !text) {
+                    return;
+                }
+
+                if (monacoPreviewVisible) {
+
+                    icon.className =
+                        'bi bi-map me-1';
+
+                    text.textContent =
+                        'Nascondi minimappa';
+
+                    button.title =
+                        'Nascondi minimappa a destra';
+
+                } else {
+
+                    icon.className =
+                        'bi bi-map-fill me-1';
+
+                    text.textContent =
+                        'Mostra minimappa';
+
+                    button.title =
+                        'Mostra minimappa a destra';
+
+                }
+
+            }
+
+            window.toggleMonacoPreview = function () {
+
+                const editor = getEditor();
+
+                if (!editor) {
+                    return;
+                }
+
+                monacoPreviewVisible =
+                    !monacoPreviewVisible;
+
+                editor.updateOptions({
+
+                    minimap: {
+
+                        enabled:
+                            monacoPreviewVisible,
+
+                        side: 'right',
+
+                        renderCharacters: false
+
+                    },
+
+                    fixedOverflowWidgets: true
+
+                });
+
+                setTimeout(function () {
+
+                    editor.layout();
+
+                }, 80);
+
+                updatePreviewButton();
+
+            };
+
+            function searchMonaco(query) {
+
+                const editor = getEditor();
+
+                if (!editor) {
+                    return;
+                }
+
+                monacoSearchDecorations =
+                    editor.deltaDecorations(
+                        monacoSearchDecorations,
+                        []
+                    );
+
+                monacoSearchMatches = [];
+
+                monacoSearchIndex = -1;
+
+                if (!query) {
+                    return;
+                }
+
+                monacoSearchMatches =
+                    editor
+                        .getModel()
+                        .findMatches(
+                            query,
+                            true,
+                            false,
+                            false,
+                            null,
+                            true
+                        );
+
+                monacoSearchDecorations =
+                    editor.deltaDecorations(
+                        [],
+                        monacoSearchMatches.map(function (match) {
+
+                            return {
+
+                                range: match.range,
+
+                                options: {
+
+                                    inlineClassName:
+                                        'monaco-search-match'
+
+                                }
+
+                            };
+
+                        })
+                    );
+
+                if (monacoSearchMatches.length > 0) {
+
+                    monacoSearchIndex = 0;
+
+                    selectMonacoSearchMatch();
+
+                }
+
+            }
+
+            function selectMonacoSearchMatch() {
+
+                const editor = getEditor();
+
+                if (!editor ||
+                    monacoSearchIndex < 0 ||
+                    monacoSearchIndex >= monacoSearchMatches.length) {
+
+                    return;
+
+                }
+
+                const match =
+                    monacoSearchMatches[
+                        monacoSearchIndex
+                    ];
+
+                editor.setSelection(
+                    match.range
+                );
+
+                editor.revealRangeInCenter(
+                    match.range
+                );
+
+                editor.focus();
+
+            }
+
+            function nextMonacoSearchMatch(direction) {
+
+                if (!monacoSearchMatches.length) {
+                    return;
+                }
+
+                monacoSearchIndex += direction;
+
+                if (
+                    monacoSearchIndex >=
+                    monacoSearchMatches.length
+                ) {
+
+                    monacoSearchIndex = 0;
+
+                }
+
+                if (monacoSearchIndex < 0) {
+
+                    monacoSearchIndex =
+                        monacoSearchMatches.length - 1;
+
+                }
+
+                selectMonacoSearchMatch();
+
+            }
+
+            function setupMonacoSearch() {
+
+                const input =
+                    document.getElementById(
+                        'monacoSearchInput'
+                    );
+
+                const clear =
+                    document.getElementById(
+                        'btnMonacoSearchClear'
+                    );
+
+                if (!input || !clear) {
+                    return;
+                }
+
+                if (input.dataset.monacoReady === 'true') {
+                    return;
+                }
+
+                input.dataset.monacoReady = 'true';
+
+                input.addEventListener(
+                    'input',
+                    function () {
+
+                        searchMonaco(
+                            input.value
+                        );
+
+                    }
+                );
+
+                input.addEventListener(
+                    'keydown',
+                    function (event) {
+
+                        if (event.key === 'Enter') {
+
+                            event.preventDefault();
+
+                            nextMonacoSearchMatch(
+                                event.shiftKey
+                                    ? -1
+                                    : 1
+                            );
+
+                        }
+
+                        if (event.key === 'Escape') {
+
+                            event.preventDefault();
+
+                            input.value = '';
+
+                            searchMonaco('');
+
+                            const editor =
+                                getEditor();
+
+                            if (editor) {
+                                editor.focus();
+                            }
+
+                        }
+
+                    }
+                );
+
+                clear.addEventListener(
+                    'click',
+                    function () {
+
+                        input.value = '';
+
+                        searchMonaco('');
+
+                        const editor =
+                            getEditor();
+
+                        if (editor) {
+                            editor.focus();
+                        }
+
+                    }
+                );
+
+            }
+
+            /*
+             * Questa funzione è volutamente separata dal codice originale.
+             *
+             * Forza la minimappa anche dopo il passaggio fullscreen.
+             */
+            function forceMonacoMinimapAndLayout() {
+
+                const editor =
+                    getEditor();
+
+                if (!editor) {
+                    return;
+                }
+
+                editor.updateOptions({
+
+                    minimap: {
+
+                        enabled:
+                            monacoPreviewVisible,
+
+                        side: 'right',
+
+                        renderCharacters: false
+
+                    },
+
+                    fixedOverflowWidgets: true
+
+                });
+
+                setTimeout(function () {
+                    editor.layout();
+                }, 0);
+
+                setTimeout(function () {
+                    editor.layout();
+                }, 150);
+
+                setTimeout(function () {
+                    editor.layout();
+                }, 400);
+
+            }
+
+            /*
+             * POSIZIONAMENTO SUGGERIMENTI EMMET
+             *
+             * Il widget viene posizionato sotto la riga del cursore.
+             */
+            function setupSuggestionPositioning() {
+
+                const editor =
+                    getEditor();
+
+                if (!editor) {
+                    return;
+                }
+
+                if (monacoSuggestObserver) {
+
+                    monacoSuggestObserver.disconnect();
+
+                }
+
+                function repositionSuggestions() {
+
+                    const widget =
+                        document.querySelector(
+                            '.monaco-editor .suggest-widget'
+                        );
+
+                    if (!widget) {
+                        return;
+                    }
+
+                    if (widget.offsetParent === null) {
+                        return;
+                    }
+
+                    const position =
+                        editor.getPosition();
+
+                    if (!position) {
+                        return;
+                    }
+
+                    const cursor =
+                        editor.getScrolledVisiblePosition(
+                            position
+                        );
+
+                    if (!cursor) {
+                        return;
+                    }
+
+                    const container =
+                        document.getElementById(
+                            'monacoContainer'
+                        );
+
+                    if (!container) {
+                        return;
+                    }
+
+                    const containerRect =
+                        container.getBoundingClientRect();
+
+                    /*
+                     * Coordinate assolute rispetto alla viewport.
+                     */
+                    const top =
+                        containerRect.top +
+                        cursor.top +
+                        cursor.height +
+                        4;
+
+                    const left =
+                        containerRect.left +
+                        cursor.left;
+
+                    /*
+                     * Lo rendiamo fixed per evitare che il fullscreen
+                     * della modale interferisca con il popup.
+                     */
+                    widget.style.position =
+                        'fixed';
+
+                    widget.style.left =
+                        Math.max(8, left) + 'px';
+
+                    widget.style.top =
+                        top + 'px';
+
+                    widget.style.bottom =
+                        'auto';
+
+                    /*
+                     * Evita che il popup esca completamente dallo schermo
+                     * nell'ultima parte dell'editor.
+                     */
+                    const availableHeight =
+                        Math.max(
+                            120,
+                            window.innerHeight -
+                            top -
+                            8
+                        );
+
+                    widget.style.maxHeight =
+                        availableHeight + 'px';
+
+                }
+
+                monacoSuggestObserver =
+                    new MutationObserver(
+                        function () {
+
+                            setTimeout(
+                                repositionSuggestions,
+                                0
+                            );
+
+                        }
+                    );
+
+                monacoSuggestObserver.observe(
+                    document.body,
+                    {
+                        subtree: true,
+                        attributes: true,
+                        attributeFilter: [
+                            'class',
+                            'style'
+                        ]
+                    }
+                );
+
+                editor.onDidChangeCursorPosition(
+                    function () {
+
+                        setTimeout(
+                            repositionSuggestions,
+                            0
+                        );
+
+                    }
+                );
+
+                editor.onDidChangeModelContent(
+                    function () {
+
+                        setTimeout(
+                            repositionSuggestions,
+                            0
+                        );
+
+                    }
+                );
+
+                window.addEventListener(
+                    'resize',
+                    function () {
+
+                        setTimeout(
+                            repositionSuggestions,
+                            0
+                        );
+
+                    }
+                );
+
+            }
+
+            function setupMonacoExtras() {
+
+                const editor =
+                    getEditor();
+
+                if (!editor) {
+                    return false;
+                }
+
+                updateZoomLabel();
+
+                updatePreviewButton();
+
+                setupMonacoSearch();
+
+                setupSuggestionPositioning();
+
+                forceMonacoMinimapAndLayout();
+
+                return true;
+
+            }
+
+            /*
+             * Attende l'inizializzazione originale di Monaco.
+             */
+            const setupTimer =
+                setInterval(
+                    function () {
+
+                        if (setupMonacoExtras()) {
+
+                            clearInterval(
+                                setupTimer
+                            );
+
+                        }
+
+                    },
+                    100
+                );
+
+            /*
+             * QUESTO È IL FIX PRINCIPALE DEL FULLSCREEN.
+             *
+             * Osserviamo il className del dialog originale.
+             */
+            const dialog =
+                document.getElementById(
+                    'monacoModalDialog'
+                );
+
+            if (dialog) {
+
+                const fullscreenObserver =
+                    new MutationObserver(
+                        function () {
+
+                            /*
+                             * Aspettiamo che Bootstrap/CSS
+                             * abbiano terminato il ridimensionamento.
+                             */
+                            setTimeout(
+                                forceMonacoMinimapAndLayout,
+                                30
+                            );
+
+                            setTimeout(
+                                forceMonacoMinimapAndLayout,
+                                200
+                            );
+
+                            setTimeout(
+                                forceMonacoMinimapAndLayout,
+                                600
+                            );
+
+                        }
+                    );
+
+                fullscreenObserver.observe(
+                    dialog,
+                    {
+                        attributes: true,
+                        attributeFilter: [
+                            'class'
+                        ]
+                    }
+                );
+
+            }
+
+            /*
+             * Ulteriore ridisegno quando la modale viene mostrata.
+             */
+            const modal =
+                document.getElementById(
+                    'monacoEditorModal'
+                );
+
+            if (modal) {
+
+                modal.addEventListener(
+                    'shown.bs.modal',
+                    function () {
+
+                        setTimeout(
+                            function () {
+
+                                setupMonacoExtras();
+
+                                forceMonacoMinimapAndLayout();
+
+                            },
+                            50
+                        );
+
+                        setTimeout(
+                            function () {
+
+                                setupMonacoExtras();
+
+                                forceMonacoMinimapAndLayout();
+
+                            },
+                            300
+                        );
+
+                    }
+                );
+
+            }
+
+        })();
+
     </script>
 
 </body>
+
 </html>

@@ -127,6 +127,73 @@
         .modal-fullscreen-custom #monacoContainer {
             height: calc(100vh - 120px) !important;
         }
+        /* ===== AGGIUNTE MONACO: zoom, ricerca e minimappa ===== */
+        .monaco-extra-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #111827;
+            border-bottom: 1px solid #334155;
+            flex-wrap: wrap;
+        }
+
+        .monaco-search-wrapper {
+            width: min(360px, 100%);
+            flex: 1 1 260px;
+        }
+
+        .monaco-search-wrapper .input-group-text {
+            background: #1e293b;
+            border-color: #334155;
+            color: #00dc82;
+        }
+
+        .monaco-search-input {
+            min-width: 0;
+            background: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #334155 !important;
+        }
+
+        .monaco-search-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .monaco-zoom-label {
+            min-width: 58px;
+            text-align: center;
+            cursor: default !important;
+        }
+
+        .monaco-editor-workspace {
+            width: 100%;
+            height: 550px;
+            overflow: hidden;
+        }
+
+        /* Il popup dei suggerimenti rimane sopra la modale. */
+        .monaco-editor .suggest-widget,
+        .monaco-editor .parameter-hints-widget {
+            z-index: 10000 !important;
+        }
+
+        /* Evidenziazione della ricerca. */
+        .monaco-search-match {
+            background: rgba(255, 210, 0, 0.28);
+            border-bottom: 1px solid #ffd54f;
+        }
+
+        @media (max-width: 768px) {
+            .monaco-extra-toolbar {
+                align-items: stretch;
+            }
+
+            .monaco-search-wrapper {
+                flex-basis: 100%;
+            }
+        }
+
     </style>
 
     <!-- TINYMCE -->
@@ -389,7 +456,55 @@
                     </div>
                 </div>
                 <div class="modal-body p-0">
-                    <div id="monacoContainer" style="width:100%; height:550px;"></div>
+                    <!-- AGGIUNTA: barra strumenti Monaco -->
+                    <div class="monaco-extra-toolbar">
+                        <div class="input-group input-group-sm monaco-search-wrapper">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text"
+                                   id="monacoSearchInput"
+                                   class="form-control monaco-search-input"
+                                   placeholder="Cerca nel codice..."
+                                   autocomplete="off"
+                                   aria-label="Cerca nel codice">
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    id="btnMonacoSearchClear"
+                                    title="Cancella ricerca">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Zoom editor">
+                            <button type="button"
+                                    class="btn btn-outline-light"
+                                    onclick="changeMonacoFontSize(-1)"
+                                    title="Riduci testo">
+                                <i class="bi bi-zoom-out"></i>
+                            </button>
+                            <span class="btn btn-outline-secondary monaco-zoom-label"
+                                  id="monacoZoomLabel">100%</span>
+                            <button type="button"
+                                    class="btn btn-outline-light"
+                                    onclick="changeMonacoFontSize(1)"
+                                    title="Ingrandisci testo">
+                                <i class="bi bi-zoom-in"></i>
+                            </button>
+                        </div>
+
+                        <!-- QUESTA è l'anteprima/minimappa verticale a destra mostrata nella foto -->
+                        <button type="button"
+                                class="btn btn-sm btn-outline-warning"
+                                id="btnTogglePreview"
+                                onclick="toggleMonacoPreview()"
+                                title="Nascondi anteprima a destra">
+                            <i class="bi bi-map me-1" id="previewIcon"></i>
+                            <span id="previewButtonText">Nascondi anteprima</span>
+                        </button>
+                    </div>
+
+                    <div id="monacoWorkspace" class="monaco-editor-workspace">
+                        <div id="monacoContainer" style="width:100%; height:550px;"></div>
+                    </div>
                 </div>
                 <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
                     <div class="text-muted small">
@@ -425,6 +540,13 @@
     <script>
         let windowMonacoEditor = null;
 
+        let monacoFontSize = 14;
+        let monacoPreviewVisible = true;
+        let monacoSearchMatches = [];
+        let monacoSearchIndex = -1;
+        let monacoSearchDecorations = [];
+        let windowMonacoSuggestObserver = null;
+
         require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' } });
 
         function openMonacoModal() {
@@ -451,6 +573,21 @@
                             suggestOnTriggerCharacters: true,
                             formatOnPaste: true,
                             formatOnType: true,
+
+                            /* AGGIUNTA: dimensione testo regolabile */
+                            fontSize: monacoFontSize,
+
+                            /* AGGIUNTA: questa è la colonna "anteprima" a destra della foto */
+                            minimap: {
+                                enabled: monacoPreviewVisible,
+                                renderCharacters: false,
+                                showSlider: 'mouseover',
+                                side: 'right'
+                            },
+
+                            /* AGGIUNTA: evita il taglio dei popup Monaco */
+                            fixedOverflowWidgets: true,
+
                             suggest: {
                                 showWords: true,
                                 showSnippets: true,
@@ -462,9 +599,16 @@
                                 strings: true
                             }
                         });
+
+                        setupMonacoExtras();
                     });
                 } else {
                     windowMonacoEditor.setValue(currentContent);
+                    windowMonacoEditor.updateOptions({
+                        fontSize: monacoFontSize,
+                        minimap: { enabled: monacoPreviewVisible }
+                    });
+                    setupMonacoExtras();
                 }
             }, { once: true });
         }
@@ -500,6 +644,244 @@
             const modalEl = document.getElementById('monacoEditorModal');
             const modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
+        }
+
+
+
+        /* ===== NUOVE FUNZIONI: ricerca, zoom, minimappa e posizione suggerimenti ===== */
+
+        function setupMonacoExtras() {
+            if (!windowMonacoEditor) return;
+
+            updateMonacoZoomLabel();
+            updateMonacoPreviewButton();
+
+            const searchInput = document.getElementById('monacoSearchInput');
+            const clearButton = document.getElementById('btnMonacoSearchClear');
+
+            if (searchInput && !searchInput.dataset.monacoReady) {
+                searchInput.dataset.monacoReady = 'true';
+
+                searchInput.addEventListener('input', function () {
+                    searchMonacoText(this.value);
+                });
+
+                searchInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        goToNextMonacoMatch(event.shiftKey ? -1 : 1);
+                    } else if (event.key === 'Escape') {
+                        event.preventDefault();
+                        this.value = '';
+                        searchMonacoText('');
+                        windowMonacoEditor.focus();
+                    }
+                });
+
+                clearButton.addEventListener('click', function () {
+                    searchInput.value = '';
+                    searchMonacoText('');
+                    windowMonacoEditor.focus();
+                });
+            }
+
+            installMonacoSuggestPositionFix();
+        }
+
+        function changeMonacoFontSize(direction) {
+            if (!windowMonacoEditor) return;
+
+            monacoFontSize += direction;
+            monacoFontSize = Math.max(8, Math.min(32, monacoFontSize));
+
+            windowMonacoEditor.updateOptions({ fontSize: monacoFontSize });
+            updateMonacoZoomLabel();
+        }
+
+        function updateMonacoZoomLabel() {
+            const label = document.getElementById('monacoZoomLabel');
+            if (!label) return;
+
+            label.textContent = Math.round((monacoFontSize / 14) * 100) + '%';
+        }
+
+        function toggleMonacoPreview() {
+            if (!windowMonacoEditor) return;
+
+            monacoPreviewVisible = !monacoPreviewVisible;
+
+            windowMonacoEditor.updateOptions({
+                minimap: {
+                    enabled: monacoPreviewVisible
+                }
+            });
+
+            updateMonacoPreviewButton();
+
+            setTimeout(function () {
+                if (windowMonacoEditor) windowMonacoEditor.layout();
+            }, 50);
+        }
+
+        function updateMonacoPreviewButton() {
+            const icon = document.getElementById('previewIcon');
+            const text = document.getElementById('previewButtonText');
+            const button = document.getElementById('btnTogglePreview');
+
+            if (!icon || !text || !button) return;
+
+            if (monacoPreviewVisible) {
+                icon.className = 'bi bi-map me-1';
+                text.textContent = 'Nascondi anteprima';
+                button.title = 'Nascondi anteprima a destra';
+                button.classList.remove('btn-outline-success');
+                button.classList.add('btn-outline-warning');
+            } else {
+                icon.className = 'bi bi-map-fill me-1';
+                text.textContent = 'Mostra anteprima';
+                button.title = 'Mostra anteprima a destra';
+                button.classList.remove('btn-outline-warning');
+                button.classList.add('btn-outline-success');
+            }
+        }
+
+        function searchMonacoText(query) {
+            if (!windowMonacoEditor) return;
+
+            const model = windowMonacoEditor.getModel();
+
+            monacoSearchDecorations = windowMonacoEditor.deltaDecorations(
+                monacoSearchDecorations || [],
+                []
+            );
+
+            monacoSearchMatches = [];
+            monacoSearchIndex = -1;
+
+            if (!query) return;
+
+            monacoSearchMatches = model.findMatches(
+                query,
+                true,
+                false,
+                false,
+                null,
+                true
+            );
+
+            monacoSearchDecorations = windowMonacoEditor.deltaDecorations(
+                [],
+                monacoSearchMatches.map(function (match) {
+                    return {
+                        range: match.range,
+                        options: {
+                            inlineClassName: 'monaco-search-match'
+                        }
+                    };
+                })
+            );
+
+            if (monacoSearchMatches.length > 0) {
+                monacoSearchIndex = 0;
+                selectMonacoMatch();
+            }
+        }
+
+        function goToNextMonacoMatch(direction) {
+            if (!windowMonacoEditor || monacoSearchMatches.length === 0) return;
+
+            monacoSearchIndex += direction;
+
+            if (monacoSearchIndex >= monacoSearchMatches.length) {
+                monacoSearchIndex = 0;
+            }
+
+            if (monacoSearchIndex < 0) {
+                monacoSearchIndex = monacoSearchMatches.length - 1;
+            }
+
+            selectMonacoMatch();
+        }
+
+        function selectMonacoMatch() {
+            if (!windowMonacoEditor || monacoSearchIndex < 0) return;
+
+            const match = monacoSearchMatches[monacoSearchIndex];
+
+            windowMonacoEditor.setSelection(match.range);
+            windowMonacoEditor.revealRangeInCenter(match.range);
+            windowMonacoEditor.focus();
+        }
+
+        /*
+         * Monaco normalmente decide automaticamente se mostrare i suggerimenti
+         * sopra o sotto il cursore.
+         *
+         * Questa aggiunta osserva il popup e, quando c'è spazio, lo posiziona
+         * sotto la riga corrente. Se la parte inferiore dello schermo non ha
+         * spazio sufficiente, viene lasciato visibile nel punto più vicino
+         * possibile per non renderlo inutilizzabile.
+         */
+        function installMonacoSuggestPositionFix() {
+            if (!windowMonacoEditor) return;
+
+            const editorContainer = document.getElementById('monacoContainer');
+            if (!editorContainer) return;
+
+            if (window.monacoSuggestObserver) {
+                window.monacoSuggestObserver.disconnect();
+            }
+
+            const reposition = function () {
+                if (!windowMonacoEditor) return;
+
+                const widget = document.querySelector(
+                    '.monaco-editor .suggest-widget.visible, .monaco-editor .suggest-widget'
+                );
+
+                if (!widget || widget.offsetParent === null) return;
+
+                const position = windowMonacoEditor.getPosition();
+                if (!position) return;
+
+                const cursorPixel = windowMonacoEditor.getScrolledVisiblePosition(position);
+                if (!cursorPixel) return;
+
+                const editorRect = editorContainer.getBoundingClientRect();
+                const widgetRect = widget.getBoundingClientRect();
+
+                const desiredTop =
+                    editorRect.top +
+                    cursorPixel.top +
+                    cursorPixel.height +
+                    4;
+
+                const maxTop = window.innerHeight - widgetRect.height - 8;
+                const finalTop = Math.min(desiredTop, maxTop);
+
+                if (finalTop >= editorRect.top) {
+                    widget.style.top = finalTop + 'px';
+                    widget.style.bottom = 'auto';
+                }
+            };
+
+            windowMonacoSuggestObserver = new MutationObserver(function () {
+                setTimeout(reposition, 0);
+            });
+
+            windowMonacoSuggestObserver.observe(document.body, {
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['class', 'style']
+            });
+
+            windowMonacoEditor.onDidChangeCursorPosition(function () {
+                setTimeout(reposition, 0);
+            });
+
+            windowMonacoEditor.onDidChangeModelContent(function () {
+                setTimeout(reposition, 0);
+            });
         }
 
         function showSaveBlockModal() {

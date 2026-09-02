@@ -18,9 +18,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- ============================================================
-         STILI SFONDO ANIMATO
-         ============================================================ -->
+    <!-- BOOTSTRAP JS IN HEAD -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -90,28 +90,37 @@
             color: #0f172a;
         }
 
-        .course-config-box {
-            background-color: rgba(15, 23, 42, 0.8) !important;
-            border: 1px solid rgba(0, 220, 130, 0.3) !important;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
+        .modal-content-dark {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f1f5f9;
         }
 
-        /* Personalizzazione Validazione Form */
-        .was-validated .form-control:invalid, .was-validated .form-select:invalid {
-            border-color: #ea580c !important;
-            background-image: none !important;
-            box-shadow: 0 0 0 0.25rem rgba(234, 88, 12, 0.25) !important;
+        /* STILI PER MONACO FULLSCREEN MODAL */
+        .modal-fullscreen-custom {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .modal-fullscreen-custom .modal-content {
+            height: 100vh !important;
+            border-radius: 0 !important;
+        }
+
+        .modal-fullscreen-custom #monacoContainer {
+            height: calc(100vh - 120px) !important;
         }
     </style>
 
-    <!-- ============================================================
-         TINYMCE
-         ============================================================ -->
-    <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
-            referrerpolicy="origin">
-    </script>
+    <!-- TINYMCE -->
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- MONACO LOADER & EMMET SUPPORT -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -215,42 +224,16 @@
                     });
                 })
             });
-            
-            // Inizializza visibilità pannello form
-            toggleCourseForm();
         });
-
-        function toggleCourseForm() {
-            const formTypeSelect = document.getElementById('formTypeSelect');
-            const courseConfigBox = document.getElementById('courseConfigBox');
-            const courseFields = document.querySelectorAll('.course-specific-field');
-
-            if (formTypeSelect && courseConfigBox) {
-                const selectedVal = formTypeSelect.value;
-                if (selectedVal === 'NONE') {
-                    courseConfigBox.style.display = 'none';
-                } else {
-                    courseConfigBox.style.display = 'block';
-                    if (selectedVal === 'BOOKING') {
-                        courseFields.forEach(el => el.style.display = 'block');
-                    } else {
-                        // INFO e ORG_INFO escludono Tipologia, Codice e Nome Corso
-                        courseFields.forEach(el => el.style.display = 'none');
-                    }
-                }
-            }
-        }
     </script>
 </head>
 
 <body>
 
-    <!-- Canvas Sfondo Animato -->
     <canvas id="tech-bg-canvas"></canvas>
 
     <div class="container py-4">
 
-        <!-- INTESTAZIONE -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova Pagina</h2>
@@ -261,301 +244,164 @@
             </a>
         </div>
 
-        <!-- FORM PAGINA -->
         <form id="pageForm" th:action="@{/admin/pages/save}" th:object="${page}" method="post" class="card shadow-sm border-0" novalidate>
             <div class="card-body p-4">
 
                 <input type="hidden" th:field="*{id}">
 
-                <!-- TITOLO -->
                 <div class="mb-4">
                     <label class="form-label fw-bold">Titolo Pagina <span class="text-danger">*</span></label>
                     <input type="text" th:field="*{title}" class="form-control form-control-lg" placeholder="es. Chi Siamo" required>
-                    <div class="form-text">Il titolo verrà utilizzato come titolo amministrativo della pagina.</div>
                 </div>
 
-                <!-- SLUG -->
                 <div class="mb-4">
                     <label class="form-label fw-bold">Slug URL <span class="text-danger">*</span></label>
                     <input type="text" th:field="*{slug}" class="form-control" placeholder="es. chi-siamo" required>
-                    <div class="form-text">La pagina sarà disponibile all'indirizzo: <code>/p/chi-siamo</code></div>
                 </div>
 
-                <!-- LARGHEZZA BLOCCO -->
                 <div class="mb-4">
                     <label for="widthPercent" class="form-label fw-bold">Larghezza Blocco (%)</label>
                     <div class="input-group">
                         <input id="widthPercent" type="number" th:field="*{widthPercent}" class="form-control" min="10" max="100" step="1" placeholder="100">
                         <span class="input-group-text">%</span>
                     </div>
-                    <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
                 </div>
 
-                <!-- SELEZIONE MODALITÀ FORM -->
-                <div class="mb-4 p-3 border rounded bg-dark">
-                    <label for="formTypeSelect" class="form-label fw-bold text-white fs-5 mb-2">
-                        <i class="bi bi-ui-checks me-2 text-success"></i>Integrazione Form nella Pagina
-                    </label>
-                    <select id="formTypeSelect" th:field="*{formType}" class="form-select form-select-lg" onchange="toggleCourseForm()">
-                        <option value="NONE">Nessun Form</option>
-                        <option value="BOOKING">Includi Form di Prenotazione Corso in questa pagina</option>
-                        <option value="INFO">Includi Form di richiesta informazioni</option>
-                        <option value="ORG_INFO">Includi Form di richiesta informazioni per organizzazioni</option>
-                    </select>
-                    <div class="form-text ms-1 mt-2">Seleziona la modalità di form che si desidera mostrare in fondo al contenuto della pagina.</div>
-                </div>
-
-                <!-- CONFIGURAZIONE FORM CORSO / DESTINAZIONE -->
-                <div id="courseConfigBox" class="course-config-box mb-4" style="display: none;">
-                    <h5 class="text-success mb-3 fw-bold">
-                        <i class="bi bi-sliders me-2"></i>Impostazioni Form e Destinazione
-                    </h5>
-                    
-                    <div class="row g-3">
-                        <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Tipologia Corso</label>
-                            <input type="text" th:field="*{courseType}" class="form-control" placeholder="es. Corso di Formazione">
-                        </div>
-
-                        <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Codice Corso</label>
-                            <input type="text" th:field="*{courseCode}" class="form-control" placeholder="es. JAVA-2026-01">
-                        </div>
-
-                        <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Nome Corso</label>
-                            <input type="text" th:field="*{courseName}" class="form-control" placeholder="es. Corso Java Developer">
-                        </div>
-
-                        <div class="col-12 mt-3">
-                            <label class="form-label fw-bold">Email Destinazione Dati</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
-                                <input type="email" th:field="*{recipientEmail}" class="form-control" placeholder="es. iscrizioni@ecoskillfactory.it">
-                            </div>
-                            <div class="form-text">Indirizzo email a cui verranno inoltrati i dati immessi dagli utenti registrati.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CONTENUTO -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Contenuto Pagina (Editor)</label>
-                    <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e formattazione avanzata.</div>
-                    <textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
-                </div>
-
-                <!-- INFORMAZIONI URL -->
-                <div class="alert alert-light border mb-4">
-                    <div class="d-flex align-items-start">
-                        <i class="bi bi-info-circle-fill text-success fs-4 me-3"></i>
-                        <div>
-                            <strong>URL della pagina</strong>
-                            <div class="mt-1">
-                                <code>/p/<span th:text="${page.slug}">slug-pagina</span></code>
-                            </div>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label fw-bold mb-0">Contenuto HTML (TinyMCE)</label>
+                        <button type="button" class="btn btn-outline-info btn-sm" onclick="openMonacoModal()">
+                            <i class="bi bi-code-slash me-1"></i> Apri Monaco Editor
+                        </button>
                     </div>
+
+                    <textarea id="pageContentHtml" th:field="*{contentHtml}" class="form-control wysiwyg-editor" rows="15"></textarea>
                 </div>
 
-                <!-- BOTTONI -->
-                <div class="d-flex justify-content-between align-items-center">
-                    <a th:href="@{/admin/pages}" class="btn btn-outline-light">
-                        <i class="bi bi-arrow-left me-1"></i> Annulla
-                    </a>
-                    <button type="button" class="btn btn-success btn-lg" onclick="showConfirmModal()">
-                        <i class="bi bi-check-circle me-1"></i> Salva Pagina
+                <div class="text-end">
+                    <button type="submit" class="btn btn-brand btn-lg px-4">
+                        <i class="bi bi-save me-1"></i> Salva Pagina
                     </button>
                 </div>
 
             </div>
         </form>
 
-        <footer class="text-center text-muted small py-4">
-            <i class="bi bi-cpu me-1"></i> Eco Skill Factory CMS
-        </footer>
-
     </div>
 
-    <!-- MODAL DI AVVISO CAMPI MANCANTI -->
-    <div class="modal fade" id="warningModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content card border-0">
-                <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i>Campi Obbligatori Mancanti</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- MODALE MONACO EDITOR AVANZATO -->
+    <div class="modal fade" id="monacoEditorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" id="monacoModalDialog">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold text-white mb-0">
+                        <i class="bi bi-code-square text-info me-2"></i>Monaco Code Editor
+                        <small class="text-muted fs-6 ms-2">(Emmet abilitato - Premi TAB)</small>
+                    </h5>
+                    <div>
+                        <button type="button" class="btn btn-sm btn-outline-light me-2" onclick="toggleMonacoFullscreen()" id="btnToggleFullscreen" title="Schermo Intero">
+                            <i class="bi bi-arrows-angle-expand" id="fullscreenIcon"></i> Schermo Intero
+                        </button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                 </div>
-                <div class="modal-body text-light">
-                    Compilare tutti i campi obbligatori prima di salvare la pagina (es. <strong>Titolo Pagina</strong> e <strong>Slug URL</strong>).
+                <div class="modal-body p-0">
+                    <div id="monacoContainer" style="width:100%; height:550px;"></div>
                 </div>
-                <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-warning fw-bold text-dark" data-bs-dismiss="modal">Ho Capito</button>
+                <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
+                    <div class="text-muted small">
+                        <span class="badge bg-secondary me-1">Emmet</span> Usa scorciatoie come <code>ul>li*3>a</code> + TAB
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                        <button type="button" class="btn btn-info" onclick="saveMonacoContent()">Applica Modifiche</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- MODAL DI CONFERMA SALVATAGGIO -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content card border-0">
-                <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title text-white"><i class="bi bi-check-circle-fill text-success me-2"></i>Conferma Operazione</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-light">
-                    Sei sicuro di voler salvare le modifiche alla pagina?
-                </div>
-                <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                    <button type="button" class="btn btn-success" onclick="submitPageForm()">Conferma e Salva</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- BOOTSTRAP JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        function showConfirmModal() {
-            if (window.tinymce) {
-                tinymce.triggerSave();
-            }
+        let windowMonacoEditor = null;
 
-            const pageForm = document.getElementById('pageForm');
+        require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' } });
 
-            // Controlla se tutti i campi obbligatori del form sono validi
-            if (!pageForm.checkValidity()) {
-                pageForm.classList.add('was-validated');
-                pageForm.reportValidity(); // Mostra il messaggio nativo del browser sul campo errato
-                
-                // Mostra il popup di avviso
-                const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
-                warningModal.show();
-                return;
-            }
-
-            // Se tutto è valido apre la modale di conferma
-            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        function openMonacoModal() {
+            let currentContent = tinymce.get('pageContentHtml') ? tinymce.get('pageContentHtml').getContent() : document.getElementById('pageContentHtml').value;
+            
+            const modalEl = document.getElementById('monacoEditorModal');
+            const modal = new bootstrap.Modal(modalEl);
             modal.show();
+
+            modalEl.addEventListener('shown.bs.modal', function () {
+                if (!windowMonacoEditor) {
+                    require(['vs/editor/editor.main'], function () {
+                        // Inizializzazione Emmet per Monaco
+                        if (window.emmetMonaco) {
+                            window.emmetMonaco.emmetHTML(monaco);
+                        }
+
+                        windowMonacoEditor = monaco.editor.create(document.getElementById('monacoContainer'), {
+                            value: currentContent,
+                            language: 'html',
+                            theme: 'vs-dark',
+                            automaticLayout: true,
+                            autoClosingTags: true,
+                            suggestOnTriggerCharacters: true,
+                            formatOnPaste: true,
+                            formatOnType: true,
+                            suggest: {
+                                showWords: true,
+                                showSnippets: true,
+                                showHtml5: true
+                            },
+                            quickSuggestions: {
+                                other: true,
+                                comments: true,
+                                strings: true
+                            }
+                        });
+                    });
+                } else {
+                    windowMonacoEditor.setValue(currentContent);
+                }
+            }, { once: true });
         }
 
-        function submitPageForm() {
-            document.getElementById('pageForm').submit();
+        function toggleMonacoFullscreen() {
+            const dialog = document.getElementById('monacoModalDialog');
+            const icon = document.getElementById('fullscreenIcon');
+            const btn = document.getElementById('btnToggleFullscreen');
+
+            dialog.classList.toggle('modal-fullscreen-custom');
+
+            if (dialog.classList.contains('modal-fullscreen-custom')) {
+                icon.className = 'bi bi-arrows-angle-contract';
+                btn.classList.replace('btn-outline-light', 'btn-warning');
+            } else {
+                icon.className = 'bi bi-arrows-angle-expand';
+                btn.classList.replace('btn-warning', 'btn-outline-light');
+            }
+
+            if (windowMonacoEditor) {
+                setTimeout(() => windowMonacoEditor.layout(), 150);
+            }
+        }
+
+        function saveMonacoContent() {
+            if (windowMonacoEditor) {
+                const code = windowMonacoEditor.getValue();
+                if (tinymce.get('pageContentHtml')) {
+                    tinymce.get('pageContentHtml').setContent(code);
+                }
+                document.getElementById('pageContentHtml').value = code;
+            }
+            const modalEl = document.getElementById('monacoEditorModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
         }
     </script>
 
-    <!-- SCRIPT ANIMAZIONE SFONDO -->
-    <script>
-        const canvas = document.getElementById('tech-bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Circuit {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.length = Math.floor(Math.random() * 8) + 4;
-                this.currentStep = 0;
-                this.dir = Math.floor(Math.random() * 4);
-                this.path = [{ x: this.x, y: this.y }];
-                this.speed = Math.random() * 1.5 + 0.5;
-                this.alpha = Math.random() * 0.4 + 0.1;
-                this.size = 20;
-            }
-            update() {
-                if (this.currentStep < this.length) {
-                    let last = this.path[this.path.length - 1];
-                    let nx = last.x, ny = last.y;
-                    if (Math.random() < 0.3) {
-                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
-                    }
-                    switch (this.dir) {
-                        case 0: ny -= this.size; break;
-                        case 1: nx += this.size; break;
-                        case 2: ny += this.size; break;
-                        case 3: nx -= this.size; break;
-                    }
-                    this.path.push({ x: nx, y: ny });
-                    this.currentStep++;
-                } else {
-                    this.alpha -= 0.005;
-                    if (this.alpha <= 0) this.reset();
-                }
-            }
-            draw() {
-                if (this.path.length < 2) return;
-                ctx.beginPath();
-                ctx.moveTo(this.path[0].x, this.path[0].y);
-                for (let i = 1; i < this.path.length; i++) {
-                    ctx.lineTo(this.path[i].x, this.path[i].y);
-                }
-                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-
-                let last = this.path[this.path.length - 1];
-                ctx.beginPath();
-                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-                ctx.fill();
-            }
-        }
-
-        const codeSnippets = [
-            "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
-            "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
-            "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
-            "npm run build", "docker-compose up -d", "mvn clean install"
-        ];
-
-        class CodeText {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * (width - 200);
-                this.y = Math.random() * height;
-                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-                this.alpha = 0;
-                this.maxAlpha = Math.random() * 0.3 + 0.1;
-                this.fadeIn = true;
-                this.speed = Math.random() * 0.3 + 0.1;
-            }
-            update() {
-                this.y -= this.speed;
-                if (this.fadeIn) {
-                    this.alpha += 0.008;
-                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
-                } else {
-                    this.alpha -= 0.005;
-                    if (this.alpha <= 0) this.reset();
-                }
-            }
-            draw() {
-                ctx.font = '12px "Fira Code", monospace';
-                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
-                ctx.fillText(this.text, this.x, this.y);
-            }
-        }
-
-        const circuits = Array.from({ length: 18 }, () => new Circuit());
-        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            circuits.forEach(c => { c.update(); c.draw(); });
-            codeTexts.forEach(ct => { ct.update(); ct.draw(); });
-            requestAnimationFrame(animate);
-        }
-        animate();
-    </script>
 </body>
+
 </html>

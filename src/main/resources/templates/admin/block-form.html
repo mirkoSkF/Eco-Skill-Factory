@@ -18,10 +18,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- BOOTSTRAP JS IN HEAD PER DISPONIBILITÀ IMMEDIATA GLOBALE -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- STILI SFONDO ANIMATO -->
+    <!-- ========================================================
+         STILI SFONDO ANIMATO
+         ======================================================== -->
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -82,6 +81,10 @@
             cursor: pointer;
         }
 
+        /* ========================================================
+           OPACITÀ SFONDO
+           ======================================================== */
+
         .opacity-control-wrapper {
             margin-top: 15px;
         }
@@ -110,119 +113,16 @@
             color: #f1f5f9;
         }
 
-        /* STILI PER MONACO FULLSCREEN MODAL */
-        .modal-fullscreen-custom {
-            width: 100vw !important;
-            max-width: 100vw !important;
-            height: 100vh !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .modal-fullscreen-custom .modal-content {
-            height: 100vh !important;
-            border-radius: 0 !important;
-        }
-
-        .modal-fullscreen-custom #monacoContainer {
-            height: calc(100vh - 120px) !important;
-        }
-
-        /* =========================================================
-           AGGIUNTE MONACO
-           ========================================================= */
-
-        .monaco-extra-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            background: #111827;
-            border-bottom: 1px solid #334155;
-            flex-wrap: wrap;
-        }
-
-        .monaco-search-wrapper {
-            width: min(360px, 100%);
-            flex: 1 1 260px;
-        }
-
-        .monaco-search-wrapper .input-group-text {
-            background: #1e293b;
-            border-color: #334155;
-            color: #00dc82;
-        }
-
-        .monaco-search-input {
-            min-width: 0;
-            background: #0f172a !important;
-            color: #ffffff !important;
-            border-color: #334155 !important;
-        }
-
-        .monaco-search-input::placeholder {
-            color: #94a3b8;
-        }
-
-        .monaco-zoom-label {
-            min-width: 58px;
-            text-align: center;
-            cursor: default !important;
-        }
-
-        .monaco-editor-workspace {
-            width: 100%;
-            height: 550px;
-            min-height: 0;
-        }
-
-        .monaco-editor-workspace #monacoContainer {
-            width: 100%;
-            height: 100% !important;
-        }
-
-        /*
-         * IMPORTANTISSIMO:
-         * quando il dialog entra in fullscreen il workspace segue
-         * la nuova altezza della finestra.
-         */
-        .modal-fullscreen-custom .monaco-editor-workspace {
-            height: calc(100vh - 120px) !important;
-        }
-
-        /*
-         * Il popup dei suggerimenti deve stare sopra gli altri elementi.
-         */
-        .monaco-editor .suggest-widget,
-        .monaco-editor .parameter-hints-widget {
-            z-index: 10000 !important;
-        }
-
-        /*
-         * Evidenziazione risultati ricerca.
-         */
-        .monaco-search-match {
-            background: rgba(255, 210, 0, 0.28);
-            border-bottom: 1px solid #ffd54f;
-        }
-
-        @media (max-width: 768px) {
-            .monaco-extra-toolbar {
-                align-items: stretch;
-            }
-
-            .monaco-search-wrapper {
-                flex-basis: 100%;
-            }
-        }
+        /* MONACO EDITOR - aggiunta */
+        .monaco-open-button{border-color:#36e4da!important;color:#36e4da!important;font-weight:600}.monaco-open-button:hover{background:rgba(54,228,218,.12)!important;color:#fff!important}.monaco-editor-workspace{width:100%;overflow:hidden;background:#1e1e1e}.monaco-extra-toolbar{display:flex;align-items:center;gap:8px;padding:8px;background:#111827;border-bottom:1px solid #334155;flex-wrap:wrap;position:relative;z-index:20}.monaco-search-wrapper{flex:1 1 320px;min-width:260px;max-width:700px;position:relative}.monaco-search-input{font-family:'Fira Code',monospace}.monaco-search-results{position:absolute;top:calc(100% + 4px);right:0;display:none;align-items:center;gap:6px;padding:4px 6px;border:1px solid #475569;border-radius:6px;background:#0f172a;box-shadow:0 8px 20px rgba(0,0,0,.45);z-index:1000;white-space:nowrap}.monaco-search-results.visible{display:flex}.monaco-search-count{min-width:58px;text-align:center;color:#cbd5e1;font:12px 'Fira Code',monospace}.monaco-zoom-label{min-width:58px;text-align:center;cursor:default}.monaco-modal-editor-button{margin-bottom:8px}.monaco-editor .suggest-widget{z-index:10000!important}.modal-fullscreen-custom{width:100vw;max-width:none;height:100vh;margin:0}.modal-fullscreen-custom .modal-content{height:100vh;border-radius:0}.modal-fullscreen-custom #monacoContainer{height:calc(100vh - 150px)!important}.monaco-search-match{background:rgba(255,215,0,.28);border:1px solid rgba(255,215,0,.55);border-radius:2px}.monaco-search-match-current{background:rgba(0,220,130,.42);border:1px solid rgba(0,220,130,.9);border-radius:2px}@media(max-width:768px){.monaco-search-wrapper{flex-basis:100%;max-width:none}}
     </style>
 
-    <!-- TINYMCE -->
-    <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js" referrerpolicy="origin"></script>
-
-    <!-- MONACO EDITOR & EMMET SUPPORT -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script>
+    <!-- ========================================================
+         TINYMCE
+         ======================================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
+            referrerpolicy="origin">
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -313,16 +213,13 @@
                     })
                     .then(data => {
                         const imageUrl = data.location || data.url;
-
                         if (!imageUrl) {
                             throw new Error('Il server non ha restituito l\'URL dell\'immagine.');
                         }
-
                         resolve(imageUrl);
                     })
                     .catch(error => {
                         console.error('Upload fallito:', error);
-
                         reject({
                             message: 'Caricamento immagine non riuscito',
                             remove: true
@@ -341,17 +238,26 @@
     <div class="container py-4">
 
         <!-- INTESTAZIONE -->
+
         <div class="d-flex justify-content-between align-items-center mb-3">
+
             <h2 th:text="${block.id == null ? 'Nuova Riga' : 'Modifica Riga #' + block.id}">
                 Editor Riga
             </h2>
 
-            <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
-                <i class="bi bi-arrow-left"></i> Torna alla Gestione Righe
+            <a th:href="@{/admin/dashboard}"
+               class="btn btn-outline-light">
+
+                <i class="bi bi-arrow-left"></i>
+                Torna alla Gestione Righe
+
             </a>
+
         </div>
 
+
         <!-- FORM PRINCIPALE RIGA -->
+
         <form id="blockForm"
               th:action="@{/admin/block/save}"
               th:object="${block}"
@@ -361,27 +267,43 @@
 
             <input type="hidden" th:field="*{id}" />
 
+
             <div class="row g-3 mb-3">
 
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Titolo Riga (Uso Interno Admin)</label>
+
+                    <label class="form-label fw-bold">
+                        Titolo Riga (Uso Interno Admin)
+                    </label>
+
                     <input type="text"
                            class="form-control"
                            th:field="*{titleAdmin}"
                            required
                            placeholder="es. Banner Iniziale / Sezione Servizi" />
+
                 </div>
 
+
                 <div class="col-md-2">
-                    <label class="form-label fw-bold">Posizione Ordine</label>
+
+                    <label class="form-label fw-bold">
+                        Posizione Ordine
+                    </label>
+
                     <input type="number"
                            class="form-control"
                            th:field="*{position}"
                            required />
+
                 </div>
 
+
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">Modello Blocco</label>
+
+                    <label class="form-label fw-bold">
+                        Modello Blocco
+                    </label>
 
                     <select id="blockTypeSelect"
                             class="form-select"
@@ -393,14 +315,21 @@
                         </option>
 
                     </select>
+
                 </div>
+
             </div>
 
+
             <!-- DIMENSIONI E SFONDO -->
+
             <div class="row g-3 mb-3">
 
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">Larghezza Blocco (%)</label>
+
+                    <label class="form-label fw-bold">
+                        Larghezza Blocco (%)
+                    </label>
 
                     <input type="number"
                            class="form-control"
@@ -412,11 +341,15 @@
                     <div class="form-text">
                         Inserisci un valore tra 10 e 100.
                     </div>
+
                 </div>
+
 
                 <div class="col-md-4">
 
-                    <label class="form-label fw-bold">Altezza Riga</label>
+                    <label class="form-label fw-bold">
+                        Altezza Riga
+                    </label>
 
                     <input type="text"
                            class="form-control"
@@ -424,17 +357,28 @@
                            placeholder="auto, 400px, 50vh, 30rem" />
 
                     <div class="form-text">
-                        Usa <strong>auto</strong> per l'altezza automatica oppure
-                        un valore CSS come <strong>400px</strong>.
+
+                        Usa <strong>auto</strong> per l'altezza automatica
+                        oppure un valore CSS come <strong>400px</strong>.
+
                     </div>
 
                 </div>
 
+
+                <!-- ==================================================
+                     SFONDO
+                     ================================================== -->
+
                 <div class="col-md-4">
 
                     <label class="form-label fw-bold">
-                        <i class="bi bi-palette"></i> Sfondo Riga
+
+                        <i class="bi bi-palette"></i>
+                        Sfondo Riga
+
                     </label>
+
 
                     <div class="form-check form-switch mb-2">
 
@@ -453,6 +397,7 @@
 
                     </div>
 
+
                     <div id="colorPickerContainer"
                          class="color-picker-wrapper">
 
@@ -462,6 +407,7 @@
                                value="#0f172a"
                                oninput="syncColorText(this.value)">
 
+
                         <input type="text"
                                class="form-control"
                                id="bgColorInput"
@@ -470,13 +416,20 @@
 
                     </div>
 
+
+                    <!-- ==================================================
+                         SLIDER OPACITÀ
+                         ================================================== -->
+
                     <div class="opacity-control-wrapper">
 
                         <div class="d-flex justify-content-between align-items-center mb-1">
 
                             <label class="form-label fw-bold mb-0">
+
                                 <i class="bi bi-circle-half"></i>
                                 Opacità Sfondo
+
                             </label>
 
                             <span id="bgOpacityValue"
@@ -486,6 +439,7 @@
 
                         </div>
 
+
                         <input type="range"
                                class="form-range"
                                id="bgOpacityRange"
@@ -494,6 +448,7 @@
                                step="1"
                                value="100"
                                oninput="syncOpacity(this.value)">
+
 
                         <div class="d-flex justify-content-between">
 
@@ -509,22 +464,38 @@
 
                     </div>
 
+
+                    <div class="form-text mt-2">
+
+                        Puoi scegliere il colore e regolare
+                        l'opacità senza rendere trasparenti
+                        testo e contenuti del blocco.
+
+                    </div>
+
                 </div>
 
             </div>
 
+
             <!-- IMMAGINE PRINCIPALE -->
+
             <div id="mainImageUpload"
                  class="mb-3 p-3 border rounded shadow-sm"
                  th:style="${block.blockType != null and (block.blockType.name() == 'JUMBO_DEMO_1' or block.blockType.name() == 'JUMBO_DEMO_2')} ? '' : 'display:none;'">
 
                 <label class="form-label fw-bold text-success">
+
                     <i class="bi bi-upload"></i>
-                    Carica Immagine Principale Riga (Jumbo / Demo 1 / Demo 2)
+                    Carica Immagine Principale Riga
+                    (Jumbo / Demo 1 / Demo 2)
+
                 </label>
 
                 <div class="form-text mb-2">
+
                     Disponibile esclusivamente per Demo 1 e Demo 2.
+
                 </div>
 
                 <input type="file"
@@ -534,6 +505,7 @@
 
                 <input type="hidden"
                        th:field="*{imageUrl}" />
+
 
                 <div th:if="${block.imageUrl != null and !block.imageUrl.empty}"
                      class="mt-2">
@@ -551,33 +523,26 @@
 
             </div>
 
+
             <!-- EDITOR -->
+
             <div id="mainEditorSection"
                  class="mb-3">
 
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label fw-bold">
 
-                    <label class="form-label fw-bold mb-0">
-                        Testo / Contenuto Principale (Editor Avanzato TinyMCE)
-                    </label>
+                    Testo / Contenuto Principale
+                    (Editor Avanzato TinyMCE)
 
-                    <button type="button"
-                            class="btn btn-outline-info btn-sm"
-                            onclick="openMonacoModal()">
+                </label>
 
-                        <i class="bi bi-code-slash me-1"></i>
-                        Apri Monaco Editor
-
-                    </button>
-
-                </div>
-
-                <textarea class="wysiwyg-editor"
-                          id="blockMainContentHtml"
+                <div class="monaco-modal-editor-button"><button type="button" class="btn btn-sm btn-outline-info monaco-open-button" data-bs-toggle="modal" data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)"><i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)</button></div>
+<textarea class="wysiwyg-editor"
                           th:field="*{contentHtml}">
                 </textarea>
 
             </div>
+
 
             <div class="text-end">
 
@@ -594,18 +559,7 @@
 
         </form>
 
-        <!-- CARDS SECTION -->
-        <div id="itemsSection"
-             class="card shadow-sm p-4 mb-4"
-             th:style="${block.blockType != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')} ? '' : 'display:none;'">
-
-            <!-- ... Altri elementi immutati ... -->
-
-        </div>
-
-    </div>
-
-    <!-- MODALE MONACO EDITOR AVANZATO -->
+        <!-- MODALE MONACO EDITOR AVANZATO -->
     <div class="modal fade"
          id="monacoEditorModal"
          tabindex="-1"
@@ -784,56 +738,503 @@
 
     </div>
 
-    <!-- MODALE SALVATAGGIO RIGA -->
-    <div class="modal fade"
-         id="saveBlockModal"
-         tabindex="-1"
-         aria-hidden="true">
 
-        <div class="modal-dialog modal-dialog-centered">
 
-            <div class="modal-content modal-content-dark">
+        <!-- ========================================================
+             GESTIONE CARDS / CAROSELLO
+             ======================================================== -->
 
-                <div class="modal-header border-bottom border-success">
+        <div id="itemsSection"
+             class="card shadow-sm p-4 mb-4"
+             th:style="${block.blockType != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')} ? '' : 'display:none;'">
 
-                    <h5 class="modal-title fw-bold text-white">
+            <div class="d-flex align-items-center mb-4">
 
-                        <i class="bi bi-save text-success me-2"></i>
-                        Conferma Salvataggio Riga
+                <div class="me-3">
 
-                    </h5>
+                    <div id="itemsIcon"
+                         class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center"
+                         style="width: 55px; height: 55px;">
 
-                    <button type="button"
-                            class="btn-close btn-close-white"
-                            data-bs-dismiss="modal"
-                            aria-label="Close">
-                    </button>
+                        <i class="bi bi-grid-3x3-gap fs-4 text-success"></i>
+
+                    </div>
 
                 </div>
 
-                <div class="modal-body text-light">
+                <div>
 
-                    Sei sicuro di voler salvare la configurazione di questa riga?
+                    <h4 id="itemsSectionTitle"
+                        class="mb-1">
+
+                        Gestione Griglia Cards
+
+                    </h4>
+
+                    <div id="itemsSectionDescription"
+                         class="text-muted">
+
+                        Gestisci le Card di questa riga.
+
+                    </div>
 
                 </div>
 
-                <div class="modal-footer border-top border-secondary border-opacity-25">
+            </div>
 
-                    <button type="button"
-                            class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">
 
-                        Annulla
+            <div th:if="${block.id == null}"
+                 id="newBlockItemsMessage"
+                 class="alert alert-info border-0">
 
-                    </button>
+                <div class="d-flex align-items-start">
 
-                    <button type="button"
-                            class="btn btn-success"
-                            onclick="document.getElementById('blockForm').submit()">
+                    <div class="me-3">
+                        <i class="bi bi-info-circle-fill fs-4"></i>
+                    </div>
 
-                        Conferma e Salva
+                    <div>
 
-                    </button>
+                        <strong>Salva prima la riga.</strong>
+
+                        <div class="mt-1">
+
+                            Il modello è stato selezionato.
+                            Salva la configurazione della riga
+                            per aggiungere elementi.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div th:if="${block.id != null}">
+
+                <div th:if="${block.items != null and !block.items.empty}">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <h5 class="mb-0">
+
+                            <i class="bi bi-collection text-success"></i>
+
+                            <span id="existingItemsTitle">
+                                Card inserite
+                            </span>
+
+                        </h5>
+
+                        <span class="badge bg-success"
+                              th:text="${#lists.size(block.items)}">
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div class="row mb-4">
+
+                        <div class="col-md-4 mb-4"
+                             th:each="item : ${block.items}">
+
+                            <div class="card h-100 border shadow-sm"
+                                 th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
+
+                                <div th:if="${item.imageUrl != null and !item.imageUrl.empty}"
+                                     class="position-relative">
+
+                                    <img th:src="${item.imageUrl}"
+                                         class="card-img-top"
+                                         th:alt="${item.title}"
+                                         style="height: 180px; object-fit: cover;">
+
+                                </div>
+
+
+                                <div th:unless="${item.imageUrl != null and !item.imageUrl.empty}"
+                                     class="d-flex align-items-center justify-content-center"
+                                     style="height: 180px; background: rgba(0,0,0,0.2);">
+
+                                    <div class="text-center text-muted">
+
+                                        <i class="bi bi-image fs-1"></i>
+
+                                        <div class="small mt-2">
+                                            Nessuna immagine
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="card-body">
+
+                                    <h5 class="card-title"
+                                        th:text="${item.title}">
+                                        Titolo Card
+                                    </h5>
+
+                                    <div th:if="${item.contentHtml != null and !item.contentHtml.empty}"
+                                         class="card-text small text-muted"
+                                         th:utext="${item.contentHtml}">
+                                    </div>
+
+
+                                    <div th:if="${item.buttonText != null and !item.buttonText.empty}"
+                                         class="mt-3">
+
+                                        <a th:if="${item.buttonUrl != null and !item.buttonUrl.empty}"
+                                           th:href="${item.buttonUrl}"
+                                           class="btn btn-sm btn-outline-success"
+                                           target="_blank">
+
+                                            <span th:text="${item.buttonText}">
+                                                Scopri
+                                            </span>
+
+                                            <i class="bi bi-box-arrow-up-right"></i>
+
+                                        </a>
+
+                                        <span th:unless="${item.buttonUrl != null and !item.buttonUrl.empty}"
+                                              class="btn btn-sm btn-outline-secondary"
+                                              th:text="${item.buttonText}">
+                                            Pulsante
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="card-footer bg-transparent d-flex justify-content-end gap-1">
+
+                                    <a th:href="@{/admin/block/{bId}/item/edit/{iId}(bId=${block.id}, iId=${item.id})}"
+                                       class="btn btn-sm btn-outline-warning">
+
+                                        <i class="bi bi-pencil"></i>
+                                        Modifica
+
+                                    </a>
+
+
+                                    <a th:href="@{/admin/block/{bId}/item/delete/{iId}(bId=${block.id}, iId=${item.id})}"
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="confirmDeleteItem(this.href); return false;">
+
+                                        <i class="bi bi-trash"></i>
+                                        Rimuovi
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div th:if="${block.items == null or block.items.empty}"
+                     class="alert alert-warning border-0">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="me-3">
+                            <i class="bi bi-stars fs-3"></i>
+                        </div>
+
+                        <div>
+
+                            <strong>Nessun elemento inserito.</strong>
+
+                            <div>
+                                Utilizza il modulo qui sotto
+                                per aggiungere il primo elemento.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORM ELEMENTO -->
+
+                <div class="border-top border-secondary border-opacity-25 pt-4 mt-4">
+
+                    <div class="d-flex align-items-center mb-3">
+
+                        <div class="me-2">
+
+                            <i th:class="${editingItem != null} ? 'bi bi-pencil-square text-warning fs-4' : 'bi bi-plus-circle-fill text-success fs-4'">
+                            </i>
+
+                        </div>
+
+                        <h5 id="addItemTitle"
+                            class="mb-0"
+                            th:text="${editingItem != null ? 'Modifica Elemento' : 'Aggiungi Card'}">
+
+                            Aggiungi Card
+
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card border-0 p-3"
+                         style="background-color: #0b1329 !important;">
+
+                        <form id="itemForm"
+                              th:action="${editingItem != null} ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} : @{/admin/block/{id}/item/add(id=${block.id})}"
+                              method="post"
+                              enctype="multipart/form-data"
+                              class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-bold">
+
+                                    <span id="itemTitleLabel">
+                                        Titolo Card
+                                    </span>
+
+                                </label>
+
+                                <input type="text"
+                                       name="title"
+                                       class="form-control"
+                                       placeholder="Titolo Card"
+                                       th:value="${editingItem != null ? editingItem.title : ''}"
+                                       required />
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-bold">
+
+                                    <i class="bi bi-image"></i>
+
+                                    <span id="itemImageLabel">
+                                        Carica Immagine Card
+                                    </span>
+
+                                </label>
+
+                                <input type="file"
+                                       name="itemImageFile"
+                                       class="form-control"
+                                       accept="image/*" />
+
+                                <!-- ANTEPRIMA IMMAGINE CARD ATTUALE -->
+                                <div th:if="${editingItem != null and editingItem.imageUrl != null and !editingItem.imageUrl.empty}"
+                                     class="mt-2">
+
+                                    <small class="text-muted d-block mb-1">
+                                        Immagine Attualmente Caricata:
+                                    </small>
+
+                                    <img th:src="${editingItem.imageUrl}"
+                                         alt="Anteprima Card"
+                                         class="img-thumbnail"
+                                         style="max-height: 100px; width: auto; object-fit: contain;" />
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- COLORE SFONDO SINGOLA CARD (CON TRASPARENZA E OPACITÀ) -->
+                            <div class="col-md-12">
+
+                                <label class="form-label fw-bold">
+
+                                    <i class="bi bi-palette text-success"></i>
+                                    Sfondo Card
+
+                                </label>
+
+                                <!-- SWITCH TRASPARENZA CARD -->
+                                <div class="form-check form-switch mb-2">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           id="itemIsTransparentSwitch"
+                                           onchange="toggleItemBackgroundType()">
+
+                                    <label class="form-check-label text-warning"
+                                           for="itemIsTransparentSwitch">
+
+                                        <i class="bi bi-droplet"></i>
+                                        Sfondo Trasparente
+
+                                    </label>
+
+                                </div>
+
+                                <!-- PICKER E CAMPO TESTO -->
+                                <div class="color-picker-wrapper">
+
+                                    <input type="color"
+                                           class="form-control form-control-color"
+                                           id="itemBgPicker"
+                                           th:value="${editingItem != null and editingItem.backgroundColor != null and !#strings.isEmpty(editingItem.backgroundColor) ? editingItem.backgroundColor : '#0f172a'}"
+                                           oninput="syncItemColorText(this.value)">
+
+                                    <input type="text"
+                                           name="backgroundColor"
+                                           id="itemBgColorInput"
+                                           class="form-control"
+                                           placeholder="es. #1e293b, rgba(30,41,59,0.8) o transparent"
+                                           th:value="${editingItem != null ? editingItem.backgroundColor : ''}" />
+
+                                </div>
+
+                                <!-- SLIDER OPACITÀ CARD -->
+                                <div class="opacity-control-wrapper">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+
+                                        <label class="form-label fw-bold mb-0">
+
+                                            <i class="bi bi-circle-half"></i>
+                                            Opacità Sfondo Card
+
+                                        </label>
+
+                                        <span id="itemBgOpacityValue"
+                                              class="badge bg-success opacity-value">
+                                            100%
+                                        </span>
+
+                                    </div>
+
+                                    <input type="range"
+                                           class="form-range"
+                                           id="itemBgOpacityRange"
+                                           min="0"
+                                           max="100"
+                                           step="1"
+                                           value="100"
+                                           oninput="syncItemOpacity(this.value)">
+
+                                    <div class="d-flex justify-content-between">
+
+                                        <small class="text-muted">
+                                            0% - Trasparente
+                                        </small>
+
+                                        <small class="text-muted">
+                                            100% - Opaco
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-text mt-2">
+                                    Scegli il colore di sfondo per questa singola card e regolane l'opacità o imposta lo sfondo trasparente.
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-bold">
+                                    Descrizione Elemento
+                                </label>
+
+                                <div class="monaco-modal-editor-button"><button type="button" class="btn btn-sm btn-outline-info monaco-open-button" data-bs-toggle="modal" data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)"><i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)</button></div>
+<textarea name="contentHtml"
+                                          class="wysiwyg-editor"
+                                          placeholder="Testo descrittivo..."
+                                          th:text="${editingItem != null ? editingItem.contentHtml : ''}">
+                                </textarea>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Testo Pulsante
+                                    <span class="text-muted">
+                                        (opzionale)
+                                    </span>
+                                </label>
+
+                                <input type="text"
+                                       name="buttonText"
+                                       class="form-control"
+                                       placeholder="es. Scopri di più"
+                                       th:value="${editingItem != null ? editingItem.buttonText : ''}" />
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Link Pulsante
+                                    <span class="text-muted">
+                                        (opzionale)
+                                    </span>
+                                </label>
+
+                                <input type="text"
+                                       name="buttonUrl"
+                                       class="form-control"
+                                       placeholder="https://..."
+                                       th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
+
+                            </div>
+
+
+                            <div class="col-12 text-end d-flex justify-content-end gap-2">
+
+                                <a th:if="${editingItem != null}"
+                                   th:href="@{/admin/block/edit/{id}(id=${block.id})}"
+                                   class="btn btn-outline-light btn-lg">
+
+                                    Annulla Modifica
+
+                                </a>
+
+
+                                <button type="button"
+                                        onclick="showSaveItemModal()"
+                                        th:class="${editingItem != null} ? 'btn btn-warning btn-lg' : 'btn btn-success btn-lg'">
+
+                                    <i th:class="${editingItem != null} ? 'bi bi-check-lg' : 'bi bi-plus-lg'">
+                                    </i>
+
+                                    <span id="addItemButtonText"
+                                          th:text="${editingItem != null ? 'Salva Modifiche Elemento' : 'Aggiungi Card'}">
+
+                                        Aggiungi Card
+
+                                    </span>
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
 
                 </div>
 
@@ -843,889 +1244,1443 @@
 
     </div>
 
-    <!-- SCRIPT GESTIONE MONACO EDITOR -->
+    <!-- ========================================================
+         MODALI DI CONFERMA
+         ======================================================== -->
+    
+    <!-- MODALE SALVATAGGIO RIGA -->
+    <div class="modal fade" id="saveBlockModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header border-bottom border-success">
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-save text-success me-2"></i>Conferma Salvataggio Riga</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Sei sicuro di voler salvare la configurazione di questa riga?
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-success" onclick="document.getElementById('blockForm').submit()">Conferma e Salva</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE SALVATAGGIO ELEMENTO -->
+    <div class="modal fade" id="saveItemModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header border-bottom border-success">
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-check-circle text-success me-2"></i>Conferma Salvataggio Elemento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Sei sicuro di voler salvare i dati di questo elemento?
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-success" onclick="document.getElementById('itemForm').submit()">Conferma e Salva</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE RIMOZIONE ELEMENTO -->
+    <div class="modal fade" id="deleteItemModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header border-bottom border-danger bg-danger bg-opacity-25 text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Conferma Rimozione</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Vuoi davvero rimuovere questo elemento? L'azione non potrà essere annullata.
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <a id="btnConfirmDeleteItem" href="#" class="btn btn-danger">Rimuovi</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ========================================================
+         JS GESTIONE MODELLO E SFONDO
+         ======================================================== -->
+
     <script>
 
-        let windowMonacoEditor = null;
+    function showSaveBlockModal() {
+        const modal = new bootstrap.Modal(document.getElementById('saveBlockModal'));
+        modal.show();
+    }
 
-        require.config({
-            paths: {
-                vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'
+    function showSaveItemModal() {
+        const modal = new bootstrap.Modal(document.getElementById('saveItemModal'));
+        modal.show();
+    }
+
+    function confirmDeleteItem(deleteUrl) {
+        document.getElementById('btnConfirmDeleteItem').href = deleteUrl;
+        const modal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
+        modal.show();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const blockTypeSelect =
+            document.getElementById("blockTypeSelect");
+
+        const mainImageUpload =
+            document.getElementById("mainImageUpload");
+
+        const mainEditorSection =
+            document.getElementById("mainEditorSection");
+
+        const itemsSection =
+            document.getElementById("itemsSection");
+
+        const itemsSectionTitle =
+            document.getElementById("itemsSectionTitle");
+
+        const itemsSectionDescription =
+            document.getElementById("itemsSectionDescription");
+
+        const itemsIcon =
+            document.getElementById("itemsIcon");
+
+        const addItemTitle =
+            document.getElementById("addItemTitle");
+
+        const itemTitleLabel =
+            document.getElementById("itemTitleLabel");
+
+        const itemImageLabel =
+            document.getElementById("itemImageLabel");
+
+        const addItemButtonText =
+            document.getElementById("addItemButtonText");
+
+        const existingItemsTitle =
+            document.getElementById("existingItemsTitle");
+
+
+        /* ========================================================
+           INIZIALIZZAZIONE SFONDI
+           ======================================================== */
+
+        initBgColor();
+        initItemBgColor();
+
+
+        if (blockTypeSelect) {
+
+            blockTypeSelect.addEventListener(
+                "change",
+                aggiornaInterfaccia
+            );
+
+            aggiornaInterfaccia();
+
+        }
+
+
+        function aggiornaInterfaccia() {
+
+            const tipo =
+                blockTypeSelect.value;
+
+            const mostraImmaginePrincipale =
+                tipo === "JUMBO_DEMO_1"
+                ||
+                tipo === "JUMBO_DEMO_2";
+
+
+            if (mainImageUpload) {
+
+                mainImageUpload.style.display =
+                    mostraImmaginePrincipale
+                        ? ""
+                        : "none";
+
             }
-        });
 
-        function openMonacoModal() {
 
-            let currentContent =
-                tinymce.get('blockMainContentHtml')
-                    ? tinymce.get('blockMainContentHtml').getContent()
-                    : document.getElementById('blockMainContentHtml').value;
+            const isCards =
+                tipo === "CARDS";
 
-            const modalEl =
-                document.getElementById('monacoEditorModal');
+            const isCarousel =
+                tipo === "CAROUSEL";
 
-            const modal =
-                new bootstrap.Modal(modalEl);
+            const isItemsBlock =
+                isCards || isCarousel;
 
-            modal.show();
 
-            modalEl.addEventListener('shown.bs.modal', function () {
+            if (mainEditorSection) {
 
-                if (!windowMonacoEditor) {
+                mainEditorSection.style.display =
+                    isItemsBlock
+                        ? "none"
+                        : "";
 
-                    require(['vs/editor/editor.main'], function () {
+            }
 
-                        // Inizializzazione Emmet per Monaco
-                        if (window.emmetMonaco) {
 
-                            window.emmetMonaco.emmetHTML(monaco);
+            if (itemsSection) {
 
-                        }
+                itemsSection.style.display =
+                    isItemsBlock
+                        ? ""
+                        : "none";
 
-                        windowMonacoEditor =
-                            monaco.editor.create(
-                                document.getElementById('monacoContainer'),
-                                {
-                                    value: currentContent,
-                                    language: 'html',
-                                    theme: 'vs-dark',
-                                    automaticLayout: true,
-                                    autoClosingTags: true,
-                                    suggestOnTriggerCharacters: true,
-                                    formatOnPaste: true,
-                                    formatOnType: true,
+            }
 
-                                    suggest: {
-                                        showWords: true,
-                                        showSnippets: true,
-                                        showHtml5: true
-                                    },
 
-                                    quickSuggestions: {
-                                        other: true,
-                                        comments: true,
-                                        strings: true
-                                    }
-                                }
-                            );
+            if (isCards) {
 
-                    });
+                if (itemsSectionTitle)
+                    itemsSectionTitle.textContent =
+                        "Gestione Griglia Cards";
 
-                } else {
+                if (itemsSectionDescription)
+                    itemsSectionDescription.textContent =
+                        "Gestisci le Card che compongono questa riga.";
 
-                    windowMonacoEditor.setValue(currentContent);
+                if (addItemTitle &&
+                    (!editingMode() ||
+                     addItemTitle.textContent.trim() !== "Modifica Elemento")) {
 
+                    addItemTitle.textContent =
+                        "Aggiungi Card";
                 }
 
-            }, { once: true });
+                if (itemTitleLabel)
+                    itemTitleLabel.textContent =
+                        "Titolo Card";
 
-        }
+                if (itemImageLabel)
+                    itemImageLabel.textContent =
+                        "Carica Immagine Card";
 
-        function toggleMonacoFullscreen() {
+                if (addItemButtonText &&
+                    !editingMode()) {
 
-            const dialog =
-                document.getElementById('monacoModalDialog');
-
-            const icon =
-                document.getElementById('fullscreenIcon');
-
-            const btn =
-                document.getElementById('btnToggleFullscreen');
-
-            dialog.classList.toggle('modal-fullscreen-custom');
-
-            if (dialog.classList.contains('modal-fullscreen-custom')) {
-
-                icon.className =
-                    'bi bi-arrows-angle-contract';
-
-                btn.classList.replace(
-                    'btn-outline-light',
-                    'btn-warning'
-                );
-
-            } else {
-
-                icon.className =
-                    'bi bi-arrows-angle-expand';
-
-                btn.classList.replace(
-                    'btn-warning',
-                    'btn-outline-light'
-                );
-
-            }
-
-            if (windowMonacoEditor) {
-
-                setTimeout(() => {
-
-                    windowMonacoEditor.layout();
-
-                }, 150);
-
-            }
-
-        }
-
-        function saveMonacoContent() {
-
-            if (windowMonacoEditor) {
-
-                const code =
-                    windowMonacoEditor.getValue();
-
-                if (tinymce.get('blockMainContentHtml')) {
-
-                    tinymce
-                        .get('blockMainContentHtml')
-                        .setContent(code);
-
+                    addItemButtonText.textContent =
+                        "Aggiungi Card";
                 }
 
-                document
-                    .getElementById('blockMainContentHtml')
-                    .value = code;
+                if (existingItemsTitle)
+                    existingItemsTitle.textContent =
+                        "Card inserite";
+
+                if (itemsIcon)
+                    itemsIcon.innerHTML =
+                        '<i class="bi bi-grid-3x3-gap fs-4 text-success"></i>';
 
             }
 
-            const modalEl =
-                document.getElementById('monacoEditorModal');
 
-            const modal =
-                bootstrap.Modal.getInstance(modalEl);
+            if (isCarousel) {
 
-            if (modal) {
+                if (itemsSectionTitle)
+                    itemsSectionTitle.textContent =
+                        "Gestione Carosello";
 
-                modal.hide();
+                if (itemsSectionDescription)
+                    itemsSectionDescription.textContent =
+                        "Gestisci le Slide che compongono questo carosello.";
+
+                if (addItemTitle &&
+                    (!editingMode() ||
+                     addItemTitle.textContent.trim() !== "Modifica Elemento")) {
+
+                    addItemTitle.textContent =
+                        "Aggiungi Slide";
+                }
+
+                if (itemTitleLabel)
+                    itemTitleLabel.textContent =
+                        "Titolo Slide";
+
+                if (itemImageLabel)
+                    itemImageLabel.textContent =
+                        "Carica Immagine Slide";
+
+                if (addItemButtonText &&
+                    !editingMode()) {
+
+                    addItemButtonText.textContent =
+                        "Aggiungi Slide";
+                }
+
+                if (existingItemsTitle)
+                    existingItemsTitle.textContent =
+                        "Slide inserite";
+
+                if (itemsIcon)
+                    itemsIcon.innerHTML =
+                        '<i class="bi bi-images fs-4 text-success"></i>';
 
             }
 
         }
 
-        function showSaveBlockModal() {
 
-            const modal =
-                new bootstrap.Modal(
-                    document.getElementById('saveBlockModal')
+        function editingMode() {
+
+            const button =
+                document.getElementById(
+                    "addItemButtonText"
                 );
 
-            modal.show();
+            return button
+                ? button.textContent.trim()
+                    === "Salva Modifiche Elemento"
+                : false;
 
         }
+
+    });
+
+
+    /* ============================================================
+       GESTIONE COLORE / OPACITÀ RIGA
+       ============================================================ */
+
+
+    function initBgColor() {
+
+        const bgInput =
+            document.getElementById("bgColorInput");
+
+        const bgPicker =
+            document.getElementById("bgPicker");
+
+        const transparentSwitch =
+            document.getElementById(
+                "isTransparentSwitch"
+            );
+
+        const opacityRange =
+            document.getElementById(
+                "bgOpacityRange"
+            );
+
+        const opacityValue =
+            document.getElementById(
+                "bgOpacityValue"
+            );
+
+
+        if (!bgInput)
+            return;
+
+
+        let value =
+            bgInput.value.trim();
+
+
+        if (value === "transparent") {
+
+            transparentSwitch.checked =
+                true;
+
+            bgPicker.disabled =
+                true;
+
+            bgInput.readOnly =
+                true;
+
+            opacityRange.value =
+                0;
+
+            opacityValue.textContent =
+                "0%";
+
+            return;
+
+        }
+
+
+        const rgbaMatch =
+            value.match(
+                /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([0-9.]+)\s*\)$/i
+            );
+
+
+        if (rgbaMatch) {
+
+            const r =
+                parseInt(rgbaMatch[1]);
+
+            const g =
+                parseInt(rgbaMatch[2]);
+
+            const b =
+                parseInt(rgbaMatch[3]);
+
+            const alpha =
+                parseFloat(rgbaMatch[4]);
+
+
+            const hex =
+                rgbToHex(r, g, b);
+
+
+            bgPicker.value =
+                hex;
+
+
+            const percentage =
+                Math.round(
+                    alpha * 100
+                );
+
+
+            opacityRange.value =
+                percentage;
+
+            opacityValue.textContent =
+                percentage + "%";
+
+
+            transparentSwitch.checked =
+                percentage === 0;
+
+
+            bgPicker.disabled =
+                percentage === 0;
+
+            bgInput.readOnly =
+                percentage === 0;
+
+
+            return;
+
+        }
+
+
+        if (
+            /^#[0-9A-F]{6}$/i.test(value)
+        ) {
+
+            bgPicker.value =
+                value;
+
+        }
+
+
+        if (!value) {
+
+            bgPicker.value =
+                "#0f172a";
+
+            bgInput.value =
+                "#0f172a";
+
+        }
+
+
+        opacityRange.value =
+            100;
+
+        opacityValue.textContent =
+            "100%";
+
+    }
+
+
+    function syncOpacity(value) {
+
+        const bgInput =
+            document.getElementById(
+                "bgColorInput"
+            );
+
+        const bgPicker =
+            document.getElementById(
+                "bgPicker"
+            );
+
+        const transparentSwitch =
+            document.getElementById(
+                "isTransparentSwitch"
+            );
+
+        const opacityValue =
+            document.getElementById(
+                "bgOpacityValue"
+            );
+
+
+        const opacity =
+            parseInt(value) / 100;
+
+
+        opacityValue.textContent =
+            value + "%";
+
+
+        if (parseInt(value) === 0) {
+
+            bgInput.value =
+                "rgba(" +
+                getRgbFromPicker().join(",") +
+                ",0)";
+
+            bgPicker.disabled =
+                true;
+
+            bgInput.readOnly =
+                true;
+
+            transparentSwitch.checked =
+                true;
+
+            return;
+
+        }
+
+
+        bgPicker.disabled =
+            false;
+
+        bgInput.readOnly =
+            false;
+
+        transparentSwitch.checked =
+            false;
+
+
+        const rgb =
+            getRgbFromPicker();
+
+
+        bgInput.value =
+            "rgba(" +
+            rgb[0] + "," +
+            rgb[1] + "," +
+            rgb[2] + "," +
+            opacity.toFixed(2) +
+            ")";
+
+    }
+
+
+    function syncColorText(val) {
+
+        const bgInput =
+            document.getElementById(
+                "bgColorInput"
+            );
+
+        const opacityRange =
+            document.getElementById(
+                "bgOpacityRange"
+            );
+
+        const transparentSwitch =
+            document.getElementById(
+                "isTransparentSwitch"
+            );
+
+
+        const rgb =
+            hexToRgb(val);
+
+
+        if (!rgb)
+            return;
+
+
+        const opacity =
+            parseInt(
+                opacityRange.value
+            ) / 100;
+
+
+        bgInput.value =
+            "rgba(" +
+            rgb.r + "," +
+            rgb.g + "," +
+            rgb.b + "," +
+            opacity.toFixed(2) +
+            ")";
+
+
+        transparentSwitch.checked =
+            parseInt(opacityRange.value) === 0;
+
+    }
+
+
+    function toggleBackgroundType() {
+
+        const transparentSwitch =
+            document.getElementById(
+                "isTransparentSwitch"
+            );
+
+        const bgInput =
+            document.getElementById(
+                "bgColorInput"
+            );
+
+        const bgPicker =
+            document.getElementById(
+                "bgPicker"
+            );
+
+        const opacityRange =
+            document.getElementById(
+                "bgOpacityRange"
+            );
+
+        const opacityValue =
+            document.getElementById(
+                "bgOpacityValue"
+            );
+
+
+        if (transparentSwitch.checked) {
+
+            opacityRange.value =
+                0;
+
+            opacityValue.textContent =
+                "0%";
+
+
+            const rgb =
+                getRgbFromPicker();
+
+
+            bgInput.value =
+                "rgba(" +
+                rgb.join(",") +
+                ",0)";
+
+
+            bgInput.readOnly =
+                true;
+
+            bgPicker.disabled =
+                true;
+
+        }
+
+        else {
+
+            const previousOpacity =
+                parseInt(
+                    opacityRange.value
+                );
+
+
+            const newOpacity =
+                previousOpacity === 0
+                    ? 100
+                    : previousOpacity;
+
+
+            opacityRange.value =
+                newOpacity;
+
+            opacityValue.textContent =
+                newOpacity + "%";
+
+
+            bgInput.readOnly =
+                false;
+
+            bgPicker.disabled =
+                false;
+
+
+            syncOpacity(
+                newOpacity
+            );
+
+        }
+
+    }
+
+
+    /* ============================================================
+       GESTIONE COLORE / OPACITÀ CARD
+       ============================================================ */
+
+    function initItemBgColor() {
+
+        const bgInput =
+            document.getElementById("itemBgColorInput");
+
+        const bgPicker =
+            document.getElementById("itemBgPicker");
+
+        const transparentSwitch =
+            document.getElementById("itemIsTransparentSwitch");
+
+        const opacityRange =
+            document.getElementById("itemBgOpacityRange");
+
+        const opacityValue =
+            document.getElementById("itemBgOpacityValue");
+
+
+        if (!bgInput)
+            return;
+
+
+        let value =
+            bgInput.value.trim();
+
+
+        if (value === "transparent") {
+
+            if (transparentSwitch) transparentSwitch.checked = true;
+
+            if (bgPicker) bgPicker.disabled = true;
+
+            if (bgInput) bgInput.readOnly = true;
+
+            if (opacityRange) opacityRange.value = 0;
+
+            if (opacityValue) opacityValue.textContent = "0%";
+
+            return;
+
+        }
+
+
+        const rgbaMatch =
+            value.match(
+                /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([0-9.]+)\s*\)$/i
+            );
+
+
+        if (rgbaMatch) {
+
+            const r = parseInt(rgbaMatch[1]);
+            const g = parseInt(rgbaMatch[2]);
+            const b = parseInt(rgbaMatch[3]);
+            const alpha = parseFloat(rgbaMatch[4]);
+
+            const hex = rgbToHex(r, g, b);
+
+            if (bgPicker) bgPicker.value = hex;
+
+            const percentage = Math.round(alpha * 100);
+
+            if (opacityRange) opacityRange.value = percentage;
+            if (opacityValue) opacityValue.textContent = percentage + "%";
+
+            if (transparentSwitch) transparentSwitch.checked = (percentage === 0);
+            if (bgPicker) bgPicker.disabled = (percentage === 0);
+            if (bgInput) bgInput.readOnly = (percentage === 0);
+
+            return;
+
+        }
+
+
+        if (/^#[0-9A-F]{6}$/i.test(value)) {
+
+            if (bgPicker) bgPicker.value = value;
+
+        }
+
+
+        if (!value) {
+
+            if (bgPicker) bgPicker.value = "#0f172a";
+
+        }
+
+
+        if (opacityRange) opacityRange.value = 100;
+        if (opacityValue) opacityValue.textContent = "100%";
+
+    }
+
+
+    function syncItemOpacity(value) {
+
+        const bgInput =
+            document.getElementById("itemBgColorInput");
+
+        const bgPicker =
+            document.getElementById("itemBgPicker");
+
+        const transparentSwitch =
+            document.getElementById("itemIsTransparentSwitch");
+
+        const opacityValue =
+            document.getElementById("itemBgOpacityValue");
+
+
+        const opacity = parseInt(value) / 100;
+
+        if (opacityValue) opacityValue.textContent = value + "%";
+
+
+        if (parseInt(value) === 0) {
+
+            const rgb = getItemRgbFromPicker();
+
+            bgInput.value = "rgba(" + rgb.join(",") + ",0)";
+
+            if (bgPicker) bgPicker.disabled = true;
+            if (bgInput) bgInput.readOnly = true;
+            if (transparentSwitch) transparentSwitch.checked = true;
+
+            return;
+
+        }
+
+
+        if (bgPicker) bgPicker.disabled = false;
+        if (bgInput) bgInput.readOnly = false;
+        if (transparentSwitch) transparentSwitch.checked = false;
+
+
+        const rgb = getItemRgbFromPicker();
+
+        bgInput.value =
+            "rgba(" +
+            rgb[0] + "," +
+            rgb[1] + "," +
+            rgb[2] + "," +
+            opacity.toFixed(2) +
+            ")";
+
+    }
+
+
+    function syncItemColorText(val) {
+
+        const bgInput =
+            document.getElementById("itemBgColorInput");
+
+        const opacityRange =
+            document.getElementById("itemBgOpacityRange");
+
+        const transparentSwitch =
+            document.getElementById("itemIsTransparentSwitch");
+
+
+        const rgb = hexToRgb(val);
+
+        if (!rgb) return;
+
+
+        const opacity =
+            parseInt(opacityRange ? opacityRange.value : 100) / 100;
+
+
+        bgInput.value =
+            "rgba(" +
+            rgb.r + "," +
+            rgb.g + "," +
+            rgb.b + "," +
+            opacity.toFixed(2) +
+            ")";
+
+
+        if (transparentSwitch && opacityRange) {
+            transparentSwitch.checked = (parseInt(opacityRange.value) === 0);
+        }
+
+    }
+
+
+    function toggleItemBackgroundType() {
+
+        const transparentSwitch =
+            document.getElementById("itemIsTransparentSwitch");
+
+        const bgInput =
+            document.getElementById("itemBgColorInput");
+
+        const bgPicker =
+            document.getElementById("itemBgPicker");
+
+        const opacityRange =
+            document.getElementById("itemBgOpacityRange");
+
+        const opacityValue =
+            document.getElementById("itemBgOpacityValue");
+
+
+        if (transparentSwitch.checked) {
+
+            if (opacityRange) opacityRange.value = 0;
+            if (opacityValue) opacityValue.textContent = "0%";
+
+
+            const rgb = getItemRgbFromPicker();
+
+
+            bgInput.value = "rgba(" + rgb.join(",") + ",0)";
+
+            bgInput.readOnly = true;
+            if (bgPicker) bgPicker.disabled = true;
+
+        }
+        else {
+
+            const previousOpacity =
+                opacityRange ? parseInt(opacityRange.value) : 0;
+
+
+            const newOpacity =
+                previousOpacity === 0 ? 100 : previousOpacity;
+
+
+            if (opacityRange) opacityRange.value = newOpacity;
+            if (opacityValue) opacityValue.textContent = newOpacity + "%";
+
+
+            bgInput.readOnly = false;
+            if (bgPicker) bgPicker.disabled = false;
+
+
+            syncItemOpacity(newOpacity);
+
+        }
+
+    }
+
+
+    function getItemRgbFromPicker() {
+
+        const bgPicker =
+            document.getElementById("itemBgPicker");
+
+
+        const rgb =
+            hexToRgb(bgPicker ? bgPicker.value : "#0f172a");
+
+
+        if (!rgb) {
+            return [15, 23, 42];
+        }
+
+
+        return [rgb.r, rgb.g, rgb.b];
+
+    }
+
+
+    /* ============================================================
+       CONVERSIONI COLORE UTILS
+       ============================================================ */
+
+    function hexToRgb(hex) {
+
+        const result =
+            /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
+                hex
+            );
+
+
+        return result
+            ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            }
+            : null;
+
+    }
+
+
+    function rgbToHex(r, g, b) {
+
+        return "#" +
+            [r, g, b]
+                .map(
+                    x =>
+                        x.toString(16)
+                         .padStart(2, "0")
+                )
+                .join("");
+
+    }
+
+
+    function getRgbFromPicker() {
+
+        const bgPicker =
+            document.getElementById(
+                "bgPicker"
+            );
+
+
+        const rgb =
+            hexToRgb(
+                bgPicker.value
+            );
+
+
+        if (!rgb) {
+
+            return [
+                15,
+                23,
+                42
+            ];
+
+        }
+
+
+        return [
+            rgb.r,
+            rgb.g,
+            rgb.b
+        ];
+
+    }
 
     </script>
 
-    <!-- ============================================================
-         AGGIUNTE MONACO
-         NON SOSTITUISCONO IL CODICE ORIGINALE SOPRA
-         ============================================================ -->
+
+    <!-- ========================================================
+         SCRIPT ANIMAZIONE SFONDO
+         ======================================================== -->
 
     <script>
 
-        (function () {
+        const canvas =
+            document.getElementById(
+                'tech-bg-canvas'
+            );
 
-            let monacoFontSize = 14;
+        const ctx =
+            canvas.getContext('2d');
 
-            let monacoPreviewVisible = true;
+        let width,
+            height;
 
-            let monacoSearchMatches = [];
 
-            let monacoSearchIndex = -1;
+        function resize() {
 
-            let monacoSearchDecorations = [];
+            width =
+                canvas.width =
+                window.innerWidth;
 
-            let monacoSuggestObserver = null;
+            height =
+                canvas.height =
+                window.innerHeight;
 
-            function getEditor() {
+        }
 
-                return windowMonacoEditor || null;
 
-            }
+        window.addEventListener(
+            'resize',
+            resize
+        );
 
-            function updateZoomLabel() {
+        resize();
 
-                const label =
-                    document.getElementById('monacoZoomLabel');
 
-                if (label) {
+        class Circuit {
 
-                    label.textContent =
-                        Math.round(
-                            (monacoFontSize / 14) * 100
-                        ) + '%';
+            constructor() {
 
-                }
-
-            }
-
-            window.changeMonacoFontSize = function (direction) {
-
-                const editor = getEditor();
-
-                if (!editor) {
-                    return;
-                }
-
-                monacoFontSize += direction;
-
-                if (monacoFontSize < 8) {
-                    monacoFontSize = 8;
-                }
-
-                if (monacoFontSize > 32) {
-                    monacoFontSize = 32;
-                }
-
-                editor.updateOptions({
-                    fontSize: monacoFontSize
-                });
-
-                updateZoomLabel();
-
-            };
-
-            function updatePreviewButton() {
-
-                const button =
-                    document.getElementById('btnTogglePreview');
-
-                const icon =
-                    document.getElementById('previewIcon');
-
-                const text =
-                    document.getElementById('previewButtonText');
-
-                if (!button || !icon || !text) {
-                    return;
-                }
-
-                if (monacoPreviewVisible) {
-
-                    icon.className =
-                        'bi bi-map me-1';
-
-                    text.textContent =
-                        'Nascondi minimappa';
-
-                    button.title =
-                        'Nascondi minimappa a destra';
-
-                } else {
-
-                    icon.className =
-                        'bi bi-map-fill me-1';
-
-                    text.textContent =
-                        'Mostra minimappa';
-
-                    button.title =
-                        'Mostra minimappa a destra';
-
-                }
+                this.reset();
 
             }
 
-            window.toggleMonacoPreview = function () {
+            reset() {
 
-                const editor = getEditor();
+                this.x =
+                    Math.random() * width;
 
-                if (!editor) {
-                    return;
-                }
+                this.y =
+                    Math.random() * height;
 
-                monacoPreviewVisible =
-                    !monacoPreviewVisible;
+                this.length =
+                    Math.floor(
+                        Math.random() * 8
+                    ) + 4;
 
-                editor.updateOptions({
+                this.currentStep =
+                    0;
 
-                    minimap: {
-
-                        enabled:
-                            monacoPreviewVisible,
-
-                        side: 'right',
-
-                        renderCharacters: false
-
-                    },
-
-                    fixedOverflowWidgets: true
-
-                });
-
-                setTimeout(function () {
-
-                    editor.layout();
-
-                }, 80);
-
-                updatePreviewButton();
-
-            };
-
-            function searchMonaco(query) {
-
-                const editor = getEditor();
-
-                if (!editor) {
-                    return;
-                }
-
-                monacoSearchDecorations =
-                    editor.deltaDecorations(
-                        monacoSearchDecorations,
-                        []
+                this.dir =
+                    Math.floor(
+                        Math.random() * 4
                     );
 
-                monacoSearchMatches = [];
+                this.path = [
+                    {
+                        x: this.x,
+                        y: this.y
+                    }
+                ];
 
-                monacoSearchIndex = -1;
+                this.speed =
+                    Math.random() * 1.5 + 0.5;
 
-                if (!query) {
-                    return;
-                }
+                this.alpha =
+                    Math.random() * 0.4 + 0.1;
 
-                monacoSearchMatches =
-                    editor
-                        .getModel()
-                        .findMatches(
-                            query,
-                            true,
-                            false,
-                            false,
-                            null,
-                            true
-                        );
-
-                monacoSearchDecorations =
-                    editor.deltaDecorations(
-                        [],
-                        monacoSearchMatches.map(function (match) {
-
-                            return {
-
-                                range: match.range,
-
-                                options: {
-
-                                    inlineClassName:
-                                        'monaco-search-match'
-
-                                }
-
-                            };
-
-                        })
-                    );
-
-                if (monacoSearchMatches.length > 0) {
-
-                    monacoSearchIndex = 0;
-
-                    selectMonacoSearchMatch();
-
-                }
+                this.size =
+                    20;
 
             }
 
-            function selectMonacoSearchMatch() {
 
-                const editor = getEditor();
-
-                if (!editor ||
-                    monacoSearchIndex < 0 ||
-                    monacoSearchIndex >= monacoSearchMatches.length) {
-
-                    return;
-
-                }
-
-                const match =
-                    monacoSearchMatches[
-                        monacoSearchIndex
-                    ];
-
-                editor.setSelection(
-                    match.range
-                );
-
-                editor.revealRangeInCenter(
-                    match.range
-                );
-
-                editor.focus();
-
-            }
-
-            function nextMonacoSearchMatch(direction) {
-
-                if (!monacoSearchMatches.length) {
-                    return;
-                }
-
-                monacoSearchIndex += direction;
+            update() {
 
                 if (
-                    monacoSearchIndex >=
-                    monacoSearchMatches.length
+                    this.currentStep
+                    <
+                    this.length
                 ) {
 
-                    monacoSearchIndex = 0;
+                    let last =
+                        this.path[
+                            this.path.length - 1
+                        ];
+
+                    let nx =
+                        last.x;
+
+                    let ny =
+                        last.y;
+
+
+                    if (
+                        Math.random() < 0.3
+                    ) {
+
+                        this.dir =
+                            (
+                                this.dir +
+                                (
+                                    Math.random() < 0.5
+                                        ? 1
+                                        : 3
+                                )
+                            ) % 4;
+
+                    }
+
+
+                    switch (this.dir) {
+
+                        case 0:
+                            ny -= this.size;
+                            break;
+
+                        case 1:
+                            nx += this.size;
+                            break;
+
+                        case 2:
+                            ny += this.size;
+                            break;
+
+                        case 3:
+                            nx -= this.size;
+                            break;
+
+                    }
+
+
+                    this.path.push({
+                        x: nx,
+                        y: ny
+                    });
+
+                    this.currentStep++;
 
                 }
 
-                if (monacoSearchIndex < 0) {
+                else {
 
-                    monacoSearchIndex =
-                        monacoSearchMatches.length - 1;
+                    this.alpha -= 0.005;
+
+                    if (
+                        this.alpha <= 0
+                    ) {
+
+                        this.reset();
+
+                    }
 
                 }
-
-                selectMonacoSearchMatch();
 
             }
 
-            function setupMonacoSearch() {
 
-                const input =
-                    document.getElementById(
-                        'monacoSearchInput'
+            draw() {
+
+                if (
+                    this.path.length < 2
+                ) {
+
+                    return;
+
+                }
+
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    this.path[0].x,
+                    this.path[0].y
+                );
+
+
+                for (
+                    let i = 1;
+                    i < this.path.length;
+                    i++
+                ) {
+
+                    ctx.lineTo(
+                        this.path[i].x,
+                        this.path[i].y
                     );
 
-                const clear =
-                    document.getElementById(
-                        'btnMonacoSearchClear'
-                    );
-
-                if (!input || !clear) {
-                    return;
                 }
 
-                if (input.dataset.monacoReady === 'true') {
-                    return;
+
+                ctx.strokeStyle =
+                    `rgba(0, 220, 130, ${this.alpha})`;
+
+                ctx.lineWidth =
+                    1.5;
+
+                ctx.stroke();
+
+
+                let last =
+                    this.path[
+                        this.path.length - 1
+                    ];
+
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    last.x,
+                    last.y,
+                    3,
+                    0,
+                    Math.PI * 2
+                );
+
+
+                ctx.fillStyle =
+                    `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+
+                ctx.fill();
+
+            }
+
+        }
+
+
+        const codeSnippets = [
+
+            "class BlockManager {}",
+            "import spring.boot.*;",
+            "<div class='eco'>",
+            "SELECT * FROM blocks;",
+            "const init = () => {};",
+            "return new PageBlock();",
+            "01000101 01000011 01001111",
+            "public static void main()",
+            "async fetch('/api')",
+            "npm run build",
+            "docker-compose up -d",
+            "mvn clean install"
+
+        ];
+
+
+        class CodeText {
+
+            constructor() {
+
+                this.reset();
+
+            }
+
+
+            reset() {
+
+                this.x =
+                    Math.random() *
+                    (width - 200);
+
+                this.y =
+                    Math.random() *
+                    height;
+
+                this.text =
+                    codeSnippets[
+                        Math.floor(
+                            Math.random() *
+                            codeSnippets.length
+                        )
+                    ];
+
+                this.alpha =
+                    0;
+
+                this.maxAlpha =
+                    Math.random() * 0.3 + 0.1;
+
+                this.fadeIn =
+                    true;
+
+                this.speed =
+                    Math.random() * 0.3 + 0.1;
+
+            }
+
+
+            update() {
+
+                this.y -=
+                    this.speed;
+
+
+                if (this.fadeIn) {
+
+                    this.alpha +=
+                        0.008;
+
+
+                    if (
+                        this.alpha >=
+                        this.maxAlpha
+                    ) {
+
+                        this.fadeIn =
+                            false;
+
+                    }
+
                 }
 
-                input.dataset.monacoReady = 'true';
+                else {
 
-                input.addEventListener(
-                    'input',
-                    function () {
+                    this.alpha -=
+                        0.005;
 
-                        searchMonaco(
-                            input.value
-                        );
 
-                    }
-                );
+                    if (
+                        this.alpha <= 0
+                    ) {
 
-                input.addEventListener(
-                    'keydown',
-                    function (event) {
-
-                        if (event.key === 'Enter') {
-
-                            event.preventDefault();
-
-                            nextMonacoSearchMatch(
-                                event.shiftKey
-                                    ? -1
-                                    : 1
-                            );
-
-                        }
-
-                        if (event.key === 'Escape') {
-
-                            event.preventDefault();
-
-                            input.value = '';
-
-                            searchMonaco('');
-
-                            const editor =
-                                getEditor();
-
-                            if (editor) {
-                                editor.focus();
-                            }
-
-                        }
+                        this.reset();
 
                     }
-                );
 
-                clear.addEventListener(
-                    'click',
-                    function () {
+                }
 
-                        input.value = '';
+            }
 
-                        searchMonaco('');
 
-                        const editor =
-                            getEditor();
+            draw() {
 
-                        if (editor) {
-                            editor.focus();
-                        }
+                ctx.font =
+                    '12px "Fira Code", monospace';
 
-                    }
+                ctx.fillStyle =
+                    `rgba(0, 220, 130, ${this.alpha})`;
+
+                ctx.fillText(
+                    this.text,
+                    this.x,
+                    this.y
                 );
 
             }
 
-            /*
-             * Questa funzione è volutamente separata dal codice originale.
-             *
-             * Forza la minimappa anche dopo il passaggio fullscreen.
-             */
-            function forceMonacoMinimapAndLayout() {
+        }
 
-                const editor =
-                    getEditor();
 
-                if (!editor) {
-                    return;
-                }
+        const circuits =
+            Array.from(
+                { length: 18 },
+                () => new Circuit()
+            );
 
-                editor.updateOptions({
 
-                    minimap: {
+        const codeTexts =
+            Array.from(
+                { length: 12 },
+                () => new CodeText()
+            );
 
-                        enabled:
-                            monacoPreviewVisible,
 
-                        side: 'right',
+        function animate() {
 
-                        renderCharacters: false
+            ctx.clearRect(
+                0,
+                0,
+                width,
+                height
+            );
 
-                    },
 
-                    fixedOverflowWidgets: true
+            circuits.forEach(
+                c => {
 
-                });
-
-                setTimeout(function () {
-                    editor.layout();
-                }, 0);
-
-                setTimeout(function () {
-                    editor.layout();
-                }, 150);
-
-                setTimeout(function () {
-                    editor.layout();
-                }, 400);
-
-            }
-
-            /*
-             * POSIZIONAMENTO SUGGERIMENTI EMMET
-             *
-             * Il widget viene posizionato sotto la riga del cursore.
-             */
-            function setupSuggestionPositioning() {
-
-                const editor =
-                    getEditor();
-
-                if (!editor) {
-                    return;
-                }
-
-                if (monacoSuggestObserver) {
-
-                    monacoSuggestObserver.disconnect();
+                    c.update();
+                    c.draw();
 
                 }
+            );
 
-                function repositionSuggestions() {
 
-                    const widget =
-                        document.querySelector(
-                            '.monaco-editor .suggest-widget'
-                        );
+            codeTexts.forEach(
+                ct => {
 
-                    if (!widget) {
-                        return;
-                    }
-
-                    if (widget.offsetParent === null) {
-                        return;
-                    }
-
-                    const position =
-                        editor.getPosition();
-
-                    if (!position) {
-                        return;
-                    }
-
-                    const cursor =
-                        editor.getScrolledVisiblePosition(
-                            position
-                        );
-
-                    if (!cursor) {
-                        return;
-                    }
-
-                    const container =
-                        document.getElementById(
-                            'monacoContainer'
-                        );
-
-                    if (!container) {
-                        return;
-                    }
-
-                    const containerRect =
-                        container.getBoundingClientRect();
-
-                    /*
-                     * Coordinate assolute rispetto alla viewport.
-                     */
-                    const top =
-                        containerRect.top +
-                        cursor.top +
-                        cursor.height +
-                        4;
-
-                    const left =
-                        containerRect.left +
-                        cursor.left;
-
-                    /*
-                     * Lo rendiamo fixed per evitare che il fullscreen
-                     * della modale interferisca con il popup.
-                     */
-                    widget.style.position =
-                        'fixed';
-
-                    widget.style.left =
-                        Math.max(8, left) + 'px';
-
-                    widget.style.top =
-                        top + 'px';
-
-                    widget.style.bottom =
-                        'auto';
-
-                    /*
-                     * Evita che il popup esca completamente dallo schermo
-                     * nell'ultima parte dell'editor.
-                     */
-                    const availableHeight =
-                        Math.max(
-                            120,
-                            window.innerHeight -
-                            top -
-                            8
-                        );
-
-                    widget.style.maxHeight =
-                        availableHeight + 'px';
+                    ct.update();
+                    ct.draw();
 
                 }
+            );
 
-                monacoSuggestObserver =
-                    new MutationObserver(
-                        function () {
 
-                            setTimeout(
-                                repositionSuggestions,
-                                0
-                            );
+            requestAnimationFrame(
+                animate
+            );
 
-                        }
-                    );
+        }
 
-                monacoSuggestObserver.observe(
-                    document.body,
-                    {
-                        subtree: true,
-                        attributes: true,
-                        attributeFilter: [
-                            'class',
-                            'style'
-                        ]
-                    }
-                );
 
-                editor.onDidChangeCursorPosition(
-                    function () {
-
-                        setTimeout(
-                            repositionSuggestions,
-                            0
-                        );
-
-                    }
-                );
-
-                editor.onDidChangeModelContent(
-                    function () {
-
-                        setTimeout(
-                            repositionSuggestions,
-                            0
-                        );
-
-                    }
-                );
-
-                window.addEventListener(
-                    'resize',
-                    function () {
-
-                        setTimeout(
-                            repositionSuggestions,
-                            0
-                        );
-
-                    }
-                );
-
-            }
-
-            function setupMonacoExtras() {
-
-                const editor =
-                    getEditor();
-
-                if (!editor) {
-                    return false;
-                }
-
-                updateZoomLabel();
-
-                updatePreviewButton();
-
-                setupMonacoSearch();
-
-                setupSuggestionPositioning();
-
-                forceMonacoMinimapAndLayout();
-
-                return true;
-
-            }
-
-            /*
-             * Attende l'inizializzazione originale di Monaco.
-             */
-            const setupTimer =
-                setInterval(
-                    function () {
-
-                        if (setupMonacoExtras()) {
-
-                            clearInterval(
-                                setupTimer
-                            );
-
-                        }
-
-                    },
-                    100
-                );
-
-            /*
-             * QUESTO È IL FIX PRINCIPALE DEL FULLSCREEN.
-             *
-             * Osserviamo il className del dialog originale.
-             */
-            const dialog =
-                document.getElementById(
-                    'monacoModalDialog'
-                );
-
-            if (dialog) {
-
-                const fullscreenObserver =
-                    new MutationObserver(
-                        function () {
-
-                            /*
-                             * Aspettiamo che Bootstrap/CSS
-                             * abbiano terminato il ridimensionamento.
-                             */
-                            setTimeout(
-                                forceMonacoMinimapAndLayout,
-                                30
-                            );
-
-                            setTimeout(
-                                forceMonacoMinimapAndLayout,
-                                200
-                            );
-
-                            setTimeout(
-                                forceMonacoMinimapAndLayout,
-                                600
-                            );
-
-                        }
-                    );
-
-                fullscreenObserver.observe(
-                    dialog,
-                    {
-                        attributes: true,
-                        attributeFilter: [
-                            'class'
-                        ]
-                    }
-                );
-
-            }
-
-            /*
-             * Ulteriore ridisegno quando la modale viene mostrata.
-             */
-            const modal =
-                document.getElementById(
-                    'monacoEditorModal'
-                );
-
-            if (modal) {
-
-                modal.addEventListener(
-                    'shown.bs.modal',
-                    function () {
-
-                        setTimeout(
-                            function () {
-
-                                setupMonacoExtras();
-
-                                forceMonacoMinimapAndLayout();
-
-                            },
-                            50
-                        );
-
-                        setTimeout(
-                            function () {
-
-                                setupMonacoExtras();
-
-                                forceMonacoMinimapAndLayout();
-
-                            },
-                            300
-                        );
-
-                    }
-                );
-
-            }
-
-        })();
+        animate();
 
     </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script><script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script><script>
+let windowMonacoEditor=null,monacoTargetTextarea=null,monacoFontSize=14,monacoMinimapVisible=true,monacoSearchMatches=[],monacoSearchIndex=0,monacoSearchDecorations=[],monacoCurrentSearchDecoration=[],monacoLoaderPromise=null,monacoEmmetInitialized=false;
+function loadMonaco(){if(monacoLoaderPromise)return monacoLoaderPromise;monacoLoaderPromise=new Promise((resolve,reject)=>{if(window.monaco&&window.monaco.editor){initMonacoEmmet();resolve(window.monaco);return}if(!window.require||!window.require.config){reject(Error('Loader Monaco non disponibile.'));return}window.require.config({paths:{vs:'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'}});window.require(['vs/editor/editor.main'],m=>{initMonacoEmmet();resolve(m)},reject)});return monacoLoaderPromise}
+function initMonacoEmmet(){if(monacoEmmetInitialized)return;try{if(window.emmetMonaco?.emmetHTML){window.emmetMonaco.emmetHTML(window.monaco,['html']);monacoEmmetInitialized=true}}catch(e){console.error('Emmet Monaco:',e)}}
+function getTinyEditor(t){if(!t||!window.tinymce)return null;if(t.id){const e=tinymce.get(t.id);if(e)return e}return(tinymce.editors||[]).find(e=>e.getElement?.()===t)||null}
+function openMonacoFromButton(b){let p=b,t=null;while(p&&!t){t=p.querySelector?.('.wysiwyg-editor');p=p.parentElement}openMonacoForTextarea(t||document.querySelector('.wysiwyg-editor'))}
+function openMonacoForTextarea(t){if(!t){alert('Editor HTML non trovato.');return}monacoTargetTextarea=t;const te=getTinyEditor(t),value=te?(te.getContent({format:'html'})||''):(t.value||''),modal=document.getElementById('monacoEditorModal');if(!modal){alert('Finestra Monaco non disponibile.');return}const modalInstance=bootstrap.Modal.getOrCreateInstance(modal);modalInstance.show();loadMonaco().then(m=>{const c=document.getElementById('monacoContainer');if(!c)return;if(!windowMonacoEditor){windowMonacoEditor=m.editor.create(c,{value,language:'html',theme:'vs-dark',fontSize:monacoFontSize,automaticLayout:true,minimap:{enabled:monacoMinimapVisible},wordWrap:'off',lineNumbers:'on',scrollBeyondLastLine:false,autoClosingBrackets:'always',autoClosingQuotes:'always',autoClosingTags:true,suggestOnTriggerCharacters:true,quickSuggestions:{other:true,comments:true,strings:true},suggest:{showWords:true,showSnippets:true},formatOnPaste:true,formatOnType:true,fixedOverflowWidgets:true,tabSize:2,insertSpaces:true});installSuggestionPositioning()}else{windowMonacoEditor.setValue(value);windowMonacoEditor.updateOptions({fontSize:monacoFontSize,minimap:{enabled:monacoMinimapVisible},fixedOverflowWidgets:true})}updateZoomLabel();updateMinimapButton();clearMonacoSearch();setTimeout(()=>windowMonacoEditor.layout(),100);windowMonacoEditor.focus()}).catch(e=>{console.error(e);alert('Impossibile caricare Monaco Editor. Controlla la connessione internet.')})}
+function saveMonacoContent(){if(!windowMonacoEditor||!monacoTargetTextarea)return;const v=windowMonacoEditor.getValue(),te=getTinyEditor(monacoTargetTextarea);if(te){te.setContent(v);te.save()}else monacoTargetTextarea.value=v;bootstrap.Modal.getOrCreateInstance(document.getElementById('monacoEditorModal')).hide()}
+function changeMonacoFontSize(d){if(!windowMonacoEditor)return;monacoFontSize=Math.max(8,Math.min(32,monacoFontSize+d));windowMonacoEditor.updateOptions({fontSize:monacoFontSize});updateZoomLabel()}function updateZoomLabel(){const e=document.getElementById('monacoZoomLabel');if(e)e.textContent=Math.round(monacoFontSize/14*100)+'%'}
+function toggleMonacoPreview(){if(!windowMonacoEditor)return;monacoMinimapVisible=!monacoMinimapVisible;windowMonacoEditor.updateOptions({minimap:{enabled:monacoMinimapVisible}});updateMinimapButton()}function updateMinimapButton(){const t=document.getElementById('previewButtonText'),i=document.getElementById('previewIcon'),b=document.getElementById('btnTogglePreview');if(t)t.textContent=monacoMinimapVisible?'Nascondi minimappa':'Mostra minimappa';if(i)i.className=monacoMinimapVisible?'bi bi-map me-1':'bi bi-map-fill me-1';if(b)b.title=monacoMinimapVisible?'Nascondi minimappa a destra':'Mostra minimappa a destra'}
+function toggleMonacoFullscreen(){const d=document.getElementById('monacoModalDialog'),i=document.getElementById('fullscreenIcon'),b=document.getElementById('btnToggleFullscreen');if(!d)return;const f=d.classList.toggle('modal-fullscreen-custom');if(i)i.className=f?'bi bi-arrows-angle-contract':'bi bi-arrows-angle-expand';if(b){b.title=f?'Esci da Schermo Intero':'Schermo Intero';[...b.childNodes].filter(n=>n.nodeType===3).forEach(n=>n.textContent=f?' Esci da Schermo Intero':' Schermo Intero')}if(windowMonacoEditor)[50,250,500].forEach(x=>setTimeout(()=>windowMonacoEditor.layout(),x))}
+function installSuggestionPositioning(){if(window.__monacoSuggestObserver)return;window.__monacoSuggestObserver=true;const o=new MutationObserver(positionSuggestion);o.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class']});window.addEventListener('resize',positionSuggestion)}function positionSuggestion(){if(!windowMonacoEditor)return;const w=document.querySelector('.monaco-editor .suggest-widget');if(!w||getComputedStyle(w).display==='none')return;const p=windowMonacoEditor.getPosition(),c=windowMonacoEditor.getScrolledVisiblePosition(p),n=windowMonacoEditor.getDomNode();if(!p||!c||!n)return;const r=n.getBoundingClientRect();w.style.position='fixed';w.style.left=Math.max(4,r.left+c.left)+'px';w.style.top=Math.max(4,r.top+c.top+c.height+2)+'px';w.style.zIndex='10000'}
+function performMonacoSearch(){if(!windowMonacoEditor)return;const q=document.getElementById('monacoSearchInput')?.value||'';clearMonacoSearchDecorations();if(!q){monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults();return}monacoSearchMatches=windowMonacoEditor.getModel().findMatches(q,true,false,false,null,true);monacoSearchIndex=monacoSearchMatches.length?0:-1;monacoSearchDecorations=windowMonacoEditor.deltaDecorations([],monacoSearchMatches.map(m=>({range:m.range,options:{inlineClassName:'monaco-search-match'}})));updateCurrentSearchDecoration();updateSearchResults()}function clearMonacoSearchDecorations(){if(windowMonacoEditor){if(monacoSearchDecorations.length)windowMonacoEditor.deltaDecorations(monacoSearchDecorations,[]);if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[])}monacoSearchDecorations=[];monacoCurrentSearchDecoration=[]}function updateCurrentSearchDecoration(){if(!windowMonacoEditor||monacoSearchIndex<0||!monacoSearchMatches.length)return;if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[]);monacoCurrentSearchDecoration=windowMonacoEditor.deltaDecorations([],[{range:monacoSearchMatches[monacoSearchIndex].range,options:{inlineClassName:'monaco-search-match-current'}}])}function selectMonacoSearchMatch(i){if(!windowMonacoEditor||!monacoSearchMatches.length)return;monacoSearchIndex=(i+monacoSearchMatches.length)%monacoSearchMatches.length;const m=monacoSearchMatches[monacoSearchIndex];windowMonacoEditor.setSelection(m.range);windowMonacoEditor.revealRangeInCenter(m.range);updateCurrentSearchDecoration();updateSearchResults()}function navigateMonacoSearch(d){if(monacoSearchMatches.length)selectMonacoSearchMatch(monacoSearchIndex+d);document.getElementById('monacoSearchInput')?.focus()}
+function updateSearchResults(){const w=document.querySelector('.monaco-search-wrapper');if(!w)return;let r=document.getElementById('monacoSearchResults');if(!r){r=document.createElement('div');r.id='monacoSearchResults';r.className='monaco-search-results';r.innerHTML='<button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchPrev">↑</button><span class="monaco-search-count" id="monacoSearchCount">0 / 0</span><button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchNext">↓</button>';w.appendChild(r);document.getElementById('monacoSearchPrev').onmousedown=e=>{e.preventDefault();navigateMonacoSearch(-1)};document.getElementById('monacoSearchNext').onmousedown=e=>{e.preventDefault();navigateMonacoSearch(1)}}const c=document.getElementById('monacoSearchCount');if(!monacoSearchMatches.length||monacoSearchIndex<0){r.classList.remove('visible');if(c)c.textContent='0 / 0'}else{if(c)c.textContent=(monacoSearchIndex+1)+' / '+monacoSearchMatches.length;r.classList.add('visible')}}function clearMonacoSearch(){const i=document.getElementById('monacoSearchInput');if(i)i.value='';clearMonacoSearchDecorations();monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults()}
+document.addEventListener('DOMContentLoaded',()=>{const mm=document.getElementById('monacoEditorModal');if(mm)mm.addEventListener('shown.bs.modal',()=>{if(monacoTargetTextarea)loadMonaco().catch(e=>console.error('Monaco:',e));});const i=document.getElementById('monacoSearchInput'),c=document.getElementById('btnMonacoSearchClear');if(i){i.oninput=performMonacoSearch;i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();navigateMonacoSearch(e.shiftKey?-1:1)}else if(e.key==='Escape'){e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()}}}if(c)c.onmousedown=e=>{e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()};const m=document.getElementById('monacoEditorModal');if(m)m.addEventListener('shown.bs.modal',()=>setTimeout(()=>windowMonacoEditor?.layout(),100))});document.addEventListener('keydown',e=>{if(e.key==='F11'&&windowMonacoEditor){e.preventDefault();toggleMonacoFullscreen()}});
+</script>\n
 </body>
 
 </html>

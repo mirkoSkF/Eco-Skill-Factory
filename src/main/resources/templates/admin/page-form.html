@@ -16,15 +16,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
-          rel="stylesheet">
-
-    <!-- BOOTSTRAP JS IN HEAD -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- ============================================================
+         STILI SFONDO ANIMATO
+         ============================================================ -->
     <style>
-
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #f1f5f9;
@@ -93,193 +90,67 @@
             color: #0f172a;
         }
 
-        .modal-content-dark {
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #f1f5f9;
+        .course-config-box {
+            background-color: rgba(15, 23, 42, 0.8) !important;
+            border: 1px solid rgba(0, 220, 130, 0.3) !important;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
         }
 
-        /* STILI PER MONACO FULLSCREEN MODAL */
-
-        .modal-fullscreen-custom {
-            width: 100vw !important;
-            max-width: 100vw !important;
-            height: 100vh !important;
-            margin: 0 !important;
-            padding: 0 !important;
+        /* Personalizzazione Validazione Form */
+        .was-validated .form-control:invalid, .was-validated .form-select:invalid {
+            border-color: #ea580c !important;
+            background-image: none !important;
+            box-shadow: 0 0 0 0.25rem rgba(234, 88, 12, 0.25) !important;
         }
 
-        .modal-fullscreen-custom .modal-content {
-            height: 100vh !important;
-            border-radius: 0 !important;
-        }
-
-        .modal-fullscreen-custom #monacoContainer {
-            height: calc(100vh - 120px) !important;
-        }
-
-        /* =========================================================
-           AGGIUNTE MONACO
-           ========================================================= */
-
-        .monaco-extra-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            background: #111827;
-            border-bottom: 1px solid #334155;
-            flex-wrap: wrap;
-        }
-
-        .monaco-search-wrapper {
-            width: min(360px, 100%);
-            flex: 1 1 260px;
-        }
-
-        .monaco-search-wrapper .input-group-text {
-            background: #1e293b;
-            border-color: #334155;
-            color: #00dc82;
-        }
-
-        .monaco-search-input {
-            min-width: 0;
-            background: #0f172a !important;
-            color: #ffffff !important;
-            border-color: #334155 !important;
-        }
-
-        .monaco-search-input::placeholder {
-            color: #94a3b8;
-        }
-
-        .monaco-zoom-label {
-            min-width: 58px;
-            text-align: center;
-            cursor: default !important;
-        }
-
-        .monaco-editor-workspace {
-            width: 100%;
-            height: 550px;
-            min-height: 0;
-        }
-
-        .monaco-editor-workspace #monacoContainer {
-            width: 100%;
-            height: 100% !important;
-        }
-
-        .modal-fullscreen-custom .monaco-editor-workspace {
-            height: calc(100vh - 120px) !important;
-        }
-
-        .monaco-editor .suggest-widget,
-        .monaco-editor .parameter-hints-widget {
-            z-index: 10000 !important;
-        }
-
-        .monaco-search-match {
-            background: rgba(255, 210, 0, 0.28);
-            border-bottom: 1px solid #ffd54f;
-        }
-
-        @media (max-width: 768px) {
-
-            .monaco-extra-toolbar {
-                align-items: stretch;
-            }
-
-            .monaco-search-wrapper {
-                flex-basis: 100%;
-            }
-
-        }
-
+        /* MONACO EDITOR - aggiunta */
+        .monaco-open-button{border-color:#36e4da!important;color:#36e4da!important;font-weight:600}.monaco-open-button:hover{background:rgba(54,228,218,.12)!important;color:#fff!important}.monaco-editor-workspace{width:100%;overflow:hidden;background:#1e1e1e}.monaco-extra-toolbar{display:flex;align-items:center;gap:8px;padding:8px;background:#111827;border-bottom:1px solid #334155;flex-wrap:wrap;position:relative;z-index:20}.monaco-search-wrapper{flex:1 1 320px;min-width:260px;max-width:700px;position:relative}.monaco-search-input{font-family:'Fira Code',monospace}.monaco-search-results{position:absolute;top:calc(100% + 4px);right:0;display:none;align-items:center;gap:6px;padding:4px 6px;border:1px solid #475569;border-radius:6px;background:#0f172a;box-shadow:0 8px 20px rgba(0,0,0,.45);z-index:1000;white-space:nowrap}.monaco-search-results.visible{display:flex}.monaco-search-count{min-width:58px;text-align:center;color:#cbd5e1;font:12px 'Fira Code',monospace}.monaco-zoom-label{min-width:58px;text-align:center;cursor:default}.monaco-modal-editor-button{margin-bottom:8px}.monaco-editor .suggest-widget{z-index:10000!important}.modal-fullscreen-custom{width:100vw;max-width:none;height:100vh;margin:0}.modal-fullscreen-custom .modal-content{height:100vh;border-radius:0}.modal-fullscreen-custom #monacoContainer{height:calc(100vh - 150px)!important}.monaco-search-match{background:rgba(255,215,0,.28);border:1px solid rgba(255,215,0,.55);border-radius:2px}.monaco-search-match-current{background:rgba(0,220,130,.42);border:1px solid rgba(0,220,130,.9);border-radius:2px}@media(max-width:768px){.monaco-search-wrapper{flex-basis:100%;max-width:none}}
     </style>
 
-    <!-- TINYMCE -->
+    <!-- ============================================================
+         TINYMCE
+         ============================================================ -->
     <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
-            referrerpolicy="origin"></script>
-
-    <!-- MONACO LOADER & EMMET SUPPORT -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script>
+            referrerpolicy="origin">
+    </script>
 
     <script>
-
         document.addEventListener("DOMContentLoaded", function () {
-
             tinymce.init({
-
                 selector: '.wysiwyg-editor',
-
                 language: 'it',
-
                 language_url: '/tinymce/langs/it.js',
-
                 content_language: 'it',
-
                 min_height: 500,
-
                 menubar: true,
-
                 branding: false,
-
                 promotion: false,
-
                 license_key: 'gpl',
-
                 statusbar: true,
-
                 elementpath: true,
-
                 skin: 'oxide-dark',
-
                 image_advtab: true,
-
                 image_title: true,
-
                 image_caption: true,
-
                 automatic_uploads: true,
-
                 object_resizing: 'img',
-
                 resize_img_proportional: true,
 
                 relative_urls: false,
-
                 remove_script_host: false,
-
                 convert_urls: false,
-
                 document_base_url: window.location.origin + '/',
 
                 font_size_formats:
                     '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
-
                 font_size_input_default_unit: 'px',
 
                 plugins: [
-                    'advlist',
-                    'autolink',
-                    'lists',
-                    'link',
-                    'image',
-                    'charmap',
-                    'anchor',
-                    'searchreplace',
-                    'visualblocks',
-                    'code',
-                    'fullscreen',
-                    'media',
-                    'table',
-                    'wordcount',
-                    'help',
-                    'emoticons'
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'media', 'table', 'wordcount', 'help', 'emoticons'
                 ],
 
                 toolbar:
@@ -300,329 +171,211 @@
                         color: #ffffff !important;
                         padding: 15px;
                     }
-
-                    p {
-                        font-size: 18px;
-                        color: #ffffff !important;
-                    }
-
-                    h1, h2, h3, h4, h5, h6 {
-                        color: #ffffff !important;
-                    }
-
-                    a {
-                        color: #36e4da !important;
-                    }
-
-                    img {
-                        max-width: 100%;
-                        height: auto;
-                    }
-
-                    figure.image.align-left {
-                        float: left;
-                        margin: 0 15px 10px 0;
-                    }
-
-                    figure.image.align-center {
-                        display: block;
-                        text-align: center;
-                        margin: 10px auto;
-                    }
-
-                    figure.image.align-right {
-                        float: right;
-                        margin: 0 0 10px 15px;
-                    }
-
-                    figure.image {
-                        display: inline-block;
-                        margin: 0 2px 0 1px;
-                    }
-
-                    figure.image img {
-                        max-width: 100%;
-                        height: auto;
-                    }
+                    p { font-size: 18px; color: #ffffff !important; }
+                    h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
+                    a { color: #36e4da !important; }
+                    img { max-width: 100%; height: auto; }
+                    figure.image.align-left { float: left; margin: 0 15px 10px 0; }
+                    figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
+                    figure.image.align-right { float: right; margin: 0 0 10px 15px; }
+                    figure.image { display: inline-block; margin: 0 2px 0 1px; }
+                    figure.image img { max-width: 100%; height: auto; }
                 `,
 
                 style_formats: [
-
-                    {
-                        title: 'Immagine a sinistra',
-                        selector: 'img',
-                        styles: {
-                            'float': 'left',
-                            'margin': '0 15px 10px 0'
-                        }
-                    },
-
-                    {
-                        title: 'Immagine centrata',
-                        selector: 'img',
-                        styles: {
-                            'display': 'block',
-                            'float': 'none',
-                            'margin-left': 'auto',
-                            'margin-right': 'auto'
-                        }
-                    },
-
-                    {
-                        title: 'Immagine a destra',
-                        selector: 'img',
-                        styles: {
-                            'float': 'right',
-                            'margin': '0 0 10px 15px'
-                        }
-                    },
-
-                    {
-                        title: 'Immagine normale',
-                        selector: 'img',
-                        styles: {
-                            'float': 'none',
-                            'display': 'inline',
-                            'margin': '0'
-                        }
-                    }
-
+                    { title: 'Immagine a sinistra', selector: 'img', styles: { 'float': 'left', 'margin': '0 15px 10px 0' } },
+                    { title: 'Immagine centrata', selector: 'img', styles: { 'display': 'block', 'float': 'none', 'margin-left': 'auto', 'margin-right': 'auto' } },
+                    { title: 'Immagine a destra', selector: 'img', styles: { 'float': 'right', 'margin': '0 0 10px 15px' } },
+                    { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
                 ],
 
-                images_upload_handler:
-                    (blobInfo) => new Promise((resolve, reject) => {
+                images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
+                    const formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
 
-                        const formData =
-                            new FormData();
-
-                        formData.append(
-                            'file',
-                            blobInfo.blob(),
-                            blobInfo.filename()
-                        );
-
-                        fetch(
-                            '/api/uploads/immagine',
-                            {
-                                method: 'POST',
-                                body: formData
-                            }
-                        )
-
-                        .then(response => {
-
-                            if (!response.ok) {
-
-                                return response
-                                    .text()
-                                    .then(text => {
-
-                                        throw new Error(
-                                            'Errore HTTP ' +
-                                            response.status +
-                                            ': ' +
-                                            text
-                                        );
-
-                                    });
-
-                            }
-
-                            return response.json();
-
-                        })
-
-                        .then(data => {
-
-                            const imageUrl =
-                                data.location ||
-                                data.url;
-
-                            if (!imageUrl) {
-
-                                throw new Error(
-                                    'Il server non ha restituito location oppure url.'
-                                );
-
-                            }
-
-                            resolve(imageUrl);
-
-                        })
-
-                        .catch(error => {
-
-                            console.error(
-                                'Upload fallito:',
-                                error
-                            );
-
-                            reject({
-                                message:
-                                    'Caricamento immagine non riuscito: ' +
-                                    error.message,
-                                remove: true
-                            });
-
-                        });
-
+                    fetch('/api/uploads/immagine', {
+                        method: 'POST',
+                        body: formData
                     })
-
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                throw new Error('Errore HTTP ' + response.status + ': ' + text);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const imageUrl = data.location || data.url;
+                        if (!imageUrl) {
+                            throw new Error('Il server non ha restituito location oppure url.');
+                        }
+                        resolve(imageUrl);
+                    })
+                    .catch(error => {
+                        console.error('Upload fallito:', error);
+                        reject({ message: 'Caricamento immagine non riuscito: ' + error.message, remove: true });
+                    });
+                })
             });
-
+            
+            // Inizializza visibilità pannello form
+            toggleCourseForm();
         });
 
-    </script>
+        function toggleCourseForm() {
+            const formTypeSelect = document.getElementById('formTypeSelect');
+            const courseConfigBox = document.getElementById('courseConfigBox');
+            const courseFields = document.querySelectorAll('.course-specific-field');
 
+            if (formTypeSelect && courseConfigBox) {
+                const selectedVal = formTypeSelect.value;
+                if (selectedVal === 'NONE') {
+                    courseConfigBox.style.display = 'none';
+                } else {
+                    courseConfigBox.style.display = 'block';
+                    if (selectedVal === 'BOOKING') {
+                        courseFields.forEach(el => el.style.display = 'block');
+                    } else {
+                        // INFO e ORG_INFO escludono Tipologia, Codice e Nome Corso
+                        courseFields.forEach(el => el.style.display = 'none');
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
 <body>
 
+    <!-- Canvas Sfondo Animato -->
     <canvas id="tech-bg-canvas"></canvas>
 
     <div class="container py-4">
 
+        <!-- INTESTAZIONE -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-
             <div>
-
-                <h2 class="mb-1"
-                    th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">
-                    Nuova Pagina
-                </h2>
-
-                <p class="text-muted mb-0">
-                    Crea o modifica il contenuto della pagina.
-                </p>
-
+                <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova Pagina</h2>
+                <p class="text-muted mb-0">Crea o modifica il contenuto della pagina.</p>
             </div>
-
-            <a th:href="@{/admin/pages}"
-               class="btn btn-outline-light">
-
-                <i class="bi bi-arrow-left me-1"></i>
-                Torna alla Gestione Pagine
-
+            <a th:href="@{/admin/pages}" class="btn btn-outline-light">
+                <i class="bi bi-arrow-left me-1"></i> Torna alla Gestione Pagine
             </a>
-
         </div>
 
-        <form id="pageForm"
-              th:action="@{/admin/pages/save}"
-              th:object="${page}"
-              method="post"
-              class="card shadow-sm border-0"
-              novalidate>
-
+        <!-- FORM PAGINA -->
+        <form id="pageForm" th:action="@{/admin/pages/save}" th:object="${page}" method="post" class="card shadow-sm border-0" novalidate>
             <div class="card-body p-4">
 
-                <input type="hidden"
-                       th:field="*{id}">
+                <input type="hidden" th:field="*{id}">
 
+                <!-- TITOLO -->
                 <div class="mb-4">
-
-                    <label class="form-label fw-bold">
-                        Titolo Pagina
-                        <span class="text-danger">*</span>
-                    </label>
-
-                    <input type="text"
-                           th:field="*{title}"
-                           class="form-control form-control-lg"
-                           placeholder="es. Chi Siamo"
-                           required>
-
+                    <label class="form-label fw-bold">Titolo Pagina <span class="text-danger">*</span></label>
+                    <input type="text" th:field="*{title}" class="form-control form-control-lg" placeholder="es. Chi Siamo" required>
+                    <div class="form-text">Il titolo verrà utilizzato come titolo amministrativo della pagina.</div>
                 </div>
 
+                <!-- SLUG -->
                 <div class="mb-4">
-
-                    <label class="form-label fw-bold">
-                        Slug URL
-                        <span class="text-danger">*</span>
-                    </label>
-
-                    <input type="text"
-                           th:field="*{slug}"
-                           class="form-control"
-                           placeholder="es. chi-siamo"
-                           required>
-
+                    <label class="form-label fw-bold">Slug URL <span class="text-danger">*</span></label>
+                    <input type="text" th:field="*{slug}" class="form-control" placeholder="es. chi-siamo" required>
+                    <div class="form-text">La pagina sarà disponibile all'indirizzo: <code>/p/chi-siamo</code></div>
                 </div>
 
+                <!-- LARGHEZZA BLOCCO -->
                 <div class="mb-4">
-
-                    <label for="widthPercent"
-                           class="form-label fw-bold">
-
-                        Larghezza Blocco (%)
-
-                    </label>
-
+                    <label for="widthPercent" class="form-label fw-bold">Larghezza Blocco (%)</label>
                     <div class="input-group">
-
-                        <input id="widthPercent"
-                               type="number"
-                               th:field="*{widthPercent}"
-                               class="form-control"
-                               min="10"
-                               max="100"
-                               step="1"
-                               placeholder="100">
-
-                        <span class="input-group-text">
-                            %
-                        </span>
-
+                        <input id="widthPercent" type="number" th:field="*{widthPercent}" class="form-control" min="10" max="100" step="1" placeholder="100">
+                        <span class="input-group-text">%</span>
                     </div>
-
+                    <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
                 </div>
 
+                <!-- SELEZIONE MODALITÀ FORM -->
+                <div class="mb-4 p-3 border rounded bg-dark">
+                    <label for="formTypeSelect" class="form-label fw-bold text-white fs-5 mb-2">
+                        <i class="bi bi-ui-checks me-2 text-success"></i>Integrazione Form nella Pagina
+                    </label>
+                    <select id="formTypeSelect" th:field="*{formType}" class="form-select form-select-lg" onchange="toggleCourseForm()">
+                        <option value="NONE">Nessun Form</option>
+                        <option value="BOOKING">Includi Form di Prenotazione Corso in questa pagina</option>
+                        <option value="INFO">Includi Form di richiesta informazioni</option>
+                        <option value="ORG_INFO">Includi Form di richiesta informazioni per organizzazioni</option>
+                    </select>
+                    <div class="form-text ms-1 mt-2">Seleziona la modalità di form che si desidera mostrare in fondo al contenuto della pagina.</div>
+                </div>
+
+                <!-- CONFIGURAZIONE FORM CORSO / DESTINAZIONE -->
+                <div id="courseConfigBox" class="course-config-box mb-4" style="display: none;">
+                    <h5 class="text-success mb-3 fw-bold">
+                        <i class="bi bi-sliders me-2"></i>Impostazioni Form e Destinazione
+                    </h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4 course-specific-field">
+                            <label class="form-label fw-bold">Tipologia Corso</label>
+                            <input type="text" th:field="*{courseType}" class="form-control" placeholder="es. Corso di Formazione">
+                        </div>
+
+                        <div class="col-md-4 course-specific-field">
+                            <label class="form-label fw-bold">Codice Corso</label>
+                            <input type="text" th:field="*{courseCode}" class="form-control" placeholder="es. JAVA-2026-01">
+                        </div>
+
+                        <div class="col-md-4 course-specific-field">
+                            <label class="form-label fw-bold">Nome Corso</label>
+                            <input type="text" th:field="*{courseName}" class="form-control" placeholder="es. Corso Java Developer">
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label class="form-label fw-bold">Email Destinazione Dati</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
+                                <input type="email" th:field="*{recipientEmail}" class="form-control" placeholder="es. iscrizioni@ecoskillfactory.it">
+                            </div>
+                            <div class="form-text">Indirizzo email a cui verranno inoltrati i dati immessi dagli utenti registrati.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTENUTO -->
                 <div class="mb-4">
-
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-
-                        <label class="form-label fw-bold mb-0">
-                            Contenuto HTML (TinyMCE)
-                        </label>
-
-                        <button type="button"
-                                class="btn btn-outline-info btn-sm"
-                                onclick="openMonacoModal()">
-
-                            <i class="bi bi-code-slash me-1"></i>
-                            Apri Monaco Editor
-
-                        </button>
-
-                    </div>
-
-                    <textarea id="pageContentHtml"
-                              th:field="*{contentHtml}"
-                              class="form-control wysiwyg-editor"
-                              rows="15">
-                    </textarea>
-
+                    <label class="form-label fw-bold">Contenuto Pagina (Editor)</label>
+                    <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e formattazione avanzata.</div>
+                    <div class="monaco-modal-editor-button"><button type="button" class="btn btn-sm btn-outline-info monaco-open-button" data-bs-toggle="modal" data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)"><i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)</button></div>
+<textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
                 </div>
 
-                <div class="text-end">
+                <!-- INFORMAZIONI URL -->
+                <div class="alert alert-light border mb-4">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle-fill text-success fs-4 me-3"></i>
+                        <div>
+                            <strong>URL della pagina</strong>
+                            <div class="mt-1">
+                                <code>/p/<span th:text="${page.slug}">slug-pagina</span></code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <button type="submit"
-                            class="btn btn-brand btn-lg px-4">
-
-                        <i class="bi bi-save me-1"></i>
-                        Salva Pagina
-
+                <!-- BOTTONI -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a th:href="@{/admin/pages}" class="btn btn-outline-light">
+                        <i class="bi bi-arrow-left me-1"></i> Annulla
+                    </a>
+                    <button type="button" class="btn btn-success btn-lg" onclick="showConfirmModal()">
+                        <i class="bi bi-check-circle me-1"></i> Salva Pagina
                     </button>
-
                 </div>
 
             </div>
-
         </form>
 
-    </div>
-
-    <!-- MODALE MONACO EDITOR AVANZATO -->
+<!-- MODALE MONACO EDITOR AVANZATO -->
     <div class="modal fade"
          id="monacoEditorModal"
          tabindex="-1"
@@ -638,7 +391,6 @@
                     <h5 class="modal-title fw-bold text-white mb-0">
 
                         <i class="bi bi-code-square text-info me-2"></i>
-
                         Monaco Code Editor
 
                         <small class="text-muted fs-6 ms-2">
@@ -674,8 +426,7 @@
 
                 <div class="modal-body p-0">
 
-                    <!-- AGGIUNTE: STRUMENTI MONACO -->
-
+                    <!-- AGGIUNTA: STRUMENTI MONACO -->
                     <div class="monaco-extra-toolbar">
 
                         <div class="input-group input-group-sm monaco-search-wrapper">
@@ -734,7 +485,6 @@
                         </div>
 
                         <!-- SOLO LA MINIMAPPA DI MONACO -->
-
                         <button type="button"
                                 class="btn btn-sm btn-outline-warning"
                                 id="btnTogglePreview"
@@ -772,7 +522,7 @@
                         </span>
 
                         Usa scorciatoie come
-                        <code>ul>li*3>a</code> + TAB
+                        <code>div.card>h2</code> + TAB
 
                     </div>
 
@@ -804,952 +554,210 @@
 
     </div>
 
+
+
+        
+        <footer class="text-center text-muted small py-4">
+            <i class="bi bi-cpu me-1"></i> Eco Skill Factory CMS
+        </footer>
+
+    </div>
+
+    <!-- MODAL DI AVVISO CAMPI MANCANTI -->
+    <div class="modal fade" id="warningModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content card border-0">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i>Campi Obbligatori Mancanti</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Compilare tutti i campi obbligatori prima di salvare la pagina (es. <strong>Titolo Pagina</strong> e <strong>Slug URL</strong>).
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-warning fw-bold text-dark" data-bs-dismiss="modal">Ho Capito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DI CONFERMA SALVATAGGIO -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content card border-0">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title text-white"><i class="bi bi-check-circle-fill text-success me-2"></i>Conferma Operazione</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    Sei sicuro di voler salvare le modifiche alla pagina?
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-success" onclick="submitPageForm()">Conferma e Salva</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-
-        let windowMonacoEditor = null;
-
-        require.config({
-            paths: {
-                vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'
+        function showConfirmModal() {
+            if (window.tinymce) {
+                tinymce.triggerSave();
             }
-        });
 
-        function openMonacoModal() {
+            const pageForm = document.getElementById('pageForm');
 
-            let currentContent =
-                tinymce.get('pageContentHtml')
-                    ? tinymce.get('pageContentHtml').getContent()
-                    : document.getElementById('pageContentHtml').value;
+            // Controlla se tutti i campi obbligatori del form sono validi
+            if (!pageForm.checkValidity()) {
+                pageForm.classList.add('was-validated');
+                pageForm.reportValidity(); // Mostra il messaggio nativo del browser sul campo errato
+                
+                // Mostra il popup di avviso
+                const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
+                warningModal.show();
+                return;
+            }
 
-            const modalEl =
-                document.getElementById(
-                    'monacoEditorModal'
-                );
-
-            const modal =
-                new bootstrap.Modal(
-                    modalEl
-                );
-
+            // Se tutto è valido apre la modale di conferma
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
             modal.show();
-
-            modalEl.addEventListener(
-                'shown.bs.modal',
-                function () {
-
-                    if (!windowMonacoEditor) {
-
-                        require(
-                            ['vs/editor/editor.main'],
-                            function () {
-
-                                // Inizializzazione Emmet per Monaco
-
-                                if (window.emmetMonaco) {
-
-                                    window.emmetMonaco.emmetHTML(
-                                        monaco
-                                    );
-
-                                }
-
-                                windowMonacoEditor =
-                                    monaco.editor.create(
-                                        document.getElementById(
-                                            'monacoContainer'
-                                        ),
-                                        {
-                                            value: currentContent,
-                                            language: 'html',
-                                            theme: 'vs-dark',
-                                            automaticLayout: true,
-                                            autoClosingTags: true,
-                                            suggestOnTriggerCharacters: true,
-                                            formatOnPaste: true,
-                                            formatOnType: true,
-
-                                            suggest: {
-                                                showWords: true,
-                                                showSnippets: true,
-                                                showHtml5: true
-                                            },
-
-                                            quickSuggestions: {
-                                                other: true,
-                                                comments: true,
-                                                strings: true
-                                            }
-                                        }
-                                    );
-
-                            }
-                        );
-
-                    } else {
-
-                        windowMonacoEditor.setValue(
-                            currentContent
-                        );
-
-                    }
-
-                },
-                {
-                    once: true
-                }
-            );
-
         }
 
-        function toggleMonacoFullscreen() {
-
-            const dialog =
-                document.getElementById(
-                    'monacoModalDialog'
-                );
-
-            const icon =
-                document.getElementById(
-                    'fullscreenIcon'
-                );
-
-            const btn =
-                document.getElementById(
-                    'btnToggleFullscreen'
-                );
-
-            dialog.classList.toggle(
-                'modal-fullscreen-custom'
-            );
-
-            if (
-                dialog.classList.contains(
-                    'modal-fullscreen-custom'
-                )
-            ) {
-
-                icon.className =
-                    'bi bi-arrows-angle-contract';
-
-                btn.classList.replace(
-                    'btn-outline-light',
-                    'btn-warning'
-                );
-
-            } else {
-
-                icon.className =
-                    'bi bi-arrows-angle-expand';
-
-                btn.classList.replace(
-                    'btn-warning',
-                    'btn-outline-light'
-                );
-
-            }
-
-            if (windowMonacoEditor) {
-
-                setTimeout(
-                    () => windowMonacoEditor.layout(),
-                    150
-                );
-
-            }
-
+        function submitPageForm() {
+            document.getElementById('pageForm').submit();
         }
-
-        function saveMonacoContent() {
-
-            if (windowMonacoEditor) {
-
-                const code =
-                    windowMonacoEditor.getValue();
-
-                if (
-                    tinymce.get(
-                        'pageContentHtml'
-                    )
-                ) {
-
-                    tinymce
-                        .get('pageContentHtml')
-                        .setContent(code);
-
-                }
-
-                document.getElementById(
-                    'pageContentHtml'
-                ).value = code;
-
-            }
-
-            const modalEl =
-                document.getElementById(
-                    'monacoEditorModal'
-                );
-
-            const modal =
-                bootstrap.Modal.getInstance(
-                    modalEl
-                );
-
-            if (modal) {
-                modal.hide();
-            }
-
-        }
-
     </script>
 
-    <!-- ============================================================
-         AGGIUNTE MONACO
-         ============================================================ -->
-
+    <!-- SCRIPT ANIMAZIONE SFONDO -->
     <script>
+        const canvas = document.getElementById('tech-bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
 
-        (function () {
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
-            let monacoFontSize = 14;
-
-            let monacoPreviewVisible = true;
-
-            let monacoSearchMatches = [];
-
-            let monacoSearchIndex = -1;
-
-            let monacoSearchDecorations = [];
-
-            let monacoSuggestObserver = null;
-
-            function getEditor() {
-
-                return windowMonacoEditor || null;
-
+        class Circuit {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.length = Math.floor(Math.random() * 8) + 4;
+                this.currentStep = 0;
+                this.dir = Math.floor(Math.random() * 4);
+                this.path = [{ x: this.x, y: this.y }];
+                this.speed = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.4 + 0.1;
+                this.size = 20;
             }
-
-            function updateZoomLabel() {
-
-                const label =
-                    document.getElementById(
-                        'monacoZoomLabel'
-                    );
-
-                if (label) {
-
-                    label.textContent =
-                        Math.round(
-                            (monacoFontSize / 14) * 100
-                        ) + '%';
-
-                }
-
-            }
-
-            window.changeMonacoFontSize =
-                function (direction) {
-
-                    const editor =
-                        getEditor();
-
-                    if (!editor) {
-                        return;
+            update() {
+                if (this.currentStep < this.length) {
+                    let last = this.path[this.path.length - 1];
+                    let nx = last.x, ny = last.y;
+                    if (Math.random() < 0.3) {
+                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
                     }
-
-                    monacoFontSize += direction;
-
-                    monacoFontSize =
-                        Math.max(
-                            8,
-                            Math.min(
-                                32,
-                                monacoFontSize
-                            )
-                        );
-
-                    editor.updateOptions({
-                        fontSize:
-                            monacoFontSize
-                    });
-
-                    updateZoomLabel();
-
-                };
-
-            function updatePreviewButton() {
-
-                const button =
-                    document.getElementById(
-                        'btnTogglePreview'
-                    );
-
-                const icon =
-                    document.getElementById(
-                        'previewIcon'
-                    );
-
-                const text =
-                    document.getElementById(
-                        'previewButtonText'
-                    );
-
-                if (!button || !icon || !text) {
-                    return;
-                }
-
-                if (monacoPreviewVisible) {
-
-                    icon.className =
-                        'bi bi-map me-1';
-
-                    text.textContent =
-                        'Nascondi minimappa';
-
-                    button.title =
-                        'Nascondi minimappa a destra';
-
+                    switch (this.dir) {
+                        case 0: ny -= this.size; break;
+                        case 1: nx += this.size; break;
+                        case 2: ny += this.size; break;
+                        case 3: nx -= this.size; break;
+                    }
+                    this.path.push({ x: nx, y: ny });
+                    this.currentStep++;
                 } else {
-
-                    icon.className =
-                        'bi bi-map-fill me-1';
-
-                    text.textContent =
-                        'Mostra minimappa';
-
-                    button.title =
-                        'Mostra minimappa a destra';
-
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
                 }
-
             }
-
-            window.toggleMonacoPreview =
-                function () {
-
-                    const editor =
-                        getEditor();
-
-                    if (!editor) {
-                        return;
-                    }
-
-                    monacoPreviewVisible =
-                        !monacoPreviewVisible;
-
-                    editor.updateOptions({
-
-                        minimap: {
-
-                            enabled:
-                                monacoPreviewVisible,
-
-                            side: 'right',
-
-                            renderCharacters: false
-
-                        },
-
-                        fixedOverflowWidgets: true
-
-                    });
-
-                    setTimeout(
-                        function () {
-
-                            editor.layout();
-
-                        },
-                        80
-                    );
-
-                    updatePreviewButton();
-
-                };
-
-            function searchMonaco(query) {
-
-                const editor =
-                    getEditor();
-
-                if (!editor) {
-                    return;
+            draw() {
+                if (this.path.length < 2) return;
+                ctx.beginPath();
+                ctx.moveTo(this.path[0].x, this.path[0].y);
+                for (let i = 1; i < this.path.length; i++) {
+                    ctx.lineTo(this.path[i].x, this.path[i].y);
                 }
+                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
 
-                monacoSearchDecorations =
-                    editor.deltaDecorations(
-                        monacoSearchDecorations,
-                        []
-                    );
-
-                monacoSearchMatches = [];
-
-                monacoSearchIndex = -1;
-
-                if (!query) {
-                    return;
-                }
-
-                monacoSearchMatches =
-                    editor
-                        .getModel()
-                        .findMatches(
-                            query,
-                            true,
-                            false,
-                            false,
-                            null,
-                            true
-                        );
-
-                monacoSearchDecorations =
-                    editor.deltaDecorations(
-                        [],
-                        monacoSearchMatches.map(
-                            function (match) {
-
-                                return {
-
-                                    range: match.range,
-
-                                    options: {
-
-                                        inlineClassName:
-                                            'monaco-search-match'
-
-                                    }
-
-                                };
-
-                            }
-                        )
-                    );
-
-                if (
-                    monacoSearchMatches.length
-                ) {
-
-                    monacoSearchIndex = 0;
-
-                    selectMonacoSearchMatch();
-
-                }
-
+                let last = this.path[this.path.length - 1];
+                ctx.beginPath();
+                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+                ctx.fill();
             }
+        }
 
-            function selectMonacoSearchMatch() {
+        const codeSnippets = [
+            "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
+            "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
+            "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
+            "npm run build", "docker-compose up -d", "mvn clean install"
+        ];
 
-                const editor =
-                    getEditor();
-
-                if (
-                    !editor ||
-                    monacoSearchIndex < 0 ||
-                    monacoSearchIndex >=
-                        monacoSearchMatches.length
-                ) {
-                    return;
-                }
-
-                const match =
-                    monacoSearchMatches[
-                        monacoSearchIndex
-                    ];
-
-                editor.setSelection(
-                    match.range
-                );
-
-                editor.revealRangeInCenter(
-                    match.range
-                );
-
-                editor.focus();
-
+        class CodeText {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * (width - 200);
+                this.y = Math.random() * height;
+                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                this.alpha = 0;
+                this.maxAlpha = Math.random() * 0.3 + 0.1;
+                this.fadeIn = true;
+                this.speed = Math.random() * 0.3 + 0.1;
             }
-
-            function nextMonacoSearchMatch(
-                direction
-            ) {
-
-                if (
-                    !monacoSearchMatches.length
-                ) {
-                    return;
+            update() {
+                this.y -= this.speed;
+                if (this.fadeIn) {
+                    this.alpha += 0.008;
+                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+                } else {
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
                 }
-
-                monacoSearchIndex +=
-                    direction;
-
-                if (
-                    monacoSearchIndex >=
-                    monacoSearchMatches.length
-                ) {
-
-                    monacoSearchIndex = 0;
-
-                }
-
-                if (
-                    monacoSearchIndex < 0
-                ) {
-
-                    monacoSearchIndex =
-                        monacoSearchMatches.length -
-                        1;
-
-                }
-
-                selectMonacoSearchMatch();
-
             }
-
-            function setupMonacoSearch() {
-
-                const input =
-                    document.getElementById(
-                        'monacoSearchInput'
-                    );
-
-                const clear =
-                    document.getElementById(
-                        'btnMonacoSearchClear'
-                    );
-
-                if (!input || !clear) {
-                    return;
-                }
-
-                if (
-                    input.dataset.monacoReady ===
-                    'true'
-                ) {
-                    return;
-                }
-
-                input.dataset.monacoReady =
-                    'true';
-
-                input.addEventListener(
-                    'input',
-                    function () {
-
-                        searchMonaco(
-                            input.value
-                        );
-
-                    }
-                );
-
-                input.addEventListener(
-                    'keydown',
-                    function (event) {
-
-                        if (
-                            event.key ===
-                            'Enter'
-                        ) {
-
-                            event.preventDefault();
-
-                            nextMonacoSearchMatch(
-                                event.shiftKey
-                                    ? -1
-                                    : 1
-                            );
-
-                        }
-
-                        if (
-                            event.key ===
-                            'Escape'
-                        ) {
-
-                            event.preventDefault();
-
-                            input.value = '';
-
-                            searchMonaco('');
-
-                            const editor =
-                                getEditor();
-
-                            if (editor) {
-                                editor.focus();
-                            }
-
-                        }
-
-                    }
-                );
-
-                clear.addEventListener(
-                    'click',
-                    function () {
-
-                        input.value = '';
-
-                        searchMonaco('');
-
-                        const editor =
-                            getEditor();
-
-                        if (editor) {
-                            editor.focus();
-                        }
-
-                    }
-                );
-
+            draw() {
+                ctx.font = '12px "Fira Code", monospace';
+                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.fillText(this.text, this.x, this.y);
             }
-
-            /*
-             * FORZA LA MINIMAPPA DOPO IL RIDIMENSIONAMENTO
-             * DELLA MODALE.
-             */
-            function forceMonacoMinimapAndLayout() {
-
-                const editor =
-                    getEditor();
-
-                if (!editor) {
-                    return;
-                }
-
-                editor.updateOptions({
-
-                    minimap: {
-
-                        enabled:
-                            monacoPreviewVisible,
-
-                        side: 'right',
-
-                        renderCharacters: false
-
-                    },
-
-                    fixedOverflowWidgets: true
-
-                });
-
-                setTimeout(
-                    function () {
-                        editor.layout();
-                    },
-                    0
-                );
-
-                setTimeout(
-                    function () {
-                        editor.layout();
-                    },
-                    150
-                );
-
-                setTimeout(
-                    function () {
-                        editor.layout();
-                    },
-                    400
-                );
-
-            }
-
-            /*
-             * FORZA I SUGGERIMENTI SOTTO IL CURSORE.
-             */
-            function setupSuggestionPositioning() {
-
-                const editor =
-                    getEditor();
-
-                if (!editor) {
-                    return;
-                }
-
-                if (monacoSuggestObserver) {
-
-                    monacoSuggestObserver.disconnect();
-
-                }
-
-                function repositionSuggestions() {
-
-                    const widget =
-                        document.querySelector(
-                            '.monaco-editor .suggest-widget'
-                        );
-
-                    if (!widget) {
-                        return;
-                    }
-
-                    if (
-                        widget.offsetParent ===
-                        null
-                    ) {
-                        return;
-                    }
-
-                    const position =
-                        editor.getPosition();
-
-                    if (!position) {
-                        return;
-                    }
-
-                    const cursor =
-                        editor.getScrolledVisiblePosition(
-                            position
-                        );
-
-                    if (!cursor) {
-                        return;
-                    }
-
-                    const container =
-                        document.getElementById(
-                            'monacoContainer'
-                        );
-
-                    if (!container) {
-                        return;
-                    }
-
-                    const containerRect =
-                        container.getBoundingClientRect();
-
-                    const top =
-                        containerRect.top +
-                        cursor.top +
-                        cursor.height +
-                        4;
-
-                    const left =
-                        containerRect.left +
-                        cursor.left;
-
-                    widget.style.position =
-                        'fixed';
-
-                    widget.style.left =
-                        Math.max(
-                            8,
-                            left
-                        ) + 'px';
-
-                    widget.style.top =
-                        top + 'px';
-
-                    widget.style.bottom =
-                        'auto';
-
-                    const availableHeight =
-                        Math.max(
-                            120,
-                            window.innerHeight -
-                            top -
-                            8
-                        );
-
-                    widget.style.maxHeight =
-                        availableHeight + 'px';
-
-                }
-
-                monacoSuggestObserver =
-                    new MutationObserver(
-                        function () {
-
-                            setTimeout(
-                                repositionSuggestions,
-                                0
-                            );
-
-                        }
-                    );
-
-                monacoSuggestObserver.observe(
-                    document.body,
-                    {
-                        subtree: true,
-                        attributes: true,
-                        attributeFilter: [
-                            'class',
-                            'style'
-                        ]
-                    }
-                );
-
-                editor.onDidChangeCursorPosition(
-                    function () {
-
-                        setTimeout(
-                            repositionSuggestions,
-                            0
-                        );
-
-                    }
-                );
-
-                editor.onDidChangeModelContent(
-                    function () {
-
-                        setTimeout(
-                            repositionSuggestions,
-                            0
-                        );
-
-                    }
-                );
-
-                window.addEventListener(
-                    'resize',
-                    function () {
-
-                        setTimeout(
-                            repositionSuggestions,
-                            0
-                        );
-
-                    }
-                );
-
-            }
-
-            function setupMonacoExtras() {
-
-                const editor =
-                    getEditor();
-
-                if (!editor) {
-                    return false;
-                }
-
-                updateZoomLabel();
-
-                updatePreviewButton();
-
-                setupMonacoSearch();
-
-                setupSuggestionPositioning();
-
-                forceMonacoMinimapAndLayout();
-
-                return true;
-
-            }
-
-            /*
-             * Aspetta che il Monaco originale venga creato.
-             */
-            const setupTimer =
-                setInterval(
-                    function () {
-
-                        if (
-                            setupMonacoExtras()
-                        ) {
-
-                            clearInterval(
-                                setupTimer
-                            );
-
-                        }
-
-                    },
-                    100
-                );
-
-            /*
-             * FIX FULLSCREEN:
-             *
-             * osserviamo il cambio della classe del dialog
-             * originale e ridisegniamo Monaco.
-             */
-            const dialog =
-                document.getElementById(
-                    'monacoModalDialog'
-                );
-
-            if (dialog) {
-
-                const fullscreenObserver =
-                    new MutationObserver(
-                        function () {
-
-                            setTimeout(
-                                forceMonacoMinimapAndLayout,
-                                30
-                            );
-
-                            setTimeout(
-                                forceMonacoMinimapAndLayout,
-                                200
-                            );
-
-                            setTimeout(
-                                forceMonacoMinimapAndLayout,
-                                600
-                            );
-
-                        }
-                    );
-
-                fullscreenObserver.observe(
-                    dialog,
-                    {
-                        attributes: true,
-                        attributeFilter: [
-                            'class'
-                        ]
-                    }
-                );
-
-            }
-
-            const modal =
-                document.getElementById(
-                    'monacoEditorModal'
-                );
-
-            if (modal) {
-
-                modal.addEventListener(
-                    'shown.bs.modal',
-                    function () {
-
-                        setTimeout(
-                            function () {
-
-                                setupMonacoExtras();
-
-                                forceMonacoMinimapAndLayout();
-
-                            },
-                            50
-                        );
-
-                        setTimeout(
-                            function () {
-
-                                setupMonacoExtras();
-
-                                forceMonacoMinimapAndLayout();
-
-                            },
-                            300
-                        );
-
-                    }
-                );
-
-            }
-
-        })();
-
+        }
+
+        const circuits = Array.from({ length: 18 }, () => new Circuit());
+        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            circuits.forEach(c => { c.update(); c.draw(); });
+            codeTexts.forEach(ct => { ct.update(); ct.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script><script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script><script>
+let windowMonacoEditor=null,monacoTargetTextarea=null,monacoFontSize=14,monacoMinimapVisible=true,monacoSearchMatches=[],monacoSearchIndex=0,monacoSearchDecorations=[],monacoCurrentSearchDecoration=[],monacoLoaderPromise=null,monacoEmmetInitialized=false;
+function loadMonaco(){if(monacoLoaderPromise)return monacoLoaderPromise;monacoLoaderPromise=new Promise((resolve,reject)=>{if(window.monaco&&window.monaco.editor){initMonacoEmmet();resolve(window.monaco);return}if(!window.require||!window.require.config){reject(Error('Loader Monaco non disponibile.'));return}window.require.config({paths:{vs:'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'}});window.require(['vs/editor/editor.main'],m=>{initMonacoEmmet();resolve(m)},reject)});return monacoLoaderPromise}
+function initMonacoEmmet(){if(monacoEmmetInitialized)return;try{if(window.emmetMonaco?.emmetHTML){window.emmetMonaco.emmetHTML(window.monaco,['html']);monacoEmmetInitialized=true}}catch(e){console.error('Emmet Monaco:',e)}}
+function getTinyEditor(t){if(!t||!window.tinymce)return null;if(t.id){const e=tinymce.get(t.id);if(e)return e}return(tinymce.editors||[]).find(e=>e.getElement?.()===t)||null}
+function openMonacoFromButton(b){let p=b,t=null;while(p&&!t){t=p.querySelector?.('.wysiwyg-editor');p=p.parentElement}openMonacoForTextarea(t||document.querySelector('.wysiwyg-editor'))}
+function openMonacoForTextarea(t){if(!t){alert('Editor HTML non trovato.');return}monacoTargetTextarea=t;const te=getTinyEditor(t),value=te?(te.getContent({format:'html'})||''):(t.value||''),modal=document.getElementById('monacoEditorModal');if(!modal){alert('Finestra Monaco non disponibile.');return}const modalInstance=bootstrap.Modal.getOrCreateInstance(modal);modalInstance.show();loadMonaco().then(m=>{const c=document.getElementById('monacoContainer');if(!c)return;if(!windowMonacoEditor){windowMonacoEditor=m.editor.create(c,{value,language:'html',theme:'vs-dark',fontSize:monacoFontSize,automaticLayout:true,minimap:{enabled:monacoMinimapVisible},wordWrap:'off',lineNumbers:'on',scrollBeyondLastLine:false,autoClosingBrackets:'always',autoClosingQuotes:'always',autoClosingTags:true,suggestOnTriggerCharacters:true,quickSuggestions:{other:true,comments:true,strings:true},suggest:{showWords:true,showSnippets:true},formatOnPaste:true,formatOnType:true,fixedOverflowWidgets:true,tabSize:2,insertSpaces:true});installSuggestionPositioning()}else{windowMonacoEditor.setValue(value);windowMonacoEditor.updateOptions({fontSize:monacoFontSize,minimap:{enabled:monacoMinimapVisible},fixedOverflowWidgets:true})}updateZoomLabel();updateMinimapButton();clearMonacoSearch();setTimeout(()=>windowMonacoEditor.layout(),100);windowMonacoEditor.focus()}).catch(e=>{console.error(e);alert('Impossibile caricare Monaco Editor. Controlla la connessione internet.')})}
+function saveMonacoContent(){if(!windowMonacoEditor||!monacoTargetTextarea)return;const v=windowMonacoEditor.getValue(),te=getTinyEditor(monacoTargetTextarea);if(te){te.setContent(v);te.save()}else monacoTargetTextarea.value=v;bootstrap.Modal.getOrCreateInstance(document.getElementById('monacoEditorModal')).hide()}
+function changeMonacoFontSize(d){if(!windowMonacoEditor)return;monacoFontSize=Math.max(8,Math.min(32,monacoFontSize+d));windowMonacoEditor.updateOptions({fontSize:monacoFontSize});updateZoomLabel()}function updateZoomLabel(){const e=document.getElementById('monacoZoomLabel');if(e)e.textContent=Math.round(monacoFontSize/14*100)+'%'}
+function toggleMonacoPreview(){if(!windowMonacoEditor)return;monacoMinimapVisible=!monacoMinimapVisible;windowMonacoEditor.updateOptions({minimap:{enabled:monacoMinimapVisible}});updateMinimapButton()}function updateMinimapButton(){const t=document.getElementById('previewButtonText'),i=document.getElementById('previewIcon'),b=document.getElementById('btnTogglePreview');if(t)t.textContent=monacoMinimapVisible?'Nascondi minimappa':'Mostra minimappa';if(i)i.className=monacoMinimapVisible?'bi bi-map me-1':'bi bi-map-fill me-1';if(b)b.title=monacoMinimapVisible?'Nascondi minimappa a destra':'Mostra minimappa a destra'}
+function toggleMonacoFullscreen(){const d=document.getElementById('monacoModalDialog'),i=document.getElementById('fullscreenIcon'),b=document.getElementById('btnToggleFullscreen');if(!d)return;const f=d.classList.toggle('modal-fullscreen-custom');if(i)i.className=f?'bi bi-arrows-angle-contract':'bi bi-arrows-angle-expand';if(b){b.title=f?'Esci da Schermo Intero':'Schermo Intero';[...b.childNodes].filter(n=>n.nodeType===3).forEach(n=>n.textContent=f?' Esci da Schermo Intero':' Schermo Intero')}if(windowMonacoEditor)[50,250,500].forEach(x=>setTimeout(()=>windowMonacoEditor.layout(),x))}
+function installSuggestionPositioning(){if(window.__monacoSuggestObserver)return;window.__monacoSuggestObserver=true;const o=new MutationObserver(positionSuggestion);o.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class']});window.addEventListener('resize',positionSuggestion)}function positionSuggestion(){if(!windowMonacoEditor)return;const w=document.querySelector('.monaco-editor .suggest-widget');if(!w||getComputedStyle(w).display==='none')return;const p=windowMonacoEditor.getPosition(),c=windowMonacoEditor.getScrolledVisiblePosition(p),n=windowMonacoEditor.getDomNode();if(!p||!c||!n)return;const r=n.getBoundingClientRect();w.style.position='fixed';w.style.left=Math.max(4,r.left+c.left)+'px';w.style.top=Math.max(4,r.top+c.top+c.height+2)+'px';w.style.zIndex='10000'}
+function performMonacoSearch(){if(!windowMonacoEditor)return;const q=document.getElementById('monacoSearchInput')?.value||'';clearMonacoSearchDecorations();if(!q){monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults();return}monacoSearchMatches=windowMonacoEditor.getModel().findMatches(q,true,false,false,null,true);monacoSearchIndex=monacoSearchMatches.length?0:-1;monacoSearchDecorations=windowMonacoEditor.deltaDecorations([],monacoSearchMatches.map(m=>({range:m.range,options:{inlineClassName:'monaco-search-match'}})));updateCurrentSearchDecoration();updateSearchResults()}function clearMonacoSearchDecorations(){if(windowMonacoEditor){if(monacoSearchDecorations.length)windowMonacoEditor.deltaDecorations(monacoSearchDecorations,[]);if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[])}monacoSearchDecorations=[];monacoCurrentSearchDecoration=[]}function updateCurrentSearchDecoration(){if(!windowMonacoEditor||monacoSearchIndex<0||!monacoSearchMatches.length)return;if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[]);monacoCurrentSearchDecoration=windowMonacoEditor.deltaDecorations([],[{range:monacoSearchMatches[monacoSearchIndex].range,options:{inlineClassName:'monaco-search-match-current'}}])}function selectMonacoSearchMatch(i){if(!windowMonacoEditor||!monacoSearchMatches.length)return;monacoSearchIndex=(i+monacoSearchMatches.length)%monacoSearchMatches.length;const m=monacoSearchMatches[monacoSearchIndex];windowMonacoEditor.setSelection(m.range);windowMonacoEditor.revealRangeInCenter(m.range);updateCurrentSearchDecoration();updateSearchResults()}function navigateMonacoSearch(d){if(monacoSearchMatches.length)selectMonacoSearchMatch(monacoSearchIndex+d);document.getElementById('monacoSearchInput')?.focus()}
+function updateSearchResults(){const w=document.querySelector('.monaco-search-wrapper');if(!w)return;let r=document.getElementById('monacoSearchResults');if(!r){r=document.createElement('div');r.id='monacoSearchResults';r.className='monaco-search-results';r.innerHTML='<button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchPrev">↑</button><span class="monaco-search-count" id="monacoSearchCount">0 / 0</span><button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchNext">↓</button>';w.appendChild(r);document.getElementById('monacoSearchPrev').onmousedown=e=>{e.preventDefault();navigateMonacoSearch(-1)};document.getElementById('monacoSearchNext').onmousedown=e=>{e.preventDefault();navigateMonacoSearch(1)}}const c=document.getElementById('monacoSearchCount');if(!monacoSearchMatches.length||monacoSearchIndex<0){r.classList.remove('visible');if(c)c.textContent='0 / 0'}else{if(c)c.textContent=(monacoSearchIndex+1)+' / '+monacoSearchMatches.length;r.classList.add('visible')}}function clearMonacoSearch(){const i=document.getElementById('monacoSearchInput');if(i)i.value='';clearMonacoSearchDecorations();monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults()}
+document.addEventListener('DOMContentLoaded',()=>{const mm=document.getElementById('monacoEditorModal');if(mm)mm.addEventListener('shown.bs.modal',()=>{if(monacoTargetTextarea)loadMonaco().catch(e=>console.error('Monaco:',e));});const i=document.getElementById('monacoSearchInput'),c=document.getElementById('btnMonacoSearchClear');if(i){i.oninput=performMonacoSearch;i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();navigateMonacoSearch(e.shiftKey?-1:1)}else if(e.key==='Escape'){e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()}}}if(c)c.onmousedown=e=>{e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()};const m=document.getElementById('monacoEditorModal');if(m)m.addEventListener('shown.bs.modal',()=>setTimeout(()=>windowMonacoEditor?.layout(),100))});document.addEventListener('keydown',e=>{if(e.key==='F11'&&windowMonacoEditor){e.preventDefault();toggleMonacoFullscreen()}});
+</script>\n
 </body>
-
 </html>

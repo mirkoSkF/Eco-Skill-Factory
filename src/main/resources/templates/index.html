@@ -996,6 +996,41 @@
 
         }
 
+
+
+        /* ========================================================
+           GESTIONE BOZZE HOMEPAGE
+           ======================================================== */
+
+        .draft-block-hidden {
+            display: none !important;
+        }
+
+        .draft-toggle-container {
+            position: fixed;
+            top: 85px;
+            right: 24px;
+            z-index: 1050;
+        }
+
+        .draft-toggle-container .btn {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.78rem;
+            border-radius: 0.6rem;
+        }
+
+        @media (max-width: 767.98px) {
+            .draft-toggle-container {
+                top: 75px;
+                right: 15px;
+            }
+
+            .draft-toggle-container .btn {
+                padding: 0.35rem 0.6rem;
+                font-size: 0.72rem;
+            }
+        }
+
     </style>
 
 </head>
@@ -1017,6 +1052,23 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+    <!-- ========================================================
+         PULSANTE MOSTRA/NASCONDI BOZZE
+         VISIBILE SOLO AGLI UTENTI AUTENTICATI
+         ======================================================== -->
+
+    <div sec:authorize="isAuthenticated()" class="container py-3 draft-toggle-container">
+        <div class="d-flex justify-content-end">
+            <button type="button"
+                    id="btn-toggle-drafts"
+                    class="btn btn-warning fw-semibold shadow-sm"
+                    aria-expanded="false">
+                <i class="bi bi-eye me-2"></i>
+                <span>Mostra bozze</span>
+            </button>
+        </div>
+    </div>
+
 
 <!-- ========================================================
      MAIN CONTENT
@@ -1031,6 +1083,8 @@
          th:class="${block.containerType.cssClass}
                    + ' py-5 block-container position-relative'"
 
+         th:classappend="${block.draft ? ' draft-block-hidden' : ''}"
+
          th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'}
                    + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent') + ';'">
 
@@ -1039,7 +1093,7 @@
         <div sec:authorize="isAuthenticated()" th:if="${block.draft}" 
              class="position-absolute top-0 start-0 m-3 z-3">
             <span class="badge bg-warning text-dark fs-6 px-3 py-2 shadow border border-warning border-2">
-                <i class="bi bi-pencil-square me-1"></i> Bozza (Visibile solo all'Admin)
+                <i class="bi bi-pencil-square me-1"></i> Bozza
             </span>
         </div>
 
@@ -1516,6 +1570,71 @@
      ======================================================== -->
 
 <script>
+
+    /* ========================================================
+       MOSTRA / NASCONDI BOZZE
+       ======================================================== */
+
+    const toggleDraftsBtn =
+        document.getElementById('btn-toggle-drafts');
+
+    if (toggleDraftsBtn) {
+
+        const draftBlocks =
+            document.querySelectorAll('.draft-block-hidden');
+
+        toggleDraftsBtn.addEventListener('click', () => {
+
+            const draftsVisible =
+                toggleDraftsBtn.getAttribute('aria-expanded') === 'true';
+
+            draftBlocks.forEach(block => {
+
+                if (draftsVisible) {
+                    block.classList.add('draft-block-hidden');
+                } else {
+                    block.classList.remove('draft-block-hidden');
+                }
+
+            });
+
+            toggleDraftsBtn.setAttribute(
+                'aria-expanded',
+                String(!draftsVisible)
+            );
+
+            const icon =
+                toggleDraftsBtn.querySelector('i');
+
+            const text =
+                toggleDraftsBtn.querySelector('span');
+
+            if (!draftsVisible) {
+
+                if (icon) {
+                    icon.className = 'bi bi-eye-slash me-2';
+                }
+
+                if (text) {
+                    text.textContent = 'Nascondi bozze';
+                }
+
+            } else {
+
+                if (icon) {
+                    icon.className = 'bi bi-eye me-2';
+                }
+
+                if (text) {
+                    text.textContent = 'Mostra bozze';
+                }
+
+            }
+
+        });
+
+    }
+
 
     /* ========================================================
        TORNA SU SCRIPT

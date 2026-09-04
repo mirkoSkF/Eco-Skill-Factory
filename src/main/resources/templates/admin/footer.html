@@ -288,9 +288,21 @@
                         <form id="configForm" th:action="@{/admin/footer/config/save}" th:object="${footerConfig}" method="post">
                             <input type="hidden" th:field="*{id}"/>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Opacità (0.0 - 1.0)</label>
-                                <input type="number" step="0.05" min="0" max="1" class="form-control" th:field="*{opacity}">
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <label class="form-label fw-bold mb-0" for="footerOpacityRange">Opacità Trasparenza</label>
+                                    <span class="badge bg-success" id="footerOpacityVal"
+                                          th:text="${footerConfig != null ? (T(java.lang.Math).round(footerConfig.opacity * 20) * 5) + '%' : '90%'}">90%</span>
+                                </div>
+                                <input type="range"
+                                       class="form-range"
+                                       id="footerOpacityRange"
+                                       name="opacity"
+                                       min="0"
+                                       max="1"
+                                       step="0.05"
+                                       th:value="${footerConfig != null ? footerConfig.opacity : 0.9}"
+                                       oninput="document.getElementById('footerOpacityVal').innerText = (Math.round(this.value * 20) * 5) + '%'">
                             </div>
 
                             <div class="mb-3">

@@ -431,7 +431,7 @@
                                 <button type="button" class="btn btn-brand flex-grow-1 py-2" onclick="showSaveBrandSettingsModal()">
                                     <i class="bi bi-save me-1"></i> Salva Impostazioni
                                 </button>
-                                <button type="button" class="btn btn-outline-warning py-2" onclick="resetBrandFormToDefault()" title="Ripristina valori di fabbrica nel form">
+                                <button type="button" class="btn btn-outline-warning py-2" onclick="showResetBrandSettingsModal()" title="Ripristina valori di fabbrica nel form">
                                     <i class="bi bi-arrow-counterclockwise me-1"></i> Reset colori
                                 </button>
                             </div>
@@ -628,7 +628,7 @@
                                                 <span th:if="${child.openInNewTab}" class="new-tab-badge">nuova scheda</span>
                                             </a>
 
-                                            <a th:if="${child.url != null and !#strings.isEmpty(child.url)}"
+                                            <a th:if="${child.page == null and child.url != null and !#strings.isEmpty(child.url)}"
                                                th:href="${child.url}"
                                                th:target="${child.openInNewTab} ? '_blank' : '_self'"
                                                class="badge bg-secondary bg-opacity-50 text-light border border-secondary border-opacity-25 text-decoration-none">
@@ -677,6 +677,22 @@
             <div class="modal-footer border-top border-secondary">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
                 <button type="button" class="btn btn-brand fw-bold" onclick="document.getElementById('brandSettingsForm').submit();">Conferma e Salva</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resetBrandSettingsConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-custom border-0">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title text-white"><i class="bi bi-arrow-counterclockwise text-warning me-2"></i>Conferma Reset Colori</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-light">Sei sicuro di voler ripristinare i colori e l'opacità ai valori predefiniti e salvare subito le modifiche?</div>
+            <div class="modal-footer border-top border-secondary">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="confirmResetAndSaveBrandSettings();">Conferma e Ripristina</button>
             </div>
         </div>
     </div>
@@ -734,6 +750,16 @@ function resetBrandFormToDefault() {
     // Aggiornamento Opacità
     document.getElementById('opacityRange').value = defaultOpacity;
     document.getElementById('opacityVal').innerText = defaultOpacity + '%';
+}
+
+function showResetBrandSettingsModal() {
+    const modal = new bootstrap.Modal(document.getElementById('resetBrandSettingsConfirmModal'));
+    modal.show();
+}
+
+function confirmResetAndSaveBrandSettings() {
+    resetBrandFormToDefault();
+    document.getElementById('brandSettingsForm').submit();
 }
 
 function toggleLinkInput() {

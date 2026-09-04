@@ -69,4 +69,20 @@ public class FooterAdminController {
         footerConfigRepository.save(config);
         return "redirect:/admin/footer";
     }
+
+    @PostMapping("/config/reset")
+    public String resetConfig() {
+        FooterConfig config = footerConfigRepository.findAll().stream()
+                .findFirst()
+                .orElseGet(FooterConfig::new);
+
+        config.setBackgroundColor("#0f172a");
+        config.setTextColor("#94a3b8");
+        config.setLinkColor("#00dc82");
+        config.setOpacity(0.95);
+        config.setCopyrightText("© 2026 Eco Skill Factory. Tutti i diritti riservati.");
+
+        footerConfigRepository.save(config);
+        return "redirect:/admin/footer";
+    }
 }

@@ -14,6 +14,12 @@ public class FooterConfig {
     @Column(name = "background_color")
     private String backgroundColor = "#0f172a";
 
+    @Column(name = "text_color")
+    private String textColor = "#94a3b8";
+
+    @Column(name = "link_color")
+    private String linkColor = "#00dc82";
+
     @Column(name = "opacity")
     private Double opacity = 0.95;
 
@@ -42,6 +48,12 @@ public class FooterConfig {
 
     public String getBackgroundColor() { return backgroundColor; }
     public void setBackgroundColor(String backgroundColor) { this.backgroundColor = backgroundColor; }
+
+    public String getTextColor() { return textColor; }
+    public void setTextColor(String textColor) { this.textColor = textColor; }
+
+    public String getLinkColor() { return linkColor; }
+    public void setLinkColor(String linkColor) { this.linkColor = linkColor; }
 
     public Double getOpacity() { return opacity; }
     public void setOpacity(Double opacity) { this.opacity = opacity; }

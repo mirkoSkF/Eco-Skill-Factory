@@ -3,21 +3,24 @@
 <body>
 
 <footer th:fragment="footer"
-        class="py-5 mt-auto border-top border-secondary border-opacity-10 text-white"
-        th:style="'background-color: ' + ${footerConfig != null ? footerConfig.rgbaStyle : 'rgba(15, 23, 42, 0.95)'} + ' !important;'">
+        class="py-5 mt-auto border-top border-secondary border-opacity-10"
+        th:style="'background-color: ' + ${footerConfig != null ? footerConfig.rgbaStyle : 'rgba(15, 23, 42, 0.95)'} + ' !important; color: ' + ${footerConfig != null and footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
 
     <div class="container">
         <div class="row g-4 mb-4">
             
             <!-- LATO SINISTRO: INFORMAZIONI AZIENDALI & SOCIAL -->
             <div class="col-12 col-lg-4">
-                <div class="mb-3 text-secondary small" th:if="${footerConfig != null}">
+                <div class="mb-3 small" th:if="${footerConfig != null}"
+                     th:style="'color: ' + ${footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                     <p class="mb-1" th:if="${footerConfig.address != null and !#strings.isEmpty(footerConfig.address)}">
-                        <i class="bi bi-geo-alt-fill me-2 text-success"></i>
+                        <i class="bi bi-geo-alt-fill me-2"
+                           th:style="'color: ' + ${footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"></i>
                         <span th:text="${footerConfig.address}">Indirizzo Sede</span>
                     </p>
                     <p class="mb-1" th:if="${footerConfig.vatNumber != null and !#strings.isEmpty(footerConfig.vatNumber)}">
-                        <i class="bi bi-card-heading me-2 text-success"></i>
+                        <i class="bi bi-card-heading me-2"
+                           th:style="'color: ' + ${footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"></i>
                         <span>P.IVA: </span><span th:text="${footerConfig.vatNumber}">12345678901</span>
                     </p>
                 </div>
@@ -25,15 +28,18 @@
                 <!-- ICONE SOCIAL -->
                 <div class="d-flex gap-3 mt-3" th:if="${footerConfig != null}">
                     <a th:if="${footerConfig.facebookUrl != null and !#strings.isEmpty(footerConfig.facebookUrl)}"
-                       th:href="${footerConfig.facebookUrl}" target="_blank" class="text-secondary hover-white fs-5" title="Facebook">
+                       th:href="${footerConfig.facebookUrl}" target="_blank" class="fs-5 opacity-75 opacity-100-hover" title="Facebook"
+                       th:style="'color: ' + ${footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                         <i class="bi bi-facebook"></i>
                     </a>
                     <a th:if="${footerConfig.instagramUrl != null and !#strings.isEmpty(footerConfig.instagramUrl)}"
-                       th:href="${footerConfig.instagramUrl}" target="_blank" class="text-secondary hover-white fs-5" title="Instagram">
+                       th:href="${footerConfig.instagramUrl}" target="_blank" class="fs-5 opacity-75 opacity-100-hover" title="Instagram"
+                       th:style="'color: ' + ${footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                         <i class="bi bi-instagram"></i>
                     </a>
                     <a th:if="${footerConfig.linkedinUrl != null and !#strings.isEmpty(footerConfig.linkedinUrl)}"
-                       th:href="${footerConfig.linkedinUrl}" target="_blank" class="text-secondary hover-white fs-5" title="LinkedIn">
+                       th:href="${footerConfig.linkedinUrl}" target="_blank" class="fs-5 opacity-75 opacity-100-hover" title="LinkedIn"
+                       th:style="'color: ' + ${footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                         <i class="bi bi-linkedin"></i>
                     </a>
                 </div>
@@ -53,7 +59,9 @@
                                 <a th:href="@{'/p/' + ${group.page.slug}}"
                                    th:target="${group.openInNewTab} ? '_blank' : '_self'"
                                    class="text-decoration-none">
-                                    <h6 class="fw-bold text-success mb-3 hover-white" th:text="${group.label}">Categoria</h6>
+                                    <h6 class="fw-bold mb-3"
+                                        th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                        th:text="${group.label}">Categoria</h6>
                                 </a>
                             </th:block>
 
@@ -61,12 +69,16 @@
                                 <a th:href="${group.url}"
                                    th:target="${group.openInNewTab} ? '_blank' : '_self'"
                                    class="text-decoration-none">
-                                    <h6 class="fw-bold text-success mb-3 hover-white" th:text="${group.label}">Categoria</h6>
+                                    <h6 class="fw-bold mb-3"
+                                        th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                        th:text="${group.label}">Categoria</h6>
                                 </a>
                             </th:block>
 
                             <th:block th:if="${group.page == null and (group.url == null or #strings.isEmpty(group.url))}">
-                                <h6 class="fw-bold text-success mb-3" th:text="${group.label}">Categoria</h6>
+                                <h6 class="fw-bold mb-3"
+                                    th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                    th:text="${group.label}">Categoria</h6>
                             </th:block>
 
                             <ul class="list-unstyled mb-0" th:if="${group.children != null and !#lists.isEmpty(group.children)}">
@@ -74,13 +86,15 @@
                                     <a th:if="${child.page != null}"
                                        th:href="@{'/p/' + ${child.page.slug}}"
                                        th:target="${child.openInNewTab} ? '_blank' : '_self'"
-                                       class="text-secondary text-decoration-none hover-white small">
+                                       class="text-decoration-none small"
+                                       th:style="'color: ' + ${footerConfig != null and footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                                         <span th:text="${child.label}">Link Page</span>
                                     </a>
                                     <a th:if="${child.page == null and child.url != null}"
                                        th:href="${child.url}"
                                        th:target="${child.openInNewTab} ? '_blank' : '_self'"
-                                       class="text-secondary text-decoration-none hover-white small">
+                                       class="text-decoration-none small"
+                                       th:style="'color: ' + ${footerConfig != null and footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                                         <span th:text="${child.label}">Link External</span>
                                     </a>
                                 </li>
@@ -98,7 +112,9 @@
                                 <a th:href="@{'/p/' + ${group.page.slug}}"
                                    th:target="${group.openInNewTab} ? '_blank' : '_self'"
                                    class="text-decoration-none">
-                                    <h6 class="fw-bold text-success mb-3 hover-white" th:text="${group.label}">Categoria</h6>
+                                    <h6 class="fw-bold mb-3"
+                                        th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                        th:text="${group.label}">Categoria</h6>
                                 </a>
                             </th:block>
 
@@ -106,12 +122,16 @@
                                 <a th:href="${group.url}"
                                    th:target="${group.openInNewTab} ? '_blank' : '_self'"
                                    class="text-decoration-none">
-                                    <h6 class="fw-bold text-success mb-3 hover-white" th:text="${group.label}">Categoria</h6>
+                                    <h6 class="fw-bold mb-3"
+                                        th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                        th:text="${group.label}">Categoria</h6>
                                 </a>
                             </th:block>
 
                             <th:block th:if="${group.page == null and (group.url == null or #strings.isEmpty(group.url))}">
-                                <h6 class="fw-bold text-success mb-3" th:text="${group.label}">Categoria</h6>
+                                <h6 class="fw-bold mb-3"
+                                    th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                    th:text="${group.label}">Categoria</h6>
                             </th:block>
 
                             <ul class="list-unstyled mb-0" th:if="${group.children != null and !#lists.isEmpty(group.children)}">
@@ -119,13 +139,15 @@
                                     <a th:if="${child.page != null}"
                                        th:href="@{'/p/' + ${child.page.slug}}"
                                        th:target="${child.openInNewTab} ? '_blank' : '_self'"
-                                       class="text-secondary text-decoration-none hover-white small">
+                                       class="text-decoration-none small"
+                                       th:style="'color: ' + ${footerConfig != null and footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                                         <span th:text="${child.label}">Link Page</span>
                                     </a>
                                     <a th:if="${child.page == null and child.url != null}"
                                        th:href="${child.url}"
                                        th:target="${child.openInNewTab} ? '_blank' : '_self'"
-                                       class="text-secondary text-decoration-none hover-white small">
+                                       class="text-decoration-none small"
+                                       th:style="'color: ' + ${footerConfig != null and footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                                         <span th:text="${child.label}">Link External</span>
                                     </a>
                                 </li>
@@ -143,7 +165,9 @@
                                 <a th:href="@{'/p/' + ${group.page.slug}}"
                                    th:target="${group.openInNewTab} ? '_blank' : '_self'"
                                    class="text-decoration-none">
-                                    <h6 class="fw-bold text-success mb-3 hover-white" th:text="${group.label}">Categoria</h6>
+                                    <h6 class="fw-bold mb-3"
+                                        th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                        th:text="${group.label}">Categoria</h6>
                                 </a>
                             </th:block>
 
@@ -151,12 +175,16 @@
                                 <a th:href="${group.url}"
                                    th:target="${group.openInNewTab} ? '_blank' : '_self'"
                                    class="text-decoration-none">
-                                    <h6 class="fw-bold text-success mb-3 hover-white" th:text="${group.label}">Categoria</h6>
+                                    <h6 class="fw-bold mb-3"
+                                        th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                        th:text="${group.label}">Categoria</h6>
                                 </a>
                             </th:block>
 
                             <th:block th:if="${group.page == null and (group.url == null or #strings.isEmpty(group.url))}">
-                                <h6 class="fw-bold text-success mb-3" th:text="${group.label}">Categoria</h6>
+                                <h6 class="fw-bold mb-3"
+                                    th:style="'color: ' + ${footerConfig != null and footerConfig.linkColor != null ? footerConfig.linkColor : '#00dc82'} + ' !important;'"
+                                    th:text="${group.label}">Categoria</h6>
                             </th:block>
 
                             <ul class="list-unstyled mb-0" th:if="${group.children != null and !#lists.isEmpty(group.children)}">
@@ -164,13 +192,15 @@
                                     <a th:if="${child.page != null}"
                                        th:href="@{'/p/' + ${child.page.slug}}"
                                        th:target="${child.openInNewTab} ? '_blank' : '_self'"
-                                       class="text-secondary text-decoration-none hover-white small">
+                                       class="text-decoration-none small"
+                                       th:style="'color: ' + ${footerConfig != null and footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                                         <span th:text="${child.label}">Link Page</span>
                                     </a>
                                     <a th:if="${child.page == null and child.url != null}"
                                        th:href="${child.url}"
                                        th:target="${child.openInNewTab} ? '_blank' : '_self'"
-                                       class="text-secondary text-decoration-none hover-white small">
+                                       class="text-decoration-none small"
+                                       th:style="'color: ' + ${footerConfig != null and footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'">
                                         <span th:text="${child.label}">Link External</span>
                                     </a>
                                 </li>
@@ -184,7 +214,8 @@
 
         <!-- COPYRIGHT -->
         <div class="text-center pt-3 border-top border-secondary border-opacity-10">
-            <p class="mb-0 small text-secondary"
+            <p class="mb-0 small"
+               th:style="'color: ' + ${footerConfig != null and footerConfig.textColor != null ? footerConfig.textColor : '#94a3b8'} + ' !important;'"
                th:text="${footerConfig != null ? footerConfig.copyrightText : '© 2026 Eco Skill Factory. Tutti i diritti riservati.'}">
                 © 2026 Eco Skill Factory. Tutti i diritti riservati.
             </p>

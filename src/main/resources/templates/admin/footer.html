@@ -288,11 +288,44 @@
                         <form id="configForm" th:action="@{/admin/footer/config/save}" th:object="${footerConfig}" method="post">
                             <input type="hidden" th:field="*{id}"/>
 
+                            <!-- SEZIONE COLORI -->
+                            <h6 class="fw-bold text-success mb-3"><i class="bi bi-palette me-1"></i> Stile e Colori</h6>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Colore Sfondo Footer</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color bg-dark border-secondary"
+                                           id="bgColorPicker" th:value="${footerConfig.backgroundColor}">
+                                    <input type="text" class="form-control" id="bgColorInput"
+                                           th:field="*{backgroundColor}" placeholder="#0f172a">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Colore Testo Generale</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color bg-dark border-secondary"
+                                           id="textColorPicker" th:value="${footerConfig.textColor}">
+                                    <input type="text" class="form-control" id="textColorInput"
+                                           th:field="*{textColor}" placeholder="#94a3b8">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Colore Voci / Link</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color bg-dark border-secondary"
+                                           id="linkColorPicker" th:value="${footerConfig.linkColor}">
+                                    <input type="text" class="form-control" id="linkColorInput"
+                                           th:field="*{linkColor}" placeholder="#00dc82">
+                                </div>
+                            </div>
+
                             <div class="mb-4">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <label class="form-label fw-bold mb-0" for="footerOpacityRange">Opacità Trasparenza</label>
                                     <span class="badge bg-success" id="footerOpacityVal"
-                                          th:text="${footerConfig != null ? (T(java.lang.Math).round(footerConfig.opacity * 20) * 5) + '%' : '90%'}">90%</span>
+                                          th:text="${footerConfig != null ? (T(java.lang.Math).round(footerConfig.opacity * 20) * 5) + '%' : '95%'}">95%</span>
                                 </div>
                                 <input type="range"
                                        class="form-range"
@@ -301,7 +334,7 @@
                                        min="0"
                                        max="1"
                                        step="0.05"
-                                       th:value="${footerConfig != null ? footerConfig.opacity : 0.9}"
+                                       th:value="${footerConfig != null ? footerConfig.opacity : 0.95}"
                                        oninput="document.getElementById('footerOpacityVal').innerText = (Math.round(this.value * 20) * 5) + '%'">
                             </div>
 
@@ -341,10 +374,18 @@
                                 <input type="url" class="form-control" placeholder="https://instagram.com/..." th:field="*{instagramUrl}">
                             </div>
 
-                            <button type="button" class="btn btn-brand w-100 py-2" onclick="showConfirmModal()">
-                                <i class="bi bi-save me-1"></i> Salva Configurazione
-                            </button>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-brand w-100 py-2" onclick="showConfirmModal()">
+                                    <i class="bi bi-save me-1"></i> Salva Configurazione
+                                </button>
+                                <button type="button" class="btn btn-outline-warning text-nowrap py-2" onclick="showResetModal()">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset stile e colori
+                                </button>
+                            </div>
                         </form>
+
+                        <!-- FORM NASCOSTO PER RESET FABBRICA -->
+                        <form id="resetConfigForm" th:action="@{/admin/footer/config/reset}" method="post" style="display: none;"></form>
                     </div>
                 </div>
             </div>
@@ -490,6 +531,25 @@
     </div>
 </div>
 
+<!-- MODAL DI CONFERMA RESET FABBRICA -->
+<div class="modal fade" id="resetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-custom border-0">
+            <div class="modal-header border-bottom border-warning bg-warning bg-opacity-10 text-white">
+                <h5 class="modal-title fw-bold"><i class="bi bi-arrow-counterclockwise text-warning me-2"></i>Reset di Fabbrica</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-light">
+                Sei sicuro di voler ripristinare le impostazioni predefinite del footer? I colori e i parametri generali torneranno a quelli di default.
+            </div>
+            <div class="modal-footer border-top border-secondary">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-warning fw-bold" onclick="submitResetForm()">Ripristina</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- MODAL DI CONFERMA SALVATAGGIO VOCE -->
 <div class="modal fade" id="confirmItemModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -531,21 +591,27 @@
 <!-- SCRIPT COLOR PICKER E MODAL -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const picker = document.getElementById('bgColorPicker');
-    const input = document.getElementById('bgColorInput');
-    if (picker && input) {
-        if (/^#[0-9A-Fa-f]{6}$/.test(input.value)) {
-            picker.value = input.value;
-        }
-        picker.addEventListener('input', () => {
-            input.value = picker.value;
-        });
-        input.addEventListener('input', () => {
+    function bindColorPicker(pickerId, inputId) {
+        const picker = document.getElementById(pickerId);
+        const input = document.getElementById(inputId);
+        if (picker && input) {
             if (/^#[0-9A-Fa-f]{6}$/.test(input.value)) {
                 picker.value = input.value;
             }
-        });
+            picker.addEventListener('input', () => {
+                input.value = picker.value;
+            });
+            input.addEventListener('input', () => {
+                if (/^#[0-9A-Fa-f]{6}$/.test(input.value)) {
+                    picker.value = input.value;
+                }
+            });
+        }
     }
+
+    bindColorPicker('bgColorPicker', 'bgColorInput');
+    bindColorPicker('textColorPicker', 'textColorInput');
+    bindColorPicker('linkColorPicker', 'linkColorInput');
 });
 
 function showConfirmModal() {
@@ -555,6 +621,15 @@ function showConfirmModal() {
 
 function submitConfigForm() {
     document.getElementById('configForm').submit();
+}
+
+function showResetModal() {
+    const modal = new bootstrap.Modal(document.getElementById('resetModal'));
+    modal.show();
+}
+
+function submitResetForm() {
+    document.getElementById('resetConfigForm').submit();
 }
 
 function showItemConfirmModal() {

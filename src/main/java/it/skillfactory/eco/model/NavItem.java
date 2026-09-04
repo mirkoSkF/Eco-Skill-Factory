@@ -27,6 +27,9 @@ public class NavItem {
     @Column(name = "open_in_new_tab", nullable = false)
     private boolean openInNewTab = false;
 
+    @Column(name = "color")
+    private String color;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "page_id")
     private Page page;
@@ -90,6 +93,14 @@ public class NavItem {
 
     public void setOpenInNewTab(boolean openInNewTab) {
         this.openInNewTab = openInNewTab;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public Page getPage() {

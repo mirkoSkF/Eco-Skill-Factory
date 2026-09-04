@@ -19,6 +19,12 @@ public class NavbarSettings {
     @Column(name = "opacity")
     private Integer opacity = 90;
 
+    @Column(name = "bg_color")
+    private String bgColor = "#0f172a";
+
+    @Column(name = "text_color")
+    private String textColor = "#f1f5f9";
+
     public NavbarSettings() {
     }
 
@@ -52,5 +58,21 @@ public class NavbarSettings {
 
     public void setOpacity(Integer opacity) {
         this.opacity = opacity;
+    }
+
+    public String getBgColor() {
+        return bgColor;
+    }
+
+    public void setBgColor(String bgColor) {
+        this.bgColor = bgColor;
+    }
+
+    public String getTextColor() {
+        return textColor;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
     }
 }

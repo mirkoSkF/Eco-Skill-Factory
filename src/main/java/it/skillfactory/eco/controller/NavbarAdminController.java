@@ -58,6 +58,8 @@ public class NavbarAdminController {
                 .orElseGet(() -> {
                     NavbarSettings s = new NavbarSettings();
                     s.setOpacity(90);
+                    s.setBgColor("#0f172a");
+                    s.setTextColor("#f1f5f9");
                     return navbarSettingsRepository.save(s);
                 });
         model.addAttribute("settings", settings);
@@ -98,6 +100,8 @@ public class NavbarAdminController {
                 .orElseGet(() -> {
                     NavbarSettings s = new NavbarSettings();
                     s.setOpacity(90);
+                    s.setBgColor("#0f172a");
+                    s.setTextColor("#f1f5f9");
                     return navbarSettingsRepository.save(s);
                 });
         model.addAttribute("settings", settings);
@@ -117,17 +121,23 @@ public class NavbarAdminController {
             navItem.setItemOrder(0);
         }
 
+        if (navItem.getColor() != null && navItem.getColor().isBlank()) {
+            navItem.setColor(null);
+        }
+
         navItemRepository.save(navItem);
 
         return "redirect:/admin/navbar";
     }
 
     /**
-     * Salvataggio impostazioni generali Navbar (Logo, Favicon, Opacità)
+     * Salvataggio impostazioni generali Navbar (Logo, Favicon, Opacità, Colori)
      */
     @PostMapping("/settings/save")
     public String saveSettings(
             @RequestParam(value = "opacity", defaultValue = "90") Integer opacity,
+            @RequestParam(value = "bgColor", defaultValue = "#0f172a") String bgColor,
+            @RequestParam(value = "textColor", defaultValue = "#f1f5f9") String textColor,
             @RequestParam(value = "logoFile", required = false) MultipartFile logoFile,
             @RequestParam(value = "faviconFile", required = false) MultipartFile faviconFile,
             @RequestParam(value = "removeLogo", required = false, defaultValue = "false") boolean removeLogo,
@@ -139,6 +149,8 @@ public class NavbarAdminController {
                 .orElseGet(NavbarSettings::new);
 
         settings.setOpacity(opacity);
+        settings.setBgColor(bgColor);
+        settings.setTextColor(textColor);
 
         if (removeLogo) {
             deleteUploadedFile(settings.getLogoUrl());

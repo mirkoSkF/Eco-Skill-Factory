@@ -15,7 +15,29 @@
 
 <header th:fragment="navbar"
         class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3"
-        th:style="${navbarSettings != null ? 'background-color: rgba(15, 23, 42, ' + (navbarSettings.opacity / 100.0) + ') !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);' : ''}">
+        th:style="${navbarSettings != null ? 
+            'background-color: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + ' !important; ' +
+            'opacity: ' + ((navbarSettings.opacity != null ? navbarSettings.opacity : 90) / 100.0) + '; ' +
+            'color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#f1f5f9') + '; ' +
+            'backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); ' +
+            '--btn-color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#ffffff') + '; ' +
+            '--btn-bg-hover: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + ';'
+            : '--btn-color: #ffffff; --btn-bg-hover: #0f172a;'}">
+
+    <style>
+        .btn-dynamic-auth {
+            color: var(--btn-color) !important;
+            border-color: var(--btn-color) !important;
+            background-color: transparent;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-dynamic-auth:hover {
+            background-color: var(--btn-color) !important;
+            color: var(--btn-bg-hover) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 
     <div class="container">
 
@@ -87,7 +109,8 @@
 
                     <!-- VOCE SINGOLA - PAGINA INTERNA -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page != null}"
-                       class="nav-link px-3 text-light opacity-75 opacity-100-hover"
+                       class="nav-link px-3 opacity-75 opacity-100-hover"
+                       th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
                        th:href="@{'/p/' + ${item.page.slug}}"
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
                        th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
@@ -97,7 +120,8 @@
 
                     <!-- VOCE SINGOLA - URL ESTERNO -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and item.url != null and !#strings.isEmpty(item.url)}"
-                       class="nav-link px-3 text-light opacity-75 opacity-100-hover"
+                       class="nav-link px-3 opacity-75 opacity-100-hover"
+                       th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
                        th:href="${item.url}"
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
                        th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
@@ -107,7 +131,8 @@
 
                     <!-- VOCE SINGOLA - SENZA DESTINAZIONE -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and (item.url == null or #strings.isEmpty(item.url))}"
-                       class="nav-link px-3 text-light opacity-75 opacity-100-hover"
+                       class="nav-link px-3 opacity-75 opacity-100-hover"
+                       th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
                        href="javascript:void(0);"
                        th:text="${item.label}">
                         Menu Item
@@ -115,7 +140,8 @@
 
                     <!-- VOCE DROPDOWN -->
                     <a th:if="${item.children != null and !item.children.isEmpty()}"
-                       class="nav-link dropdown-toggle px-3 text-light opacity-75 opacity-100-hover"
+                       class="nav-link dropdown-toggle px-3 opacity-75 opacity-100-hover"
+                       th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
                        href="#"
                        role="button"
                        data-bs-toggle="dropdown"
@@ -132,6 +158,7 @@
 
                             <a th:if="${child.page != null}"
                                class="dropdown-item"
+                               th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
                                th:href="@{'/p/' + ${child.page.slug}}"
                                th:target="${child.openInNewTab ? '_blank' : '_self'}"
                                th:rel="${child.openInNewTab ? 'noopener noreferrer' : null}"
@@ -141,6 +168,7 @@
 
                             <a th:if="${child.page == null and child.url != null and !#strings.isEmpty(child.url)}"
                                class="dropdown-item"
+                               th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
                                th:href="${child.url}"
                                th:target="${child.openInNewTab ? '_blank' : '_self'}"
                                th:rel="${child.openInNewTab ? 'noopener noreferrer' : null}"
@@ -150,6 +178,7 @@
 
                             <a th:if="${child.page == null and (child.url == null or #strings.isEmpty(child.url))}"
                                class="dropdown-item"
+                               th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
                                href="javascript:void(0);"
                                th:text="${child.label}">
                                 Sub Item
@@ -172,14 +201,14 @@
 
                 <a sec:authorize="!isAuthenticated()"
                    th:href="@{/login}"
-                   class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
+                   class="btn btn-sm rounded-pill px-3 shadow-sm btn-dynamic-auth">
                     <i class="bi bi-shield-lock-fill me-1"></i>
                     Area Admin
                 </a>
 
                 <a sec:authorize="isAuthenticated()"
                    th:href="@{/admin/dashboard}"
-                   class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm border-opacity-25">
+                   class="btn btn-sm rounded-pill px-3 shadow-sm btn-dynamic-auth">
                     <i class="bi bi-speedometer2 me-1"></i>
                     Dashboard
                 </a>

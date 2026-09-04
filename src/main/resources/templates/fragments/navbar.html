@@ -16,15 +16,20 @@
 <header th:fragment="navbar"
         class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3"
         th:style="${navbarSettings != null ? 
-            'background-color: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + ' !important; ' +
-            'opacity: ' + ((navbarSettings.opacity != null ? navbarSettings.opacity : 90) / 100.0) + '; ' +
+            '--nav-bg-hex: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + '; ' +
+            '--nav-opacity: ' + ((navbarSettings.opacity != null ? navbarSettings.opacity : 90) / 100.0) + '; ' +
             'color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#f1f5f9') + '; ' +
             'backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); ' +
             '--btn-color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#ffffff') + '; ' +
             '--btn-bg-hover: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + ';'
-            : '--btn-color: #ffffff; --btn-bg-hover: #0f172a;'}">
+            : '--nav-bg-hex: #0f172a; --nav-opacity: 0.9; --btn-color: #ffffff; --btn-bg-hover: #0f172a;'}">
 
     <style>
+        /* Applicazione del colore di sfondo isolato tramite RGBA */
+        header.navbar {
+            background-color: rgb(from var(--nav-bg-hex) r g b / var(--nav-opacity)) !important;
+        }
+
         .btn-dynamic-auth {
             color: var(--btn-color) !important;
             border-color: var(--btn-color) !important;
@@ -109,7 +114,7 @@
 
                     <!-- VOCE SINGOLA - PAGINA INTERNA -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page != null}"
-                       class="nav-link px-3 opacity-75 opacity-100-hover"
+                       class="nav-link px-3"
                        th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
                        th:href="@{'/p/' + ${item.page.slug}}"
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
@@ -120,7 +125,7 @@
 
                     <!-- VOCE SINGOLA - URL ESTERNO -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and item.url != null and !#strings.isEmpty(item.url)}"
-                       class="nav-link px-3 opacity-75 opacity-100-hover"
+                       class="nav-link px-3"
                        th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
                        th:href="${item.url}"
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
@@ -131,7 +136,7 @@
 
                     <!-- VOCE SINGOLA - SENZA DESTINAZIONE -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and (item.url == null or #strings.isEmpty(item.url))}"
-                       class="nav-link px-3 opacity-75 opacity-100-hover"
+                       class="nav-link px-3"
                        th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
                        href="javascript:void(0);"
                        th:text="${item.label}">
@@ -140,7 +145,7 @@
 
                     <!-- VOCE DROPDOWN -->
                     <a th:if="${item.children != null and !item.children.isEmpty()}"
-                       class="nav-link dropdown-toggle px-3 opacity-75 opacity-100-hover"
+                       class="nav-link dropdown-toggle px-3"
                        th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
                        href="#"
                        role="button"

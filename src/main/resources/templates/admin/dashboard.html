@@ -143,6 +143,27 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        /* INPUT CUSTOM DI RICERCA */
+        .search-input-group .form-control,
+        .search-input-group .form-select {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f1f5f9;
+        }
+
+        .search-input-group .form-control:focus,
+        .search-input-group .form-select:focus {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: #00dc82;
+            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.15);
+            color: #fff;
+        }
+
+        .search-input-group .form-select option {
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+
         /* TABELLA RIDOTTA ULTERIORMENTE DEL 20% */
         .table-custom {
             color: #cbd5e1;
@@ -300,6 +321,45 @@
             </div>
         </div>
 
+        <!-- FORM DI RICERCA IN TEMPO REALE (PURE CLIENT-SIDE) -->
+        <div class="card card-custom mb-4 p-3">
+            <form id="searchForm" onsubmit="return false;" class="row g-2 align-items-center">
+                <!-- Ricerca per Titolo -->
+                <div class="col-md-6 col-lg-5">
+                    <div class="input-group search-input-group">
+                        <span class="input-group-text bg-transparent text-secondary border-secondary border-opacity-25">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Cerca per titolo amminstrativo..." autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Ricerca / Filtro per Tipo Blocco -->
+                <div class="col-md-4 col-lg-4">
+                    <div class="input-group search-input-group">
+                        <span class="input-group-text bg-transparent text-secondary border-secondary border-opacity-25">
+                            <i class="bi bi-filter"></i>
+                        </span>
+                        <select id="typeSelect" class="form-select">
+                            <option value="">Tutti i tipi di blocco</option>
+                            <option th:each="type : ${T(it.skillfactory.eco.model.BlockType).values()}"
+                                    th:value="${type}"
+                                    th:text="${type.label}">
+                                Jumbotron
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Reset Filtri Client-Side -->
+                <div class="col-md-2 col-lg-3 d-flex justify-content-end d-none" id="resetBtnContainer">
+                    <button type="button" id="resetFiltersBtn" class="btn btn-outline-secondary w-100" title="Azzera filtri">
+                        <i class="bi bi-x-lg me-1"></i>Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <!-- TABELLA RIGHE HOME -->
         <div class="card card-custom mb-5">
             <div class="card-body p-0">
@@ -318,6 +378,7 @@
                         <tbody>
                             <tr th:each="b : ${blocks}"
                                 th:data-draft="${b.draft}"
+                                th:data-block-type="${b.blockType}"
                                 th:classappend="${b.draft} ? 'table-draft-row d-none' : ''">
                                 <td class="text-center fw-bold text-success">
                                     <span th:text="${b.position}">1</span>
@@ -455,18 +516,21 @@
         const toggleIcon = document.getElementById('toggleDraftsIcon');
 
         if (toggleBtn) {
-            // Recupera lo stato dal localStorage (predefinito: 'false' -> bozze nascoste)
             let draftsVisible = localStorage.getItem('draftsVisible') === 'true';
 
             function updateUI() {
-                const draftRows = document.querySelectorAll('.table-draft-row');
-                draftRows.forEach(row => {
-                    if (draftsVisible) {
-                        row.classList.remove('d-none');
-                    } else {
-                        row.classList.add('d-none');
-                    }
-                });
+                if (window.filterRowsLocally) {
+                    window.filterRowsLocally();
+                } else {
+                    const draftRows = document.querySelectorAll('.table-draft-row');
+                    draftRows.forEach(row => {
+                        if (draftsVisible) {
+                            row.classList.remove('d-none');
+                        } else {
+                            row.classList.add('d-none');
+                        }
+                    });
+                }
 
                 if (draftsVisible) {
                     toggleBtnText.textContent = 'nascondi bozze';
@@ -477,13 +541,105 @@
                 }
             }
 
-            // Applica subito lo stato memorizzato all'avvio/ricaricamento pagina
             updateUI();
 
             toggleBtn.addEventListener('click', function() {
                 draftsVisible = !draftsVisible;
                 localStorage.setItem('draftsVisible', draftsVisible);
                 updateUI();
+            });
+        }
+    });
+
+    /* ========================================================
+       SCRIPT GESTIONE FILTRO IN TEMPO REALE SENZA RICARICARE LA PAGINA
+       ======================================================== */
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchInput');
+        const typeSelect = document.getElementById('typeSelect');
+        const searchForm = document.getElementById('searchForm');
+        const resetBtnContainer = document.getElementById('resetBtnContainer');
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+
+        if (!searchForm) return;
+
+        // Previene la sottomissione del form su pressione del tasto Enter
+        searchForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+        });
+
+        // Funzione per filtrare direttamente le righe DOM visibili
+        window.filterRowsLocally = function() {
+            const titleFilter = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const selectedType = typeSelect ? typeSelect.value.toLowerCase().trim() : '';
+            
+            // Recupera la label dell'opzione selezionata (se presente)
+            const selectedTypeLabel = (typeSelect && typeSelect.selectedIndex >= 0) 
+                ? typeSelect.options[typeSelect.selectedIndex].text.toLowerCase().trim() 
+                : '';
+
+            const draftsVisible = localStorage.getItem('draftsVisible') === 'true';
+            const rows = document.querySelectorAll('.table-custom tbody tr');
+
+            rows.forEach(row => {
+                if (row.querySelector('.empty-icon')) return;
+
+                const isDraft = row.getAttribute('data-draft') === 'true' || row.classList.contains('table-draft-row');
+                
+                // Se la riga è una bozza e il toggle bozze è disattivato, nascondila
+                if (isDraft && !draftsVisible) {
+                    row.classList.add('d-none');
+                    return;
+                }
+
+                const titleText = row.children[1] ? row.children[1].textContent.toLowerCase() : '';
+                const typeBadgeText = row.children[2] ? row.children[2].textContent.toLowerCase().trim() : '';
+                const rowBlockType = row.getAttribute('data-block-type') ? row.getAttribute('data-block-type').toLowerCase() : '';
+
+                const matchesTitle = titleFilter === '' || titleText.includes(titleFilter);
+                
+                // Confronta sia con il valore Enum che con il testo descrittivo della label del Badge
+                const matchesType = selectedType === '' || 
+                                    (rowBlockType && rowBlockType === selectedType) ||
+                                    typeBadgeText.includes(selectedType) ||
+                                    (selectedTypeLabel && typeBadgeText.includes(selectedTypeLabel));
+
+                if (matchesTitle && matchesType) {
+                    row.classList.remove('d-none');
+                } else {
+                    row.classList.add('d-none');
+                }
+            });
+
+            // Mostra o nasconde il pulsante Reset a seconda che ci siano filtri attivi
+            if (resetBtnContainer) {
+                if (titleFilter !== '' || selectedType !== '') {
+                    resetBtnContainer.classList.remove('d-none');
+                } else {
+                    resetBtnContainer.classList.add('d-none');
+                }
+            }
+        };
+
+        // Esegui il primo filtraggio all'avvio
+        window.filterRowsLocally();
+
+        // Listener ricerca testuale istantanea
+        if (searchInput) {
+            searchInput.addEventListener('input', window.filterRowsLocally);
+        }
+
+        // Listener selezione tipo blocco istantanea
+        if (typeSelect) {
+            typeSelect.addEventListener('change', window.filterRowsLocally);
+        }
+
+        // Listener reset filtri
+        if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', function () {
+                if (searchInput) searchInput.value = '';
+                if (typeSelect) typeSelect.value = '';
+                window.filterRowsLocally();
             });
         }
     });

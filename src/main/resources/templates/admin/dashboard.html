@@ -125,9 +125,11 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        /* TABELLA RIDOTTA ULTERIORMENTE DEL 20% */
         .table-custom {
             color: #cbd5e1;
             margin-bottom: 0;
+            font-size: 0.75rem; /* Dimensione testo ridotta a 0.75rem */
         }
 
         .table-custom thead th {
@@ -135,7 +137,7 @@
             color: #f8fafc;
             border-bottom: 1px solid rgba(255, 255, 255, 0.12);
             font-weight: 600;
-            padding: 1rem 0.75rem;
+            padding: 0.55rem 0.5rem; /* Padding ridotto */
         }
 
         .table-custom tbody tr {
@@ -144,13 +146,30 @@
         }
 
         .table-custom tbody tr:hover {
-            background: rgba(0, 220, 130, 0.04) !important;
+            background: rgba(0, 220, 130, 0.06) !important;
         }
 
         .table-custom td {
-            padding: 0.9rem 0.75rem;
-            background: transparent !important;
+            padding: 0.45rem 0.5rem; /* Padding celle fortemente compattato */
+            background: transparent;
             color: #cbd5e1;
+        }
+
+        /* STILE EVIDENZIATO PER RIGHE IN BOZZA */
+        .table-draft-row {
+            background: rgba(245, 158, 11, 0.12) !important; /* Colore ambrato semitrasparente */
+            border-left: 3px solid #f59e0b !important; /* Bordo evidenziatore a sinistra */
+        }
+
+        .table-draft-row:hover {
+            background: rgba(245, 158, 11, 0.2) !important;
+        }
+
+        /* BOTTONI COMPATTI PER TABELLA RIDOTTA */
+        .table-custom .btn-table {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.45rem;
+            border-radius: 0.35rem;
         }
 
         /* BOTTONI CON STILE BRAND */
@@ -173,9 +192,10 @@
         code {
             color: #36e4da;
             background: rgba(54, 228, 218, 0.1);
-            padding: 0.2rem 0.4rem;
+            padding: 0.15rem 0.35rem;
             border-radius: 0.25rem;
             font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
         }
 
         .empty-icon {
@@ -237,30 +257,41 @@
                 </p>
             </div>
 
-            <!-- NUOVA RIGA -->
-            <a th:href="@{/admin/block/new}" class="btn btn-brand px-3 py-2">
-                <i class="bi bi-plus-circle me-1"></i>
-                Aggiungi Nuova Riga
-            </a>
+            <!-- BOTTONI AZIONE -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- BOTTONE MOSTRA / NASCONDI BOZZE TABELLA -->
+                <button id="toggleDraftsBtn" type="button" class="btn btn-warning fw-semibold px-3 py-2">
+                    <i class="bi bi-eye me-1" id="toggleDraftsIcon"></i>
+                    <span id="toggleDraftsBtnText">mostra bozze</span>
+                </button>
+
+                <!-- NUOVA RIGA -->
+                <a th:href="@{/admin/block/new}" class="btn btn-brand px-3 py-2">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Aggiungi Nuova Riga
+                </a>
+            </div>
         </div>
 
         <!-- TABELLA RIGHE HOME -->
         <div class="card card-custom mb-5">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-custom align-middle">
+                    <table class="table table-sm table-custom align-middle">
                         <thead>
                             <tr>
-                                <th style="width: 80px;" class="text-center">Pos.</th>
+                                <th style="width: 70px;" class="text-center">Pos.</th>
                                 <th>Titolo Amministrativo</th>
                                 <th>Tipo Blocco</th>
                                 <th>Altezza Min.</th>
                                 <th>Stato</th>
-                                <th class="text-end" style="width: 220px;">Azioni</th>
+                                <th class="text-end" style="width: 180px;">Azioni</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="b : ${blocks}">
+                            <tr th:each="b : ${blocks}"
+                                th:data-draft="${b.draft}"
+                                th:classappend="${b.draft} ? 'table-draft-row d-none' : ''">
                                 <td class="text-center fw-bold text-success">
                                     <span th:text="${b.position}">1</span>
                                 </td>
@@ -285,12 +316,12 @@
                                 </td>
                                 <td>
                                     <!-- LEVETTA STATO BOZZA -->
-                                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                                    <div class="form-check form-switch d-flex align-items-center gap-2 mb-0">
                                         <input class="form-check-input style-switch" type="checkbox" role="switch"
                                                th:id="'draftSwitch-' + ${b.id}"
                                                th:checked="${b.draft}"
                                                th:onchange="|window.location.href='@{/admin/block/toggle-draft/}${b.id}'|">
-                                        <label class="form-check-label small mb-0 fw-semibold"
+                                        <label class="form-check-label fw-semibold"
                                                th:for="'draftSwitch-' + ${b.id}"
                                                th:classappend="${b.draft} ? 'text-warning' : 'text-success'"
                                                th:text="${b.draft} ? 'Bozza' : 'Pubblicato'">
@@ -299,10 +330,10 @@
                                     </div>
                                 </td>
                                 <td class="text-end text-nowrap">
-                                    <a th:href="@{/admin/block/edit/{id}(id=${b.id})}" class="btn btn-sm btn-outline-info me-1" title="Modifica Riga">
+                                    <a th:href="@{/admin/block/edit/{id}(id=${b.id})}" class="btn btn-outline-info btn-table me-1" title="Modifica Riga">
                                         <i class="bi bi-pencil me-1"></i>Modifica
                                     </a>
-                                    <a th:href="@{/admin/block/delete/{id}(id=${b.id})}" class="btn btn-sm btn-outline-danger" onclick="confirmDeleteBlock(this.href); return false;" title="Elimina Riga">
+                                    <a th:href="@{/admin/block/delete/{id}(id=${b.id})}" class="btn btn-outline-danger btn-table" onclick="confirmDeleteBlock(this.href); return false;" title="Elimina Riga">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -388,6 +419,48 @@
 </script>
 
 <script>
+    /* ========================================================
+       TOGGLE VISIBILITÀ BOZZE IN TABELLA CON PERSISTENZA LOCALSTORAGE
+       ======================================================== */
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggleDraftsBtn');
+        const toggleBtnText = document.getElementById('toggleDraftsBtnText');
+        const toggleIcon = document.getElementById('toggleDraftsIcon');
+
+        if (toggleBtn) {
+            // Recupera lo stato dal localStorage (predefinito: 'false' -> bozze nascoste)
+            let draftsVisible = localStorage.getItem('draftsVisible') === 'true';
+
+            function updateUI() {
+                const draftRows = document.querySelectorAll('.table-draft-row');
+                draftRows.forEach(row => {
+                    if (draftsVisible) {
+                        row.classList.remove('d-none');
+                    } else {
+                        row.classList.add('d-none');
+                    }
+                });
+
+                if (draftsVisible) {
+                    toggleBtnText.textContent = 'nascondi bozze';
+                    toggleIcon.className = 'bi bi-eye-slash me-1';
+                } else {
+                    toggleBtnText.textContent = 'mostra bozze';
+                    toggleIcon.className = 'bi bi-eye me-1';
+                }
+            }
+
+            // Applica subito lo stato memorizzato all'avvio/ricaricamento pagina
+            updateUI();
+
+            toggleBtn.addEventListener('click', function() {
+                draftsVisible = !draftsVisible;
+                localStorage.setItem('draftsVisible', draftsVisible);
+                updateUI();
+            });
+        }
+    });
+
     function confirmDeleteBlock(deleteUrl) {
         document.getElementById('btnConfirmDeleteBlock').href = deleteUrl;
         var deleteModal = new bootstrap.Modal(document.getElementById('deleteBlockModal'));

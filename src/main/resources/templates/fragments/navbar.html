@@ -9,23 +9,20 @@
 <body>
 
 <!-- ========================================================
-     NAVBAR FRAGMENT
-     Condivisa da index.html e pagina.html
+     NAVBAR FRAGMENT (SENZA SFOCATURA)
      ======================================================== -->
 
 <header th:fragment="navbar"
-        class="navbar navbar-expand-lg navbar-dark glass-header sticky-top py-3"
+        class="navbar navbar-expand-lg navbar-dark sticky-top py-3"
         th:style="${navbarSettings != null ? 
             '--nav-bg-hex: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + '; ' +
             '--nav-opacity: ' + ((navbarSettings.opacity != null ? navbarSettings.opacity : 90) / 100.0) + '; ' +
             'color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#f1f5f9') + '; ' +
-            'backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); ' +
             '--btn-color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#ffffff') + '; ' +
             '--btn-bg-hover: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + ';'
             : '--nav-bg-hex: #0f172a; --nav-opacity: 0.9; --btn-color: #ffffff; --btn-bg-hover: #0f172a;'}">
 
     <style>
-        /* Applicazione del colore di sfondo isolato tramite RGBA */
         header.navbar {
             background-color: rgb(from var(--nav-bg-hex) r g b / var(--nav-opacity)) !important;
         }
@@ -46,39 +43,22 @@
 
     <div class="container">
 
-        <!-- =================================================
-             LOGO (SOSTITUITO SE ALLEGATO, ALTRIMENTI DEFAULT)
-             ================================================= -->
-
-        <!-- SE IL LOGO È STATO ALLEGATO -->
+        <!-- LOGO -->
         <a th:if="${navbarSettings != null and navbarSettings.logoUrl != null and !#strings.isEmpty(navbarSettings.logoUrl)}"
            class="navbar-brand d-flex align-items-center"
            th:href="@{/}">
             <img th:src="${navbarSettings.logoUrl}" alt="Logo" class="img-fluid" style="max-height: 45px;" />
         </a>
 
-        <!-- SE IL LOGO NON È ALLEGATO (BLOCCO DI DEFAULT) -->
         <a th:unless="${navbarSettings != null and navbarSettings.logoUrl != null and !#strings.isEmpty(navbarSettings.logoUrl)}"
            class="navbar-brand fw-extrabold fs-4 d-flex align-items-center gap-2"
            th:href="@{/}">
-
             <i class="bi bi-cpu-fill text-success fs-3"></i>
-
-            <span class="brand-text fw-bold">
-                Eco
-            </span>
-
-            <span class="brand-accent fw-bold">
-                Skill Factory
-            </span>
-
+            <span class="brand-text fw-bold">Eco</span>
+            <span class="brand-accent fw-bold">Skill Factory</span>
         </a>
 
-
-        <!-- =================================================
-             MOBILE MENU BUTTON
-             ================================================= -->
-
+        <!-- MOBILE BUTTON -->
         <button class="navbar-toggler border-0"
                 type="button"
                 data-bs-toggle="collapse"
@@ -86,33 +66,16 @@
                 aria-controls="navbarContent"
                 aria-expanded="false"
                 aria-label="Apri menu">
-
             <span class="navbar-toggler-icon"></span>
-
         </button>
 
+        <!-- NAVBAR CONTENT -->
+        <div class="collapse navbar-collapse" id="navbarContent">
 
-        <!-- =================================================
-             NAVBAR CONTENT
-             ================================================= -->
-
-        <div class="collapse navbar-collapse"
-             id="navbarContent">
-
-            <!-- =================================================
-                 MENU DINAMICO DA DATABASE
-                 ================================================= -->
-
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0"
-                th:if="${navItems != null}">
-
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0" th:if="${navItems != null}">
                 <li th:each="item : ${navItems}"
-                    th:class="${(item.children != null and !item.children.isEmpty())
-                               ? 'nav-item dropdown'
-                               : 'nav-item'}">
+                    th:class="${(item.children != null and !item.children.isEmpty()) ? 'nav-item dropdown' : 'nav-item'}">
 
-
-                    <!-- VOCE SINGOLA - PAGINA INTERNA -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page != null}"
                        class="nav-link px-3"
                        th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
@@ -123,7 +86,6 @@
                         Menu Item
                     </a>
 
-                    <!-- VOCE SINGOLA - URL ESTERNO -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and item.url != null and !#strings.isEmpty(item.url)}"
                        class="nav-link px-3"
                        th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
@@ -134,7 +96,6 @@
                         Menu Item
                     </a>
 
-                    <!-- VOCE SINGOLA - SENZA DESTINAZIONE -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and (item.url == null or #strings.isEmpty(item.url))}"
                        class="nav-link px-3"
                        th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
@@ -143,7 +104,6 @@
                         Menu Item
                     </a>
 
-                    <!-- VOCE DROPDOWN -->
                     <a th:if="${item.children != null and !item.children.isEmpty()}"
                        class="nav-link dropdown-toggle px-3"
                        th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
@@ -155,12 +115,9 @@
                         Dropdown
                     </a>
 
-                    <!-- SOTTO-VOCI DROPDOWN -->
                     <ul th:if="${item.children != null and !item.children.isEmpty()}"
                         class="dropdown-menu dropdown-menu-dark bg-dark border-secondary p-2">
-
                         <li th:each="child : ${item.children}">
-
                             <a th:if="${child.page != null}"
                                class="dropdown-item"
                                th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
@@ -170,7 +127,6 @@
                                th:text="${child.label}">
                                 Sub Item
                             </a>
-
                             <a th:if="${child.page == null and child.url != null and !#strings.isEmpty(child.url)}"
                                class="dropdown-item"
                                th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
@@ -180,7 +136,6 @@
                                th:text="${child.label}">
                                 Sub Item
                             </a>
-
                             <a th:if="${child.page == null and (child.url == null or #strings.isEmpty(child.url))}"
                                class="dropdown-item"
                                th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
@@ -188,22 +143,14 @@
                                th:text="${child.label}">
                                 Sub Item
                             </a>
-
                         </li>
-
                     </ul>
 
                 </li>
-
             </ul>
 
-
-            <!-- =================================================
-                 AUTENTICAZIONE / DASHBOARD
-                 ================================================= -->
-
+            <!-- AUTH / DASHBOARD -->
             <div class="ms-auto">
-
                 <a sec:authorize="!isAuthenticated()"
                    th:href="@{/login}"
                    class="btn btn-sm rounded-pill px-3 shadow-sm btn-dynamic-auth">
@@ -217,7 +164,6 @@
                     <i class="bi bi-speedometer2 me-1"></i>
                     Dashboard
                 </a>
-
             </div>
 
         </div>

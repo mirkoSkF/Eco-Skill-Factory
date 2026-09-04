@@ -105,8 +105,23 @@
             box-shadow: 0 0 0 0.25rem rgba(234, 88, 12, 0.25) !important;
         }
 
-        /* MONACO EDITOR - aggiunta */
-        .monaco-open-button{border-color:#36e4da!important;color:#36e4da!important;font-weight:600}.monaco-open-button:hover{background:rgba(54,228,218,.12)!important;color:#fff!important}.monaco-editor-workspace{width:100%;overflow:hidden;background:#1e1e1e}.monaco-extra-toolbar{display:flex;align-items:center;gap:8px;padding:8px;background:#111827;border-bottom:1px solid #334155;flex-wrap:wrap;position:relative;z-index:20}.monaco-search-wrapper{flex:1 1 320px;min-width:260px;max-width:700px;position:relative}.monaco-search-input{font-family:'Fira Code',monospace}.monaco-search-results{position:absolute;top:calc(100% + 4px);right:0;display:none;align-items:center;gap:6px;padding:4px 6px;border:1px solid #475569;border-radius:6px;background:#0f172a;box-shadow:0 8px 20px rgba(0,0,0,.45);z-index:1000;white-space:nowrap}.monaco-search-results.visible{display:flex}.monaco-search-count{min-width:58px;text-align:center;color:#cbd5e1;font:12px 'Fira Code',monospace}.monaco-zoom-label{min-width:58px;text-align:center;cursor:default}.monaco-modal-editor-button{margin-bottom:8px}.monaco-editor .suggest-widget{z-index:10000!important}.modal-fullscreen-custom{width:100vw;max-width:none;height:100vh;margin:0}.modal-fullscreen-custom .modal-content{height:100vh;border-radius:0}.modal-fullscreen-custom #monacoContainer{height:calc(100vh - 150px)!important}.monaco-search-match{background:rgba(255,215,0,.28);border:1px solid rgba(255,215,0,.55);border-radius:2px}.monaco-search-match-current{background:rgba(0,220,130,.42);border:1px solid rgba(0,220,130,.9);border-radius:2px}@media(max-width:768px){.monaco-search-wrapper{flex-basis:100%;max-width:none}}
+        .modal-content-dark {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f1f5f9;
+        }
+
+        /* MONACO EDITOR - OMOLOGATO */
+        .monaco-open-button{border-color:#36e4da!important;color:#36e4da!important;font-weight:600}.monaco-open-button:hover{background:rgba(54,228,218,.12)!important;color:#fff!important}.monaco-editor-workspace{width:100%;overflow:hidden;background:#1e1e1e}.monaco-extra-toolbar{display:flex;align-items:center;gap:8px;padding:8px;background:#111827;border-bottom:1px solid #334155;flex-wrap:wrap;position:relative;z-index:20}.monaco-search-wrapper{flex:1 1 320px;min-width:260px;max-width:700px;position:relative}.monaco-search-input{font-family:'Fira Code',monospace}.monaco-search-results{position:absolute;top:calc(100% + 4px);right:0;display:none;align-items:center;gap:6px;padding:4px 6px;border:1px solid #475569;border-radius:6px;background:#0f172a;box-shadow:0 8px 20px rgba(0,0,0,.45);z-index:1000;white-space:nowrap}.monaco-search-results.visible{display:flex}.monaco-search-count{min-width:58px;text-align:center;color:#cbd5e1;font:12px 'Fira Code',monospace}.monaco-zoom-label{min-width:58px;text-align:center;cursor:default}.monaco-modal-editor-button{margin-bottom:8px}.monaco-editor .suggest-widget{z-index:10000!important}
+        
+        .modal-fullscreen-custom{width:100vw;max-width:none;height:100vh;margin:0}
+        .modal-fullscreen-custom .modal-content{height:100vh;border-radius:0;display:flex;flex-direction:column;overflow:hidden}
+        .modal-fullscreen-custom .modal-body{flex:1 1 auto;display:flex;flex-direction:column;overflow:hidden;padding:0!important}
+        .modal-fullscreen-custom .monaco-editor-workspace{flex:1 1 auto;display:flex;flex-direction:column}
+        .modal-fullscreen-custom #monacoContainer{height:calc(100vh - 180px)!important;flex:1 1 auto}
+        .modal-fullscreen-custom .modal-footer{flex-shrink:0;z-index:30;background:#0f172a}
+        
+        .monaco-search-match{background:rgba(255,215,0,.28);border:1px solid rgba(255,215,0,.55);border-radius:2px}.monaco-search-match-current{background:rgba(0,220,130,.42);border:1px solid rgba(0,220,130,.9);border-radius:2px}@media(max-width:768px){.monaco-search-wrapper{flex-basis:100%;max-width:none}}
     </style>
 
     <!-- ============================================================
@@ -407,10 +422,8 @@
                                 id="btnToggleFullscreen"
                                 title="Schermo Intero">
 
-                            <i class="bi bi-arrows-angle-expand"
-                               id="fullscreenIcon"></i>
-
-                            Schermo Intero
+                            <i class="bi bi-arrows-angle-expand me-1"
+                               id="fullscreenIcon"></i><span id="btnToggleFullscreenText">Schermo Intero</span>
 
                         </button>
 
@@ -426,7 +439,7 @@
 
                 <div class="modal-body p-0">
 
-                    <!-- AGGIUNTA: STRUMENTI MONACO -->
+                    <!-- STRUMENTI MONACO -->
                     <div class="monaco-extra-toolbar">
 
                         <div class="input-group input-group-sm monaco-search-wrapper">
@@ -553,8 +566,6 @@
         </div>
 
     </div>
-
-
 
         
         <footer class="text-center text-muted small py-4">
@@ -753,11 +764,12 @@ function openMonacoForTextarea(t){if(!t){alert('Editor HTML non trovato.');retur
 function saveMonacoContent(){if(!windowMonacoEditor||!monacoTargetTextarea)return;const v=windowMonacoEditor.getValue(),te=getTinyEditor(monacoTargetTextarea);if(te){te.setContent(v);te.save()}else monacoTargetTextarea.value=v;bootstrap.Modal.getOrCreateInstance(document.getElementById('monacoEditorModal')).hide()}
 function changeMonacoFontSize(d){if(!windowMonacoEditor)return;monacoFontSize=Math.max(8,Math.min(32,monacoFontSize+d));windowMonacoEditor.updateOptions({fontSize:monacoFontSize});updateZoomLabel()}function updateZoomLabel(){const e=document.getElementById('monacoZoomLabel');if(e)e.textContent=Math.round(monacoFontSize/14*100)+'%'}
 function toggleMonacoPreview(){if(!windowMonacoEditor)return;monacoMinimapVisible=!monacoMinimapVisible;windowMonacoEditor.updateOptions({minimap:{enabled:monacoMinimapVisible}});updateMinimapButton()}function updateMinimapButton(){const t=document.getElementById('previewButtonText'),i=document.getElementById('previewIcon'),b=document.getElementById('btnTogglePreview');if(t)t.textContent=monacoMinimapVisible?'Nascondi minimappa':'Mostra minimappa';if(i)i.className=monacoMinimapVisible?'bi bi-map me-1':'bi bi-map-fill me-1';if(b)b.title=monacoMinimapVisible?'Nascondi minimappa a destra':'Mostra minimappa a destra'}
-function toggleMonacoFullscreen(){const d=document.getElementById('monacoModalDialog'),i=document.getElementById('fullscreenIcon'),b=document.getElementById('btnToggleFullscreen');if(!d)return;const f=d.classList.toggle('modal-fullscreen-custom');if(i)i.className=f?'bi bi-arrows-angle-contract':'bi bi-arrows-angle-expand';if(b){b.title=f?'Esci da Schermo Intero':'Schermo Intero';[...b.childNodes].filter(n=>n.nodeType===3).forEach(n=>n.textContent=f?' Esci da Schermo Intero':' Schermo Intero')}if(windowMonacoEditor)[50,250,500].forEach(x=>setTimeout(()=>windowMonacoEditor.layout(),x))}
+function toggleMonacoFullscreen(){const d=document.getElementById('monacoModalDialog'),i=document.getElementById('fullscreenIcon'),b=document.getElementById('btnToggleFullscreen'),t=document.getElementById('btnToggleFullscreenText');if(!d)return;const f=d.classList.toggle('modal-fullscreen-custom');if(i)i.className=f?'bi bi-arrows-angle-contract me-1':'bi bi-arrows-angle-expand me-1';if(t)t.textContent=f?'Esci da Schermo Intero':'Schermo Intero';if(b)b.title=f?'Esci da Schermo Intero':'Schermo Intero';if(windowMonacoEditor)[50,250,500].forEach(x=>setTimeout(()=>windowMonacoEditor.layout(),x))}
 function installSuggestionPositioning(){if(window.__monacoSuggestObserver)return;window.__monacoSuggestObserver=true;const o=new MutationObserver(positionSuggestion);o.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class']});window.addEventListener('resize',positionSuggestion)}function positionSuggestion(){if(!windowMonacoEditor)return;const w=document.querySelector('.monaco-editor .suggest-widget');if(!w||getComputedStyle(w).display==='none')return;const p=windowMonacoEditor.getPosition(),c=windowMonacoEditor.getScrolledVisiblePosition(p),n=windowMonacoEditor.getDomNode();if(!p||!c||!n)return;const r=n.getBoundingClientRect();w.style.position='fixed';w.style.left=Math.max(4,r.left+c.left)+'px';w.style.top=Math.max(4,r.top+c.top+c.height+2)+'px';w.style.zIndex='10000'}
 function performMonacoSearch(){if(!windowMonacoEditor)return;const q=document.getElementById('monacoSearchInput')?.value||'';clearMonacoSearchDecorations();if(!q){monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults();return}monacoSearchMatches=windowMonacoEditor.getModel().findMatches(q,true,false,false,null,true);monacoSearchIndex=monacoSearchMatches.length?0:-1;monacoSearchDecorations=windowMonacoEditor.deltaDecorations([],monacoSearchMatches.map(m=>({range:m.range,options:{inlineClassName:'monaco-search-match'}})));updateCurrentSearchDecoration();updateSearchResults()}function clearMonacoSearchDecorations(){if(windowMonacoEditor){if(monacoSearchDecorations.length)windowMonacoEditor.deltaDecorations(monacoSearchDecorations,[]);if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[])}monacoSearchDecorations=[];monacoCurrentSearchDecoration=[]}function updateCurrentSearchDecoration(){if(!windowMonacoEditor||monacoSearchIndex<0||!monacoSearchMatches.length)return;if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[]);monacoCurrentSearchDecoration=windowMonacoEditor.deltaDecorations([],[{range:monacoSearchMatches[monacoSearchIndex].range,options:{inlineClassName:'monaco-search-match-current'}}])}function selectMonacoSearchMatch(i){if(!windowMonacoEditor||!monacoSearchMatches.length)return;monacoSearchIndex=(i+monacoSearchMatches.length)%monacoSearchMatches.length;const m=monacoSearchMatches[monacoSearchIndex];windowMonacoEditor.setSelection(m.range);windowMonacoEditor.revealRangeInCenter(m.range);updateCurrentSearchDecoration();updateSearchResults()}function navigateMonacoSearch(d){if(monacoSearchMatches.length)selectMonacoSearchMatch(monacoSearchIndex+d);document.getElementById('monacoSearchInput')?.focus()}
 function updateSearchResults(){const w=document.querySelector('.monaco-search-wrapper');if(!w)return;let r=document.getElementById('monacoSearchResults');if(!r){r=document.createElement('div');r.id='monacoSearchResults';r.className='monaco-search-results';r.innerHTML='<button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchPrev">↑</button><span class="monaco-search-count" id="monacoSearchCount">0 / 0</span><button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchNext">↓</button>';w.appendChild(r);document.getElementById('monacoSearchPrev').onmousedown=e=>{e.preventDefault();navigateMonacoSearch(-1)};document.getElementById('monacoSearchNext').onmousedown=e=>{e.preventDefault();navigateMonacoSearch(1)}}const c=document.getElementById('monacoSearchCount');if(!monacoSearchMatches.length||monacoSearchIndex<0){r.classList.remove('visible');if(c)c.textContent='0 / 0'}else{if(c)c.textContent=(monacoSearchIndex+1)+' / '+monacoSearchMatches.length;r.classList.add('visible')}}function clearMonacoSearch(){const i=document.getElementById('monacoSearchInput');if(i)i.value='';clearMonacoSearchDecorations();monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults()}
 document.addEventListener('DOMContentLoaded',()=>{const mm=document.getElementById('monacoEditorModal');if(mm)mm.addEventListener('shown.bs.modal',()=>{if(monacoTargetTextarea)loadMonaco().catch(e=>console.error('Monaco:',e));});const i=document.getElementById('monacoSearchInput'),c=document.getElementById('btnMonacoSearchClear');if(i){i.oninput=performMonacoSearch;i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();navigateMonacoSearch(e.shiftKey?-1:1)}else if(e.key==='Escape'){e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()}}}if(c)c.onmousedown=e=>{e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()};const m=document.getElementById('monacoEditorModal');if(m)m.addEventListener('shown.bs.modal',()=>setTimeout(()=>windowMonacoEditor?.layout(),100))});document.addEventListener('keydown',e=>{if(e.key==='F11'&&windowMonacoEditor){e.preventDefault();toggleMonacoFullscreen()}});
-</script>\n
+</script>
 </body>
+
 </html>

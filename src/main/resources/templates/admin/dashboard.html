@@ -9,7 +9,7 @@
 
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- BOOTSTRAP & ICONS -->
@@ -309,9 +309,9 @@
             <div class="d-flex align-items-center gap-2">
                 <!-- BOTTONE MOSTRA / NASCONDI BOZZE TABELLA -->
                 <button id="toggleDraftsBtn" type="button" class="btn btn-outline-warning fw-semibold px-3 py-2">
-    <i class="bi bi-eye me-1" id="toggleDraftsIcon"></i>
-    <span id="toggleDraftsBtnText">mostra bozze</span>
-</button>
+                    <i class="bi bi-eye-slash me-1" id="toggleDraftsIcon"></i>
+                    <span id="toggleDraftsBtnText">nascondi bozze</span>
+                </button>
 
                 <!-- NUOVA RIGA -->
                 <a th:href="@{/admin/block/new}" class="btn btn-brand px-3 py-2">
@@ -379,7 +379,7 @@
                             <tr th:each="b : ${blocks}"
                                 th:data-draft="${b.draft}"
                                 th:data-block-type="${b.blockType}"
-                                th:classappend="${b.draft} ? 'table-draft-row d-none' : ''">
+                                th:classappend="${b.draft} ? 'table-draft-row' : ''">
                                 <td class="text-center fw-bold text-success">
                                     <span th:text="${b.position}">1</span>
                                 </td>
@@ -514,7 +514,8 @@
         const toggleIcon = document.getElementById('toggleDraftsIcon');
 
         if (toggleBtn) {
-            let draftsVisible = localStorage.getItem('draftsVisible') === 'true';
+            // Di default mostra tutte le bozze (true) a meno che l'utente non abbia salvato esplicitamente 'false'
+            let draftsVisible = localStorage.getItem('draftsVisible') !== 'false';
 
             function updateUI() {
                 if (window.filterRowsLocally) {
@@ -576,7 +577,7 @@
                 ? typeSelect.options[typeSelect.selectedIndex].text.toLowerCase().trim() 
                 : '';
 
-            const draftsVisible = localStorage.getItem('draftsVisible') === 'true';
+            const draftsVisible = localStorage.getItem('draftsVisible') !== 'false';
             const rows = document.querySelectorAll('.table-custom tbody tr');
 
             rows.forEach(row => {

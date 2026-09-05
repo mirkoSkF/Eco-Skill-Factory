@@ -9,7 +9,7 @@
 <body>
 
 <!-- ========================================================
-     NAVBAR FRAGMENT (SENZA SFOCATURA)
+     NAVBAR FRAGMENT
      ======================================================== -->
 
 <header th:fragment="navbar"
@@ -38,6 +38,30 @@
             background-color: var(--btn-color) !important;
             color: var(--btn-bg-hover) !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ANIMAZIONE E COLORE LINEA UNDERLINE HOVER */
+        .navbar-nav .nav-link {
+            position: relative;
+        }
+
+        /* Il !important su background-color forza la lettura della variabile stilizzata inline */
+        .navbar-nav .nav-link::after {
+            content: '' !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 50% !important;
+            width: 0 !important;
+            height: 2px !important;
+            background-color: var(--line-color, #00dc82) !important;
+            background: var(--line-color, #00dc82) !important;
+            transition: width 0.3s ease-in-out, left 0.3s ease-in-out !important;
+        }
+
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .nav-link:focus::after {
+            width: 80% !important;
+            left: 10% !important;
         }
     </style>
 
@@ -76,9 +100,10 @@
                 <li th:each="item : ${navItems}"
                     th:class="${(item.children != null and !item.children.isEmpty()) ? 'nav-item dropdown' : 'nav-item'}">
 
+                    <!-- ITEM CON PAGINA -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page != null}"
                        class="nav-link px-3"
-                       th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
+                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? 'color: ' + item.color + ' !important; --line-color: ' + item.color + ';' : ((navbarSettings != null and navbarSettings.textColor != null) ? 'color: ' + navbarSettings.textColor + ' !important; --line-color: ' + navbarSettings.textColor + ';' : '--line-color: #00dc82;')}"
                        th:href="@{'/p/' + ${item.page.slug}}"
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
                        th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
@@ -86,9 +111,10 @@
                         Menu Item
                     </a>
 
+                    <!-- ITEM CON URL ESTERNO -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and item.url != null and !#strings.isEmpty(item.url)}"
                        class="nav-link px-3"
-                       th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
+                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? 'color: ' + item.color + ' !important; --line-color: ' + item.color + ';' : ((navbarSettings != null and navbarSettings.textColor != null) ? 'color: ' + navbarSettings.textColor + ' !important; --line-color: ' + navbarSettings.textColor + ';' : '--line-color: #00dc82;')}"
                        th:href="${item.url}"
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
                        th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
@@ -96,17 +122,19 @@
                         Menu Item
                     </a>
 
+                    <!-- ITEM PLACEHOLDER -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and (item.url == null or #strings.isEmpty(item.url))}"
                        class="nav-link px-3"
-                       th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
+                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? 'color: ' + item.color + ' !important; --line-color: ' + item.color + ';' : ((navbarSettings != null and navbarSettings.textColor != null) ? 'color: ' + navbarSettings.textColor + ' !important; --line-color: ' + navbarSettings.textColor + ';' : '--line-color: #00dc82;')}"
                        href="javascript:void(0);"
                        th:text="${item.label}">
                         Menu Item
                     </a>
 
+                    <!-- DROPDOWN PARENT -->
                     <a th:if="${item.children != null and !item.children.isEmpty()}"
                        class="nav-link dropdown-toggle px-3"
-                       th:style="${item.color != null and !#strings.isEmpty(item.color)} ? 'color: ' + ${item.color} + ' !important;' : (${navbarSettings != null and navbarSettings.textColor != null} ? 'color: ' + ${navbarSettings.textColor} + ' !important;' : '')"
+                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? 'color: ' + item.color + ' !important; --line-color: ' + item.color + ';' : ((navbarSettings != null and navbarSettings.textColor != null) ? 'color: ' + navbarSettings.textColor + ' !important; --line-color: ' + navbarSettings.textColor + ';' : '--line-color: #00dc82;')}"
                        href="#"
                        role="button"
                        data-bs-toggle="dropdown"

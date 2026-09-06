@@ -668,227 +668,169 @@
 
 
         <!-- =================================================
-             TABELLA
+             CONTAINER CONTENUTO DINAMICO TABELLE
              ================================================= -->
 
-        <div class="card card-custom overflow-hidden">
-
-            <div class="table-responsive">
-
-                <table class="table table-custom table-hover align-middle mb-0">
+        <div id="dynamicTablesContainer"></div>
 
 
-                    <!-- =================================================
-                         TABELLA: HEADER UNIFICATO
-                         ================================================= -->
+        <!-- =================================================
+             TABELLA ORIGINALE DI RISERVA (NASCOSTA)
+             SERVE A LEGGERE TUTTI I DATI DI THYMELEAF
+             ================================================= -->
 
-                    <thead>
-                        <tr>
-                            <th class="ps-4">ID</th>
-                            <th>Form</th>
-                            <th>Nome e Cognome</th>
-                            <th>Email / Tel</th>
-                            <th>Codice Corso</th>
-                            <th>Nome Corso</th>
-                            <th class="text-center">PRIVACY</th>
-                            <th class="text-center">MARKETING</th>
-                            <th class="text-center">PROFILAZIONE</th>
-                            <th>Data Invio</th>
-                            <th>Stato</th>
-                            <th class="text-end pe-4">Azioni</th>
-                        </tr>
-                    </thead>
+        <div class="d-none">
+
+            <table class="table">
+
+                <tbody id="bookingsTableBody">
+
+                    <th:block th:each="booking : ${bookings}">
+
+                        <tr class="booking-row"
+                            th:data-id="${booking.id}"
+                            th:data-form-type="${booking.formType}"
+                            th:data-nome="${booking.nome}"
+                            th:data-cognome="${booking.cognome}"
+                            th:data-email="${booking.email}"
+                            th:data-telefono="${booking.telefono}"
+                            th:data-course-code="${booking.courseCode != null ? booking.courseCode : ''}"
+                            th:data-course-name="${booking.courseName != null ? booking.courseName : ''}"
+                            th:data-privacy="${booking.privacyCheck == true ? 'true' : 'false'}"
+                            th:data-marketing="${booking.marketingCheck == true ? 'true' : 'false'}"
+                            th:data-profiling="${booking.profilingCheck == true ? 'true' : 'false'}"
+                            th:data-created-at="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}"
+                            th:data-anonymized="${booking.anonymized == true ? 'true' : 'false'}"
+                            th:data-user-name="${(booking.nome != null ? booking.nome : '') + ' ' + (booking.cognome != null ? booking.cognome : '')}">
 
 
-                    <!-- =================================================
-                         BODY
-                         ================================================= -->
-
-                    <tbody id="bookingsTableBody">
+                            <td class="ps-4 booking-id" th:text="${'#' + booking.id}">
+                                #1
+                            </td>
 
 
-                        <!-- =================================================
-                             RIGA VUOTA
-                             ================================================= -->
+                            <td>
+                                <span class="form-type-badge">
+                                    <i class="bi bi-ui-checks-grid me-1"></i>
+                                    <span th:switch="${booking.formType}">
+                                        <span th:case="'BOOKING'">Prenotazione</span>
+                                        <span th:case="'INFO'">Info</span>
+                                        <span th:case="'ORG_INFO'">Org. Info</span>
+                                        <span th:case="*" th:text="${booking.formType}">Form</span>
+                                    </span>
+                                </span>
+                            </td>
 
-                        <tr id="emptyRow" style="display:none;">
 
-                            <td colspan="12" class="text-center py-5 text-secondary">
-
-                                <i class="bi bi-inbox empty-icon d-block mb-3"></i>
-
-                                <div class="fw-semibold text-light">
-                                    Nessuna prenotazione trovata con i filtri selezionati.
+                            <td>
+                                <div class="booking-name" th:text="${booking.nome + ' ' + booking.cognome}">
+                                    Mario Rossi
                                 </div>
+                            </td>
 
+
+                            <td>
+                                <div>
+                                    <a th:href="${'mailto:' + booking.email}" class="booking-email" th:text="${booking.email}">
+                                        mario@example.com
+                                    </a>
+                                </div>
+                                <small class="text-secondary" th:text="${booking.telefono}">
+                                    +39 333 1234567
+                                </small>
+                            </td>
+
+
+                            <td>
+                                <span th:if="${booking.courseCode != null and !booking.courseCode.empty}"
+                                      class="course-code-badge"
+                                      th:text="${booking.courseCode}">
+                                    COD-123
+                                </span>
+                                <span th:unless="${booking.courseCode != null and !booking.courseCode.empty}" class="text-secondary">
+                                    —
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span th:if="${booking.courseName != null and !booking.courseName.empty}"
+                                      th:text="${booking.courseName}">
+                                    Nome Corso
+                                </span>
+                                <span th:unless="${booking.courseName != null and !booking.courseName.empty}" class="text-secondary">
+                                    —
+                                </span>
+                            </td>
+
+
+                            <!-- COLONNA PRIVACY -->
+                            <td class="text-center">
+                                <span th:if="${booking.privacyCheck == true}" class="privacy-check checked" title="Privacy accettata">
+                                    <i class="bi bi-check-lg"></i>
+                                </span>
+                                <span th:unless="${booking.privacyCheck == true}" class="privacy-check unchecked" title="Privacy non accettata">
+                                    <i class="bi bi-x-lg"></i>
+                                </span>
+                            </td>
+
+                            <!-- COLONNA MARKETING -->
+                            <td class="text-center">
+                                <span th:if="${booking.marketingCheck == true}" class="privacy-check checked" title="Marketing accettato">
+                                    <i class="bi bi-check-lg"></i>
+                                </span>
+                                <span th:unless="${booking.marketingCheck == true}" class="privacy-check unchecked" title="Marketing non accettato">
+                                    <i class="bi bi-x-lg"></i>
+                                </span>
+                            </td>
+
+                            <!-- COLONNA PROFILAZIONE -->
+                            <td class="text-center">
+                                <span th:if="${booking.profilingCheck == true}" class="privacy-check checked" title="Profilazione accettata">
+                                    <i class="bi bi-check-lg"></i>
+                                </span>
+                                <span th:unless="${booking.profilingCheck == true}" class="privacy-check unchecked" title="Profilazione non accettata">
+                                    <i class="bi bi-x-lg"></i>
+                                </span>
+                            </td>
+
+
+                            <td th:text="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                01/01/2026 10:30
+                            </td>
+
+
+                            <td>
+                                <span th:if="${booking.anonymized == true}" class="badge bg-light text-secondary border border-secondary-subtle badge-status">
+                                    <i class="bi bi-shield-check me-1"></i>
+                                    Anonimizzato
+                                </span>
+
+                                <span th:unless="${booking.anonymized == true}" class="badge bg-success-subtle text-success border border-success-subtle badge-status">
+                                    <i class="bi bi-envelope-fill me-1"></i>
+                                    Attivo
+                                </span>
+                            </td>
+
+
+                            <td class="text-end pe-4">
+                                <div class="btn-group btn-group-sm">
+                                    <a th:href="@{/admin/bookings/view/{id}(id=${booking.id})}" class="btn btn-outline-secondary" title="Dettaglio">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <a th:href="@{/admin/bookings/delete/{id}(id=${booking.id})}" class="btn btn-outline-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?');" title="Elimina">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
                             </td>
 
                         </tr>
 
+                    </th:block>
 
-                        <!-- =================================================
-                             PRENOTAZIONI
-                             ================================================= -->
+                </tbody>
 
-                        <th:block th:each="booking : ${bookings}">
-
-                            <tr class="booking-row"
-                                th:data-form-type="${booking.formType}"
-                                th:data-course-code="${booking.courseCode != null ? booking.courseCode : ''}"
-                                th:data-course-name="${booking.courseName != null ? booking.courseName : ''}"
-                                th:data-user-name="${(booking.nome != null ? booking.nome : '') + ' ' + (booking.cognome != null ? booking.cognome : '')}">
-
-
-                                <td class="ps-4 booking-id" th:text="${'#' + booking.id}">
-                                    #1
-                                </td>
-
-
-                                <td>
-                                    <span class="form-type-badge">
-                                        <i class="bi bi-ui-checks-grid me-1"></i>
-                                        <span th:switch="${booking.formType}">
-                                            <span th:case="'BOOKING'">Prenotazione</span>
-                                            <span th:case="'INFO'">Info</span>
-                                            <span th:case="'ORG_INFO'">Org. Info</span>
-                                            <span th:case="*" th:text="${booking.formType}">Form</span>
-                                        </span>
-                                    </span>
-                                </td>
-
-
-                                <td>
-                                    <div class="booking-name" th:text="${booking.nome + ' ' + booking.cognome}">
-                                        Mario Rossi
-                                    </div>
-                                </td>
-
-
-                                <td>
-                                    <div>
-                                        <a th:href="${'mailto:' + booking.email}" class="booking-email" th:text="${booking.email}">
-                                            mario@example.com
-                                        </a>
-                                    </div>
-                                    <small class="text-secondary" th:text="${booking.telefono}">
-                                        +39 333 1234567
-                                    </small>
-                                </td>
-
-
-                                <td>
-                                    <span th:if="${booking.courseCode != null and !booking.courseCode.empty}"
-                                          class="course-code-badge"
-                                          th:text="${booking.courseCode}">
-                                        COD-123
-                                    </span>
-                                    <span th:unless="${booking.courseCode != null and !booking.courseCode.empty}" class="text-secondary">
-                                        —
-                                    </span>
-                                </td>
-
-
-                                <td>
-                                    <span th:if="${booking.courseName != null and !booking.courseName.empty}"
-                                          th:text="${booking.courseName}">
-                                        Nome Corso
-                                    </span>
-                                    <span th:unless="${booking.courseName != null and !booking.courseName.empty}" class="text-secondary">
-                                        —
-                                    </span>
-                                </td>
-
-
-                                <!-- COLONNA PRIVACY -->
-                                <td class="text-center">
-                                    <span th:if="${booking.privacyCheck == true}" class="privacy-check checked" title="Privacy accettata">
-                                        <i class="bi bi-check-lg"></i>
-                                    </span>
-                                    <span th:unless="${booking.privacyCheck == true}" class="privacy-check unchecked" title="Privacy non accettata">
-                                        <i class="bi bi-x-lg"></i>
-                                    </span>
-                                </td>
-
-                                <!-- COLONNA MARKETING -->
-                                <td class="text-center">
-                                    <span th:if="${booking.marketingCheck == true}" class="privacy-check checked" title="Marketing accettato">
-                                        <i class="bi bi-check-lg"></i>
-                                    </span>
-                                    <span th:unless="${booking.marketingCheck == true}" class="privacy-check unchecked" title="Marketing non accettato">
-                                        <i class="bi bi-x-lg"></i>
-                                    </span>
-                                </td>
-
-                                <!-- COLONNA PROFILAZIONE -->
-                                <td class="text-center">
-                                    <span th:if="${booking.profilingCheck == true}" class="privacy-check checked" title="Profilazione accettata">
-                                        <i class="bi bi-check-lg"></i>
-                                    </span>
-                                    <span th:unless="${booking.profilingCheck == true}" class="privacy-check unchecked" title="Profilazione non accettata">
-                                        <i class="bi bi-x-lg"></i>
-                                    </span>
-                                </td>
-
-
-                                <td th:text="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}">
-                                    01/01/2026 10:30
-                                </td>
-
-
-                                <td>
-                                    <span th:if="${booking.anonymized == true}" class="badge bg-light text-secondary border border-secondary-subtle badge-status">
-                                        <i class="bi bi-shield-check me-1"></i>
-                                        Anonimizzato
-                                    </span>
-
-                                    <span th:unless="${booking.anonymized == true}" class="badge bg-success-subtle text-success border border-success-subtle badge-status">
-                                        <i class="bi bi-envelope-fill me-1"></i>
-                                        Attivo
-                                    </span>
-                                </td>
-
-
-                                <td class="text-end pe-4">
-                                    <div class="btn-group btn-group-sm">
-                                        <a th:href="@{/admin/bookings/view/{id}(id=${booking.id})}" class="btn btn-outline-secondary" title="Dettaglio">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </a>
-                                        <a th:href="@{/admin/bookings/delete/{id}(id=${booking.id})}" class="btn btn-outline-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?');" title="Elimina">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </a>
-                                    </div>
-                                </td>
-
-                            </tr>
-
-                        </th:block>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <!-- =================================================
-                 PAGINAZIONE
-                 ================================================= -->
-
-            <div id="paginationWrapper" class="pagination-wrapper">
-
-                <div id="paginationInfo" class="pagination-info">
-                    Visualizzazione 0-0 di 0
-                </div>
-
-                <nav aria-label="Navigazione pagine">
-
-                    <ul id="pagination" class="pagination pagination-custom mb-0">
-                        <!-- Generata dinamicamente da JavaScript -->
-                    </ul>
-
-                </nav>
-
-            </div>
+            </table>
 
         </div>
 
@@ -918,410 +860,580 @@
     const searchQuery = document.getElementById('searchQuery');
     const resetFilter = document.getElementById('resetFilter');
     const bookingCounter = document.getElementById('bookingCounter');
-    const emptyRow = document.getElementById('emptyRow');
-    const rows = document.querySelectorAll('.booking-row');
-
-    /* =========================================================
-       PAGINAZIONE
-       ========================================================= */
+    const dynamicTablesContainer = document.getElementById('dynamicTablesContainer');
 
     const ROWS_PER_PAGE = 20;
 
-    let currentPage = 1;
-    let filteredRows = [];
-
+    // Mappa stato paginazione per ogni tabella (per formType)
+    const paginationState = {
+        'BOOKING': 1,
+        'INFO': 1,
+        'ORG_INFO': 1
+    };
 
     /* =========================================================
-       NORMALIZZA FORMTYPE
+       ESTRAZIONE DATI DALLA TABELLA THYMELEAF
        ========================================================= */
 
-    function normalizeFormType(value) {
-        if (!value) return '';
-        return value.toString().toUpperCase().trim();
+    function getRawBookingsData() {
+        const rows = document.querySelectorAll('.booking-row');
+        const data = [];
+
+        rows.forEach(row => {
+            data.push({
+                id: row.dataset.id,
+                formType: (row.dataset.formType || '').toUpperCase().trim(),
+                nome: row.dataset.nome || '',
+                cognome: row.dataset.cognome || '',
+                email: row.dataset.email || '',
+                telefono: row.dataset.telefono || '',
+                courseCode: row.dataset.courseCode || '',
+                courseName: row.dataset.courseName || '',
+                privacy: row.dataset.privacy === 'true',
+                marketing: row.dataset.marketing === 'true',
+                profiling: row.dataset.profiling === 'true',
+                createdAt: row.dataset.createdAt || '',
+                anonymized: row.dataset.anonymized === 'true',
+                userName: row.dataset.userName || ''
+            });
+        });
+
+        return data;
     }
 
-
     /* =========================================================
-       CREA LINK PAGINAZIONE
+       CONFIGURAZIONE SCHEMI E COLONNE PER OGNI FORM
        ========================================================= */
 
-    function createPaginationItem(label, page, options = {}) {
+    const FORM_CONFIGS = {
+        'BOOKING': {
+            title: 'Form Prenotazione Corso',
+            icon: 'bi-journal-check',
+            columns: [
+                { title: 'ID', field: 'id' },
+                { title: 'Nome e Cognome', field: 'user' },
+                { title: 'Email / Tel', field: 'contact' },
+                { title: 'Codice Corso', field: 'courseCode' },
+                { title: 'Nome Corso', field: 'courseName' },
+                { title: 'PRIVACY', field: 'privacy', align: 'center' },
+                { title: 'MARKETING', field: 'marketing', align: 'center' },
+                { title: 'PROFILAZIONE', field: 'profiling', align: 'center' },
+                { title: 'Data Invio', field: 'createdAt' },
+                { title: 'Stato', field: 'status' },
+                { title: 'Azioni', field: 'actions', align: 'end' }
+            ]
+        },
 
-        const li = document.createElement('li');
+        'INFO': {
+            title: 'Form Richiesta Info',
+            icon: 'bi-info-circle',
+            columns: [
+                { title: 'ID', field: 'id' },
+                { title: 'Nome e Cognome', field: 'user' },
+                { title: 'Email / Tel', field: 'contact' },
+                { title: 'PRIVACY', field: 'privacy', align: 'center' },
+                { title: 'MARKETING', field: 'marketing', align: 'center' },
 
-        li.classList.add('page-item');
+                /* =====================================================
+                   AGGIUNTA CAMPO PROFILAZIONE
+                   ===================================================== */
+                { title: 'PROFILAZIONE', field: 'profiling', align: 'center' },
 
-        if (options.active) {
-            li.classList.add('active');
+                { title: 'Data Invio', field: 'createdAt' },
+                { title: 'Stato', field: 'status' },
+                { title: 'Azioni', field: 'actions', align: 'end' }
+            ]
+        },
+
+        'ORG_INFO': {
+            title: 'Form Info Organizzazioni',
+            icon: 'bi-building',
+            columns: [
+                { title: 'ID', field: 'id' },
+                { title: 'Nome e Cognome', field: 'user' },
+                { title: 'Email / Tel', field: 'contact' },
+                { title: 'PRIVACY', field: 'privacy', align: 'center' },
+                { title: 'MARKETING', field: 'marketing', align: 'center' },
+                { title: 'PROFILAZIONE', field: 'profiling', align: 'center' },
+                { title: 'Data Invio', field: 'createdAt' },
+                { title: 'Stato', field: 'status' },
+                { title: 'Azioni', field: 'actions', align: 'end' }
+            ]
+        }
+    };
+
+    /* =========================================================
+       HELPER RENDERING CELLE
+       ========================================================= */
+
+    function renderCellContent(item, field) {
+        switch (field) {
+
+            case 'id':
+                return `<span class="booking-id">#${item.id}</span>`;
+
+            case 'user':
+                return `<div class="booking-name">${item.nome} ${item.cognome}</div>`;
+
+            case 'contact':
+                return `
+                    <div>
+                        <a href="mailto:${item.email}" class="booking-email">${item.email}</a>
+                    </div>
+                    <small class="text-secondary">${item.telefono}</small>
+                `;
+
+            case 'courseCode':
+                return item.courseCode
+                    ? `<span class="course-code-badge">${item.courseCode}</span>`
+                    : `<span class="text-secondary">—</span>`;
+
+            case 'courseName':
+                return item.courseName
+                    ? `<span>${item.courseName}</span>`
+                    : `<span class="text-secondary">—</span>`;
+
+            case 'privacy':
+                return item.privacy
+                    ? `<span class="privacy-check checked" title="Privacy accettata"><i class="bi bi-check-lg"></i></span>`
+                    : `<span class="privacy-check unchecked" title="Privacy non accettata"><i class="bi bi-x-lg"></i></span>`;
+
+            case 'marketing':
+                return item.marketing
+                    ? `<span class="privacy-check checked" title="Marketing accettato"><i class="bi bi-check-lg"></i></span>`
+                    : `<span class="privacy-check unchecked" title="Marketing non accettato"><i class="bi bi-x-lg"></i></span>`;
+
+            case 'profiling':
+                return item.profiling
+                    ? `<span class="privacy-check checked" title="Profilazione accettata"><i class="bi bi-check-lg"></i></span>`
+                    : `<span class="privacy-check unchecked" title="Profilazione non accettata"><i class="bi bi-x-lg"></i></span>`;
+
+            case 'createdAt':
+                return item.createdAt;
+
+            case 'status':
+                return item.anonymized
+                    ? `<span class="badge bg-light text-secondary border border-secondary-subtle badge-status"><i class="bi bi-shield-check me-1"></i>Anonimizzato</span>`
+                    : `<span class="badge bg-success-subtle text-success border border-success-subtle badge-status"><i class="bi bi-envelope-fill me-1"></i>Attivo</span>`;
+
+            case 'actions':
+                return `
+                    <div class="btn-group btn-group-sm">
+                        <a href="/admin/bookings/view/${item.id}" class="btn btn-outline-secondary" title="Dettaglio">
+                            <i class="bi bi-eye-fill"></i>
+                        </a>
+                        <a href="/admin/bookings/delete/${item.id}" class="btn btn-outline-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?');" title="Elimina">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                `;
+
+            default:
+                return '';
+        }
+    }
+
+    /* =========================================================
+       CREAZIONE INTERFACCIA PAGINAZIONE
+       ========================================================= */
+
+    function buildPaginationUI(formType, totalItems) {
+        const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
+        const currentPage = paginationState[formType] || 1;
+
+        const startIndex = totalItems === 0
+            ? 0
+            : (currentPage - 1) * ROWS_PER_PAGE + 1;
+
+        const endIndex = Math.min(
+            currentPage * ROWS_PER_PAGE,
+            totalItems
+        );
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'pagination-wrapper';
+
+        const info = document.createElement('div');
+        info.className = 'pagination-info';
+        info.textContent = `Visualizzazione ${startIndex}-${endIndex} di ${totalItems}`;
+        wrapper.appendChild(info);
+
+        if (totalPages <= 1) {
+            return wrapper;
         }
 
-        if (options.disabled) {
-            li.classList.add('disabled');
-        }
+        const nav = document.createElement('nav');
 
-        if (options.dots) {
-            li.classList.add('pagination-dots');
-        }
+        const ul = document.createElement('ul');
+        ul.className = 'pagination pagination-custom mb-0';
 
-        const button = document.createElement('button');
+        // Tasto Prev
+        const prevLi = document.createElement('li');
 
-        button.type = 'button';
-        button.classList.add('page-link');
-        button.innerHTML = label;
+        prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
 
-        if (options.disabled || options.dots) {
-            button.disabled = true;
-        } else {
-            button.addEventListener('click', function () {
-                goToPage(page);
+        prevLi.innerHTML = `
+            <button type="button"
+                    class="page-link"
+                    ${currentPage === 1 ? 'disabled' : ''}>
+                <i class="bi bi-chevron-left"></i>
+            </button>
+        `;
+
+        if (currentPage > 1) {
+            prevLi.querySelector('button').addEventListener('click', () => {
+                paginationState[formType] = currentPage - 1;
+                applyFilter();
             });
         }
 
-        li.appendChild(button);
+        ul.appendChild(prevLi);
 
-        return li;
-    }
+        // Pagine
+        for (let i = 1; i <= totalPages; i++) {
 
+            const li = document.createElement('li');
 
-    /* =========================================================
-       VAI ALLA PAGINA
-       ========================================================= */
+            li.className = `page-item ${i === currentPage ? 'active' : ''}`;
 
-    function goToPage(page) {
+            li.innerHTML = `
+                <button type="button" class="page-link">
+                    ${i}
+                </button>
+            `;
 
-        const totalPages = Math.ceil(filteredRows.length / ROWS_PER_PAGE);
-
-        if (totalPages === 0) {
-            currentPage = 1;
-            renderTable();
-            return;
-        }
-
-        if (page < 1) {
-            page = 1;
-        }
-
-        if (page > totalPages) {
-            page = totalPages;
-        }
-
-        currentPage = page;
-
-        renderTable();
-    }
-
-
-    /* =========================================================
-       GENERA PAGINAZIONE
-       ========================================================= */
-
-    function renderPagination() {
-
-        const pagination = document.getElementById('pagination');
-
-        pagination.innerHTML = '';
-
-        const totalItems = filteredRows.length;
-        const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
-
-        if (totalPages <= 1) {
-            return;
-        }
-
-
-        /* =====================================================
-           PRECEDENTE
-           ===================================================== */
-
-        pagination.appendChild(
-            createPaginationItem(
-                '<i class="bi bi-chevron-left"></i>',
-                currentPage - 1,
-                {
-                    disabled: currentPage === 1
-                }
-            )
-        );
-
-
-        /* =====================================================
-           PAGINE
-           ===================================================== */
-
-        const pages = [];
-
-        if (totalPages <= 7) {
-
-            for (let i = 1; i <= totalPages; i++) {
-                pages.push(i);
+            if (i !== currentPage) {
+                li.querySelector('button').addEventListener('click', () => {
+                    paginationState[formType] = i;
+                    applyFilter();
+                });
             }
+
+            ul.appendChild(li);
+        }
+
+        // Tasto Next
+        const nextLi = document.createElement('li');
+
+        nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+
+        nextLi.innerHTML = `
+            <button type="button"
+                    class="page-link"
+                    ${currentPage === totalPages ? 'disabled' : ''}>
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        `;
+
+        if (currentPage < totalPages) {
+            nextLi.querySelector('button').addEventListener('click', () => {
+                paginationState[formType] = currentPage + 1;
+                applyFilter();
+            });
+        }
+
+        ul.appendChild(nextLi);
+
+        nav.appendChild(ul);
+        wrapper.appendChild(nav);
+
+        return wrapper;
+    }
+
+    /* =========================================================
+       BUILDER SINGOLA TABELLA
+       ========================================================= */
+
+    function buildTableCard(formType, items) {
+
+        const config = FORM_CONFIGS[formType];
+
+        if (!config) {
+            return null;
+        }
+
+        const card = document.createElement('div');
+
+        card.className = 'card card-custom overflow-hidden mb-4';
+
+        // Intestazione Sezione Tabella
+        const header = document.createElement('div');
+
+        header.className =
+            'p-3 border-bottom border-secondary border-opacity-25 bg-dark bg-opacity-50 d-flex align-items-center justify-content-between';
+
+        header.innerHTML = `
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi ${config.icon} text-success fs-5"></i>
+                <h5 class="mb-0 text-white fw-bold">${config.title}</h5>
+            </div>
+
+            <span class="badge bg-secondary text-light fs-7">
+                ${items.length} elementi
+            </span>
+        `;
+
+        card.appendChild(header);
+
+        const responsiveDiv = document.createElement('div');
+
+        responsiveDiv.className = 'table-responsive';
+
+        const table = document.createElement('table');
+
+        table.className =
+            'table table-custom table-hover align-middle mb-0';
+
+        // THEAD
+        const thead = document.createElement('thead');
+
+        let theadRow = '<tr>';
+
+        config.columns.forEach((col, idx) => {
+
+            const alignClass =
+                col.align ? `text-${col.align}` : '';
+
+            const paddingClass =
+                idx === 0
+                    ? 'ps-4'
+                    : (idx === config.columns.length - 1 ? 'pe-4' : '');
+
+            theadRow += `
+                <th class="${alignClass} ${paddingClass}">
+                    ${col.title}
+                </th>
+            `;
+        });
+
+        theadRow += '</tr>';
+
+        thead.innerHTML = theadRow;
+
+        table.appendChild(thead);
+
+        // TBODY
+        const tbody = document.createElement('tbody');
+
+        if (items.length === 0) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="${config.columns.length}"
+                        class="text-center py-5 text-secondary">
+
+                        <i class="bi bi-inbox empty-icon d-block mb-3"></i>
+
+                        <div class="fw-semibold text-light">
+                            Nessuna prenotazione trovata per questa categoria.
+                        </div>
+
+                    </td>
+                </tr>
+            `;
 
         } else {
 
-            pages.push(1);
+            // Paginazione max 20 righe
+            const currentPage =
+                paginationState[formType] || 1;
 
-            if (currentPage > 4) {
-                pages.push('dots-left');
-            }
+            const startIndex =
+                (currentPage - 1) * ROWS_PER_PAGE;
 
-            const startPage = Math.max(2, currentPage - 1);
-            const endPage = Math.min(totalPages - 1, currentPage + 1);
-
-            for (let i = startPage; i <= endPage; i++) {
-                pages.push(i);
-            }
-
-            if (currentPage < totalPages - 3) {
-                pages.push('dots-right');
-            }
-
-            pages.push(totalPages);
-        }
-
-
-        pages.forEach(page => {
-
-            if (page === 'dots-left' || page === 'dots-right') {
-
-                pagination.appendChild(
-                    createPaginationItem(
-                        '...',
-                        null,
-                        {
-                            dots: true
-                        }
-                    )
+            const paginatedItems =
+                items.slice(
+                    startIndex,
+                    startIndex + ROWS_PER_PAGE
                 );
 
-            } else {
+            paginatedItems.forEach(item => {
 
-                pagination.appendChild(
-                    createPaginationItem(
-                        page,
-                        page,
-                        {
-                            active: page === currentPage
-                        }
-                    )
-                );
+                const tr = document.createElement('tr');
 
-            }
+                let trContent = '';
 
-        });
+                config.columns.forEach((col, idx) => {
 
+                    const alignClass =
+                        col.align
+                            ? `text-${col.align}`
+                            : '';
 
-        /* =====================================================
-           SUCCESSIVA
-           ===================================================== */
+                    const paddingClass =
+                        idx === 0
+                            ? 'ps-4'
+                            : (idx === config.columns.length - 1
+                                ? 'pe-4'
+                                : '');
 
-        pagination.appendChild(
-            createPaginationItem(
-                '<i class="bi bi-chevron-right"></i>',
-                currentPage + 1,
-                {
-                    disabled: currentPage === totalPages
-                }
-            )
-        );
-    }
+                    trContent += `
+                        <td class="${alignClass} ${paddingClass}">
+                            ${renderCellContent(item, col.field)}
+                        </td>
+                    `;
+                });
 
+                tr.innerHTML = trContent;
 
-    /* =========================================================
-       AGGIORNA INFO PAGINAZIONE
-       ========================================================= */
-
-    function updatePaginationInfo() {
-
-        const paginationInfo = document.getElementById('paginationInfo');
-
-        const totalItems = filteredRows.length;
-
-        if (totalItems === 0) {
-            paginationInfo.textContent = 'Visualizzazione 0-0 di 0';
-            return;
+                tbody.appendChild(tr);
+            });
         }
 
-        const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+        table.appendChild(tbody);
 
-        const endIndex = Math.min(
-            startIndex + ROWS_PER_PAGE,
-            totalItems
-        );
+        responsiveDiv.appendChild(table);
 
-        paginationInfo.textContent =
-            `Visualizzazione ${startIndex + 1}-${endIndex} di ${totalItems}`;
-    }
+        card.appendChild(responsiveDiv);
 
-
-    /* =========================================================
-       MOSTRA LE RIGHE DELLA PAGINA CORRENTE
-       ========================================================= */
-
-    function renderTable() {
-
-        const totalItems = filteredRows.length;
-
-        const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
-
-
-        /* =====================================================
-           CORREGGE LA PAGINA SE NON ESISTE PIÙ
-           ===================================================== */
-
-        if (totalPages === 0) {
-            currentPage = 1;
-        } else if (currentPage > totalPages) {
-            currentPage = totalPages;
+        // Paginazione Footer
+        if (items.length > 0) {
+            card.appendChild(
+                buildPaginationUI(
+                    formType,
+                    items.length
+                )
+            );
         }
 
-
-        /* =====================================================
-           NASCONDE TUTTE LE RIGHE
-           ===================================================== */
-
-        rows.forEach(row => {
-            row.style.display = 'none';
-        });
-
-
-        /* =====================================================
-           CALCOLA INTERVALLO DELLA PAGINA
-           ===================================================== */
-
-        const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
-
-        const endIndex = Math.min(
-            startIndex + ROWS_PER_PAGE,
-            totalItems
-        );
-
-
-        /* =====================================================
-           MOSTRA MASSIMO 20 RIGHE
-           ===================================================== */
-
-        for (let i = startIndex; i < endIndex; i++) {
-            filteredRows[i].style.display = '';
-        }
-
-
-        /* =====================================================
-           AGGIORNA CONTATORE
-           ===================================================== */
-
-        bookingCounter.textContent = totalItems;
-
-
-        /* =====================================================
-           GESTIONE LISTA VUOTA
-           ===================================================== */
-
-        emptyRow.style.display =
-            (totalItems === 0) ? 'table-row' : 'none';
-
-
-        /* =====================================================
-           AGGIORNA PAGINAZIONE
-           ===================================================== */
-
-        updatePaginationInfo();
-        renderPagination();
+        return card;
     }
 
-
     /* =========================================================
-       FUNZIONE DI FILTRAGGIO COMBINATO
-       (FORM + RICERCA TESTUALE + PAGINAZIONE)
+       APPLICAZIONE FILTRI E GENERAZIONE LAYOUT
        ========================================================= */
 
     function applyFilter() {
 
         const selectedForm = formFilter.value;
-        const query = searchQuery.value.toLowerCase().trim();
 
+        const query =
+            searchQuery.value.toLowerCase().trim();
 
-        /* =====================================================
-           RESET PAGINA QUANDO CAMBIA IL FILTRO
-           ===================================================== */
+        const allData =
+            getRawBookingsData();
 
-        currentPage = 1;
+        // Filtro per testo
+        const filteredData =
+            allData.filter(item => {
 
-        filteredRows = [];
+                if (!query) {
+                    return true;
+                }
 
+                return item.courseCode
+                    .toLowerCase()
+                    .includes(query) ||
 
-        /* =====================================================
-           APPLICA FILTRI
-           ===================================================== */
+                    item.courseName
+                        .toLowerCase()
+                        .includes(query) ||
 
-        rows.forEach(row => {
+                    item.userName
+                        .toLowerCase()
+                        .includes(query) ||
 
-            const rowFormType =
-                normalizeFormType(row.dataset.formType);
+                    item.email
+                        .toLowerCase()
+                        .includes(query);
+            });
 
-            const courseCode =
-                (row.dataset.courseCode || '').toLowerCase();
+        // Aggiorna Contatore Totale
+        let totalCount = 0;
 
-            const courseName =
-                (row.dataset.courseName || '').toLowerCase();
+        if (selectedForm === 'all') {
 
-            const userName =
-                (row.dataset.userName || '').toLowerCase();
+            totalCount =
+                filteredData.length;
 
+        } else {
 
-            /* =================================================
-               CHECK FILTRO FORM
-               ================================================= */
+            totalCount =
+                filteredData.filter(
+                    d => d.formType === selectedForm
+                ).length;
+        }
 
-            let matchesForm =
-                (selectedForm === 'all') ||
-                (rowFormType === selectedForm);
+        bookingCounter.textContent =
+            totalCount;
 
+        // Pulizia container
+        dynamicTablesContainer.innerHTML = '';
 
-            /* =================================================
-               CHECK FILTRO TESTO
-               ================================================= */
+        if (selectedForm === 'all') {
 
-            let matchesQuery = true;
+            // Render di 3 tabelle distinte
+            const formTypes = [
+                'BOOKING',
+                'INFO',
+                'ORG_INFO'
+            ];
 
-            if (query !== '') {
+            formTypes.forEach(type => {
 
-                matchesQuery =
-                    courseCode.includes(query) ||
-                    courseName.includes(query) ||
-                    userName.includes(query);
+                const typeData =
+                    filteredData.filter(
+                        item => item.formType === type
+                    );
 
+                const tableCard =
+                    buildTableCard(
+                        type,
+                        typeData
+                    );
+
+                if (tableCard) {
+                    dynamicTablesContainer.appendChild(
+                        tableCard
+                    );
+                }
+            });
+
+        } else {
+
+            // Render tabella singola specifica per il form
+            const typeData =
+                filteredData.filter(
+                    item => item.formType === selectedForm
+                );
+
+            const tableCard =
+                buildTableCard(
+                    selectedForm,
+                    typeData
+                );
+
+            if (tableCard) {
+                dynamicTablesContainer.appendChild(
+                    tableCard
+                );
             }
-
-
-            /* =================================================
-               AGGIUNGE ALLA LISTA FILTRATA
-               ================================================= */
-
-            const matches =
-                matchesForm && matchesQuery;
-
-            if (matches) {
-                filteredRows.push(row);
-            }
-
-        });
-
-
-        /* =====================================================
-           RENDER
-           ===================================================== */
-
-        renderTable();
+        }
     }
-
 
     /* =========================================================
        EVENT LISTENERS
        ========================================================= */
 
-    formFilter.addEventListener('change', applyFilter);
+    formFilter.addEventListener('change', () => {
 
-    searchQuery.addEventListener('input', applyFilter);
+        // Reset pagina al cambio filtro
+        paginationState['BOOKING'] = 1;
+        paginationState['INFO'] = 1;
+        paginationState['ORG_INFO'] = 1;
+
+        applyFilter();
+    });
+
+
+    searchQuery.addEventListener('input', () => {
+
+        paginationState['BOOKING'] = 1;
+        paginationState['INFO'] = 1;
+        paginationState['ORG_INFO'] = 1;
+
+        applyFilter();
+    });
 
 
     resetFilter.addEventListener('click', function () {
@@ -1330,10 +1442,11 @@
 
         searchQuery.value = '';
 
-        currentPage = 1;
+        paginationState['BOOKING'] = 1;
+        paginationState['INFO'] = 1;
+        paginationState['ORG_INFO'] = 1;
 
         applyFilter();
-
     });
 
 
@@ -1352,140 +1465,355 @@
        SFONDO ANIMATO
        ========================================================= */
 
-    const canvas = document.getElementById('tech-bg-canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas =
+        document.getElementById('tech-bg-canvas');
+
+    const ctx =
+        canvas.getContext('2d');
+
     let width, height;
 
+
     function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+
+        width =
+            canvas.width =
+                window.innerWidth;
+
+        height =
+            canvas.height =
+                window.innerHeight;
     }
 
-    window.addEventListener('resize', resize);
+
+    window.addEventListener(
+        'resize',
+        resize
+    );
+
     resize();
 
 
     class Circuit {
-        constructor() { this.reset(); }
+
+        constructor() {
+            this.reset();
+        }
 
         reset() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.length = Math.floor(Math.random() * 8) + 4;
+
+            this.x =
+                Math.random() * width;
+
+            this.y =
+                Math.random() * height;
+
+            this.length =
+                Math.floor(
+                    Math.random() * 8
+                ) + 4;
+
             this.currentStep = 0;
-            this.dir = Math.floor(Math.random() * 4);
-            this.path = [{ x: this.x, y: this.y }];
-            this.speed = Math.random() * 1.5 + 0.5;
-            this.alpha = Math.random() * 0.4 + 0.1;
+
+            this.dir =
+                Math.floor(
+                    Math.random() * 4
+                );
+
+            this.path = [
+                {
+                    x: this.x,
+                    y: this.y
+                }
+            ];
+
+            this.speed =
+                Math.random() * 1.5 + 0.5;
+
+            this.alpha =
+                Math.random() * 0.4 + 0.1;
+
             this.size = 20;
         }
 
+
         update() {
+
             if (this.currentStep < this.length) {
-                let last = this.path[this.path.length - 1];
+
+                let last =
+                    this.path[
+                        this.path.length - 1
+                    ];
+
                 let nx = last.x;
                 let ny = last.y;
 
+
                 if (Math.random() < 0.3) {
-                    this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+
+                    this.dir =
+                        (
+                            this.dir +
+                            (
+                                Math.random() < 0.5
+                                    ? 1
+                                    : 3
+                            )
+                        ) % 4;
                 }
+
 
                 switch (this.dir) {
-                    case 0: ny -= this.size; break;
-                    case 1: nx += this.size; break;
-                    case 2: ny += this.size; break;
-                    case 3: nx -= this.size; break;
+
+                    case 0:
+                        ny -= this.size;
+                        break;
+
+                    case 1:
+                        nx += this.size;
+                        break;
+
+                    case 2:
+                        ny += this.size;
+                        break;
+
+                    case 3:
+                        nx -= this.size;
+                        break;
                 }
 
-                this.path.push({ x: nx, y: ny });
+
+                this.path.push({
+                    x: nx,
+                    y: ny
+                });
+
                 this.currentStep++;
+
             } else {
+
                 this.alpha -= 0.005;
-                if (this.alpha <= 0) this.reset();
+
+                if (this.alpha <= 0) {
+                    this.reset();
+                }
             }
         }
 
+
         draw() {
-            if (this.path.length < 2) return;
 
-            ctx.beginPath();
-            ctx.moveTo(this.path[0].x, this.path[0].y);
-
-            for (let i = 1; i < this.path.length; i++) {
-                ctx.lineTo(this.path[i].x, this.path[i].y);
+            if (this.path.length < 2) {
+                return;
             }
 
-            ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                this.path[0].x,
+                this.path[0].y
+            );
+
+
+            for (
+                let i = 1;
+                i < this.path.length;
+                i++
+            ) {
+
+                ctx.lineTo(
+                    this.path[i].x,
+                    this.path[i].y
+                );
+            }
+
+
+            ctx.strokeStyle =
+                `rgba(0, 220, 130, ${this.alpha})`;
+
             ctx.lineWidth = 1.5;
+
             ctx.stroke();
 
-            let last = this.path[this.path.length - 1];
+
+            let last =
+                this.path[
+                    this.path.length - 1
+                ];
+
+
             ctx.beginPath();
-            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+
+            ctx.arc(
+                last.x,
+                last.y,
+                3,
+                0,
+                Math.PI * 2
+            );
+
+
+            ctx.fillStyle =
+                `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+
             ctx.fill();
         }
     }
 
 
     const codeSnippets = [
+
         "class BookingManager {}",
+
         "import spring.boot.*;",
+
         "<div class='booking'>",
+
         "SELECT * FROM bookings;",
+
         "SELECT privacyCheck FROM bookings;",
+
         "const init = () => {};",
+
         "return new Booking();",
+
         "01000010 01001111 01001111 01001011",
+
         "public static void main()",
+
         "async fetch('/api/bookings')",
+
         "npm run build",
+
         "docker-compose up -d",
+
         "mvn clean install"
     ];
 
 
     class CodeText {
-        constructor() { this.reset(); }
 
-        reset() {
-            this.x = Math.random() * (width - 200);
-            this.y = Math.random() * height;
-            this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-            this.alpha = 0;
-            this.maxAlpha = Math.random() * 0.3 + 0.1;
-            this.fadeIn = true;
-            this.speed = Math.random() * 0.3 + 0.1;
+        constructor() {
+            this.reset();
         }
 
+
+        reset() {
+
+            this.x =
+                Math.random() *
+                (width - 200);
+
+            this.y =
+                Math.random() * height;
+
+            this.text =
+                codeSnippets[
+                    Math.floor(
+                        Math.random() *
+                        codeSnippets.length
+                    )
+                ];
+
+            this.alpha = 0;
+
+            this.maxAlpha =
+                Math.random() * 0.3 + 0.1;
+
+            this.fadeIn = true;
+
+            this.speed =
+                Math.random() * 0.3 + 0.1;
+        }
+
+
         update() {
+
             this.y -= this.speed;
+
+
             if (this.fadeIn) {
+
                 this.alpha += 0.008;
-                if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+
+                if (
+                    this.alpha >=
+                    this.maxAlpha
+                ) {
+                    this.fadeIn = false;
+                }
+
             } else {
+
                 this.alpha -= 0.005;
-                if (this.alpha <= 0) this.reset();
+
+                if (this.alpha <= 0) {
+                    this.reset();
+                }
             }
         }
 
+
         draw() {
-            ctx.font = '12px "Fira Code", monospace';
-            ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
-            ctx.fillText(this.text, this.x, this.y);
+
+            ctx.font =
+                '12px "Fira Code", monospace';
+
+            ctx.fillStyle =
+                `rgba(0, 220, 130, ${this.alpha})`;
+
+            ctx.fillText(
+                this.text,
+                this.x,
+                this.y
+            );
         }
     }
 
 
-    const circuits = Array.from({ length: 18 }, () => new Circuit());
-    const codeTexts = Array.from({ length: 12 }, () => new CodeText());
+    const circuits =
+        Array.from(
+            { length: 18 },
+            () => new Circuit()
+        );
+
+
+    const codeTexts =
+        Array.from(
+            { length: 12 },
+            () => new CodeText()
+        );
+
 
     function animate() {
-        ctx.clearRect(0, 0, width, height);
-        circuits.forEach(c => { c.update(); c.draw(); });
-        codeTexts.forEach(ct => { ct.update(); ct.draw(); });
-        requestAnimationFrame(animate);
+
+        ctx.clearRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+        circuits.forEach(c => {
+            c.update();
+            c.draw();
+        });
+
+
+        codeTexts.forEach(ct => {
+            ct.update();
+            ct.draw();
+        });
+
+
+        requestAnimationFrame(
+            animate
+        );
     }
+
 
     animate();
 

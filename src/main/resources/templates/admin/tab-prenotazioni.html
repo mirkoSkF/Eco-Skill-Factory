@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prenotazioni Form - Admin CMS</title>
+
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- BOOTSTRAP ICONS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
+    <style>
+
+        :root {
+            --brand-primary: #00dc82;
+            --brand-primary-hover: #00b368;
+            --brand-dark: #0f172a;
+            --sidebar-width: 280px;
+        }
+
+
+        /* =========================================================
+           BODY
+           ========================================================= */
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f1f5f9;
+            background-color: #080c14;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+
+        /* =========================================================
+           SFONDO CANVAS
+           ========================================================= */
+
+        #tech-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+
+        /* =========================================================
+           LAYOUT
+           ========================================================= */
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        .sidebar-nav {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 2.5rem;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+
+        /* =========================================================
+           SIDEBAR
+           ========================================================= */
+
+        .sidebar-menu .nav-link {
+            color: #94a3b8;
+            font-weight: 500;
+            padding: 0.8rem 1.25rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.35rem;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+        }
+
+
+        .sidebar-menu .nav-link:hover,
+        .sidebar-menu .nav-link.active {
+            color: #00dc82 !important;
+            background: rgba(0, 220, 130, 0.1);
+            transform: translateX(4px);
+        }
+
+
+        .sidebar-menu .nav-link i {
+            font-size: 1.15rem;
+        }
+
+
+        /* =========================================================
+           CARD GLASS
+           ========================================================= */
+
+        .card-custom {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.25rem;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            color: #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+
+        /* =========================================================
+           FILTRO FORM
+           ========================================================= */
+
+        .filter-card {
+            padding: 1.25rem;
+        }
+
+
+        .filter-label {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+
+        .form-select-custom, .form-control-custom {
+            background-color: rgba(15, 23, 42, 0.8);
+            color: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0.6rem;
+            padding: 0.7rem 0.9rem;
+        }
+
+        .form-select-custom {
+            padding-right: 2.5rem;
+        }
+
+
+        .form-select-custom:focus, .form-control-custom:focus {
+            background-color: rgba(15, 23, 42, 0.95);
+            color: #ffffff;
+            border-color: #00dc82;
+            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.12);
+        }
+
+
+        .form-select-custom option {
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+
+
+        /* =========================================================
+           BADGE FORM TYPE
+           ========================================================= */
+
+        .form-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.65rem;
+            border-radius: 0.45rem;
+            background: rgba(54, 228, 218, 0.1);
+            color: #36e4da;
+            border: 1px solid rgba(54, 228, 218, 0.2);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           TABELLA
+           ========================================================= */
+
+        .table-custom {
+            color: #cbd5e1;
+            margin-bottom: 0;
+            min-width: 1100px;
+        }
+
+
+        .table-custom thead th {
+            background: rgba(15, 23, 42, 0.9) !important;
+            color: #f8fafc;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            font-weight: 600;
+            padding: 1rem 0.75rem;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+
+        .table-custom tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s ease;
+        }
+
+
+        .table-custom tbody tr:hover {
+            background: rgba(0, 220, 130, 0.04) !important;
+        }
+
+
+        .table-custom tbody tr:last-child {
+            border-bottom: none;
+        }
+
+
+        .table-custom tbody td {
+            padding: 0.9rem 0.75rem;
+            background: transparent !important;
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            vertical-align: middle;
+        }
+
+
+        /* =========================================================
+           NOME
+           ========================================================= */
+
+        .booking-name {
+            color: #ffffff !important;
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           EMAIL
+           ========================================================= */
+
+        .booking-email {
+            color: #36e4da !important;
+            text-decoration: none;
+        }
+
+
+        .booking-email:hover {
+            color: #00dc82 !important;
+        }
+
+
+        /* =========================================================
+           ID E CODICE
+           ========================================================= */
+
+        .booking-id {
+            color: #64748b !important;
+            font-weight: 600;
+        }
+
+        .course-code-badge {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.3rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            color: #00dc82;
+        }
+
+
+        /* =========================================================
+           PRIVACY CHECK
+           ========================================================= */
+
+        .privacy-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+
+        .privacy-check.checked {
+            color: #00dc82;
+            background: rgba(0, 220, 130, 0.12);
+            border: 1px solid rgba(0, 220, 130, 0.25);
+        }
+
+
+        .privacy-check.unchecked {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.08);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+        }
+
+
+        /* =========================================================
+           BADGE STATO
+           ========================================================= */
+
+        .badge-status {
+            padding: 0.4em 0.7em;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 0.375rem;
+        }
+
+
+        .badge-status.bg-success-subtle {
+            background: rgba(0, 220, 130, 0.12) !important;
+            color: #00dc82 !important;
+            border-color: rgba(0, 220, 130, 0.25) !important;
+        }
+
+
+        .badge-status.bg-light {
+            background: rgba(148, 163, 184, 0.1) !important;
+            color: #94a3b8 !important;
+            border-color: rgba(148, 163, 184, 0.25) !important;
+        }
+
+
+        /* =========================================================
+           BOTTONI
+           ========================================================= */
+
+        .btn-outline-secondary {
+            color: #94a3b8;
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+
+        .btn-outline-secondary:hover {
+            color: #f8fafc;
+            background: rgba(148, 163, 184, 0.1);
+            border-color: rgba(148, 163, 148, 0.5);
+        }
+
+
+        .btn-outline-danger {
+            color: #f87171;
+            border-color: rgba(248, 113, 113, 0.35);
+        }
+
+
+        .btn-outline-danger:hover {
+            color: #ffffff;
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+
+        /* =========================================================
+           EMPTY
+           ========================================================= */
+
+        .empty-icon {
+            font-size: 3rem;
+            color: #475569;
+        }
+
+
+        /* =========================================================
+           PAGINAZIONE
+           ========================================================= */
+
+        .pagination-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.35);
+        }
+
+
+        .pagination-info {
+            color: #64748b;
+            font-size: 0.78rem;
+            white-space: nowrap;
+        }
+
+
+        .pagination-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            margin: 0;
+        }
+
+
+        .pagination-custom .page-item .page-link {
+            min-width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.4rem 0.65rem;
+            color: #94a3b8;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem !important;
+            font-size: 0.78rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+
+        .pagination-custom .page-item .page-link:hover {
+            color: #00dc82;
+            background: rgba(0, 220, 130, 0.08);
+            border-color: rgba(0, 220, 130, 0.25);
+        }
+
+
+        .pagination-custom .page-item.active .page-link {
+            color: #080c14;
+            background: #00dc82;
+            border-color: #00dc82;
+        }
+
+
+        .pagination-custom .page-item.disabled .page-link {
+            color: #475569;
+            background: rgba(15, 23, 42, 0.4);
+            border-color: rgba(255, 255, 255, 0.05);
+            cursor: not-allowed;
+        }
+
+
+        .pagination-custom .page-item.pagination-dots .page-link {
+            color: #64748b;
+            background: transparent;
+            border-color: transparent;
+            cursor: default;
+        }
+
+
+        /* =========================================================
+           SCROLLBAR
+           ========================================================= */
+
+        .table-responsive::-webkit-scrollbar {
+            height: 8px;
+        }
+
+
+        .table-responsive::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: rgba(0, 220, 130, 0.25);
+            border-radius: 10px;
+        }
+
+
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 220, 130, 0.45);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 991.98px) {
+            .sidebar-nav {
+                position: relative;
+                width: 100%;
+                min-width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .admin-layout {
+                flex-direction: column;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding: 1.5rem;
+            }
+        }
+
+
+        @media (max-width: 767.98px) {
+            .main-wrapper {
+                padding: 1rem;
+            }
+
+            .pagination-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pagination-info {
+                white-space: normal;
+                text-align: center;
+            }
+
+            .pagination-custom {
+                flex-wrap: wrap;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SFONDO ANIMATO
+     ========================================================= -->
+
+<canvas id="tech-bg-canvas"></canvas>
+
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <div th:replace="~{fragments/sidebar :: sidebar('bookings')}"></div>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main-wrapper">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+            <div>
+                <h2 class="section-title mb-1 fw-bold text-white">
+                    Gestione Prenotazioni
+                </h2>
+                <p class="text-secondary mb-0">
+                    Consulta e gestisci le richieste inviate dai moduli del sito
+                </p>
+            </div>
+        </div>
+
+
+        <!-- =================================================
+             FILTRI E RICERCA
+             ================================================= -->
+
+        <div class="card card-custom filter-card mb-4">
+
+            <div class="row align-items-end g-3">
+
+                <!-- FILTRO TIPO FORM -->
+                <div class="col-12 col-md-4 col-lg-3">
+
+                    <label for="formFilter" class="filter-label">
+                        <i class="bi bi-funnel me-1"></i>
+                        Filtra per form
+                    </label>
+
+                    <select id="formFilter" class="form-select form-select-custom">
+                        <option value="all">Tutti i form</option>
+                        <option value="BOOKING">Form Prenotazione Corso</option>
+                        <option value="INFO">Form Richiesta Info</option>
+                        <option value="ORG_INFO">Form Info Organizzazioni</option>
+                    </select>
+
+                </div>
+
+                <!-- CAMPO RICERCA CORSO / CODICE / NOME -->
+                <div class="col-12 col-md-5 col-lg-4">
+
+                    <label for="searchQuery" class="filter-label">
+                        <i class="bi bi-search me-1"></i>
+                        Cerca Corso, Codice o Utente
+                    </label>
+
+                    <input type="text"
+                           id="searchQuery"
+                           class="form-control form-control-custom"
+                           placeholder="Es: JAVA-2026, Corso Spring, Mario...">
+
+                </div>
+
+
+                <!-- RESET FILTRI -->
+                <div class="col-12 col-md-auto">
+
+                    <button type="button"
+                            id="resetFilter"
+                            class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>
+                        Azzera filtri
+                    </button>
+
+                </div>
+
+
+                <!-- CONTATORE -->
+                <div class="col-12 col-md text-md-end">
+
+                    <span class="text-secondary small">
+                        Prenotazioni visualizzate:
+                        <strong id="bookingCounter" class="text-white">
+                            0
+                        </strong>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABELLA
+             ================================================= -->
+
+        <div class="card card-custom overflow-hidden">
+
+            <div class="table-responsive">
+
+                <table class="table table-custom table-hover align-middle mb-0">
+
+
+                    <!-- =================================================
+                         TABELLA: HEADER UNIFICATO
+                         ================================================= -->
+
+                    <thead>
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Form</th>
+                            <th>Nome e Cognome</th>
+                            <th>Email / Tel</th>
+                            <th>Codice Corso</th>
+                            <th>Nome Corso</th>
+                            <th class="text-center">PRIVACY</th>
+                            <th class="text-center">MARKETING</th>
+                            <th class="text-center">PROFILAZIONE</th>
+                            <th>Data Invio</th>
+                            <th>Stato</th>
+                            <th class="text-end pe-4">Azioni</th>
+                        </tr>
+                    </thead>
+
+
+                    <!-- =================================================
+                         BODY
+                         ================================================= -->
+
+                    <tbody id="bookingsTableBody">
+
+
+                        <!-- =================================================
+                             RIGA VUOTA
+                             ================================================= -->
+
+                        <tr id="emptyRow" style="display:none;">
+
+                            <td colspan="12" class="text-center py-5 text-secondary">
+
+                                <i class="bi bi-inbox empty-icon d-block mb-3"></i>
+
+                                <div class="fw-semibold text-light">
+                                    Nessuna prenotazione trovata con i filtri selezionati.
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- =================================================
+                             PRENOTAZIONI
+                             ================================================= -->
+
+                        <th:block th:each="booking : ${bookings}">
+
+                            <tr class="booking-row"
+                                th:data-form-type="${booking.formType}"
+                                th:data-course-code="${booking.courseCode != null ? booking.courseCode : ''}"
+                                th:data-course-name="${booking.courseName != null ? booking.courseName : ''}"
+                                th:data-user-name="${(booking.nome != null ? booking.nome : '') + ' ' + (booking.cognome != null ? booking.cognome : '')}">
+
+
+                                <td class="ps-4 booking-id" th:text="${'#' + booking.id}">
+                                    #1
+                                </td>
+
+
+                                <td>
+                                    <span class="form-type-badge">
+                                        <i class="bi bi-ui-checks-grid me-1"></i>
+                                        <span th:switch="${booking.formType}">
+                                            <span th:case="'BOOKING'">Prenotazione</span>
+                                            <span th:case="'INFO'">Info</span>
+                                            <span th:case="'ORG_INFO'">Org. Info</span>
+                                            <span th:case="*" th:text="${booking.formType}">Form</span>
+                                        </span>
+                                    </span>
+                                </td>
+
+
+                                <td>
+                                    <div class="booking-name" th:text="${booking.nome + ' ' + booking.cognome}">
+                                        Mario Rossi
+                                    </div>
+                                </td>
+
+
+                                <td>
+                                    <div>
+                                        <a th:href="${'mailto:' + booking.email}" class="booking-email" th:text="${booking.email}">
+                                            mario@example.com
+                                        </a>
+                                    </div>
+                                    <small class="text-secondary" th:text="${booking.telefono}">
+                                        +39 333 1234567
+                                    </small>
+                                </td>
+
+
+                                <td>
+                                    <span th:if="${booking.courseCode != null and !booking.courseCode.empty}"
+                                          class="course-code-badge"
+                                          th:text="${booking.courseCode}">
+                                        COD-123
+                                    </span>
+                                    <span th:unless="${booking.courseCode != null and !booking.courseCode.empty}" class="text-secondary">
+                                        —
+                                    </span>
+                                </td>
+
+
+                                <td>
+                                    <span th:if="${booking.courseName != null and !booking.courseName.empty}"
+                                          th:text="${booking.courseName}">
+                                        Nome Corso
+                                    </span>
+                                    <span th:unless="${booking.courseName != null and !booking.courseName.empty}" class="text-secondary">
+                                        —
+                                    </span>
+                                </td>
+
+
+                                <!-- COLONNA PRIVACY -->
+                                <td class="text-center">
+                                    <span th:if="${booking.privacyCheck == true}" class="privacy-check checked" title="Privacy accettata">
+                                        <i class="bi bi-check-lg"></i>
+                                    </span>
+                                    <span th:unless="${booking.privacyCheck == true}" class="privacy-check unchecked" title="Privacy non accettata">
+                                        <i class="bi bi-x-lg"></i>
+                                    </span>
+                                </td>
+
+                                <!-- COLONNA MARKETING -->
+                                <td class="text-center">
+                                    <span th:if="${booking.marketingCheck == true}" class="privacy-check checked" title="Marketing accettato">
+                                        <i class="bi bi-check-lg"></i>
+                                    </span>
+                                    <span th:unless="${booking.marketingCheck == true}" class="privacy-check unchecked" title="Marketing non accettato">
+                                        <i class="bi bi-x-lg"></i>
+                                    </span>
+                                </td>
+
+                                <!-- COLONNA PROFILAZIONE -->
+                                <td class="text-center">
+                                    <span th:if="${booking.profilingCheck == true}" class="privacy-check checked" title="Profilazione accettata">
+                                        <i class="bi bi-check-lg"></i>
+                                    </span>
+                                    <span th:unless="${booking.profilingCheck == true}" class="privacy-check unchecked" title="Profilazione non accettata">
+                                        <i class="bi bi-x-lg"></i>
+                                    </span>
+                                </td>
+
+
+                                <td th:text="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                    01/01/2026 10:30
+                                </td>
+
+
+                                <td>
+                                    <span th:if="${booking.anonymized == true}" class="badge bg-light text-secondary border border-secondary-subtle badge-status">
+                                        <i class="bi bi-shield-check me-1"></i>
+                                        Anonimizzato
+                                    </span>
+
+                                    <span th:unless="${booking.anonymized == true}" class="badge bg-success-subtle text-success border border-success-subtle badge-status">
+                                        <i class="bi bi-envelope-fill me-1"></i>
+                                        Attivo
+                                    </span>
+                                </td>
+
+
+                                <td class="text-end pe-4">
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/admin/bookings/view/{id}(id=${booking.id})}" class="btn btn-outline-secondary" title="Dettaglio">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </a>
+                                        <a th:href="@{/admin/bookings/delete/{id}(id=${booking.id})}" class="btn btn-outline-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?');" title="Elimina">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        </th:block>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- =================================================
+                 PAGINAZIONE
+                 ================================================= -->
+
+            <div id="paginationWrapper" class="pagination-wrapper">
+
+                <div id="paginationInfo" class="pagination-info">
+                    Visualizzazione 0-0 di 0
+                </div>
+
+                <nav aria-label="Navigazione pagine">
+
+                    <ul id="pagination" class="pagination pagination-custom mb-0">
+                        <!-- Generata dinamicamente da JavaScript -->
+                    </ul>
+
+                </nav>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     BOOTSTRAP JS
+     ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+    /* =========================================================
+       ELEMENTI DOM
+       ========================================================= */
+
+    const formFilter = document.getElementById('formFilter');
+    const searchQuery = document.getElementById('searchQuery');
+    const resetFilter = document.getElementById('resetFilter');
+    const bookingCounter = document.getElementById('bookingCounter');
+    const emptyRow = document.getElementById('emptyRow');
+    const rows = document.querySelectorAll('.booking-row');
+
+    /* =========================================================
+       PAGINAZIONE
+       ========================================================= */
+
+    const ROWS_PER_PAGE = 20;
+
+    let currentPage = 1;
+    let filteredRows = [];
+
+
+    /* =========================================================
+       NORMALIZZA FORMTYPE
+       ========================================================= */
+
+    function normalizeFormType(value) {
+        if (!value) return '';
+        return value.toString().toUpperCase().trim();
+    }
+
+
+    /* =========================================================
+       CREA LINK PAGINAZIONE
+       ========================================================= */
+
+    function createPaginationItem(label, page, options = {}) {
+
+        const li = document.createElement('li');
+
+        li.classList.add('page-item');
+
+        if (options.active) {
+            li.classList.add('active');
+        }
+
+        if (options.disabled) {
+            li.classList.add('disabled');
+        }
+
+        if (options.dots) {
+            li.classList.add('pagination-dots');
+        }
+
+        const button = document.createElement('button');
+
+        button.type = 'button';
+        button.classList.add('page-link');
+        button.innerHTML = label;
+
+        if (options.disabled || options.dots) {
+            button.disabled = true;
+        } else {
+            button.addEventListener('click', function () {
+                goToPage(page);
+            });
+        }
+
+        li.appendChild(button);
+
+        return li;
+    }
+
+
+    /* =========================================================
+       VAI ALLA PAGINA
+       ========================================================= */
+
+    function goToPage(page) {
+
+        const totalPages = Math.ceil(filteredRows.length / ROWS_PER_PAGE);
+
+        if (totalPages === 0) {
+            currentPage = 1;
+            renderTable();
+            return;
+        }
+
+        if (page < 1) {
+            page = 1;
+        }
+
+        if (page > totalPages) {
+            page = totalPages;
+        }
+
+        currentPage = page;
+
+        renderTable();
+    }
+
+
+    /* =========================================================
+       GENERA PAGINAZIONE
+       ========================================================= */
+
+    function renderPagination() {
+
+        const pagination = document.getElementById('pagination');
+
+        pagination.innerHTML = '';
+
+        const totalItems = filteredRows.length;
+        const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
+
+        if (totalPages <= 1) {
+            return;
+        }
+
+
+        /* =====================================================
+           PRECEDENTE
+           ===================================================== */
+
+        pagination.appendChild(
+            createPaginationItem(
+                '<i class="bi bi-chevron-left"></i>',
+                currentPage - 1,
+                {
+                    disabled: currentPage === 1
+                }
+            )
+        );
+
+
+        /* =====================================================
+           PAGINE
+           ===================================================== */
+
+        const pages = [];
+
+        if (totalPages <= 7) {
+
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+
+        } else {
+
+            pages.push(1);
+
+            if (currentPage > 4) {
+                pages.push('dots-left');
+            }
+
+            const startPage = Math.max(2, currentPage - 1);
+            const endPage = Math.min(totalPages - 1, currentPage + 1);
+
+            for (let i = startPage; i <= endPage; i++) {
+                pages.push(i);
+            }
+
+            if (currentPage < totalPages - 3) {
+                pages.push('dots-right');
+            }
+
+            pages.push(totalPages);
+        }
+
+
+        pages.forEach(page => {
+
+            if (page === 'dots-left' || page === 'dots-right') {
+
+                pagination.appendChild(
+                    createPaginationItem(
+                        '...',
+                        null,
+                        {
+                            dots: true
+                        }
+                    )
+                );
+
+            } else {
+
+                pagination.appendChild(
+                    createPaginationItem(
+                        page,
+                        page,
+                        {
+                            active: page === currentPage
+                        }
+                    )
+                );
+
+            }
+
+        });
+
+
+        /* =====================================================
+           SUCCESSIVA
+           ===================================================== */
+
+        pagination.appendChild(
+            createPaginationItem(
+                '<i class="bi bi-chevron-right"></i>',
+                currentPage + 1,
+                {
+                    disabled: currentPage === totalPages
+                }
+            )
+        );
+    }
+
+
+    /* =========================================================
+       AGGIORNA INFO PAGINAZIONE
+       ========================================================= */
+
+    function updatePaginationInfo() {
+
+        const paginationInfo = document.getElementById('paginationInfo');
+
+        const totalItems = filteredRows.length;
+
+        if (totalItems === 0) {
+            paginationInfo.textContent = 'Visualizzazione 0-0 di 0';
+            return;
+        }
+
+        const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+
+        const endIndex = Math.min(
+            startIndex + ROWS_PER_PAGE,
+            totalItems
+        );
+
+        paginationInfo.textContent =
+            `Visualizzazione ${startIndex + 1}-${endIndex} di ${totalItems}`;
+    }
+
+
+    /* =========================================================
+       MOSTRA LE RIGHE DELLA PAGINA CORRENTE
+       ========================================================= */
+
+    function renderTable() {
+
+        const totalItems = filteredRows.length;
+
+        const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
+
+
+        /* =====================================================
+           CORREGGE LA PAGINA SE NON ESISTE PIÙ
+           ===================================================== */
+
+        if (totalPages === 0) {
+            currentPage = 1;
+        } else if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+
+        /* =====================================================
+           NASCONDE TUTTE LE RIGHE
+           ===================================================== */
+
+        rows.forEach(row => {
+            row.style.display = 'none';
+        });
+
+
+        /* =====================================================
+           CALCOLA INTERVALLO DELLA PAGINA
+           ===================================================== */
+
+        const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+
+        const endIndex = Math.min(
+            startIndex + ROWS_PER_PAGE,
+            totalItems
+        );
+
+
+        /* =====================================================
+           MOSTRA MASSIMO 20 RIGHE
+           ===================================================== */
+
+        for (let i = startIndex; i < endIndex; i++) {
+            filteredRows[i].style.display = '';
+        }
+
+
+        /* =====================================================
+           AGGIORNA CONTATORE
+           ===================================================== */
+
+        bookingCounter.textContent = totalItems;
+
+
+        /* =====================================================
+           GESTIONE LISTA VUOTA
+           ===================================================== */
+
+        emptyRow.style.display =
+            (totalItems === 0) ? 'table-row' : 'none';
+
+
+        /* =====================================================
+           AGGIORNA PAGINAZIONE
+           ===================================================== */
+
+        updatePaginationInfo();
+        renderPagination();
+    }
+
+
+    /* =========================================================
+       FUNZIONE DI FILTRAGGIO COMBINATO
+       (FORM + RICERCA TESTUALE + PAGINAZIONE)
+       ========================================================= */
+
+    function applyFilter() {
+
+        const selectedForm = formFilter.value;
+        const query = searchQuery.value.toLowerCase().trim();
+
+
+        /* =====================================================
+           RESET PAGINA QUANDO CAMBIA IL FILTRO
+           ===================================================== */
+
+        currentPage = 1;
+
+        filteredRows = [];
+
+
+        /* =====================================================
+           APPLICA FILTRI
+           ===================================================== */
+
+        rows.forEach(row => {
+
+            const rowFormType =
+                normalizeFormType(row.dataset.formType);
+
+            const courseCode =
+                (row.dataset.courseCode || '').toLowerCase();
+
+            const courseName =
+                (row.dataset.courseName || '').toLowerCase();
+
+            const userName =
+                (row.dataset.userName || '').toLowerCase();
+
+
+            /* =================================================
+               CHECK FILTRO FORM
+               ================================================= */
+
+            let matchesForm =
+                (selectedForm === 'all') ||
+                (rowFormType === selectedForm);
+
+
+            /* =================================================
+               CHECK FILTRO TESTO
+               ================================================= */
+
+            let matchesQuery = true;
+
+            if (query !== '') {
+
+                matchesQuery =
+                    courseCode.includes(query) ||
+                    courseName.includes(query) ||
+                    userName.includes(query);
+
+            }
+
+
+            /* =================================================
+               AGGIUNGE ALLA LISTA FILTRATA
+               ================================================= */
+
+            const matches =
+                matchesForm && matchesQuery;
+
+            if (matches) {
+                filteredRows.push(row);
+            }
+
+        });
+
+
+        /* =====================================================
+           RENDER
+           ===================================================== */
+
+        renderTable();
+    }
+
+
+    /* =========================================================
+       EVENT LISTENERS
+       ========================================================= */
+
+    formFilter.addEventListener('change', applyFilter);
+
+    searchQuery.addEventListener('input', applyFilter);
+
+
+    resetFilter.addEventListener('click', function () {
+
+        formFilter.value = 'all';
+
+        searchQuery.value = '';
+
+        currentPage = 1;
+
+        applyFilter();
+
+    });
+
+
+    /* =========================================================
+       AVVIO INIZIALE
+       ========================================================= */
+
+    document.addEventListener('DOMContentLoaded', function () {
+        applyFilter();
+    });
+
+    applyFilter();
+
+
+    /* =========================================================
+       SFONDO ANIMATO
+       ========================================================= */
+
+    const canvas = document.getElementById('tech-bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+
+    class Circuit {
+        constructor() { this.reset(); }
+
+        reset() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.length = Math.floor(Math.random() * 8) + 4;
+            this.currentStep = 0;
+            this.dir = Math.floor(Math.random() * 4);
+            this.path = [{ x: this.x, y: this.y }];
+            this.speed = Math.random() * 1.5 + 0.5;
+            this.alpha = Math.random() * 0.4 + 0.1;
+            this.size = 20;
+        }
+
+        update() {
+            if (this.currentStep < this.length) {
+                let last = this.path[this.path.length - 1];
+                let nx = last.x;
+                let ny = last.y;
+
+                if (Math.random() < 0.3) {
+                    this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+                }
+
+                switch (this.dir) {
+                    case 0: ny -= this.size; break;
+                    case 1: nx += this.size; break;
+                    case 2: ny += this.size; break;
+                    case 3: nx -= this.size; break;
+                }
+
+                this.path.push({ x: nx, y: ny });
+                this.currentStep++;
+            } else {
+                this.alpha -= 0.005;
+                if (this.alpha <= 0) this.reset();
+            }
+        }
+
+        draw() {
+            if (this.path.length < 2) return;
+
+            ctx.beginPath();
+            ctx.moveTo(this.path[0].x, this.path[0].y);
+
+            for (let i = 1; i < this.path.length; i++) {
+                ctx.lineTo(this.path[i].x, this.path[i].y);
+            }
+
+            ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            let last = this.path[this.path.length - 1];
+            ctx.beginPath();
+            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+            ctx.fill();
+        }
+    }
+
+
+    const codeSnippets = [
+        "class BookingManager {}",
+        "import spring.boot.*;",
+        "<div class='booking'>",
+        "SELECT * FROM bookings;",
+        "SELECT privacyCheck FROM bookings;",
+        "const init = () => {};",
+        "return new Booking();",
+        "01000010 01001111 01001111 01001011",
+        "public static void main()",
+        "async fetch('/api/bookings')",
+        "npm run build",
+        "docker-compose up -d",
+        "mvn clean install"
+    ];
+
+
+    class CodeText {
+        constructor() { this.reset(); }
+
+        reset() {
+            this.x = Math.random() * (width - 200);
+            this.y = Math.random() * height;
+            this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            this.alpha = 0;
+            this.maxAlpha = Math.random() * 0.3 + 0.1;
+            this.fadeIn = true;
+            this.speed = Math.random() * 0.3 + 0.1;
+        }
+
+        update() {
+            this.y -= this.speed;
+            if (this.fadeIn) {
+                this.alpha += 0.008;
+                if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+            } else {
+                this.alpha -= 0.005;
+                if (this.alpha <= 0) this.reset();
+            }
+        }
+
+        draw() {
+            ctx.font = '12px "Fira Code", monospace';
+            ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+            ctx.fillText(this.text, this.x, this.y);
+        }
+    }
+
+
+    const circuits = Array.from({ length: 18 }, () => new Circuit());
+    const codeTexts = Array.from({ length: 12 }, () => new CodeText());
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        circuits.forEach(c => { c.update(); c.draw(); });
+        codeTexts.forEach(ct => { ct.update(); ct.draw(); });
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+</script>
+
+
+</body>
+
+</html>

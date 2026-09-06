@@ -1,6 +1,8 @@
 package it.skillfactory.eco.controller;
 
+import it.skillfactory.eco.model.Booking;
 import it.skillfactory.eco.model.Page;
+import it.skillfactory.eco.repository.BookingRepository;
 import it.skillfactory.eco.repository.PageRepository;
 
 import org.springframework.http.HttpStatus;
@@ -20,10 +22,12 @@ public class PublicPageController {
 
     private final PageRepository pageRepository;
     private final JavaMailSender mailSender;
+    private final BookingRepository bookingRepository;
 
-    public PublicPageController(PageRepository pageRepository, JavaMailSender mailSender) {
+    public PublicPageController(PageRepository pageRepository, JavaMailSender mailSender, BookingRepository bookingRepository) {
         this.pageRepository = pageRepository;
         this.mailSender = mailSender;
+        this.bookingRepository = bookingRepository;
     }
 
     // ============================================================
@@ -74,6 +78,35 @@ public class PublicPageController {
             RedirectAttributes redirectAttributes) {
 
         String mode = (formType != null && !formType.trim().isEmpty()) ? formType : "BOOKING";
+
+        // ============================================================
+        // SALVATAGGIO INTERNO DELLA PRENOTAZIONE (DATABASE)
+        // ============================================================
+        try {
+            Booking booking = new Booking();
+            booking.setFormType(mode);
+            booking.setPageSlug(pageSlug);
+            booking.setCourseType(courseType);
+            booking.setCourseCode(courseCode);
+            booking.setCourseName(courseName);
+            booking.setNome(nome);
+            booking.setCognome(cognome);
+            booking.setEmail(email);
+            booking.setTelefono(telefono);
+            booking.setCodiceFiscale(codiceFiscale);
+            booking.setCitta(citta);
+            booking.setOrganizzazione(organizzazione);
+            booking.setRuolo(ruolo);
+            booking.setNote(note);
+            booking.setPrivacyCheck(privacyCheck);
+            booking.setMarketingCheck(marketingCheck);
+            booking.setProfilingCheck(profilingCheck);
+
+            bookingRepository.save(booking);
+            System.out.println("Prenotazione salvata nel database con successo.");
+        } catch (Exception e) {
+            System.err.println("Errore durante il salvataggio della prenotazione nel DB: " + e.getMessage());
+        }
 
         System.out.println("=================================");
         System.out.println("NUOVA RICHIESTA FORM (" + mode + ")");

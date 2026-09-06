@@ -26,22 +26,27 @@
 
         <!-- MENU PRINCIPALE -->
         <div class="sidebar-menu flex-grow-1">
-            <a class="nav-link" th:classappend="${activeMenu == 'dashboard'} ? 'active' : ''" th:href="@{/admin/dashboard}">
+            <a th:class="${activeMenu == 'dashboard'} ? 'nav-link active' : 'nav-link'" th:href="@{/admin/dashboard}">
                 <i class="bi bi-layers-half me-2"></i>
                 Righe Home Page
             </a>
 
-            <a class="nav-link" th:classappend="${activeMenu == 'pages'} ? 'active' : ''" th:href="@{/admin/pages}">
+            <a th:class="${activeMenu == 'pages'} ? 'nav-link active' : 'nav-link'" th:href="@{/admin/pages}">
                 <i class="bi bi-file-earmark-text me-2"></i>
                 Pagine Dinamiche
             </a>
 
-            <a class="nav-link" th:classappend="${activeMenu == 'navbar'} ? 'active' : ''" th:href="@{/admin/navbar}">
+            <a th:class="${activeMenu == 'bookings'} ? 'nav-link active' : 'nav-link'" th:href="@{/admin/bookings}">
+                <i class="bi bi-person-lines-fill me-2"></i>
+                Prenotazioni Form
+            </a>
+
+            <a th:class="${activeMenu == 'navbar'} ? 'nav-link active' : 'nav-link'" th:href="@{/admin/navbar}">
                 <i class="bi bi-menu-button-wide me-2"></i>
                 Gestione Navbar
             </a>
 
-            <a class="nav-link" th:classappend="${activeMenu == 'footer'} ? 'active' : ''" th:href="@{/admin/footer}">
+            <a th:class="${activeMenu == 'footer'} ? 'nav-link active' : 'nav-link'" th:href="@{/admin/footer}">
                 <i class="bi bi-border-bottom me-2"></i>
                 Gestione Footer
             </a>

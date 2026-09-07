@@ -1,1208 +1,1228 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Gestione Pagina - Eco Skill Factory</title>
+<title>Gestione Pagina - Eco Skill Factory</title>
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- ============================================================
-         STILI SFONDO ANIMATO
-         ============================================================ -->
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #f1f5f9;
-            background-color: #080c14 !important;
-            overflow-x: hidden;
-            position: relative;
-        }
+<!-- ============================================================
+     STILI SFONDO ANIMATO
+     ============================================================ -->
+<style>
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #f1f5f9;
+        background-color: #080c14 !important;
+        overflow-x: hidden;
+        position: relative;
+    }
 
-        #tech-bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-        }
+    #tech-bg-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+    }
 
-        .card, .bg-light, .alert-light {
-            background-color: #0f172a !important;
-            border: 1px solid #1e293b !important;
-            color: #f1f5f9 !important;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
-        }
+    .card, .bg-light, .alert-light {
+        background-color: #0f172a !important;
+        border: 1px solid #1e293b !important;
+        color: #f1f5f9 !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+    }
 
-        label, h2, h4, h5, .form-label, .form-text, .text-muted {
-            color: #cbd5e1 !important;
-        }
+    label, h2, h4, h5, .form-label, .form-text, .text-muted {
+        color: #cbd5e1 !important;
+    }
 
-        .form-control, .form-select {
-            background-color: #1e293b !important;
-            border: 1px solid #334155 !important;
-            color: #ffffff !important;
-        }
+    .form-control, .form-select {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        color: #ffffff !important;
+    }
 
-        .form-control:focus, .form-select:focus {
-            background-color: #1e293b !important;
-            color: #ffffff !important;
-            border-color: #00dc82 !important;
-            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25) !important;
-        }
+    .form-control:focus, .form-select:focus {
+        background-color: #1e293b !important;
+        color: #ffffff !important;
+        border-color: #00dc82 !important;
+        box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25) !important;
+    }
 
-        .input-group-text {
-            background-color: #1e293b !important;
-            border: 1px solid #334155 !important;
-            color: #00dc82 !important;
-        }
+    .input-group-text {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        color: #00dc82 !important;
+    }
 
-        code {
-            color: #36e4da !important;
-        }
+    code {
+        color: #36e4da !important;
+    }
 
-        .btn-brand {
-            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
-            color: #0f172a;
-            font-weight: 700;
-            border: none;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 220, 130, 0.25);
-        }
+    .btn-brand {
+        background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
+        color: #0f172a;
+        font-weight: 700;
+        border: none;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 220, 130, 0.25);
+    }
 
-        .btn-brand:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
-            color: #0f172a;
-        }
+    .btn-brand:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
+        color: #0f172a;
+    }
 
-        .course-config-box {
-            background-color: rgba(15, 23, 42, 0.8) !important;
-            border: 1px solid rgba(0, 220, 130, 0.3) !important;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
+    .course-config-box {
+        background-color: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(0, 220, 130, 0.3) !important;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
 
-        /* Personalizzazione Validazione Form */
-        .was-validated .form-control:invalid, .was-validated .form-select:invalid {
-            border-color: #ea580c !important;
-            background-image: none !important;
-            box-shadow: 0 0 0 0.25rem rgba(234, 88, 12, 0.25) !important;
-        }
+    /* Personalizzazione Validazione Form */
+    .was-validated .form-control:invalid, .was-validated .form-select:invalid {
+        border-color: #ea580c !important;
+        background-image: none !important;
+        box-shadow: 0 0 0 0.25rem rgba(234, 88, 12, 0.25) !important;
+    }
 
-        .modal-content-dark {
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #f1f5f9;
-        }
+    .modal-content-dark {
+        background: #0f172a;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #f1f5f9;
+    }
 
-        /* ============================================================
-           ANTEPRIMA FORM
-           ============================================================ */
-        .form-preview-modal .modal-content {
-            background: #080c14;
-            border: 1px solid #334155;
-            color: #f1f5f9;
-            border-radius: 0.85rem;
-            overflow: hidden;
-        }
+    /* ============================================================
+       ANTEPRIMA FORM
+       ============================================================ */
+    .form-preview-modal .modal-content {
+        background: #080c14;
+        border: 1px solid #334155;
+        color: #f1f5f9;
+        border-radius: 0.85rem;
+        overflow: hidden;
+    }
 
-        .form-preview-modal .modal-header {
-            background: #0f172a;
-            border-bottom: 1px solid #334155;
-        }
+    .form-preview-modal .modal-header {
+        background: #0f172a;
+        border-bottom: 1px solid #334155;
+    }
 
-        .form-preview-modal .modal-footer {
-            background: #0f172a;
-            border-top: 1px solid #334155;
-        }
+    .form-preview-modal .modal-footer {
+        background: #0f172a;
+        border-top: 1px solid #334155;
+    }
 
-        .form-preview-container {
-            background: #080c14;
-            min-height: 300px;
-            padding: 1.5rem;
-        }
+    .form-preview-container {
+        background: #080c14;
+        min-height: 300px;
+        padding: 1.5rem;
+    }
 
-        .form-preview-card {
-            max-width: 850px;
-            margin: 0 auto;
-            background: #0f172a;
-            border: 1px solid #1e293b;
-            border-radius: 0.85rem;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-        }
+    .form-preview-card {
+        max-width: 850px;
+        margin: 0 auto;
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-radius: 0.85rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
 
-        .form-preview-title {
-            color: #ffffff;
-            font-weight: 700;
-            margin-bottom: 0.35rem;
-        }
+    .form-preview-title {
+        color: #ffffff;
+        font-weight: 700;
+        margin-bottom: 0.35rem;
+    }
 
-        .form-preview-description {
-            color: #94a3b8;
-            margin-bottom: 1.5rem;
-        }
+    .form-preview-description {
+        color: #94a3b8;
+        margin-bottom: 1.5rem;
+    }
 
-        .form-preview-card .form-label {
-            color: #cbd5e1 !important;
-            font-weight: 600;
-        }
+    .form-preview-card .form-label {
+        color: #cbd5e1 !important;
+        font-weight: 600;
+    }
 
-        .form-preview-card .form-control,
-        .form-preview-card .form-select {
-            background-color: #1e293b !important;
-            border-color: #334155 !important;
-            color: #ffffff !important;
-        }
+    .form-preview-card .form-control,
+    .form-preview-card .form-select {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+        color: #ffffff !important;
+    }
 
-        .form-preview-card textarea.form-control {
-            min-height: 110px;
-            resize: vertical;
-        }
+    .form-preview-card textarea.form-control {
+        min-height: 110px;
+        resize: vertical;
+    }
 
-        .form-preview-card .form-check-label {
-            color: #cbd5e1;
-        }
+    .form-preview-card .form-check-label {
+        color: #cbd5e1;
+    }
 
-        .form-preview-card .form-check-input {
-            background-color: #1e293b;
-            border-color: #475569;
-        }
+    .form-preview-card .form-check-input {
+        background-color: #1e293b;
+        border-color: #475569;
+    }
 
-        .form-preview-card .preview-required {
-            color: #f87171;
-        }
+    .form-preview-card .preview-required {
+        color: #f87171;
+    }
 
-        .form-preview-type-badge {
-            display: inline-block;
-            padding: 0.35rem 0.65rem;
-            border-radius: 999px;
-            background: rgba(0, 220, 130, 0.12);
-            border: 1px solid rgba(0, 220, 130, 0.3);
-            color: #00dc82;
-            font-size: 0.78rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
+    .form-preview-type-badge {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        background: rgba(0, 220, 130, 0.12);
+        border: 1px solid rgba(0, 220, 130, 0.3);
+        color: #00dc82;
+        font-size: 0.78rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
 
-        .form-preview-placeholder {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: #94a3b8;
-        }
+    .form-preview-placeholder {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #94a3b8;
+    }
 
-        .form-preview-placeholder i {
-            font-size: 3rem;
-            color: #475569;
-            display: block;
-            margin-bottom: 1rem;
-        }
+    .form-preview-placeholder i {
+        font-size: 3rem;
+        color: #475569;
+        display: block;
+        margin-bottom: 1rem;
+    }
 
-        /* MONACO EDITOR - OMOLOGATO */
-        .monaco-open-button{border-color:#36e4da!important;color:#36e4da!important;font-weight:600}.monaco-open-button:hover{background:rgba(54,228,218,.12)!important;color:#fff!important}.monaco-editor-workspace{width:100%;overflow:hidden;background:#1e1e1e}.monaco-extra-toolbar{display:flex;align-items:center;gap:8px;padding:8px;background:#111827;border-bottom:1px solid #334155;flex-wrap:wrap;position:relative;z-index:20}.monaco-search-wrapper{flex:1 1 320px;min-width:260px;max-width:700px;position:relative}.monaco-search-input{font-family:'Fira Code',monospace}.monaco-search-results{position:absolute;top:calc(100% + 4px);right:0;display:none;align-items:center;gap:6px;padding:4px 6px;border:1px solid #475569;border-radius:6px;background:#0f172a;box-shadow:0 8px 20px rgba(0,0,0,.45);z-index:1000;white-space:nowrap}.monaco-search-results.visible{display:flex}.monaco-search-count{min-width:58px;text-align:center;color:#cbd5e1;font:12px 'Fira Code',monospace}.monaco-zoom-label{min-width:58px;text-align:center;cursor:default}.monaco-modal-editor-button{margin-bottom:8px}.monaco-editor .suggest-widget{z-index:10000!important}
-        
-        .modal-fullscreen-custom{width:100vw;max-width:none;height:100vh;margin:0}
-        .modal-fullscreen-custom .modal-content{height:100vh;border-radius:0;display:flex;flex-direction:column;overflow:hidden}
-        .modal-fullscreen-custom .modal-body{flex:1 1 auto;display:flex;flex-direction:column;overflow:hidden;padding:0!important}
-        .modal-fullscreen-custom .monaco-editor-workspace{flex:1 1 auto;display:flex;flex-direction:column}
-        .modal-fullscreen-custom #monacoContainer{height:calc(100vh - 180px)!important;flex:1 1 auto}
-        .modal-fullscreen-custom .modal-footer{flex-shrink:0;z-index:30;background:#0f172a}
-        
-        .monaco-search-match{background:rgba(255,215,0,.28);border:1px solid rgba(255,215,0,.55);border-radius:2px}.monaco-search-match-current{background:rgba(0,220,130,.42);border:1px solid rgba(0,220,130,.9);border-radius:2px}@media(max-width:768px){.monaco-search-wrapper{flex-basis:100%;max-width:none}}
-    </style>
+    /* MONACO EDITOR - OMOLOGATO */
+    .monaco-open-button{border-color:#36e4da!important;color:#36e4da!important;font-weight:600}.monaco-open-button:hover{background:rgba(54,228,218,.12)!important;color:#fff!important}.monaco-editor-workspace{width:100%;overflow:hidden;background:#1e1e1e}.monaco-extra-toolbar{display:flex;align-items:center;gap:8px;padding:8px;background:#111827;border-bottom:1px solid #334155;flex-wrap:wrap;position:relative;z-index:20}.monaco-search-wrapper{flex:1 1 320px;min-width:260px;max-width:700px;position:relative}.monaco-search-input{font-family:'Fira Code',monospace}.monaco-search-results{position:absolute;top:calc(100% + 4px);right:0;display:none;align-items:center;gap:6px;padding:4px 6px;border:1px solid #475569;border-radius:6px;background:#0f172a;box-shadow:0 8px 20px rgba(0,0,0,.45);z-index:1000;white-space:nowrap}.monaco-search-results.visible{display:flex}.monaco-search-count{min-width:58px;text-align:center;color:#cbd5e1;font:12px 'Fira Code',monospace}.monaco-zoom-label{min-width:58px;text-align:center;cursor:default}.monaco-modal-editor-button{margin-bottom:8px}.monaco-editor .suggest-widget{z-index:10000!important}
+    
+    .modal-fullscreen-custom{width:100vw;max-width:none;height:100vh;margin:0}
+    .modal-fullscreen-custom .modal-content{height:100vh;border-radius:0;display:flex;flex-direction:column;overflow:hidden}
+    .modal-fullscreen-custom .modal-body{flex:1 1 auto;display:flex;flex-direction:column;overflow:hidden;padding:0!important}
+    .modal-fullscreen-custom .monaco-editor-workspace{flex:1 1 auto;display:flex;flex-direction:column}
+    .modal-fullscreen-custom #monacoContainer{height:calc(100vh - 180px)!important;flex:1 1 auto}
+    .modal-fullscreen-custom .modal-footer{flex-shrink:0;z-index:30;background:#0f172a}
+    
+    .monaco-search-match{background:rgba(255,215,0,.28);border:1px solid rgba(255,215,0,.55);border-radius:2px}.monaco-search-match-current{background:rgba(0,220,130,.42);border:1px solid rgba(0,220,130,.9);border-radius:2px}@media(max-width:768px){.monaco-search-wrapper{flex-basis:100%;max-width:none}}
+</style>
 
-    <!-- ============================================================
-         TINYMCE
-         ============================================================ -->
-    <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
-            referrerpolicy="origin">
-    </script>
+<!-- ============================================================
+     TINYMCE
+     ============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js"
+        referrerpolicy="origin">
+</script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            tinymce.init({
-                selector: '.wysiwyg-editor',
-                language: 'it',
-                language_url: '/tinymce/langs/it.js',
-                content_language: 'it',
-                min_height: 500,
-                menubar: true,
-                branding: false,
-                promotion: false,
-                license_key: 'gpl',
-                statusbar: true,
-                elementpath: true,
-                skin: 'oxide-dark',
-                image_advtab: true,
-                image_title: true,
-                image_caption: true,
-                automatic_uploads: true,
-                object_resizing: 'img',
-                resize_img_proportional: true,
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        tinymce.init({
+            selector: '.wysiwyg-editor',
+            language: 'it',
+            language_url: '/tinymce/langs/it.js',
+            content_language: 'it',
+            min_height: 500,
+            menubar: true,
+            branding: false,
+            promotion: false,
+            license_key: 'gpl',
+            statusbar: true,
+            elementpath: true,
+            skin: 'oxide-dark',
+            image_advtab: true,
+            image_title: true,
+            image_caption: true,
+            automatic_uploads: true,
+            object_resizing: 'img',
+            resize_img_proportional: true,
 
-                relative_urls: false,
-                remove_script_host: false,
-                convert_urls: false,
-                document_base_url: window.location.origin + '/',
+            relative_urls: false,
+            remove_script_host: false,
+            convert_urls: false,
+            document_base_url: window.location.origin + '/',
 
-                font_size_formats:
-                    '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
-                font_size_input_default_unit: 'px',
+            font_size_formats:
+                '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
+            font_size_input_default_unit: 'px',
 
-                plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                    'media', 'table', 'wordcount', 'help', 'emoticons'
-                ],
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'media', 'table', 'wordcount', 'help', 'emoticons'
+            ],
 
-                toolbar:
-                    'undo redo | blocks fontfamily fontsize | ' +
-                    'bold italic underline | ' +
-                    'forecolor backcolor | ' +
-                    'alignleft aligncenter alignright alignjustify | ' +
-                    'bullist numlist | ' +
-                    'link image media table emoticons | ' +
-                    'code fullscreen | help',
+            toolbar:
+                'undo redo | blocks fontfamily fontsize | ' +
+                'bold italic underline | ' +
+                'forecolor backcolor | ' +
+                'alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist | ' +
+                'link image media table emoticons | ' +
+                'code fullscreen | help',
 
-                content_style: `
-                    body {
-                        font-family: Arial, sans-serif;
-                        font-size: 18px;
-                        line-height: 1.6;
-                        background-color: #0d1b2a !important;
-                        color: #ffffff !important;
-                        padding: 15px;
-                    }
-                    p { font-size: 18px; color: #ffffff !important; }
-                    h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
-                    a { color: #36e4da !important; }
-                    img { max-width: 100%; height: auto; }
-                    figure.image.align-left { float: left; margin: 0 15px 10px 0; }
-                    figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
-                    figure.image.align-right { float: right; margin: 0 0 10px 15px; }
-                    figure.image { display: inline-block; margin: 0 2px 0 1px; }
-                    figure.image img { max-width: 100%; height: auto; }
-                `,
+            content_style: `
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 18px;
+                    line-height: 1.6;
+                    background-color: #0d1b2a !important;
+                    color: #ffffff !important;
+                    padding: 15px;
+                }
+                p { font-size: 18px; color: #ffffff !important; }
+                h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
+                a { color: #36e4da !important; }
+                img { max-width: 100%; height: auto; }
+                figure.image.align-left { float: left; margin: 0 15px 10px 0; }
+                figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
+                figure.image.align-right { float: right; margin: 0 0 10px 15px; }
+                figure.image { display: inline-block; margin: 0 2px 0 1px; }
+                figure.image img { max-width: 100%; height: auto; }
+            `,
 
-                style_formats: [
-                    { title: 'Immagine a sinistra', selector: 'img', styles: { 'float': 'left', 'margin': '0 15px 10px 0' } },
-                    { title: 'Immagine centrata', selector: 'img', styles: { 'display': 'block', 'float': 'none', 'margin-left': 'auto', 'margin-right': 'auto' } },
-                    { title: 'Immagine a destra', selector: 'img', styles: { 'float': 'right', 'margin': '0 0 10px 15px' } },
-                    { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
-                ],
+            style_formats: [
+                { title: 'Immagine a sinistra', selector: 'img', styles: { 'float': 'left', 'margin': '0 15px 10px 0' } },
+                { title: 'Immagine centrata', selector: 'img', styles: { 'display': 'block', 'float': 'none', 'margin-left': 'auto', 'margin-right': 'auto' } },
+                { title: 'Immagine a destra', selector: 'img', styles: { 'float': 'right', 'margin': '0 0 10px 15px' } },
+                { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
+            ],
 
-                images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
-                    const formData = new FormData();
-                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+            images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
+                const formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
 
-                    fetch('/api/uploads/immagine', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.text().then(text => {
-                                throw new Error('Errore HTTP ' + response.status + ': ' + text);
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const imageUrl = data.location || data.url;
-                        if (!imageUrl) {
-                            throw new Error('Il server non ha restituito location oppure url.');
-                        }
-                        resolve(imageUrl);
-                    })
-                    .catch(error => {
-                        console.error('Upload fallito:', error);
-                        reject({ message: 'Caricamento immagine non riuscito: ' + error.message, remove: true });
-                    });
+                fetch('/api/uploads/immagine', {
+                    method: 'POST',
+                    body: formData
                 })
-            });
-            
-            // Inizializza visibilità pannello form
-            toggleCourseForm();
-        });
-
-        function toggleCourseForm() {
-            const formTypeSelect = document.getElementById('formTypeSelect');
-            const courseConfigBox = document.getElementById('courseConfigBox');
-            const courseFields = document.querySelectorAll('.course-specific-field');
-
-            if (formTypeSelect && courseConfigBox) {
-                const selectedVal = formTypeSelect.value;
-                if (selectedVal === 'NONE') {
-                    courseConfigBox.style.display = 'none';
-                } else {
-                    courseConfigBox.style.display = 'block';
-                    if (selectedVal === 'BOOKING') {
-                        courseFields.forEach(el => el.style.display = 'block');
-                    } else {
-                        // INFO e ORG_INFO escludono Tipologia, Codice e Nome Corso
-                        courseFields.forEach(el => el.style.display = 'none');
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error('Errore HTTP ' + response.status + ': ' + text);
+                        });
                     }
+                    return response.json();
+                })
+                .then(data => {
+                    const imageUrl = data.location || data.url;
+                    if (!imageUrl) {
+                        throw new Error('Il server non ha restituito location oppure url.');
+                    }
+                    resolve(imageUrl);
+                })
+                .catch(error => {
+                    console.error('Upload fallito:', error);
+                    reject({ message: 'Caricamento immagine non riuscito: ' + error.message, remove: true });
+                });
+            })
+        });
+        
+        // Inizializza visibilità pannello form
+        toggleCourseForm();
+    });
+
+    function toggleCourseForm() {
+        const formTypeSelect = document.getElementById('formTypeSelect');
+        const courseConfigBox = document.getElementById('courseConfigBox');
+        const courseFields = document.querySelectorAll('.course-specific-field');
+
+        if (formTypeSelect && courseConfigBox) {
+            const selectedVal = formTypeSelect.value;
+            if (selectedVal === 'NONE') {
+                courseConfigBox.style.display = 'none';
+            } else {
+                courseConfigBox.style.display = 'block';
+                if (selectedVal === 'BOOKING') {
+                    courseFields.forEach(el => el.style.display = 'block');
+                } else {
+                    // INFO e ORG_INFO escludono Tipologia, Codice e Nome Corso
+                    courseFields.forEach(el => el.style.display = 'none');
                 }
             }
         }
-    </script>
+    }
+</script>
+
+
 </head>
 
 <body>
 
-    <!-- Canvas Sfondo Animato -->
-    <canvas id="tech-bg-canvas"></canvas>
 
-    <div class="container py-4">
+<!-- Canvas Sfondo Animato -->
+<canvas id="tech-bg-canvas"></canvas>
 
-        <!-- INTESTAZIONE -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova Pagina</h2>
-                <p class="text-muted mb-0">Crea o modifica il contenuto della pagina.</p>
-            </div>
-            <a th:href="@{/admin/pages}" class="btn btn-outline-light">
-                <i class="bi bi-arrow-left me-1"></i> Torna alla Gestione Pagine
-            </a>
+<div class="container py-4">
+
+    <!-- INTESTAZIONE -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova Pagina</h2>
+            <p class="text-muted mb-0">Crea o modifica il contenuto della pagina.</p>
         </div>
+        <a th:href="@{/admin/pages}" class="btn btn-outline-light">
+            <i class="bi bi-arrow-left me-1"></i> Torna alla Gestione Pagine
+        </a>
+    </div>
 
-        <!-- FORM PAGINA -->
-        <form id="pageForm" th:action="@{/admin/pages/save}" th:object="${page}" method="post" class="card shadow-sm border-0" novalidate>
-            <div class="card-body p-4">
+    <!-- FORM PAGINA -->
+    <form id="pageForm" th:action="@{/admin/pages/save}" th:object="${page}" method="post" class="card shadow-sm border-0" novalidate>
+        <div class="card-body p-4">
 
-                <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{id}">
 
-                <!-- TITOLO -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Titolo Pagina <span class="text-danger">*</span></label>
-                    <input type="text" th:field="*{title}" class="form-control form-control-lg" placeholder="es. Chi Siamo" required>
-                    <div class="form-text">Il titolo verrà utilizzato come titolo amministrativo della pagina.</div>
+            <!-- TITOLO -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Titolo Pagina <span class="text-danger">*</span></label>
+                <input type="text" th:field="*{title}" class="form-control form-control-lg" placeholder="es. Chi Siamo" required>
+                <div class="form-text">Il titolo verrà utilizzato come titolo amministrativo della pagina.</div>
+            </div>
+
+            <!-- SLUG -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Slug URL <span class="text-danger">*</span></label>
+                <input type="text" th:field="*{slug}" class="form-control" placeholder="es. chi-siamo" required>
+                <div class="form-text">La pagina sarà disponibile all'indirizzo: <code>/p/chi-siamo</code></div>
+            </div>
+
+            <!-- LARGHEZZA BLOCCO -->
+            <div class="mb-4">
+                <label for="widthPercent" class="form-label fw-bold">Larghezza Blocco (%)</label>
+                <div class="input-group">
+                    <input id="widthPercent" type="number" th:field="*{widthPercent}" class="form-control" min="10" max="100" step="1" placeholder="100">
+                    <span class="input-group-text">%</span>
                 </div>
+                <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
+            </div>
 
-                <!-- SLUG -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Slug URL <span class="text-danger">*</span></label>
-                    <input type="text" th:field="*{slug}" class="form-control" placeholder="es. chi-siamo" required>
-                    <div class="form-text">La pagina sarà disponibile all'indirizzo: <code>/p/chi-siamo</code></div>
-                </div>
+            <!-- SELEZIONE MODALITÀ FORM -->
+            <div class="mb-4 p-3 border rounded bg-dark">
+                <label for="formTypeSelect" class="form-label fw-bold text-white fs-5 mb-2">
+                    <i class="bi bi-ui-checks me-2 text-success"></i>Integrazione Form nella Pagina
+                </label>
+                <select id="formTypeSelect" th:field="*{formType}" class="form-select form-select-lg" onchange="toggleCourseForm()">
+                    <option value="NONE">Nessun Form</option>
+                    <option value="BOOKING">Includi Form di Prenotazione Corso in questa pagina</option>
+                    <option value="INFO">Includi Form di richiesta informazioni</option>
+                    <option value="ORG_INFO">Includi Form di richiesta informazioni per organizzazioni</option>
+                </select>
+                <div class="form-text ms-1 mt-2">Seleziona la modalità di form che si desidera mostrare in fondo al contenuto della pagina.</div>
+            </div>
 
-                <!-- LARGHEZZA BLOCCO -->
-                <div class="mb-4">
-                    <label for="widthPercent" class="form-label fw-bold">Larghezza Blocco (%)</label>
-                    <div class="input-group">
-                        <input id="widthPercent" type="number" th:field="*{widthPercent}" class="form-control" min="10" max="100" step="1" placeholder="100">
-                        <span class="input-group-text">%</span>
+            <!-- CONFIGURAZIONE FORM CORSO / DESTINAZIONE -->
+            <div id="courseConfigBox" class="course-config-box mb-4" style="display: none;">
+                <h5 class="text-success mb-3 fw-bold">
+                    <i class="bi bi-sliders me-2"></i>Impostazioni Form e Destinazione
+                </h5>
+                
+                <div class="row g-3">
+                    <div class="col-md-4 course-specific-field">
+                        <label class="form-label fw-bold">Tipologia Corso</label>
+                        <input type="text" th:field="*{courseType}" class="form-control" placeholder="es. Corso di Formazione">
                     </div>
-                    <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
-                </div>
 
-                <!-- SELEZIONE MODALITÀ FORM -->
-                <div class="mb-4 p-3 border rounded bg-dark">
-                    <label for="formTypeSelect" class="form-label fw-bold text-white fs-5 mb-2">
-                        <i class="bi bi-ui-checks me-2 text-success"></i>Integrazione Form nella Pagina
-                    </label>
-                    <select id="formTypeSelect" th:field="*{formType}" class="form-select form-select-lg" onchange="toggleCourseForm()">
-                        <option value="NONE">Nessun Form</option>
-                        <option value="BOOKING">Includi Form di Prenotazione Corso in questa pagina</option>
-                        <option value="INFO">Includi Form di richiesta informazioni</option>
-                        <option value="ORG_INFO">Includi Form di richiesta informazioni per organizzazioni</option>
-                    </select>
-                    <div class="form-text ms-1 mt-2">Seleziona la modalità di form che si desidera mostrare in fondo al contenuto della pagina.</div>
-                </div>
+                    <div class="col-md-4 course-specific-field">
+                        <label class="form-label fw-bold">Codice Corso</label>
+                        <input type="text" th:field="*{courseCode}" class="form-control" placeholder="es. JAVA-2026-01">
+                    </div>
 
-                <!-- CONFIGURAZIONE FORM CORSO / DESTINAZIONE -->
-                <div id="courseConfigBox" class="course-config-box mb-4" style="display: none;">
-                    <h5 class="text-success mb-3 fw-bold">
-                        <i class="bi bi-sliders me-2"></i>Impostazioni Form e Destinazione
-                    </h5>
+                    <div class="col-md-4 course-specific-field">
+                        <label class="form-label fw-bold">Nome Corso</label>
+                        <input type="text" th:field="*{courseName}" class="form-control" placeholder="es. Corso Java Developer">
+                    </div>
+
                     
-                    <div class="row g-3">
-                        <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Tipologia Corso</label>
-                            <input type="text" th:field="*{courseType}" class="form-control" placeholder="es. Corso di Formazione">
-                        </div>
-
-                        <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Codice Corso</label>
-                            <input type="text" th:field="*{courseCode}" class="form-control" placeholder="es. JAVA-2026-01">
-                        </div>
-
-                        <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Nome Corso</label>
-                            <input type="text" th:field="*{courseName}" class="form-control" placeholder="es. Corso Java Developer">
-                        </div>
-
-                        
-                    </div>
-
-                    <!-- ANTEPRIMA FORM -->
-                    <div class="mt-4 pt-3 border-top border-secondary">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                            <div>
-                                <div class="fw-bold text-white">
-                                    <i class="bi bi-eye me-2 text-info"></i>Anteprima del Form
-                                </div>
-                                <div class="form-text mt-1">
-                                    Visualizza come apparirà il form selezionato nella pagina pubblica.
-                                </div>
-                            </div>
-
-                            <button type="button"
-                                    class="btn btn-outline-info"
-                                    onclick="openFormPreview()">
-                                <i class="bi bi-eye me-1"></i>
-                                Anteprima Form
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- CONTENUTO -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Contenuto Pagina (Editor)</label>
-                    <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e formattazione avanzata.</div>
-                    <div class="monaco-modal-editor-button"><button type="button" class="btn btn-sm btn-outline-info monaco-open-button" data-bs-toggle="modal" data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)"><i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)</button></div>
-<textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
-                </div>
-
-                <!-- INFORMAZIONI URL -->
-                <div class="alert alert-light border mb-4">
-                    <div class="d-flex align-items-start">
-                        <i class="bi bi-info-circle-fill text-success fs-4 me-3"></i>
+                <!-- ANTEPRIMA FORM -->
+                <div class="mt-4 pt-3 border-top border-secondary">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div>
-                            <strong>URL della pagina</strong>
-                            <div class="mt-1">
-                                <code>/p/<span th:text="${page.slug}">slug-pagina</span></code>
+                            <div class="fw-bold text-white">
+                                <i class="bi bi-eye me-2 text-info"></i>Anteprima del Form
+                            </div>
+                            <div class="form-text mt-1">
+                                Visualizza come apparirà il form selezionato nella pagina pubblica.
                             </div>
                         </div>
+
+                        <button type="button"
+                                class="btn btn-outline-info"
+                                onclick="openFormPreview()">
+                            <i class="bi bi-eye me-1"></i>
+                            Anteprima Form
+                        </button>
                     </div>
                 </div>
+            </div>
 
-                <!-- BOTTONI -->
-                <div class="d-flex justify-content-between align-items-center">
-                    <a th:href="@{/admin/pages}" class="btn btn-outline-light">
-                        <i class="bi bi-arrow-left me-1"></i> Annulla
-                    </a>
-                    <button type="button" class="btn btn-success btn-lg" onclick="showConfirmModal()">
-                        <i class="bi bi-check-circle me-1"></i> Salva Pagina
-                    </button>
-                </div>
+            <!-- CONTENUTO -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Contenuto Pagina (Editor)</label>
+                <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e formattazione avanzata.</div>
+                <div class="monaco-modal-editor-button"><button type="button" class="btn btn-sm btn-outline-info monaco-open-button" data-bs-toggle="modal" data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)"><i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)</button></div>
+
+
+<textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
+
 
             </div>
-        </form>
+
+            <!-- INFORMAZIONI URL -->
+            <div class="alert alert-light border mb-4">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-info-circle-fill text-success fs-4 me-3"></i>
+                    <div>
+                        <strong>URL della pagina</strong>
+                        <div class="mt-1">
+                            <code>/p/<span th:text="${page.slug}">slug-pagina</span></code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTONI -->
+            <div class="d-flex justify-content-between align-items-center">
+                <a th:href="@{/admin/pages}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i> Annulla
+                </a>
+                <button type="button" class="btn btn-success btn-lg" onclick="showConfirmModal()">
+                    <i class="bi bi-check-circle me-1"></i> Salva Pagina
+                </button>
+            </div>
+
+        </div>
+    </form>
+
 
 <!-- MODALE MONACO EDITOR AVANZATO -->
-    <div class="modal fade"
-         id="monacoEditorModal"
-         tabindex="-1"
-         aria-hidden="true">
 
-        <div class="modal-dialog modal-xl modal-dialog-centered"
-             id="monacoModalDialog">
 
-            <div class="modal-content modal-content-dark">
+<div class="modal fade"
+     id="monacoEditorModal"
+     tabindex="-1"
+     aria-hidden="true">
 
-                <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
+    <div class="modal-dialog modal-xl modal-dialog-centered"
+         id="monacoModalDialog">
 
-                    <h5 class="modal-title fw-bold text-white mb-0">
+        <div class="modal-content modal-content-dark">
 
-                        <i class="bi bi-code-square text-info me-2"></i>
-                        Monaco Code Editor
+            <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
 
-                        <small class="text-muted fs-6 ms-2">
-                            (Emmet abilitato - Premi TAB)
-                        </small>
+                <h5 class="modal-title fw-bold text-white mb-0">
 
-                    </h5>
+                    <i class="bi bi-code-square text-info me-2"></i>
+                    Monaco Code Editor
 
-                    <div>
+                    <small class="text-muted fs-6 ms-2">
+                        (Emmet abilitato - Premi TAB)
+                    </small>
 
-                        <button type="button"
-                                class="btn btn-sm btn-outline-light me-2"
-                                onclick="toggleMonacoFullscreen()"
-                                id="btnToggleFullscreen"
-                                title="Schermo Intero">
+                </h5>
 
-                            <i class="bi bi-arrows-angle-expand me-1"
-                               id="fullscreenIcon"></i><span id="btnToggleFullscreenText">Schermo Intero</span>
+                <div>
 
-                        </button>
+                    <button type="button"
+                            class="btn btn-sm btn-outline-light me-2"
+                            onclick="toggleMonacoFullscreen()"
+                            id="btnToggleFullscreen"
+                            title="Schermo Intero">
 
-                        <button type="button"
-                                class="btn-close btn-close-white"
-                                data-bs-dismiss="modal"
-                                aria-label="Close">
-                        </button>
+                        <i class="bi bi-arrows-angle-expand me-1"
+                           id="fullscreenIcon"></i><span id="btnToggleFullscreenText">Schermo Intero</span>
 
-                    </div>
-
-                </div>
-
-                <div class="modal-body p-0">
-
-                    <!-- STRUMENTI MONACO -->
-                    <div class="monaco-extra-toolbar">
-
-                        <div class="input-group input-group-sm monaco-search-wrapper">
-
-                            <span class="input-group-text">
-                                <i class="bi bi-search"></i>
-                            </span>
-
-                            <input type="text"
-                                   id="monacoSearchInput"
-                                   class="form-control monaco-search-input"
-                                   placeholder="Cerca nel codice..."
-                                   autocomplete="off"
-                                   aria-label="Cerca nel codice">
-
-                            <button type="button"
-                                    class="btn btn-outline-secondary"
-                                    id="btnMonacoSearchClear"
-                                    title="Cancella ricerca">
-
-                                <i class="bi bi-x-lg"></i>
-
-                            </button>
-
-                        </div>
-
-                        <div class="btn-group btn-group-sm"
-                             role="group"
-                             aria-label="Zoom editor">
-
-                            <button type="button"
-                                    class="btn btn-outline-light"
-                                    onclick="changeMonacoFontSize(-1)"
-                                    title="Riduci testo">
-
-                                <i class="bi bi-zoom-out"></i>
-
-                            </button>
-
-                            <span class="btn btn-outline-secondary monaco-zoom-label"
-                                  id="monacoZoomLabel">
-
-                                100%
-
-                            </span>
-
-                            <button type="button"
-                                    class="btn btn-outline-light"
-                                    onclick="changeMonacoFontSize(1)"
-                                    title="Ingrandisci testo">
-
-                                <i class="bi bi-zoom-in"></i>
-
-                            </button>
-
-                        </div>
-
-                        <!-- SOLO LA MINIMAPPA DI MONACO -->
-                        <button type="button"
-                                class="btn btn-sm btn-outline-warning"
-                                id="btnTogglePreview"
-                                onclick="toggleMonacoPreview()"
-                                title="Nascondi minimappa a destra">
-
-                            <i class="bi bi-map me-1"
-                               id="previewIcon"></i>
-
-                            <span id="previewButtonText">
-                                Nascondi minimappa
-                            </span>
-
-                        </button>
-
-                    </div>
-
-                    <div id="monacoWorkspace"
-                         class="monaco-editor-workspace">
-
-                        <div id="monacoContainer"
-                             style="width:100%; height:550px;">
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
-
-                    <div class="text-muted small">
-
-                        <span class="badge bg-secondary me-1">
-                            Emmet
-                        </span>
-
-                        Usa scorciatoie come
-                        <code>div.card>h2</code> + TAB
-
-                    </div>
-
-                    <div>
-
-                        <button type="button"
-                                class="btn btn-outline-secondary"
-                                data-bs-dismiss="modal">
-
-                            Annulla
-
-                        </button>
-
-                        <button type="button"
-                                class="btn btn-info"
-                                onclick="saveMonacoContent()">
-
-                            Applica Modifiche
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-        
-        
-
-    </div>
-
-    <!-- MODALE ANTEPRIMA FORM -->
-    <div class="modal fade form-preview-modal"
-         id="formPreviewModal"
-         tabindex="-1"
-         aria-labelledby="formPreviewModalLabel"
-         aria-hidden="true">
-
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <div>
-                        <h5 class="modal-title text-white mb-1" id="formPreviewModalLabel">
-                            <i class="bi bi-eye text-info me-2"></i>
-                            Anteprima Form
-                        </h5>
-                        <small class="text-muted">
-                            Questa è una simulazione del form visualizzato nella pagina pubblica.
-                        </small>
-                    </div>
+                    </button>
 
                     <button type="button"
                             class="btn-close btn-close-white"
                             data-bs-dismiss="modal"
-                            aria-label="Chiudi">
+                            aria-label="Close">
                     </button>
+
                 </div>
 
-                <div class="modal-body p-0">
-                    <div id="formPreviewContainer" class="form-preview-container">
-                        <div class="form-preview-placeholder">
-                            <i class="bi bi-ui-checks"></i>
-                            <div>Seleziona un tipo di form per visualizzarne l'anteprima.</div>
-                        </div>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <!-- STRUMENTI MONACO -->
+                <div class="monaco-extra-toolbar">
+
+                    <div class="input-group input-group-sm monaco-search-wrapper">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input type="text"
+                               id="monacoSearchInput"
+                               class="form-control monaco-search-input"
+                               placeholder="Cerca nel codice..."
+                               autocomplete="off"
+                               aria-label="Cerca nel codice">
+
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                id="btnMonacoSearchClear"
+                                title="Cancella ricerca">
+
+                            <i class="bi bi-x-lg"></i>
+
+                        </button>
+
                     </div>
+
+                    <div class="btn-group btn-group-sm"
+                         role="group"
+                         aria-label="Zoom editor">
+
+                        <button type="button"
+                                class="btn btn-outline-light"
+                                onclick="changeMonacoFontSize(-1)"
+                                title="Riduci testo">
+
+                            <i class="bi bi-zoom-out"></i>
+
+                        </button>
+
+                        <span class="btn btn-outline-secondary monaco-zoom-label"
+                              id="monacoZoomLabel">
+
+                            100%
+
+                        </span>
+
+                        <button type="button"
+                                class="btn btn-outline-light"
+                                onclick="changeMonacoFontSize(1)"
+                                title="Ingrandisci testo">
+
+                            <i class="bi bi-zoom-in"></i>
+
+                        </button>
+
+                    </div>
+
+                    <!-- SOLO LA MINIMAPPA DI MONACO -->
+                    <button type="button"
+                            class="btn btn-sm btn-outline-warning"
+                            id="btnTogglePreview"
+                            onclick="toggleMonacoPreview()"
+                            title="Nascondi minimappa a destra">
+
+                        <i class="bi bi-map me-1"
+                           id="previewIcon"></i>
+
+                        <span id="previewButtonText">
+                            Nascondi minimappa
+                        </span>
+
+                    </button>
+
                 </div>
 
-                <div class="modal-footer">
-                    <div class="text-muted small me-auto">
-                        <i class="bi bi-info-circle me-1"></i>
-                        L'anteprima non invia dati e non modifica il form.
+                <div id="monacoWorkspace"
+                     class="monaco-editor-workspace">
+
+                    <div id="monacoContainer"
+                         style="width:100%; height:550px;">
                     </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
+
+                <div class="text-muted small">
+
+                    <span class="badge bg-secondary me-1">
+                        Emmet
+                    </span>
+
+                    Usa scorciatoie come
+                    <code>div.card>h2</code> + TAB
+
+                </div>
+
+                <div>
 
                     <button type="button"
                             class="btn btn-outline-secondary"
                             data-bs-dismiss="modal">
-                        Chiudi
+
+                        Annulla
+
                     </button>
+
+                    <button type="button"
+                            class="btn btn-info"
+                            onclick="saveMonacoContent()">
+
+                        Applica Modifiche
+
+                    </button>
+
                 </div>
 
             </div>
+
         </div>
+
     </div>
 
-    <!-- MODAL DI AVVISO CAMPI MANCANTI -->
-    <div class="modal fade" id="warningModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content card border-0">
-                <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i>Campi Obbligatori Mancanti</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+    
+    
+
+</div>
+
+<!-- MODALE ANTEPRIMA FORM -->
+<div class="modal fade form-preview-modal"
+     id="formPreviewModal"
+     tabindex="-1"
+     aria-labelledby="formPreviewModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title text-white mb-1" id="formPreviewModalLabel">
+                        <i class="bi bi-eye text-info me-2"></i>
+                        Anteprima Form
+                    </h5>
+                    <small class="text-muted">
+                        Questa è una simulazione del form visualizzato nella pagina pubblica.
+                    </small>
                 </div>
-                <div class="modal-body text-light">
-                    Compilare tutti i campi obbligatori prima di salvare la pagina (es. <strong>Titolo Pagina</strong> e <strong>Slug URL</strong>).
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Chiudi">
+                </button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div id="formPreviewContainer" class="form-preview-container">
+                    <div class="form-preview-placeholder">
+                        <i class="bi bi-ui-checks"></i>
+                        <div>Seleziona un tipo di form per visualizzarne l'anteprima.</div>
+                    </div>
                 </div>
-                <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-warning fw-bold text-dark" data-bs-dismiss="modal">Ho Capito</button>
+            </div>
+
+            <div class="modal-footer">
+                <div class="text-muted small me-auto">
+                    <i class="bi bi-info-circle me-1"></i>
+                    L'anteprima non invia dati e non modifica il form.
                 </div>
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
+                    Chiudi
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DI AVVISO CAMPI MANCANTI -->
+<div class="modal fade" id="warningModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card border-0">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i>Campi Obbligatori Mancanti</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-light">
+                Compilare tutti i campi obbligatori prima di salvare la pagina (es. <strong>Titolo Pagina</strong> e <strong>Slug URL</strong>).
+            </div>
+            <div class="modal-footer border-top border-secondary">
+                <button type="button" class="btn btn-warning fw-bold text-dark" data-bs-dismiss="modal">Ho Capito</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- MODAL DI CONFERMA SALVATAGGIO -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content card border-0">
-                <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title text-white"><i class="bi bi-check-circle-fill text-success me-2"></i>Conferma Operazione</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-light">
-                    Sei sicuro di voler salvare le modifiche alla pagina?
-                </div>
-                <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                    <button type="button" class="btn btn-success" onclick="submitPageForm()">Conferma e Salva</button>
-                </div>
+<!-- MODAL DI CONFERMA SALVATAGGIO -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card border-0">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title text-white"><i class="bi bi-check-circle-fill text-success me-2"></i>Conferma Operazione</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-light">
+                Sei sicuro di voler salvare le modifiche alla pagina?
+            </div>
+            <div class="modal-footer border-top border-secondary">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-success" onclick="submitPageForm()">Conferma e Salva</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- BOOTSTRAP JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- BOOTSTRAP JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        /* ============================================================
-           ANTEPRIMA FORM
-           ============================================================ */
+<script>
+    /* ============================================================
+       ANTEPRIMA FORM
+       ============================================================ */
 
-        function escapePreviewHtml(value) {
-            return String(value ?? '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+    function escapePreviewHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function getSelectedFormType() {
+        const select = document.getElementById('formTypeSelect');
+        return select ? select.value : 'NONE';
+    }
+
+    function getPreviewPageTitle() {
+        const titleInput = document.getElementById('title');
+        if (titleInput && titleInput.value.trim()) {
+            return titleInput.value.trim();
         }
 
-        function getSelectedFormType() {
-            const select = document.getElementById('formTypeSelect');
-            return select ? select.value : 'NONE';
+        const titleField = document.querySelector('[name="title"]');
+        if (titleField && titleField.value.trim()) {
+            return titleField.value.trim();
         }
 
-        function getPreviewPageTitle() {
-            const titleInput = document.getElementById('title');
-            if (titleInput && titleInput.value.trim()) {
-                return titleInput.value.trim();
-            }
+        return 'Pagina';
+    }
 
-            const titleField = document.querySelector('[name="title"]');
-            if (titleField && titleField.value.trim()) {
-                return titleField.value.trim();
-            }
-
-            return 'Pagina';
+    function getPreviewCourseValue(id, name) {
+        const byId = document.getElementById(id);
+        if (byId && byId.value.trim()) {
+            return byId.value.trim();
         }
 
-        function getPreviewCourseValue(id, name) {
-            const byId = document.getElementById(id);
-            if (byId && byId.value.trim()) {
-                return byId.value.trim();
-            }
+        const byName = document.querySelector('[name="' + name + '"]');
+        return byName ? byName.value.trim() : '';
+    }
 
-            const byName = document.querySelector('[name="' + name + '"]');
-            return byName ? byName.value.trim() : '';
-        }
+    function buildPreviewInput(label, name, placeholder, required = false, type = 'text') {
+        return `
+            <div class="mb-3">
+                <label class="form-label">
+                    ${escapePreviewHtml(label)}
+                    ${required ? '<span class="preview-required">*</span>' : ''}
+                </label>
+                <input type="${escapePreviewHtml(type)}"
+                       class="form-control"
+                       placeholder="${escapePreviewHtml(placeholder)}"
+                       ${required ? 'required' : ''}>
+            </div>
+        `;
+    }
 
-        function buildPreviewInput(label, name, placeholder, required = false, type = 'text') {
-            return `
-                <div class="mb-3">
-                    <label class="form-label">
-                        ${escapePreviewHtml(label)}
-                        ${required ? '<span class="preview-required">*</span>' : ''}
-                    </label>
-                    <input type="${escapePreviewHtml(type)}"
-                           class="form-control"
-                           placeholder="${escapePreviewHtml(placeholder)}"
-                           ${required ? 'required' : ''}>
+    function buildPreviewTextarea(label, placeholder, required = false) {
+        return `
+            <div class="mb-3">
+                <label class="form-label">
+                    ${escapePreviewHtml(label)}
+                    ${required ? '<span class="preview-required">*</span>' : ''}
+                </label>
+                <textarea class="form-control"
+                          placeholder="${escapePreviewHtml(placeholder)}"
+                          ${required ? 'required' : ''}></textarea>
+            </div>
+        `;
+    }
+
+    function buildPreviewCheckbox(text, required = false) {
+        return `
+            <div class="form-check mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       ${required ? 'required' : ''}>
+                <label class="form-check-label">
+                    ${escapePreviewHtml(text)}
+                    ${required ? '<span class="preview-required">*</span>' : ''}
+                </label>
+            </div>
+        `;
+    }
+
+    function buildBookingPreview() {
+        const courseType = getPreviewCourseValue('courseType', 'courseType') || 'Corso di Formazione';
+        const courseCode = getPreviewCourseValue('courseCode', 'courseCode') || 'CODICE-CORSO';
+        const courseName = getPreviewCourseValue('courseName', 'courseName') || 'Nome del corso';
+
+        return `
+            <div class="form-preview-card">
+                <span class="form-preview-type-badge">
+                    <i class="bi bi-calendar-check me-1"></i>
+                    Prenotazione Corso
+                </span>
+
+                <h4 class="form-preview-title">Prenota il corso</h4>
+                <div class="form-preview-description">
+                    Compila il modulo per richiedere la prenotazione.
                 </div>
-            `;
-        }
 
-        function buildPreviewTextarea(label, placeholder, required = false) {
-            return `
-                <div class="mb-3">
-                    <label class="form-label">
-                        ${escapePreviewHtml(label)}
-                        ${required ? '<span class="preview-required">*</span>' : ''}
-                    </label>
-                    <textarea class="form-control"
-                              placeholder="${escapePreviewHtml(placeholder)}"
-                              ${required ? 'required' : ''}></textarea>
+                <div class="mb-4 p-3 rounded border border-secondary">
+                    <div class="small text-muted mb-1">Corso</div>
+                    <div class="fw-bold text-white">${escapePreviewHtml(courseName)}</div>
+                    <div class="small text-muted mt-1">
+                        ${escapePreviewHtml(courseType)}
+                        · ${escapePreviewHtml(courseCode)}
+                    </div>
                 </div>
-            `;
-        }
 
-        function buildPreviewCheckbox(text, required = false) {
-            return `
-                <div class="form-check mb-2">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           ${required ? 'required' : ''}>
-                    <label class="form-check-label">
-                        ${escapePreviewHtml(text)}
-                        ${required ? '<span class="preview-required">*</span>' : ''}
-                    </label>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Email', 'email', 'nome@esempio.it', true, 'email')}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', true, 'tel')}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Codice Fiscale', 'codiceFiscale', 'Inserisci il codice fiscale', true)}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Città', 'citta', 'Inserisci la città', true)}
+                    </div>
                 </div>
-            `;
-        }
 
-        function buildBookingPreview() {
-            const courseType = getPreviewCourseValue('courseType', 'courseType') || 'Corso di Formazione';
-            const courseCode = getPreviewCourseValue('courseCode', 'courseCode') || 'CODICE-CORSO';
-            const courseName = getPreviewCourseValue('courseName', 'courseName') || 'Nome del corso';
+                ${buildPreviewTextarea('Note', 'Eventuali note o richieste...', false)}
 
-            return `
-                <div class="form-preview-card">
-                    <span class="form-preview-type-badge">
-                        <i class="bi bi-calendar-check me-1"></i>
-                        Prenotazione Corso
-                    </span>
-
-                    <h4 class="form-preview-title">Prenota il corso</h4>
-                    <div class="form-preview-description">
-                        Compila il modulo per richiedere la prenotazione.
-                    </div>
-
-                    <div class="mb-4 p-3 rounded border border-secondary">
-                        <div class="small text-muted mb-1">Corso</div>
-                        <div class="fw-bold text-white">${escapePreviewHtml(courseName)}</div>
-                        <div class="small text-muted mt-1">
-                            ${escapePreviewHtml(courseType)}
-                            · ${escapePreviewHtml(courseCode)}
-                        </div>
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Email', 'email', 'nome@esempio.it', true, 'email')}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', true, 'tel')}
-                        </div>
-                    </div>
-
-                    ${buildPreviewTextarea('Note', 'Eventuali note o richieste...', false)}
-
-                    <div class="mt-3">
-                        ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
-                        ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
-                        ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
-                    </div>
-
-                    <button type="button" class="btn btn-brand w-100 mt-3">
-                        <i class="bi bi-send me-1"></i>
-                        Prenota corso
-                    </button>
+                <div class="mt-3">
+                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
+                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
+                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
                 </div>
-            `;
-        }
 
-        function buildInfoPreview() {
-            return `
-                <div class="form-preview-card">
-                    <span class="form-preview-type-badge">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Richiesta Informazioni
-                    </span>
+                <button type="button" class="btn btn-brand w-100 mt-3">
+                    <i class="bi bi-send me-1"></i>
+                    Prenota corso
+                </button>
+            </div>
+        `;
+    }
 
-                    <h4 class="form-preview-title">Richiedi informazioni</h4>
-                    <div class="form-preview-description">
-                        Compila il modulo per contattarci e ricevere maggiori informazioni.
-                    </div>
+    function buildInfoPreview() {
+        return `
+            <div class="form-preview-card">
+                <span class="form-preview-type-badge">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Richiesta Informazioni
+                </span>
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Email', 'email', 'nome@esempio.it', true, 'email')}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', false, 'tel')}
-                        </div>
-                    </div>
-
-                    ${buildPreviewTextarea('Messaggio', 'Scrivi qui la tua richiesta...', true)}
-
-                    <div class="mt-3">
-                        ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
-                        ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
-                        ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
-                    </div>
-
-                    <button type="button" class="btn btn-brand w-100 mt-3">
-                        <i class="bi bi-send me-1"></i>
-                        Invia richiesta
-                    </button>
+                <h4 class="form-preview-title">Richiedi informazioni</h4>
+                <div class="form-preview-description">
+                    Compila il modulo per contattarci e ricevere maggiori informazioni.
                 </div>
-            `;
-        }
 
-        function buildOrgInfoPreview() {
-            return `
-                <div class="form-preview-card">
-                    <span class="form-preview-type-badge">
-                        <i class="bi bi-building me-1"></i>
-                        Informazioni per Organizzazioni
-                    </span>
-
-                    <h4 class="form-preview-title">Richiedi informazioni per la tua organizzazione</h4>
-                    <div class="form-preview-description">
-                        Compila il modulo per essere ricontattato in merito a corsi, servizi o soluzioni per organizzazioni.
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}
                     </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Organizzazione / Azienda', 'organizzazione', 'Nome dell’organizzazione', true)}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Ruolo Aziendale', 'ruolo', 'Es. HR Manager, Responsabile Formazione')}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Email', 'email', 'nome@azienda.it', true, 'email')}
-                        </div>
-                        <div class="col-md-6">
-                            ${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', false, 'tel')}
-                        </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}
                     </div>
-
-                    ${buildPreviewTextarea('Messaggio', 'Descrivi brevemente la tua esigenza...', true)}
-
-                    <div class="mt-3">
-                        ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
-                        ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
-                        ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Email', 'email', 'nome@esempio.it', true, 'email')}
                     </div>
-
-                    <button type="button" class="btn btn-brand w-100 mt-3">
-                        <i class="bi bi-send me-1"></i>
-                        Invia richiesta
-                    </button>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', false, 'tel')}
+                    </div>
                 </div>
-            `;
+
+                ${buildPreviewTextarea('Messaggio', 'Scrivi qui la tua richiesta...', true)}
+
+                <div class="mt-3">
+                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
+                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
+                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
+                </div>
+
+                <button type="button" class="btn btn-brand w-100 mt-3">
+                    <i class="bi bi-send me-1"></i>
+                    Invia richiesta
+                </button>
+            </div>
+        `;
+    }
+
+    function buildOrgInfoPreview() {
+        return `
+            <div class="form-preview-card">
+                <span class="form-preview-type-badge">
+                    <i class="bi bi-building me-1"></i>
+                    Informazioni per Organizzazioni
+                </span>
+
+                <h4 class="form-preview-title">Richiedi informazioni per la tua organizzazione</h4>
+                <div class="form-preview-description">
+                    Compila il modulo per essere ricontattato in merito a corsi, servizi o soluzioni per organizzazioni.
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Organizzazione / Azienda', 'organizzazione', 'Nome dell’organizzazione', true)}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Ruolo Aziendale', 'ruolo', 'Es. HR Manager, Responsabile Formazione')}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Email', 'email', 'nome@azienda.it', true, 'email')}
+                    </div>
+                    <div class="col-md-6">
+                        ${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', false, 'tel')}
+                    </div>
+                </div>
+
+                ${buildPreviewTextarea('Messaggio', 'Descrivi brevemente la tua esigenza...', true)}
+
+                <div class="mt-3">
+                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
+                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
+                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
+                </div>
+
+                <button type="button" class="btn btn-brand w-100 mt-3">
+                    <i class="bi bi-send me-1"></i>
+                    Invia richiesta
+                </button>
+            </div>
+        `;
+    }
+
+    function openFormPreview() {
+        const formType = getSelectedFormType();
+        const container = document.getElementById('formPreviewContainer');
+
+        if (!container) {
+            return;
         }
 
-        function openFormPreview() {
-            const formType = getSelectedFormType();
-            const container = document.getElementById('formPreviewContainer');
+        let content = '';
 
-            if (!container) {
-                return;
-            }
+        switch (formType) {
+            case 'BOOKING':
+                content = buildBookingPreview();
+                break;
 
-            let content = '';
+            case 'INFO':
+                content = buildInfoPreview();
+                break;
 
-            switch (formType) {
-                case 'BOOKING':
-                    content = buildBookingPreview();
-                    break;
+            case 'ORG_INFO':
+                content = buildOrgInfoPreview();
+                break;
 
-                case 'INFO':
-                    content = buildInfoPreview();
-                    break;
-
-                case 'ORG_INFO':
-                    content = buildOrgInfoPreview();
-                    break;
-
-                case 'NONE':
-                default:
-                    content = `
-                        <div class="form-preview-placeholder">
-                            <i class="bi bi-ui-checks"></i>
-                            <div class="fw-bold text-white mb-2">Nessun Form selezionato</div>
-                            <div>Seleziona prima un tipo di form nel menu "Integrazione Form nella Pagina".</div>
-                        </div>
-                    `;
-                    break;
-            }
-
-            container.innerHTML = content;
-
-            const modalElement = document.getElementById('formPreviewModal');
-            if (modalElement) {
-                bootstrap.Modal.getOrCreateInstance(modalElement).show();
-            }
+            case 'NONE':
+            default:
+                content = `
+                    <div class="form-preview-placeholder">
+                        <i class="bi bi-ui-checks"></i>
+                        <div class="fw-bold text-white mb-2">Nessun Form selezionato</div>
+                        <div>Seleziona prima un tipo di form nel menu "Integrazione Form nella Pagina".</div>
+                    </div>
+                `;
+                break;
         }
 
-                function showConfirmModal() {
-            if (window.tinymce) {
-                tinymce.triggerSave();
-            }
+        container.innerHTML = content;
 
-            const pageForm = document.getElementById('pageForm');
+        const modalElement = document.getElementById('formPreviewModal');
+        if (modalElement) {
+            bootstrap.Modal.getOrCreateInstance(modalElement).show();
+        }
+    }
 
-            // Controlla se tutti i campi obbligatori del form sono validi
-            if (!pageForm.checkValidity()) {
-                pageForm.classList.add('was-validated');
-                pageForm.reportValidity(); // Mostra il messaggio nativo del browser sul campo errato
-                
-                // Mostra il popup di avviso
-                const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
-                warningModal.show();
-                return;
-            }
-
-            // Se tutto è valido apre la modale di conferma
-            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
-            modal.show();
+            function showConfirmModal() {
+        if (window.tinymce) {
+            tinymce.triggerSave();
         }
 
-        function submitPageForm() {
-            document.getElementById('pageForm').submit();
+        const pageForm = document.getElementById('pageForm');
+
+        // Controlla se tutti i campi obbligatori del form sono validi
+        if (!pageForm.checkValidity()) {
+            pageForm.classList.add('was-validated');
+            pageForm.reportValidity(); // Mostra il messaggio nativo del browser sul campo errato
+            
+            // Mostra il popup di avviso
+            const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
+            warningModal.show();
+            return;
         }
-    </script>
 
-    <!-- SCRIPT ANIMAZIONE SFONDO -->
-    <script>
-        const canvas = document.getElementById('tech-bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
+        // Se tutto è valido apre la modale di conferma
+        const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        modal.show();
+    }
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+    function submitPageForm() {
+        document.getElementById('pageForm').submit();
+    }
+</script>
+
+<!-- SCRIPT ANIMAZIONE SFONDO -->
+<script>
+    const canvas = document.getElementById('tech-bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Circuit {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.length = Math.floor(Math.random() * 8) + 4;
+            this.currentStep = 0;
+            this.dir = Math.floor(Math.random() * 4);
+            this.path = [{ x: this.x, y: this.y }];
+            this.speed = Math.random() * 1.5 + 0.5;
+            this.alpha = Math.random() * 0.4 + 0.1;
+            this.size = 20;
         }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Circuit {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.length = Math.floor(Math.random() * 8) + 4;
-                this.currentStep = 0;
-                this.dir = Math.floor(Math.random() * 4);
-                this.path = [{ x: this.x, y: this.y }];
-                this.speed = Math.random() * 1.5 + 0.5;
-                this.alpha = Math.random() * 0.4 + 0.1;
-                this.size = 20;
-            }
-            update() {
-                if (this.currentStep < this.length) {
-                    let last = this.path[this.path.length - 1];
-                    let nx = last.x, ny = last.y;
-                    if (Math.random() < 0.3) {
-                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
-                    }
-                    switch (this.dir) {
-                        case 0: ny -= this.size; break;
-                        case 1: nx += this.size; break;
-                        case 2: ny += this.size; break;
-                        case 3: nx -= this.size; break;
-                    }
-                    this.path.push({ x: nx, y: ny });
-                    this.currentStep++;
-                } else {
-                    this.alpha -= 0.005;
-                    if (this.alpha <= 0) this.reset();
-                }
-            }
-            draw() {
-                if (this.path.length < 2) return;
-                ctx.beginPath();
-                ctx.moveTo(this.path[0].x, this.path[0].y);
-                for (let i = 1; i < this.path.length; i++) {
-                    ctx.lineTo(this.path[i].x, this.path[i].y);
-                }
-                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-
+        update() {
+            if (this.currentStep < this.length) {
                 let last = this.path[this.path.length - 1];
-                ctx.beginPath();
-                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-                ctx.fill();
-            }
-        }
-
-        const codeSnippets = [
-            "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
-            "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
-            "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
-            "npm run build", "docker-compose up -d", "mvn clean install"
-        ];
-
-        class CodeText {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * (width - 200);
-                this.y = Math.random() * height;
-                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-                this.alpha = 0;
-                this.maxAlpha = Math.random() * 0.3 + 0.1;
-                this.fadeIn = true;
-                this.speed = Math.random() * 0.3 + 0.1;
-            }
-            update() {
-                this.y -= this.speed;
-                if (this.fadeIn) {
-                    this.alpha += 0.008;
-                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
-                } else {
-                    this.alpha -= 0.005;
-                    if (this.alpha <= 0) this.reset();
+                let nx = last.x, ny = last.y;
+                if (Math.random() < 0.3) {
+                    this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
                 }
-            }
-            draw() {
-                ctx.font = '12px "Fira Code", monospace';
-                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
-                ctx.fillText(this.text, this.x, this.y);
+                switch (this.dir) {
+                    case 0: ny -= this.size; break;
+                    case 1: nx += this.size; break;
+                    case 2: ny += this.size; break;
+                    case 3: nx -= this.size; break;
+                }
+                this.path.push({ x: nx, y: ny });
+                this.currentStep++;
+            } else {
+                this.alpha -= 0.005;
+                if (this.alpha <= 0) this.reset();
             }
         }
+        draw() {
+            if (this.path.length < 2) return;
+            ctx.beginPath();
+            ctx.moveTo(this.path[0].x, this.path[0].y);
+            for (let i = 1; i < this.path.length; i++) {
+                ctx.lineTo(this.path[i].x, this.path[i].y);
+            }
+            ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
 
-        const circuits = Array.from({ length: 18 }, () => new Circuit());
-        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            circuits.forEach(c => { c.update(); c.draw(); });
-            codeTexts.forEach(ct => { ct.update(); ct.draw(); });
-            requestAnimationFrame(animate);
+            let last = this.path[this.path.length - 1];
+            ctx.beginPath();
+            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+            ctx.fill();
         }
-        animate();
-    </script>
+    }
+
+    const codeSnippets = [
+        "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
+        "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
+        "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
+        "npm run build", "docker-compose up -d", "mvn clean install"
+    ];
+
+    class CodeText {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * (width - 200);
+            this.y = Math.random() * height;
+            this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            this.alpha = 0;
+            this.maxAlpha = Math.random() * 0.3 + 0.1;
+            this.fadeIn = true;
+            this.speed = Math.random() * 0.3 + 0.1;
+        }
+        update() {
+            this.y -= this.speed;
+            if (this.fadeIn) {
+                this.alpha += 0.008;
+                if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+            } else {
+                this.alpha -= 0.005;
+                if (this.alpha <= 0) this.reset();
+            }
+        }
+        draw() {
+            ctx.font = '12px "Fira Code", monospace';
+            ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+            ctx.fillText(this.text, this.x, this.y);
+        }
+    }
+
+    const circuits = Array.from({ length: 18 }, () => new Circuit());
+    const codeTexts = Array.from({ length: 12 }, () => new CodeText());
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        circuits.forEach(c => { c.update(); c.draw(); });
+        codeTexts.forEach(ct => { ct.update(); ct.draw(); });
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script><script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script><script>
+
 let windowMonacoEditor=null,monacoTargetTextarea=null,monacoFontSize=14,monacoMinimapVisible=true,monacoSearchMatches=[],monacoSearchIndex=0,monacoSearchDecorations=[],monacoCurrentSearchDecoration=[],monacoLoaderPromise=null,monacoEmmetInitialized=false;
 function loadMonaco(){if(monacoLoaderPromise)return monacoLoaderPromise;monacoLoaderPromise=new Promise((resolve,reject)=>{if(window.monaco&&window.monaco.editor){initMonacoEmmet();resolve(window.monaco);return}if(!window.require||!window.require.config){reject(Error('Loader Monaco non disponibile.'));return}window.require.config({paths:{vs:'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'}});window.require(['vs/editor/editor.main'],m=>{initMonacoEmmet();resolve(m)},reject)});return monacoLoaderPromise}
 function initMonacoEmmet(){if(monacoEmmetInitialized)return;try{if(window.emmetMonaco?.emmetHTML){window.emmetMonaco.emmetHTML(window.monaco,['html']);monacoEmmetInitialized=true}}catch(e){console.error('Emmet Monaco:',e)}}
@@ -1214,10 +1234,10 @@ function changeMonacoFontSize(d){if(!windowMonacoEditor)return;monacoFontSize=Ma
 function toggleMonacoPreview(){if(!windowMonacoEditor)return;monacoMinimapVisible=!monacoMinimapVisible;windowMonacoEditor.updateOptions({minimap:{enabled:monacoMinimapVisible}});updateMinimapButton()}function updateMinimapButton(){const t=document.getElementById('previewButtonText'),i=document.getElementById('previewIcon'),b=document.getElementById('btnTogglePreview');if(t)t.textContent=monacoMinimapVisible?'Nascondi minimappa':'Mostra minimappa';if(i)i.className=monacoMinimapVisible?'bi bi-map me-1':'bi bi-map-fill me-1';if(b)b.title=monacoMinimapVisible?'Nascondi minimappa a destra':'Mostra minimappa a destra'}
 function toggleMonacoFullscreen(){const d=document.getElementById('monacoModalDialog'),i=document.getElementById('fullscreenIcon'),b=document.getElementById('btnToggleFullscreen'),t=document.getElementById('btnToggleFullscreenText');if(!d)return;const f=d.classList.toggle('modal-fullscreen-custom');if(i)i.className=f?'bi bi-arrows-angle-contract me-1':'bi bi-arrows-angle-expand me-1';if(t)t.textContent=f?'Esci da Schermo Intero':'Schermo Intero';if(b)b.title=f?'Esci da Schermo Intero':'Schermo Intero';if(windowMonacoEditor)[50,250,500].forEach(x=>setTimeout(()=>windowMonacoEditor.layout(),x))}
 function installSuggestionPositioning(){if(window.__monacoSuggestObserver)return;window.__monacoSuggestObserver=true;const o=new MutationObserver(positionSuggestion);o.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class']});window.addEventListener('resize',positionSuggestion)}function positionSuggestion(){if(!windowMonacoEditor)return;const w=document.querySelector('.monaco-editor .suggest-widget');if(!w||getComputedStyle(w).display==='none')return;const p=windowMonacoEditor.getPosition(),c=windowMonacoEditor.getScrolledVisiblePosition(p),n=windowMonacoEditor.getDomNode();if(!p||!c||!n)return;const r=n.getBoundingClientRect();w.style.position='fixed';w.style.left=Math.max(4,r.left+c.left)+'px';w.style.top=Math.max(4,r.top+c.top+c.height+2)+'px';w.style.zIndex='10000'}
-function performMonacoSearch(){if(!windowMonacoEditor)return;const q=document.getElementById('monacoSearchInput')?.value||'';clearMonacoSearchDecorations();if(!q){monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults();return}monacoSearchMatches=windowMonacoEditor.getModel().findMatches(q,true,false,false,null,true);monacoSearchIndex=monacoSearchMatches.length?0:-1;monacoSearchDecorations=windowMonacoEditor.deltaDecorations([],monacoSearchMatches.map(m=>({range:m.range,options:{inlineClassName:'monaco-search-match'}})));updateCurrentSearchDecoration();updateSearchResults()}function clearMonacoSearchDecorations(){if(windowMonacoEditor){if(monacoSearchDecorations.length)windowMonacoEditor.deltaDecorations(monacoSearchDecorations,[]);if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[])}monacoSearchDecorations=[];monacoCurrentSearchDecoration=[]}function updateCurrentSearchDecoration(){if(!windowMonacoEditor||monacoSearchIndex<0||!monacoSearchMatches.length)return;if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[]);monacoCurrentSearchDecoration=windowMonacoEditor.deltaDecorations([],[{range:monacoSearchMatches[monacoSearchIndex].range,options:{inlineClassName:'monaco-search-match-current'}}])}function selectMonacoSearchMatch(i){if(!windowMonacoEditor||!monacoSearchMatches.length)return;monacoSearchIndex=(i+monacoSearchMatches.length)%monacoSearchMatches.length;const m=monacoSearchMatches[monacoSearchIndex];windowMonacoEditor.setSelection(m.range);windowMonacoEditor.revealRangeInCenter(m.range);updateCurrentSearchDecoration();updateSearchResults()}function navigateMonacoSearch(d){if(monacoSearchMatches.length)selectMonacoSearchMatch(monacoSearchIndex+d);document.getElementById('monacoSearchInput')?.focus()}
+function performMonacoSearch(){if(!windowMonacoEditor)return;const q=document.getElementById('monacoSearchInput')?.value||'';clearMonacoSearchDecorations();if(!q){monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults();return}monacoSearchMatches=windowMonacoEditor.getModel().findMatches(q,true,false,false,null,true);monacoSearchIndex=monacoSearchMatches.length?0:-1;monacoSearchDecorations=windowMonacoEditor.deltaDecorations([],monacoSearchMatches.map(m=>({range:m.range,options:{inlineClassName:'monaco-search-match'}})));updateCurrentSearchDecoration();updateSearchResults()}function clearMonacoSearchDecorations(){if(windowMonacoEditor){if(monacoSearchDecorations.length)windowMonacoEditor.deltaDecorations(monacoSearchDecorations,[]);if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[])}monacoSearchDecorations=[];monacoCurrentSearchDecoration=[]}function updateCurrentSearchDecoration(){if(!windowMonacoEditor||monacoSearchIndex<0||!monacoSearchMatches.length)return;if(monacoCurrentSearchDecoration.length)windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration,[]);monacoCurrentSearchDecoration=windowMonacoEditor.deltaDecorations([],[{range:monacoSearchMatches.range,options:{inlineClassName:'monaco-search-match-current'}}])}function selectMonacoSearchMatch(i){if(!windowMonacoEditor||!monacoSearchMatches.length)return;monacoSearchIndex=(i+monacoSearchMatches.length)%monacoSearchMatches.length;const m=monacoSearchMatches[monacoSearchIndex];windowMonacoEditor.setSelection(m.range);windowMonacoEditor.revealRangeInCenter(m.range);updateCurrentSearchDecoration();updateSearchResults()}function navigateMonacoSearch(d){if(monacoSearchMatches.length)selectMonacoSearchMatch(monacoSearchIndex+d);document.getElementById('monacoSearchInput')?.focus()}
 function updateSearchResults(){const w=document.querySelector('.monaco-search-wrapper');if(!w)return;let r=document.getElementById('monacoSearchResults');if(!r){r=document.createElement('div');r.id='monacoSearchResults';r.className='monaco-search-results';r.innerHTML='<button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchPrev">↑</button><span class="monaco-search-count" id="monacoSearchCount">0 / 0</span><button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchNext">↓</button>';w.appendChild(r);document.getElementById('monacoSearchPrev').onmousedown=e=>{e.preventDefault();navigateMonacoSearch(-1)};document.getElementById('monacoSearchNext').onmousedown=e=>{e.preventDefault();navigateMonacoSearch(1)}}const c=document.getElementById('monacoSearchCount');if(!monacoSearchMatches.length||monacoSearchIndex<0){r.classList.remove('visible');if(c)c.textContent='0 / 0'}else{if(c)c.textContent=(monacoSearchIndex+1)+' / '+monacoSearchMatches.length;r.classList.add('visible')}}function clearMonacoSearch(){const i=document.getElementById('monacoSearchInput');if(i)i.value='';clearMonacoSearchDecorations();monacoSearchMatches=[];monacoSearchIndex=0;updateSearchResults()}
-document.addEventListener('DOMContentLoaded',()=>{const mm=document.getElementById('monacoEditorModal');if(mm)mm.addEventListener('shown.bs.modal',()=>{if(monacoTargetTextarea)loadMonaco().catch(e=>console.error('Monaco:',e));});const i=document.getElementById('monacoSearchInput'),c=document.getElementById('btnMonacoSearchClear');if(i){i.oninput=performMonacoSearch;i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();navigateMonacoSearch(e.shiftKey?-1:1)}else if(e.key==='Escape'){e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()}}}if(c)c.onmousedown=e=>{e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()};const m=document.getElementById('monacoEditorModal');if(m)m.addEventListener('shown.bs.modal',()=>setTimeout(()=>windowMonacoEditor?.layout(),100))});document.addEventListener('keydown',e=>{if(e.key==='F11'&&windowMonacoEditor){e.preventDefault();toggleMonacoFullscreen()}});
-</script>
+document.addEventListener('DOMContentLoaded',()=>{const mm=document.getElementById('monacoEditorModal');if(mm)mm.addEventListener('shown.bs.modal',()=>{if(monacoTargetTextarea)loadMonaco().catch(e=>console.error('Monaco:',e));});const i=document.getElementById('monacoSearchInput'),c=document.getElementById('btnMonacoSearchClear');if(i){i.oninput=performMonacoSearch;i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();navigateMonacoSearch(e.shiftKey?-1:1)}else if(e.key==='Escape'){e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()}}}if(c)c.onmousedown=e=>{e.preventDefault();clearMonacoSearch();windowMonacoEditor?.focus()};const m=document.getElementById('monacoEditorModal');if(m)m.addEventListener('shown.bs.modal',()=>setTimeout(()=>windowMonacoEditor?.layout(),100))});document.addEventListener('keydown',e=>{if(e.key==='F11'&&windowMonacoEditor){e.preventDefault();toggleMonacoFullscreen()}}); </script>
+
 </body>
 
 </html>

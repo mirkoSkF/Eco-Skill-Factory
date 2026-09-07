@@ -394,7 +394,7 @@
            ========================================================= */
 
         .empty-icon {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: #475569;
         }
 
@@ -674,13 +674,13 @@
 
                     <label for="searchQuery" class="filter-label">
                         <i class="bi bi-search me-1"></i>
-                        Cerca Corso, Codice, Utente, Organizzazione o Ruolo
+                        Cerca Corso, Codice, Utente, Codice Fiscale, Città o Organizzazione
                     </label>
 
                     <input type="text"
                            id="searchQuery"
                            class="form-control form-control-custom"
-                           placeholder="Es: JAVA-2026, Corso Spring, Mario Rossi, Skill Factory, HR Manager, note...">
+                           placeholder="Es: JAVA-2026, Mario Rossi, RSSMRA..., Roma, Skill Factory...">
 
                 </div>
 
@@ -752,6 +752,15 @@
                                 <div id="detailModalTelefono" class="detail-value"></div>
                             </div>
 
+                            <div class="col-md-6">
+                                <span class="detail-label">Codice Fiscale</span>
+                                <div id="detailModalCodiceFiscale" class="detail-value"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="detail-label">Città</span>
+                                <div id="detailModalCitta" class="detail-value"></div>
+                            </div>
+
                             <div id="detailOrganizationRow" class="col-md-6 d-none">
                                 <span class="detail-label">Organizzazione/Azienda</span>
                                 <div id="detailModalOrganization" class="detail-value"></div>
@@ -812,6 +821,8 @@
                             th:data-cognome="${booking.cognome}"
                             th:data-email="${booking.email}"
                             th:data-telefono="${booking.telefono}"
+                            th:data-codice-fiscale="${booking.codiceFiscale != null ? booking.codiceFiscale : ''}"
+                            th:data-citta="${booking.citta != null ? booking.citta : ''}"
                             th:data-course-code="${booking.courseCode != null ? booking.courseCode : ''}"
                             th:data-course-name="${booking.courseName != null ? booking.courseName : ''}"
                             th:data-organizzazione="${booking.organizzazione != null ? booking.organizzazione : ''}"
@@ -859,6 +870,14 @@
                                 <small class="text-secondary" th:text="${booking.telefono}">
                                     +39 333 1234567
                                 </small>
+                            </td>
+
+                            <td th:text="${booking.codiceFiscale}">
+                                RSSMRA80A01H501U
+                            </td>
+
+                            <td th:text="${booking.citta}">
+                                Roma
                             </td>
 
 
@@ -1024,6 +1043,10 @@
             item.email || '—';
         document.getElementById('detailModalTelefono').textContent =
             item.telefono || '—';
+        document.getElementById('detailModalCodiceFiscale').textContent =
+            item.codiceFiscale || '—';
+        document.getElementById('detailModalCitta').textContent =
+            item.citta || '—';
         document.getElementById('detailModalCreatedAt').textContent =
             item.createdAt || '—';
         document.getElementById('detailModalNotes').textContent =
@@ -1057,7 +1080,6 @@
     };
 
 
-
     // Mappa stato paginazione per ogni tabella (per formType)
     const paginationState = {
         'BOOKING': 1,
@@ -1081,6 +1103,8 @@
                 cognome: row.dataset.cognome || '',
                 email: row.dataset.email || '',
                 telefono: row.dataset.telefono || '',
+                codiceFiscale: row.dataset.codiceFiscale || '',
+                citta: row.dataset.citta || '',
                 courseCode: row.dataset.courseCode || '',
                 courseName: row.dataset.courseName || '',
                 organizzazione: row.dataset.organizzazione || '',
@@ -1110,6 +1134,8 @@
                 { title: 'ID', field: 'id' },
                 { title: 'Nome e Cognome', field: 'user' },
                 { title: 'Email / Tel', field: 'contact' },
+                { title: 'Codice Fiscale', field: 'codiceFiscale' },
+                { title: 'Città', field: 'citta' },
                 { title: 'Codice Corso', field: 'courseCode' },
                 { title: 'Nome Corso', field: 'courseName' },
                 { title: 'PRIVACY', field: 'privacy', align: 'center' },
@@ -1130,12 +1156,7 @@
                 { title: 'Email / Tel', field: 'contact' },
                 { title: 'PRIVACY', field: 'privacy', align: 'center' },
                 { title: 'MARKETING', field: 'marketing', align: 'center' },
-
-                /* =====================================================
-                   AGGIUNTA CAMPO PROFILAZIONE
-                   ===================================================== */
                 { title: 'PROFILAZIONE', field: 'profiling', align: 'center' },
-
                 { title: 'Data Invio', field: 'createdAt' },
                 { title: 'Stato', field: 'status' },
                 { title: 'Azioni', field: 'actions', align: 'end' }
@@ -1172,24 +1193,34 @@
                 return `<span class="booking-id">#${item.id}</span>`;
 
             case 'user':
-                return `<div class="booking-name">${item.nome} ${item.cognome}</div>`;
+                return `<div class="booking-name">${escapeHtml(item.nome)} ${escapeHtml(item.cognome)}</div>`;
 
             case 'contact':
                 return `
                     <div>
-                        <a href="mailto:${item.email}" class="booking-email">${item.email}</a>
+                        <a href="mailto:${escapeHtml(item.email)}" class="booking-email">${escapeHtml(item.email)}</a>
                     </div>
-                    <small class="text-secondary">${item.telefono}</small>
+                    <small class="text-secondary">${escapeHtml(item.telefono)}</small>
                 `;
+
+            case 'codiceFiscale':
+                return item.codiceFiscale
+                    ? `<span>${escapeHtml(item.codiceFiscale)}</span>`
+                    : `<span class="text-secondary">—</span>`;
+
+            case 'citta':
+                return item.citta
+                    ? `<span>${escapeHtml(item.citta)}</span>`
+                    : `<span class="text-secondary">—</span>`;
 
             case 'courseCode':
                 return item.courseCode
-                    ? `<span class="course-code-badge">${item.courseCode}</span>`
+                    ? `<span class="course-code-badge">${escapeHtml(item.courseCode)}</span>`
                     : `<span class="text-secondary">—</span>`;
 
             case 'courseName':
                 return item.courseName
-                    ? `<span>${item.courseName}</span>`
+                    ? `<span>${escapeHtml(item.courseName)}</span>`
                     : `<span class="text-secondary">—</span>`;
 
             case 'organizzazione':
@@ -1218,7 +1249,7 @@
                     : `<span class="privacy-check unchecked" title="Profilazione non accettata"><i class="bi bi-x-lg"></i></span>`;
 
             case 'createdAt':
-                return item.createdAt;
+                return escapeHtml(item.createdAt);
 
             case 'status':
                 return item.anonymized
@@ -1249,800 +1280,221 @@
        CREAZIONE INTERFACCIA PAGINAZIONE
        ========================================================= */
 
-    function buildPaginationUI(formType, totalItems) {
+    function buildPaginationUI(formType, totalItems, currentPage) {
         const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
-        const currentPage = paginationState[formType] || 1;
 
-        const startIndex = totalItems === 0
-            ? 0
-            : (currentPage - 1) * ROWS_PER_PAGE + 1;
+        if (totalPages <= 1) return '';
 
-        const endIndex = Math.min(
-            currentPage * ROWS_PER_PAGE,
-            totalItems
-        );
+        let paginationItems = '';
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'pagination-wrapper';
-
-        const info = document.createElement('div');
-        info.className = 'pagination-info';
-        info.textContent = `Visualizzazione ${startIndex}-${endIndex} di ${totalItems}`;
-        wrapper.appendChild(info);
-
-        if (totalPages <= 1) {
-            return wrapper;
-        }
-
-        const nav = document.createElement('nav');
-
-        const ul = document.createElement('ul');
-        ul.className = 'pagination pagination-custom mb-0';
-
-        // Tasto Prev
-        const prevLi = document.createElement('li');
-
-        prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-
-        prevLi.innerHTML = `
-            <button type="button"
-                    class="page-link"
-                    ${currentPage === 1 ? 'disabled' : ''}>
-                <i class="bi bi-chevron-left"></i>
-            </button>
-        `;
-
-        if (currentPage > 1) {
-            prevLi.querySelector('button').addEventListener('click', () => {
-                paginationState[formType] = currentPage - 1;
-                applyFilter();
-            });
-        }
-
-        ul.appendChild(prevLi);
-
-        // Pagine
-        for (let i = 1; i <= totalPages; i++) {
-
-            const li = document.createElement('li');
-
-            li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-
-            li.innerHTML = `
-                <button type="button" class="page-link">
-                    ${i}
+        paginationItems += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <button class="page-link" onclick="changePage('${formType}', ${currentPage - 1})">
+                    <i class="bi bi-chevron-left"></i>
                 </button>
-            `;
-
-            if (i !== currentPage) {
-                li.querySelector('button').addEventListener('click', () => {
-                    paginationState[formType] = i;
-                    applyFilter();
-                });
-            }
-
-            ul.appendChild(li);
-        }
-
-        // Tasto Next
-        const nextLi = document.createElement('li');
-
-        nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-
-        nextLi.innerHTML = `
-            <button type="button"
-                    class="page-link"
-                    ${currentPage === totalPages ? 'disabled' : ''}>
-                <i class="bi bi-chevron-right"></i>
-            </button>
+            </li>
         `;
 
-        if (currentPage < totalPages) {
-            nextLi.querySelector('button').addEventListener('click', () => {
-                paginationState[formType] = currentPage + 1;
-                applyFilter();
-            });
+        for (let page = 1; page <= totalPages; page++) {
+            if (page === 1 || page === totalPages || (page >= currentPage - 1 && page <= currentPage + 1)) {
+                paginationItems += `
+                    <li class="page-item ${page === currentPage ? 'active' : ''}">
+                        <button class="page-link" onclick="changePage('${formType}', ${page})">${page}</button>
+                    </li>
+                `;
+            } else if (page === currentPage - 2 || page === currentPage + 2) {
+                paginationItems += `
+                    <li class="page-item pagination-dots">
+                        <span class="page-link">...</span>
+                    </li>
+                `;
+            }
         }
 
-        ul.appendChild(nextLi);
+        paginationItems += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <button class="page-link" onclick="changePage('${formType}', ${currentPage + 1})">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </li>
+        `;
 
-        nav.appendChild(ul);
-        wrapper.appendChild(nav);
+        const startItem = ((currentPage - 1) * ROWS_PER_PAGE) + 1;
+        const endItem = Math.min(currentPage * ROWS_PER_PAGE, totalItems);
 
-        return wrapper;
+        return `
+            <div class="pagination-wrapper">
+                <div class="pagination-info">
+                    Mostrati <strong>${startItem}-${endItem}</strong> di <strong>${totalItems}</strong> elementi
+                </div>
+                <ul class="pagination pagination-custom">
+                    ${paginationItems}
+                </ul>
+            </div>
+        `;
     }
 
     /* =========================================================
-       BUILDER SINGOLA TABELLA
+       CAMBIO PAGINA
        ========================================================= */
 
-    function buildTableCard(formType, items) {
+    window.changePage = function (formType, page) {
+        paginationState[formType] = page;
+        renderTables();
+    };
 
-        const config = FORM_CONFIGS[formType];
+    /* =========================================================
+       FILTRAGGIO E RENDERING TABELLE
+       ========================================================= */
 
-        if (!config) {
-            return null;
-        }
+    function renderTables() {
+        const allData = getRawBookingsData();
+        const selectedForm = formFilter.value;
+        const query = searchQuery.value.trim().toLowerCase();
 
-        const card = document.createElement('div');
+        let filteredData = allData.filter(item => {
+            const matchesForm = (selectedForm === 'all') || (item.formType === selectedForm);
 
-        card.className = 'card card-custom overflow-hidden mb-4';
+            const matchesQuery = !query ||
+                item.nome.toLowerCase().includes(query) ||
+                item.cognome.toLowerCase().includes(query) ||
+                item.email.toLowerCase().includes(query) ||
+                item.telefono.toLowerCase().includes(query) ||
+                item.codiceFiscale.toLowerCase().includes(query) ||
+                item.citta.toLowerCase().includes(query) ||
+                item.courseCode.toLowerCase().includes(query) ||
+                item.courseName.toLowerCase().includes(query) ||
+                item.organizzazione.toLowerCase().includes(query) ||
+                item.ruolo.toLowerCase().includes(query) ||
+                item.note.toLowerCase().includes(query);
 
-        // Intestazione Sezione Tabella
-        const header = document.createElement('div');
-
-        header.className =
-            'p-3 border-bottom border-secondary border-opacity-25 bg-dark bg-opacity-50 d-flex align-items-center justify-content-between';
-
-        header.innerHTML = `
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi ${config.icon} text-success fs-5"></i>
-                <h5 class="mb-0 text-white fw-bold">${config.title}</h5>
-            </div>
-
-            <span class="badge bg-secondary text-light fs-7">
-                ${items.length} elementi
-            </span>
-        `;
-
-        card.appendChild(header);
-
-        const responsiveDiv = document.createElement('div');
-
-        responsiveDiv.className = 'table-responsive';
-
-        const table = document.createElement('table');
-
-        table.className =
-            'table table-custom table-hover align-middle mb-0';
-
-        // THEAD
-        const thead = document.createElement('thead');
-
-        let theadRow = '<tr>';
-
-        config.columns.forEach((col, idx) => {
-
-            const alignClass =
-                col.align ? `text-${col.align}` : '';
-
-            const paddingClass =
-                idx === 0
-                    ? 'ps-4'
-                    : (idx === config.columns.length - 1 ? 'pe-4' : '');
-
-            theadRow += `
-                <th class="${alignClass} ${paddingClass}">
-                    ${col.title}
-                </th>
-            `;
+            return matchesForm && matchesQuery;
         });
 
-        theadRow += '</tr>';
+        bookingCounter.textContent = filteredData.length;
 
-        thead.innerHTML = theadRow;
-
-        table.appendChild(thead);
-
-        // TBODY
-        const tbody = document.createElement('tbody');
-
-        if (items.length === 0) {
-
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="${config.columns.length}"
-                        class="text-center py-5 text-secondary">
-
-                        <i class="bi bi-inbox empty-icon d-block mb-3"></i>
-
-                        <div class="fw-semibold text-light">
-                            Nessuna prenotazione trovata per questa categoria.
-                        </div>
-
-                    </td>
-                </tr>
-            `;
-
-        } else {
-
-            // Paginazione max 20 righe
-            const currentPage =
-                paginationState[formType] || 1;
-
-            const startIndex =
-                (currentPage - 1) * ROWS_PER_PAGE;
-
-            const paginatedItems =
-                items.slice(
-                    startIndex,
-                    startIndex + ROWS_PER_PAGE
-                );
-
-            paginatedItems.forEach(item => {
-
-                const tr = document.createElement('tr');
-
-                let trContent = '';
-
-                config.columns.forEach((col, idx) => {
-
-                    const alignClass =
-                        col.align
-                            ? `text-${col.align}`
-                            : '';
-
-                    const paddingClass =
-                        idx === 0
-                            ? 'ps-4'
-                            : (idx === config.columns.length - 1
-                                ? 'pe-4'
-                                : '');
-
-                    trContent += `
-                        <td class="${alignClass} ${paddingClass}">
-                            ${renderCellContent(item, col.field)}
-                        </td>
-                    `;
-                });
-
-                tr.innerHTML = trContent;
-
-                tbody.appendChild(tr);
-            });
-        }
-
-        table.appendChild(tbody);
-
-        responsiveDiv.appendChild(table);
-
-        card.appendChild(responsiveDiv);
-
-        // Paginazione Footer
-        if (items.length > 0) {
-            card.appendChild(
-                buildPaginationUI(
-                    formType,
-                    items.length
-                )
-            );
-        }
-
-        return card;
-    }
-
-    /* =========================================================
-       APPLICAZIONE FILTRI E GENERAZIONE LAYOUT
-       ========================================================= */
-
-    function applyFilter() {
-
-        const selectedForm = formFilter.value;
-
-        const query =
-            searchQuery.value.toLowerCase().trim();
-
-        const allData =
-            getRawBookingsData();
-
-        // Filtro per testo
-        const filteredData =
-            allData.filter(item => {
-
-                if (!query) {
-                    return true;
-                }
-
-                return item.courseCode
-                    .toLowerCase()
-                    .includes(query) ||
-
-                    item.courseName
-                        .toLowerCase()
-                        .includes(query) ||
-
-                    item.userName
-                        .toLowerCase()
-                        .includes(query) ||
-
-                    item.email
-                        .toLowerCase()
-                        .includes(query) ||
-
-                    item.organizzazione
-                        .toLowerCase()
-                        .includes(query) ||
-
-                    item.ruolo
-                        .toLowerCase()
-                        .includes(query) ||
-
-                    item.note
-                        .toLowerCase()
-                        .includes(query);
-            });
-
-        // Aggiorna Contatore Totale
-        let totalCount = 0;
-
-        if (selectedForm === 'all') {
-
-            totalCount =
-                filteredData.length;
-
-        } else {
-
-            totalCount =
-                filteredData.filter(
-                    d => d.formType === selectedForm
-                ).length;
-        }
-
-        bookingCounter.textContent =
-            totalCount;
-
-        // Pulizia container
         dynamicTablesContainer.innerHTML = '';
 
-        if (selectedForm === 'all') {
+        // Definizione tipologie da mostrare sempre
+        const formsToDisplay = selectedForm === 'all' 
+            ? ['BOOKING', 'INFO', 'ORG_INFO'] 
+            : [selectedForm];
 
-            // Render di 3 tabelle distinte
-            const formTypes = [
-                'BOOKING',
-                'INFO',
-                'ORG_INFO'
-            ];
+        const groups = {
+            'BOOKING': [],
+            'INFO': [],
+            'ORG_INFO': []
+        };
 
-            formTypes.forEach(type => {
-
-                const typeData =
-                    filteredData.filter(
-                        item => item.formType === type
-                    );
-
-                const tableCard =
-                    buildTableCard(
-                        type,
-                        typeData
-                    );
-
-                if (tableCard) {
-                    dynamicTablesContainer.appendChild(
-                        tableCard
-                    );
-                }
-            });
-
-        } else {
-
-            // Render tabella singola specifica per il form
-            const typeData =
-                filteredData.filter(
-                    item => item.formType === selectedForm
-                );
-
-            const tableCard =
-                buildTableCard(
-                    selectedForm,
-                    typeData
-                );
-
-            if (tableCard) {
-                dynamicTablesContainer.appendChild(
-                    tableCard
-                );
+        filteredData.forEach(item => {
+            const key = item.formType || 'BOOKING';
+            if (groups[key]) {
+                groups[key].push(item);
             }
-        }
+        });
+
+        formsToDisplay.forEach(formType => {
+            const items = groups[formType] || [];
+            const config = FORM_CONFIGS[formType] || {
+                title: formType,
+                icon: 'bi-table',
+                columns: FORM_CONFIGS['BOOKING'].columns
+            };
+
+            const currentPage = paginationState[formType] || 1;
+            const totalItems = items.length;
+
+            let tableHeadersHtml = config.columns.map(col => {
+                const alignClass = col.align ? `text-${col.align}` : '';
+                return `<th class="${alignClass}">${col.title}</th>`;
+            }).join('');
+
+            let bodyContentHtml = '';
+
+            if (totalItems === 0) {
+                bodyContentHtml = `
+                    <tr>
+                        <td colspan="${config.columns.length}" class="text-center py-4 text-secondary">
+                            <i class="bi bi-inbox empty-icon d-block mb-2"></i>
+                            <span>Nessuna richiesta trovata per questa categoria.</span>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+                const pagedItems = items.slice(startIndex, startIndex + ROWS_PER_PAGE);
+
+                bodyContentHtml = pagedItems.map(item => {
+                    let rowCellsHtml = config.columns.map(col => {
+                        const alignClass = col.align ? `text-${col.align}` : '';
+                        return `<td class="${alignClass}">${renderCellContent(item, col.field)}</td>`;
+                    }).join('');
+
+                    return `<tr>${rowCellsHtml}</tr>`;
+                }).join('');
+            }
+
+            const paginationHtml = buildPaginationUI(formType, totalItems, currentPage);
+
+            const cardHtml = `
+                <div class="card card-custom mb-4 overflow-hidden">
+                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-10 py-3 px-4 d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi ${config.icon} text-success fs-5"></i>
+                            <h5 class="mb-0 text-white font-weight-bold">${config.title}</h5>
+                        </div>
+                        <span class="badge bg-secondary bg-opacity-20 text-white border border-secondary border-opacity-25">
+                            Total: ${totalItems}
+                        </span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle">
+                            <thead>
+                                <tr>${tableHeadersHtml}</tr>
+                            </thead>
+                            <tbody>
+                                ${bodyContentHtml}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    ${paginationHtml}
+                </div>
+            `;
+
+            dynamicTablesContainer.insertAdjacentHTML('beforeend', cardHtml);
+        });
     }
 
     /* =========================================================
-       EVENT LISTENERS
+       LISTENERS
        ========================================================= */
 
     formFilter.addEventListener('change', () => {
-
-        // Reset pagina al cambio filtro
-        paginationState['BOOKING'] = 1;
-        paginationState['INFO'] = 1;
-        paginationState['ORG_INFO'] = 1;
-
-        applyFilter();
+        Object.keys(paginationState).forEach(k => paginationState[k] = 1);
+        renderTables();
     });
-
 
     searchQuery.addEventListener('input', () => {
-
-        paginationState['BOOKING'] = 1;
-        paginationState['INFO'] = 1;
-        paginationState['ORG_INFO'] = 1;
-
-        applyFilter();
+        Object.keys(paginationState).forEach(k => paginationState[k] = 1);
+        renderTables();
     });
 
-
-    resetFilter.addEventListener('click', function () {
-
+    resetFilter.addEventListener('click', () => {
         formFilter.value = 'all';
-
         searchQuery.value = '';
-
-        paginationState['BOOKING'] = 1;
-        paginationState['INFO'] = 1;
-        paginationState['ORG_INFO'] = 1;
-
-        applyFilter();
+        Object.keys(paginationState).forEach(k => paginationState[k] = 1);
+        renderTables();
     });
 
-
     /* =========================================================
-       AVVIO INIZIALE
+       INIZIALIZZAZIONE
        ========================================================= */
 
-    document.addEventListener('DOMContentLoaded', function () {
-        applyFilter();
-    });
-
-    applyFilter();
-
-
-    /* =========================================================
-       SFONDO ANIMATO
-       ========================================================= */
-
-    const canvas =
-        document.getElementById('tech-bg-canvas');
-
-    const ctx =
-        canvas.getContext('2d');
-
-    let width, height;
-
-
-    function resize() {
-
-        width =
-            canvas.width =
-                window.innerWidth;
-
-        height =
-            canvas.height =
-                window.innerHeight;
-    }
-
-
-    window.addEventListener(
-        'resize',
-        resize
-    );
-
-    resize();
-
-
-    class Circuit {
-
-        constructor() {
-            this.reset();
-        }
-
-        reset() {
-
-            this.x =
-                Math.random() * width;
-
-            this.y =
-                Math.random() * height;
-
-            this.length =
-                Math.floor(
-                    Math.random() * 8
-                ) + 4;
-
-            this.currentStep = 0;
-
-            this.dir =
-                Math.floor(
-                    Math.random() * 4
-                );
-
-            this.path = [
-                {
-                    x: this.x,
-                    y: this.y
-                }
-            ];
-
-            this.speed =
-                Math.random() * 1.5 + 0.5;
-
-            this.alpha =
-                Math.random() * 0.4 + 0.1;
-
-            this.size = 20;
-        }
-
-
-        update() {
-
-            if (this.currentStep < this.length) {
-
-                let last =
-                    this.path[
-                        this.path.length - 1
-                    ];
-
-                let nx = last.x;
-                let ny = last.y;
-
-
-                if (Math.random() < 0.3) {
-
-                    this.dir =
-                        (
-                            this.dir +
-                            (
-                                Math.random() < 0.5
-                                    ? 1
-                                    : 3
-                            )
-                        ) % 4;
-                }
-
-
-                switch (this.dir) {
-
-                    case 0:
-                        ny -= this.size;
-                        break;
-
-                    case 1:
-                        nx += this.size;
-                        break;
-
-                    case 2:
-                        ny += this.size;
-                        break;
-
-                    case 3:
-                        nx -= this.size;
-                        break;
-                }
-
-
-                this.path.push({
-                    x: nx,
-                    y: ny
-                });
-
-                this.currentStep++;
-
-            } else {
-
-                this.alpha -= 0.005;
-
-                if (this.alpha <= 0) {
-                    this.reset();
-                }
-            }
-        }
-
-
-        draw() {
-
-            if (this.path.length < 2) {
-                return;
-            }
-
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                this.path[0].x,
-                this.path[0].y
-            );
-
-
-            for (
-                let i = 1;
-                i < this.path.length;
-                i++
-            ) {
-
-                ctx.lineTo(
-                    this.path[i].x,
-                    this.path[i].y
-                );
-            }
-
-
-            ctx.strokeStyle =
-                `rgba(0, 220, 130, ${this.alpha})`;
-
-            ctx.lineWidth = 1.5;
-
-            ctx.stroke();
-
-
-            let last =
-                this.path[
-                    this.path.length - 1
-                ];
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                last.x,
-                last.y,
-                3,
-                0,
-                Math.PI * 2
-            );
-
-
-            ctx.fillStyle =
-                `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-
-            ctx.fill();
-        }
-    }
-
-
-    const codeSnippets = [
-
-        "class BookingManager {}",
-
-        "import spring.boot.*;",
-
-        "<div class='booking'>",
-
-        "SELECT * FROM bookings;",
-
-        "SELECT privacyCheck FROM bookings;",
-
-        "const init = () => {};",
-
-        "return new Booking();",
-
-        "01000010 01001111 01001111 01001011",
-
-        "public static void main()",
-
-        "async fetch('/api/bookings')",
-
-        "npm run build",
-
-        "docker-compose up -d",
-
-        "mvn clean install"
-    ];
-
-
-    class CodeText {
-
-        constructor() {
-            this.reset();
-        }
-
-
-        reset() {
-
-            this.x =
-                Math.random() *
-                (width - 200);
-
-            this.y =
-                Math.random() * height;
-
-            this.text =
-                codeSnippets[
-                    Math.floor(
-                        Math.random() *
-                        codeSnippets.length
-                    )
-                ];
-
-            this.alpha = 0;
-
-            this.maxAlpha =
-                Math.random() * 0.3 + 0.1;
-
-            this.fadeIn = true;
-
-            this.speed =
-                Math.random() * 0.3 + 0.1;
-        }
-
-
-        update() {
-
-            this.y -= this.speed;
-
-
-            if (this.fadeIn) {
-
-                this.alpha += 0.008;
-
-                if (
-                    this.alpha >=
-                    this.maxAlpha
-                ) {
-                    this.fadeIn = false;
-                }
-
-            } else {
-
-                this.alpha -= 0.005;
-
-                if (this.alpha <= 0) {
-                    this.reset();
-                }
-            }
-        }
-
-
-        draw() {
-
-            ctx.font =
-                '12px "Fira Code", monospace';
-
-            ctx.fillStyle =
-                `rgba(0, 220, 130, ${this.alpha})`;
-
-            ctx.fillText(
-                this.text,
-                this.x,
-                this.y
-            );
-        }
-    }
-
-
-    const circuits =
-        Array.from(
-            { length: 18 },
-            () => new Circuit()
-        );
-
-
-    const codeTexts =
-        Array.from(
-            { length: 12 },
-            () => new CodeText()
-        );
-
-
-    function animate() {
-
-        ctx.clearRect(
-            0,
-            0,
-            width,
-            height
-        );
-
-
-        circuits.forEach(c => {
-            c.update();
-            c.draw();
-        });
-
-
-        codeTexts.forEach(ct => {
-            ct.update();
-            ct.draw();
-        });
-
-
-        requestAnimationFrame(
-            animate
-        );
-    }
-
-
-    animate();
+    document.addEventListener('DOMContentLoaded', renderTables);
 
 </script>
-
 
 </body>
 

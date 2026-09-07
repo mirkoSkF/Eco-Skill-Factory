@@ -548,7 +548,55 @@
             }
         }
 
-    </style>
+    
+        /* =========================================================
+           MODALE DETTAGLIO NOTE
+           ========================================================= */
+
+        .booking-detail-modal .modal-content {
+            background: #0f172a;
+            color: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 1rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+        }
+
+        .booking-detail-modal .modal-header,
+        .booking-detail-modal .modal-footer {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .booking-detail-modal .modal-title {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .booking-detail-modal .detail-label {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.35rem;
+        }
+
+        .booking-detail-modal .detail-value {
+            color: #f1f5f9;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.6rem;
+            padding: 0.75rem 0.9rem;
+            min-height: 44px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .booking-detail-modal .detail-notes {
+            min-height: 130px;
+            line-height: 1.6;
+        }
+</style>
 
 </head>
 
@@ -674,6 +722,76 @@
         <div id="dynamicTablesContainer"></div>
 
 
+        <div class="modal fade booking-detail-modal" id="bookingDetailModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-eye-fill text-success me-2"></i>
+                            Dettaglio richiesta <span id="detailModalId"></span>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <span class="detail-label">Nome e Cognome</span>
+                                <div id="detailModalUser" class="detail-value"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="detail-label">Tipo Form</span>
+                                <div id="detailModalFormType" class="detail-value"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="detail-label">Email</span>
+                                <div id="detailModalEmail" class="detail-value"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="detail-label">Telefono</span>
+                                <div id="detailModalTelefono" class="detail-value"></div>
+                            </div>
+
+                            <div id="detailOrganizationRow" class="col-md-6 d-none">
+                                <span class="detail-label">Organizzazione/Azienda</span>
+                                <div id="detailModalOrganization" class="detail-value"></div>
+                            </div>
+
+                            <div id="detailRoleRow" class="col-md-6 d-none">
+                                <span class="detail-label">Ruolo Aziendale</span>
+                                <div id="detailModalRole" class="detail-value"></div>
+                            </div>
+
+                            <div class="col-12">
+                                <span class="detail-label">Note dell'utente</span>
+                                <div id="detailModalNotes" class="detail-value detail-notes"></div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <span class="detail-label">Data Invio</span>
+                                <div id="detailModalCreatedAt" class="detail-value"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="detail-label">Privacy</span>
+                                <div id="detailModalPrivacy" class="detail-value"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="detail-label">Stato</span>
+                                <div id="detailModalStatus" class="detail-value"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Chiudi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- =================================================
              TABELLA ORIGINALE DI RISERVA (NASCOSTA)
              SERVE A LEGGERE TUTTI I DATI DI THYMELEAF
@@ -696,6 +814,9 @@
                             th:data-telefono="${booking.telefono}"
                             th:data-course-code="${booking.courseCode != null ? booking.courseCode : ''}"
                             th:data-course-name="${booking.courseName != null ? booking.courseName : ''}"
+                            th:data-organizzazione="${booking.organizzazione != null ? booking.organizzazione : ''}"
+                            th:data-ruolo="${booking.ruolo != null ? booking.ruolo : ''}"
+                            th:data-note="${booking.note != null ? booking.note : ''}"
                             th:data-privacy="${booking.privacyCheck == true ? 'true' : 'false'}"
                             th:data-marketing="${booking.marketingCheck == true ? 'true' : 'false'}"
                             th:data-profiling="${booking.profilingCheck == true ? 'true' : 'false'}"
@@ -815,9 +936,9 @@
 
                             <td class="text-end pe-4">
                                 <div class="btn-group btn-group-sm">
-                                    <a th:href="@{/admin/bookings/view/{id}(id=${booking.id})}" class="btn btn-outline-secondary" title="Dettaglio">
+                                    <button type="button" class="btn btn-outline-secondary" title="Dettaglio" th:attr="onclick='openBookingDetail(' + ${booking.id} + ')'">
                                         <i class="bi bi-eye-fill"></i>
-                                    </a>
+                                    </button>
                                     <a th:href="@{/admin/bookings/delete/{id}(id=${booking.id})}" class="btn btn-outline-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?');" title="Elimina">
                                         <i class="bi bi-trash-fill"></i>
                                     </a>
@@ -864,6 +985,79 @@
 
     const ROWS_PER_PAGE = 20;
 
+    /* =========================================================
+       HELPER SICUREZZA / DETTAGLIO MODALE
+       ========================================================= */
+
+    function escapeHtml(value) {
+        const div = document.createElement('div');
+        div.textContent = value == null ? '' : String(value);
+        return div.innerHTML;
+    }
+
+    function getFormTypeLabel(formType) {
+        switch ((formType || '').toUpperCase()) {
+            case 'BOOKING':
+                return 'Prenotazione Corso';
+            case 'INFO':
+                return 'Richiesta Info';
+            case 'ORG_INFO':
+                return 'Info Organizzazioni';
+            default:
+                return formType || 'Form';
+        }
+    }
+
+    window.openBookingDetail = function (id) {
+        const item = getRawBookingsData().find(row => String(row.id) === String(id));
+
+        if (!item) {
+            return;
+        }
+
+        document.getElementById('detailModalId').textContent = '#' + item.id;
+        document.getElementById('detailModalUser').textContent =
+            `${item.nome} ${item.cognome}`.trim() || '—';
+        document.getElementById('detailModalFormType').textContent =
+            getFormTypeLabel(item.formType);
+        document.getElementById('detailModalEmail').textContent =
+            item.email || '—';
+        document.getElementById('detailModalTelefono').textContent =
+            item.telefono || '—';
+        document.getElementById('detailModalCreatedAt').textContent =
+            item.createdAt || '—';
+        document.getElementById('detailModalNotes').textContent =
+            item.note || 'Nessuna nota inserita dall\'utente.';
+
+        const organizationRow = document.getElementById('detailOrganizationRow');
+        const roleRow = document.getElementById('detailRoleRow');
+
+        if (item.formType === 'ORG_INFO') {
+            organizationRow.classList.remove('d-none');
+            roleRow.classList.remove('d-none');
+
+            document.getElementById('detailModalOrganization').textContent =
+                item.organizzazione || '—';
+            document.getElementById('detailModalRole').textContent =
+                item.ruolo || '—';
+        } else {
+            organizationRow.classList.add('d-none');
+            roleRow.classList.add('d-none');
+        }
+
+        document.getElementById('detailModalPrivacy').textContent =
+            item.privacy ? 'Accettata' : 'Non accettata';
+
+        document.getElementById('detailModalStatus').textContent =
+            item.anonymized ? 'Anonimizzato' : 'Attivo';
+
+        const modalElement = document.getElementById('bookingDetailModal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+    };
+
+
+
     // Mappa stato paginazione per ogni tabella (per formType)
     const paginationState = {
         'BOOKING': 1,
@@ -889,6 +1083,9 @@
                 telefono: row.dataset.telefono || '',
                 courseCode: row.dataset.courseCode || '',
                 courseName: row.dataset.courseName || '',
+                organizzazione: row.dataset.organizzazione || '',
+                ruolo: row.dataset.ruolo || '',
+                note: row.dataset.note || '',
                 privacy: row.dataset.privacy === 'true',
                 marketing: row.dataset.marketing === 'true',
                 profiling: row.dataset.profiling === 'true',
@@ -952,6 +1149,8 @@
                 { title: 'ID', field: 'id' },
                 { title: 'Nome e Cognome', field: 'user' },
                 { title: 'Email / Tel', field: 'contact' },
+                { title: 'Organizzazione/Azienda', field: 'organizzazione' },
+                { title: 'Ruolo Aziendale', field: 'ruolo' },
                 { title: 'PRIVACY', field: 'privacy', align: 'center' },
                 { title: 'MARKETING', field: 'marketing', align: 'center' },
                 { title: 'PROFILAZIONE', field: 'profiling', align: 'center' },
@@ -993,6 +1192,16 @@
                     ? `<span>${item.courseName}</span>`
                     : `<span class="text-secondary">—</span>`;
 
+            case 'organizzazione':
+                return item.organizzazione
+                    ? `<span>${escapeHtml(item.organizzazione)}</span>`
+                    : `<span class="text-secondary">—</span>`;
+
+            case 'ruolo':
+                return item.ruolo
+                    ? `<span>${escapeHtml(item.ruolo)}</span>`
+                    : `<span class="text-secondary">—</span>`;
+
             case 'privacy':
                 return item.privacy
                     ? `<span class="privacy-check checked" title="Privacy accettata"><i class="bi bi-check-lg"></i></span>`
@@ -1019,9 +1228,12 @@
             case 'actions':
                 return `
                     <div class="btn-group btn-group-sm">
-                        <a href="/admin/bookings/view/${item.id}" class="btn btn-outline-secondary" title="Dettaglio">
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                title="Dettaglio"
+                                onclick="openBookingDetail(${item.id})">
                             <i class="bi bi-eye-fill"></i>
-                        </a>
+                        </button>
                         <a href="/admin/bookings/delete/${item.id}" class="btn btn-outline-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?');" title="Elimina">
                             <i class="bi bi-trash-fill"></i>
                         </a>
@@ -1334,6 +1546,18 @@
                         .includes(query) ||
 
                     item.email
+                        .toLowerCase()
+                        .includes(query) ||
+
+                    item.organizzazione
+                        .toLowerCase()
+                        .includes(query) ||
+
+                    item.ruolo
+                        .toLowerCase()
+                        .includes(query) ||
+
+                    item.note
                         .toLowerCase()
                         .includes(query);
             });

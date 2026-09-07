@@ -72,7 +72,6 @@
             min-height: 100vh;
         }
 
-
         .sidebar-nav {
             width: var(--sidebar-width);
             min-width: var(--sidebar-width);
@@ -88,7 +87,6 @@
             left: 0;
             z-index: 1000;
         }
-
 
         .main-wrapper {
             margin-left: var(--sidebar-width);
@@ -113,7 +111,6 @@
             align-items: center;
         }
 
-
         .sidebar-menu .nav-link:hover,
         .sidebar-menu .nav-link.active {
             color: #00dc82 !important;
@@ -121,9 +118,26 @@
             transform: translateX(4px);
         }
 
-
         .sidebar-menu .nav-link i {
             font-size: 1.15rem;
+        }
+
+
+        /* =========================================================
+           BRAND TEXT SIDEBAR
+           STESSO STILE DELLA DASHBOARD
+           ========================================================= */
+
+        .brand-text {
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-accent {
+            background: linear-gradient(135deg, #00dc82 0%, #36e4da 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
 
@@ -150,7 +164,6 @@
             padding: 1.25rem;
         }
 
-
         .filter-label {
             color: #94a3b8;
             font-size: 0.75rem;
@@ -160,8 +173,8 @@
             margin-bottom: 0.5rem;
         }
 
-
-        .form-select-custom, .form-control-custom {
+        .form-select-custom,
+        .form-control-custom {
             background-color: rgba(15, 23, 42, 0.8);
             color: #f1f5f9;
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -173,14 +186,13 @@
             padding-right: 2.5rem;
         }
 
-
-        .form-select-custom:focus, .form-control-custom:focus {
+        .form-select-custom:focus,
+        .form-control-custom:focus {
             background-color: rgba(15, 23, 42, 0.95);
             color: #ffffff;
             border-color: #00dc82;
             box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.12);
         }
-
 
         .form-select-custom option {
             background-color: #0f172a;
@@ -219,7 +231,6 @@
             min-width: 1100px;
         }
 
-
         .table-custom thead th {
             background: rgba(15, 23, 42, 0.9) !important;
             color: #f8fafc;
@@ -232,22 +243,18 @@
             white-space: nowrap;
         }
 
-
         .table-custom tbody tr {
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             transition: background 0.2s ease;
         }
 
-
         .table-custom tbody tr:hover {
             background: rgba(0, 220, 130, 0.04) !important;
         }
 
-
         .table-custom tbody tr:last-child {
             border-bottom: none;
         }
-
 
         .table-custom tbody td {
             padding: 0.9rem 0.75rem;
@@ -276,7 +283,6 @@
             color: #36e4da !important;
             text-decoration: none;
         }
-
 
         .booking-email:hover {
             color: #00dc82 !important;
@@ -318,13 +324,11 @@
             font-weight: 800;
         }
 
-
         .privacy-check.checked {
             color: #00dc82;
             background: rgba(0, 220, 130, 0.12);
             border: 1px solid rgba(0, 220, 130, 0.25);
         }
-
 
         .privacy-check.unchecked {
             color: #f87171;
@@ -344,13 +348,11 @@
             border-radius: 0.375rem;
         }
 
-
         .badge-status.bg-success-subtle {
             background: rgba(0, 220, 130, 0.12) !important;
             color: #00dc82 !important;
             border-color: rgba(0, 220, 130, 0.25) !important;
         }
-
 
         .badge-status.bg-light {
             background: rgba(148, 163, 184, 0.1) !important;
@@ -368,19 +370,16 @@
             border-color: rgba(148, 163, 184, 0.3);
         }
 
-
         .btn-outline-secondary:hover {
             color: #f8fafc;
             background: rgba(148, 163, 184, 0.1);
             border-color: rgba(148, 163, 148, 0.5);
         }
 
-
         .btn-outline-danger {
             color: #f87171;
             border-color: rgba(248, 113, 113, 0.35);
         }
-
 
         .btn-outline-danger:hover {
             color: #ffffff;
@@ -413,13 +412,11 @@
             background: rgba(15, 23, 42, 0.35);
         }
 
-
         .pagination-info {
             color: #64748b;
             font-size: 0.78rem;
             white-space: nowrap;
         }
-
 
         .pagination-custom {
             display: flex;
@@ -428,7 +425,6 @@
             gap: 0.35rem;
             margin: 0;
         }
-
 
         .pagination-custom .page-item .page-link {
             min-width: 36px;
@@ -446,13 +442,11 @@
             transition: all 0.2s ease;
         }
 
-
         .pagination-custom .page-item .page-link:hover {
             color: #00dc82;
             background: rgba(0, 220, 130, 0.08);
             border-color: rgba(0, 220, 130, 0.25);
         }
-
 
         .pagination-custom .page-item.active .page-link {
             color: #080c14;
@@ -460,14 +454,12 @@
             border-color: #00dc82;
         }
 
-
         .pagination-custom .page-item.disabled .page-link {
             color: #475569;
             background: rgba(15, 23, 42, 0.4);
             border-color: rgba(255, 255, 255, 0.05);
             cursor: not-allowed;
         }
-
 
         .pagination-custom .page-item.pagination-dots .page-link {
             color: #64748b;
@@ -485,17 +477,14 @@
             height: 8px;
         }
 
-
         .table-responsive::-webkit-scrollbar-track {
             background: rgba(15, 23, 42, 0.5);
         }
-
 
         .table-responsive::-webkit-scrollbar-thumb {
             background: rgba(0, 220, 130, 0.25);
             border-radius: 10px;
         }
-
 
         .table-responsive::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 220, 130, 0.45);
@@ -507,6 +496,7 @@
            ========================================================= */
 
         @media (max-width: 991.98px) {
+
             .sidebar-nav {
                 position: relative;
                 width: 100%;
@@ -527,8 +517,8 @@
             }
         }
 
-
         @media (max-width: 767.98px) {
+
             .main-wrapper {
                 padding: 1rem;
             }
@@ -548,7 +538,7 @@
             }
         }
 
-    
+
         /* =========================================================
            MODALE DETTAGLIO NOTE
            ========================================================= */
@@ -596,13 +586,13 @@
             min-height: 130px;
             line-height: 1.6;
         }
-</style>
+
+    </style>
 
 </head>
 
 
 <body>
-
 
 <!-- =========================================================
      SFONDO ANIMATO
@@ -633,14 +623,19 @@
              ================================================= -->
 
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+
             <div>
+
                 <h2 class="section-title mb-1 fw-bold text-white">
                     Gestione Prenotazioni
                 </h2>
+
                 <p class="text-secondary mb-0">
                     Consulta e gestisci le richieste inviate dai moduli del sito
                 </p>
+
             </div>
+
         </div>
 
 
@@ -652,29 +647,51 @@
 
             <div class="row align-items-end g-3">
 
+
                 <!-- FILTRO TIPO FORM -->
+
                 <div class="col-12 col-md-4 col-lg-3">
 
                     <label for="formFilter" class="filter-label">
+
                         <i class="bi bi-funnel me-1"></i>
                         Filtra per form
+
                     </label>
 
                     <select id="formFilter" class="form-select form-select-custom">
-                        <option value="all">Tutti i form</option>
-                        <option value="BOOKING">Form Prenotazione Corso</option>
-                        <option value="INFO">Form Richiesta Info</option>
-                        <option value="ORG_INFO">Form Info Organizzazioni</option>
+
+                        <option value="all">
+                            Tutti i form
+                        </option>
+
+                        <option value="BOOKING">
+                            Form Prenotazione Corso
+                        </option>
+
+                        <option value="INFO">
+                            Form Richiesta Info
+                        </option>
+
+                        <option value="ORG_INFO">
+                            Form Info Organizzazioni
+                        </option>
+
                     </select>
 
                 </div>
 
+
                 <!-- CAMPO RICERCA CORSO / CODICE / NOME -->
+
                 <div class="col-12 col-md-5 col-lg-4">
 
                     <label for="searchQuery" class="filter-label">
+
                         <i class="bi bi-search me-1"></i>
+
                         Cerca Corso, Codice, Utente, Codice Fiscale, Città o Organizzazione
+
                     </label>
 
                     <input type="text"
@@ -686,26 +703,33 @@
 
 
                 <!-- RESET FILTRI -->
+
                 <div class="col-12 col-md-auto">
 
                     <button type="button"
                             id="resetFilter"
                             class="btn btn-outline-secondary">
+
                         <i class="bi bi-arrow-counterclockwise me-1"></i>
                         Azzera filtri
+
                     </button>
 
                 </div>
 
 
                 <!-- CONTATORE -->
+
                 <div class="col-12 col-md text-md-end">
 
                     <span class="text-secondary small">
+
                         Prenotazioni visualizzate:
+
                         <strong id="bookingCounter" class="text-white">
                             0
                         </strong>
+
                     </span>
 
                 </div>
@@ -722,79 +746,242 @@
         <div id="dynamicTablesContainer"></div>
 
 
-        <div class="modal fade booking-detail-modal" id="bookingDetailModal" tabindex="-1" aria-hidden="true">
+        <!-- =================================================
+             MODALE DETTAGLIO
+             ================================================= -->
+
+        <div class="modal fade booking-detail-modal"
+             id="bookingDetailModal"
+             tabindex="-1"
+             aria-hidden="true">
+
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+
                 <div class="modal-content">
+
                     <div class="modal-header">
+
                         <h5 class="modal-title">
+
                             <i class="bi bi-eye-fill text-success me-2"></i>
-                            Dettaglio richiesta <span id="detailModalId"></span>
+
+                            Dettaglio richiesta
+                            <span id="detailModalId"></span>
+
                         </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Chiudi">
+                        </button>
+
                     </div>
+
 
                     <div class="modal-body">
+
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <span class="detail-label">Nome e Cognome</span>
-                                <div id="detailModalUser" class="detail-value"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="detail-label">Tipo Form</span>
-                                <div id="detailModalFormType" class="detail-value"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="detail-label">Email</span>
-                                <div id="detailModalEmail" class="detail-value"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="detail-label">Telefono</span>
-                                <div id="detailModalTelefono" class="detail-value"></div>
-                            </div>
+
 
                             <div class="col-md-6">
-                                <span class="detail-label">Codice Fiscale</span>
-                                <div id="detailModalCodiceFiscale" class="detail-value"></div>
+
+                                <span class="detail-label">
+                                    Nome e Cognome
+                                </span>
+
+                                <div id="detailModalUser"
+                                     class="detail-value">
+                                </div>
+
                             </div>
+
+
                             <div class="col-md-6">
-                                <span class="detail-label">Città</span>
-                                <div id="detailModalCitta" class="detail-value"></div>
+
+                                <span class="detail-label">
+                                    Tipo Form
+                                </span>
+
+                                <div id="detailModalFormType"
+                                     class="detail-value">
+                                </div>
+
                             </div>
 
-                            <div id="detailOrganizationRow" class="col-md-6 d-none">
-                                <span class="detail-label">Organizzazione/Azienda</span>
-                                <div id="detailModalOrganization" class="detail-value"></div>
+
+                            <div class="col-md-6">
+
+                                <span class="detail-label">
+                                    Email
+                                </span>
+
+                                <div id="detailModalEmail"
+                                     class="detail-value">
+                                </div>
+
                             </div>
 
-                            <div id="detailRoleRow" class="col-md-6 d-none">
-                                <span class="detail-label">Ruolo Aziendale</span>
-                                <div id="detailModalRole" class="detail-value"></div>
+
+                            <div class="col-md-6">
+
+                                <span class="detail-label">
+                                    Telefono
+                                </span>
+
+                                <div id="detailModalTelefono"
+                                     class="detail-value">
+                                </div>
+
                             </div>
+
+
+                            <div class="col-md-6">
+
+                                <span class="detail-label">
+                                    Codice Fiscale
+                                </span>
+
+                                <div id="detailModalCodiceFiscale"
+                                     class="detail-value">
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <span class="detail-label">
+                                    Città
+                                </span>
+
+                                <div id="detailModalCitta"
+                                     class="detail-value">
+                                </div>
+
+                            </div>
+
+
+                            <div id="detailOrganizationRow"
+                                 class="col-md-6 d-none">
+
+                                <span class="detail-label">
+                                    Organizzazione/Azienda
+                                </span>
+
+                                <div id="detailModalOrganization"
+                                     class="detail-value">
+                                </div>
+
+                            </div>
+
+
+                            <div id="detailRoleRow"
+                                 class="col-md-6 d-none">
+
+                                <span class="detail-label">
+                                    Ruolo Aziendale
+                                </span>
+
+                                <div id="detailModalRole"
+                                     class="detail-value">
+                                </div>
+
+                            </div>
+
 
                             <div class="col-12">
-                                <span class="detail-label">Note dell'utente</span>
-                                <div id="detailModalNotes" class="detail-value detail-notes"></div>
+
+                                <span class="detail-label">
+                                    Note dell'utente
+                                </span>
+
+                                <div id="detailModalNotes"
+                                     class="detail-value detail-notes">
+                                </div>
+
                             </div>
 
+
                             <div class="col-md-4">
-                                <span class="detail-label">Data Invio</span>
-                                <div id="detailModalCreatedAt" class="detail-value"></div>
+
+                                <span class="detail-label">
+                                    Data Invio
+                                </span>
+
+                                <div id="detailModalCreatedAt"
+                                     class="detail-value">
+                                </div>
+
                             </div>
+
+
                             <div class="col-md-4">
-                                <span class="detail-label">Privacy</span>
-                                <div id="detailModalPrivacy" class="detail-value"></div>
+
+                                <span class="detail-label">
+                                    Privacy
+                                </span>
+
+                                <div id="detailModalPrivacy"
+                                     class="detail-value">
+                                </div>
+
                             </div>
+
+
                             <div class="col-md-4">
-                                <span class="detail-label">Stato</span>
-                                <div id="detailModalStatus" class="detail-value"></div>
+
+                                <span class="detail-label">
+                                    Stato
+                                </span>
+
+                                <div id="detailModalStatus"
+                                     class="detail-value">
+                                </div>
+
                             </div>
+
                         </div>
+
                     </div>
 
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">
+
                             Chiudi
+
                         </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MODALE DI CONFERMA ELIMINAZIONE
+             ================================================= -->
+
+        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content card-custom border-0">
+                    <div class="modal-header border-bottom border-secondary">
+                        <h5 class="modal-title text-white"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Conferma Eliminazione</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-light">
+                        Sicuro di voler eliminare questa prenotazione?
+                    </div>
+                    <div class="modal-footer border-top border-secondary">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                        <a id="confirmDeleteBtn" href="#" class="btn btn-danger fw-bold">Elimina</a>
                     </div>
                 </div>
             </div>
@@ -803,6 +990,7 @@
 
         <!-- =================================================
              TABELLA ORIGINALE DI RISERVA (NASCOSTA)
+
              SERVE A LEGGERE TUTTI I DATI DI THYMELEAF
              ================================================= -->
 
@@ -812,161 +1000,285 @@
 
                 <tbody id="bookingsTableBody">
 
-                    <th:block th:each="booking : ${bookings}">
+                <th:block th:each="booking : ${bookings}">
 
-                        <tr class="booking-row"
-                            th:data-id="${booking.id}"
-                            th:data-form-type="${booking.formType}"
-                            th:data-nome="${booking.nome}"
-                            th:data-cognome="${booking.cognome}"
-                            th:data-email="${booking.email}"
-                            th:data-telefono="${booking.telefono}"
-                            th:data-codice-fiscale="${booking.codiceFiscale != null ? booking.codiceFiscale : ''}"
-                            th:data-citta="${booking.citta != null ? booking.citta : ''}"
-                            th:data-course-code="${booking.courseCode != null ? booking.courseCode : ''}"
-                            th:data-course-name="${booking.courseName != null ? booking.courseName : ''}"
-                            th:data-organizzazione="${booking.organizzazione != null ? booking.organizzazione : ''}"
-                            th:data-ruolo="${booking.ruolo != null ? booking.ruolo : ''}"
-                            th:data-note="${booking.note != null ? booking.note : ''}"
-                            th:data-privacy="${booking.privacyCheck == true ? 'true' : 'false'}"
-                            th:data-marketing="${booking.marketingCheck == true ? 'true' : 'false'}"
-                            th:data-profiling="${booking.profilingCheck == true ? 'true' : 'false'}"
-                            th:data-created-at="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}"
-                            th:data-anonymized="${booking.anonymized == true ? 'true' : 'false'}"
-                            th:data-user-name="${(booking.nome != null ? booking.nome : '') + ' ' + (booking.cognome != null ? booking.cognome : '')}">
+                    <tr class="booking-row"
+
+                        th:data-id="${booking.id}"
+
+                        th:data-form-type="${booking.formType}"
+
+                        th:data-nome="${booking.nome}"
+
+                        th:data-cognome="${booking.cognome}"
+
+                        th:data-email="${booking.email}"
+
+                        th:data-telefono="${booking.telefono}"
+
+                        th:data-codice-fiscale="${booking.codiceFiscale != null ? booking.codiceFiscale : ''}"
+
+                        th:data-citta="${booking.citta != null ? booking.citta : ''}"
+
+                        th:data-course-code="${booking.courseCode != null ? booking.courseCode : ''}"
+
+                        th:data-course-name="${booking.courseName != null ? booking.courseName : ''}"
+
+                        th:data-organizzazione="${booking.organizzazione != null ? booking.organizzazione : ''}"
+
+                        th:data-ruolo="${booking.ruolo != null ? booking.ruolo : ''}"
+
+                        th:data-note="${booking.note != null ? booking.note : ''}"
+
+                        th:data-privacy="${booking.privacyCheck == true ? 'true' : 'false'}"
+
+                        th:data-marketing="${booking.marketingCheck == true ? 'true' : 'false'}"
+
+                        th:data-profiling="${booking.profilingCheck == true ? 'true' : 'false'}"
+
+                        th:data-created-at="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}"
+
+                        th:data-anonymized="${booking.anonymized == true ? 'true' : 'false'}"
+
+                        th:data-user-name="${(booking.nome != null ? booking.nome : '') + ' ' + (booking.cognome != null ? booking.cognome : '')}">
 
 
-                            <td class="ps-4 booking-id" th:text="${'#' + booking.id}">
-                                #1
-                            </td>
+                        <td class="ps-4 booking-id"
+                            th:text="${'#' + booking.id}">
+                            #1
+                        </td>
 
 
-                            <td>
-                                <span class="form-type-badge">
-                                    <i class="bi bi-ui-checks-grid me-1"></i>
-                                    <span th:switch="${booking.formType}">
-                                        <span th:case="'BOOKING'">Prenotazione</span>
-                                        <span th:case="'INFO'">Info</span>
-                                        <span th:case="'ORG_INFO'">Org. Info</span>
-                                        <span th:case="*" th:text="${booking.formType}">Form</span>
+                        <td>
+
+                            <span class="form-type-badge">
+
+                                <i class="bi bi-ui-checks-grid me-1"></i>
+
+                                <span th:switch="${booking.formType}">
+
+                                    <span th:case="'BOOKING'">
+                                        Prenotazione
                                     </span>
-                                </span>
-                            </td>
 
+                                    <span th:case="'INFO'">
+                                        Info
+                                    </span>
 
-                            <td>
-                                <div class="booking-name" th:text="${booking.nome + ' ' + booking.cognome}">
-                                    Mario Rossi
-                                </div>
-                            </td>
+                                    <span th:case="'ORG_INFO'">
+                                        Org. Info
+                                    </span>
 
+                                    <span th:case="*"
+                                          th:text="${booking.formType}">
+                                        Form
+                                    </span>
 
-                            <td>
-                                <div>
-                                    <a th:href="${'mailto:' + booking.email}" class="booking-email" th:text="${booking.email}">
-                                        mario@example.com
-                                    </a>
-                                </div>
-                                <small class="text-secondary" th:text="${booking.telefono}">
-                                    +39 333 1234567
-                                </small>
-                            </td>
-
-                            <td th:text="${booking.codiceFiscale}">
-                                RSSMRA80A01H501U
-                            </td>
-
-                            <td th:text="${booking.citta}">
-                                Roma
-                            </td>
-
-
-                            <td>
-                                <span th:if="${booking.courseCode != null and !booking.courseCode.empty}"
-                                      class="course-code-badge"
-                                      th:text="${booking.courseCode}">
-                                    COD-123
-                                </span>
-                                <span th:unless="${booking.courseCode != null and !booking.courseCode.empty}" class="text-secondary">
-                                    —
-                                </span>
-                            </td>
-
-
-                            <td>
-                                <span th:if="${booking.courseName != null and !booking.courseName.empty}"
-                                      th:text="${booking.courseName}">
-                                    Nome Corso
-                                </span>
-                                <span th:unless="${booking.courseName != null and !booking.courseName.empty}" class="text-secondary">
-                                    —
-                                </span>
-                            </td>
-
-
-                            <!-- COLONNA PRIVACY -->
-                            <td class="text-center">
-                                <span th:if="${booking.privacyCheck == true}" class="privacy-check checked" title="Privacy accettata">
-                                    <i class="bi bi-check-lg"></i>
-                                </span>
-                                <span th:unless="${booking.privacyCheck == true}" class="privacy-check unchecked" title="Privacy non accettata">
-                                    <i class="bi bi-x-lg"></i>
-                                </span>
-                            </td>
-
-                            <!-- COLONNA MARKETING -->
-                            <td class="text-center">
-                                <span th:if="${booking.marketingCheck == true}" class="privacy-check checked" title="Marketing accettato">
-                                    <i class="bi bi-check-lg"></i>
-                                </span>
-                                <span th:unless="${booking.marketingCheck == true}" class="privacy-check unchecked" title="Marketing non accettato">
-                                    <i class="bi bi-x-lg"></i>
-                                </span>
-                            </td>
-
-                            <!-- COLONNA PROFILAZIONE -->
-                            <td class="text-center">
-                                <span th:if="${booking.profilingCheck == true}" class="privacy-check checked" title="Profilazione accettata">
-                                    <i class="bi bi-check-lg"></i>
-                                </span>
-                                <span th:unless="${booking.profilingCheck == true}" class="privacy-check unchecked" title="Profilazione non accettata">
-                                    <i class="bi bi-x-lg"></i>
-                                </span>
-                            </td>
-
-
-                            <td th:text="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}">
-                                01/01/2026 10:30
-                            </td>
-
-
-                            <td>
-                                <span th:if="${booking.anonymized == true}" class="badge bg-light text-secondary border border-secondary-subtle badge-status">
-                                    <i class="bi bi-shield-check me-1"></i>
-                                    Anonimizzato
                                 </span>
 
-                                <span th:unless="${booking.anonymized == true}" class="badge bg-success-subtle text-success border border-success-subtle badge-status">
-                                    <i class="bi bi-envelope-fill me-1"></i>
-                                    Attivo
-                                </span>
-                            </td>
+                            </span>
+
+                        </td>
 
 
-                            <td class="text-end pe-4">
-                                <div class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-outline-secondary" title="Dettaglio" th:attr="onclick='openBookingDetail(' + ${booking.id} + ')'">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </button>
-                                    <a th:href="@{/admin/bookings/delete/{id}(id=${booking.id})}" class="btn btn-outline-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?');" title="Elimina">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </a>
-                                </div>
-                            </td>
+                        <td>
 
-                        </tr>
+                            <div class="booking-name"
+                                 th:text="${booking.nome + ' ' + booking.cognome}">
+                                Mario Rossi
+                            </div>
 
-                    </th:block>
+                        </td>
+
+
+                        <td>
+
+                            <div>
+
+                                <a th:href="${'mailto:' + booking.email}"
+                                   class="booking-email"
+                                   th:text="${booking.email}">
+                                    mario@example.com
+                                </a>
+
+                            </div>
+
+                            <small class="text-secondary"
+                                   th:text="${booking.telefono}">
+                                +39 333 1234567
+                            </small>
+
+                        </td>
+
+
+                        <td th:text="${booking.codiceFiscale}">
+                            RSSMRA80A01H501U
+                        </td>
+
+
+                        <td th:text="${booking.citta}">
+                            Roma
+                        </td>
+
+
+                        <td>
+
+                            <span th:if="${booking.courseCode != null and !booking.courseCode.empty}"
+                                  class="course-code-badge"
+                                  th:text="${booking.courseCode}">
+                                COD-123
+                            </span>
+
+                            <span th:unless="${booking.courseCode != null and !booking.courseCode.empty}"
+                                  class="text-secondary">
+                                —
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span th:if="${booking.courseName != null and !booking.courseName.empty}"
+                                  th:text="${booking.courseName}">
+                                Nome Corso
+                            </span>
+
+                            <span th:unless="${booking.courseName != null and !booking.courseName.empty}"
+                                  class="text-secondary">
+                                —
+                            </span>
+
+                        </td>
+
+
+                        <!-- COLONNA PRIVACY -->
+
+                        <td class="text-center">
+
+                            <span th:if="${booking.privacyCheck == true}"
+                                  class="privacy-check checked"
+                                  title="Privacy accettata">
+
+                                <i class="bi bi-check-lg"></i>
+
+                            </span>
+
+                            <span th:unless="${booking.privacyCheck == true}"
+                                  class="privacy-check unchecked"
+                                  title="Privacy non accettata">
+
+                                <i class="bi bi-x-lg"></i>
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- COLONNA MARKETING -->
+
+                        <td class="text-center">
+
+                            <span th:if="${booking.marketingCheck == true}"
+                                  class="privacy-check checked"
+                                  title="Marketing accettato">
+
+                                <i class="bi bi-check-lg"></i>
+
+                            </span>
+
+                            <span th:unless="${booking.marketingCheck == true}"
+                                  class="privacy-check unchecked"
+                                  title="Marketing non accettato">
+
+                                <i class="bi bi-x-lg"></i>
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- COLONNA PROFILAZIONE -->
+
+                        <td class="text-center">
+
+                            <span th:if="${booking.profilingCheck == true}"
+                                  class="privacy-check checked"
+                                  title="Profilazione accettata">
+
+                                <i class="bi bi-check-lg"></i>
+
+                            </span>
+
+                            <span th:unless="${booking.profilingCheck == true}"
+                                  class="privacy-check unchecked"
+                                  title="Profilazione non accettata">
+
+                                <i class="bi bi-x-lg"></i>
+
+                            </span>
+
+                        </td>
+
+
+                        <td th:text="${#temporals.format(booking.createdAt, 'dd/MM/yyyy HH:mm')}">
+                            01/01/2026 10:30
+                        </td>
+
+
+                        <td>
+
+                            <span th:if="${booking.anonymized == true}"
+                                  class="badge bg-light text-secondary border border-secondary-subtle badge-status">
+
+                                <i class="bi bi-shield-check me-1"></i>
+
+                                Anonimizzato
+
+                            </span>
+
+                            <span th:unless="${booking.anonymized == true}"
+                                  class="badge bg-success-subtle text-success border border-success-subtle badge-status">
+
+                                <i class="bi bi-envelope-fill me-1"></i>
+
+                                Attivo
+
+                            </span>
+
+                        </td>
+
+
+                        <td class="text-end pe-4">
+
+                            <div class="btn-group btn-group-sm">
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        title="Dettaglio"
+                                        th:attr="onclick='openBookingDetail(' + ${booking.id} + ')'">
+
+                                    <i class="bi bi-eye-fill"></i>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        th:onclick="|showDeleteModal('@{/admin/bookings/delete/{id}(id=${booking.id})}')|"
+                                        title="Elimina">
+
+                                    <i class="bi bi-trash-fill"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </th:block>
 
                 </tbody>
 
@@ -993,6 +1305,17 @@
 <script>
 
     /* =========================================================
+       SHOW DELETE MODAL (STILE TAB-PAGINE)
+       ========================================================= */
+
+    function showDeleteModal(url) {
+        document.getElementById('confirmDeleteBtn').setAttribute('href', url);
+        const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        modal.show();
+    }
+
+
+    /* =========================================================
        ELEMENTI DOM
        ========================================================= */
 
@@ -1004,495 +1327,1141 @@
 
     const ROWS_PER_PAGE = 20;
 
+
     /* =========================================================
        HELPER SICUREZZA / DETTAGLIO MODALE
        ========================================================= */
 
     function escapeHtml(value) {
+
         const div = document.createElement('div');
+
         div.textContent = value == null ? '' : String(value);
+
         return div.innerHTML;
     }
 
+
     function getFormTypeLabel(formType) {
+
         switch ((formType || '').toUpperCase()) {
+
             case 'BOOKING':
                 return 'Prenotazione Corso';
+
             case 'INFO':
                 return 'Richiesta Info';
+
             case 'ORG_INFO':
                 return 'Info Organizzazioni';
+
             default:
                 return formType || 'Form';
         }
     }
 
+
     window.openBookingDetail = function (id) {
-        const item = getRawBookingsData().find(row => String(row.id) === String(id));
+
+        const item = getRawBookingsData()
+            .find(row => String(row.id) === String(id));
 
         if (!item) {
             return;
         }
 
-        document.getElementById('detailModalId').textContent = '#' + item.id;
+
+        document.getElementById('detailModalId').textContent =
+            '#' + item.id;
+
+
         document.getElementById('detailModalUser').textContent =
             `${item.nome} ${item.cognome}`.trim() || '—';
+
+
         document.getElementById('detailModalFormType').textContent =
             getFormTypeLabel(item.formType);
+
+
         document.getElementById('detailModalEmail').textContent =
             item.email || '—';
+
+
         document.getElementById('detailModalTelefono').textContent =
             item.telefono || '—';
+
+
         document.getElementById('detailModalCodiceFiscale').textContent =
             item.codiceFiscale || '—';
+
+
         document.getElementById('detailModalCitta').textContent =
             item.citta || '—';
+
+
         document.getElementById('detailModalCreatedAt').textContent =
             item.createdAt || '—';
-        document.getElementById('detailModalNotes').textContent =
-            item.note || 'Nessuna nota inserita dall\'utente.';
 
-        const organizationRow = document.getElementById('detailOrganizationRow');
-        const roleRow = document.getElementById('detailRoleRow');
+
+        document.getElementById('detailModalNotes').textContent =
+            item.note || "Nessuna nota inserita dall'utente.";
+
+
+        const organizationRow =
+            document.getElementById('detailOrganizationRow');
+
+        const roleRow =
+            document.getElementById('detailRoleRow');
+
 
         if (item.formType === 'ORG_INFO') {
+
             organizationRow.classList.remove('d-none');
             roleRow.classList.remove('d-none');
 
+
             document.getElementById('detailModalOrganization').textContent =
                 item.organizzazione || '—';
+
+
             document.getElementById('detailModalRole').textContent =
                 item.ruolo || '—';
+
         } else {
+
             organizationRow.classList.add('d-none');
             roleRow.classList.add('d-none');
+
         }
+
 
         document.getElementById('detailModalPrivacy').textContent =
             item.privacy ? 'Accettata' : 'Non accettata';
 
+
         document.getElementById('detailModalStatus').textContent =
             item.anonymized ? 'Anonimizzato' : 'Attivo';
 
-        const modalElement = document.getElementById('bookingDetailModal');
-        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+        const modalElement =
+            document.getElementById('bookingDetailModal');
+
+
+        const modal =
+            bootstrap.Modal.getOrCreateInstance(modalElement);
+
+
         modal.show();
     };
 
 
-    // Mappa stato paginazione per ogni tabella (per formType)
+    /* =========================================================
+       PAGINAZIONE
+       ========================================================= */
+
     const paginationState = {
+
         'BOOKING': 1,
+
         'INFO': 1,
+
         'ORG_INFO': 1
     };
+
 
     /* =========================================================
        ESTRAZIONE DATI DALLA TABELLA THYMELEAF
        ========================================================= */
 
     function getRawBookingsData() {
-        const rows = document.querySelectorAll('.booking-row');
+
+        const rows =
+            document.querySelectorAll('.booking-row');
+
         const data = [];
 
+
         rows.forEach(row => {
+
             data.push({
+
                 id: row.dataset.id,
-                formType: (row.dataset.formType || '').toUpperCase().trim(),
-                nome: row.dataset.nome || '',
-                cognome: row.dataset.cognome || '',
-                email: row.dataset.email || '',
-                telefono: row.dataset.telefono || '',
-                codiceFiscale: row.dataset.codiceFiscale || '',
-                citta: row.dataset.citta || '',
-                courseCode: row.dataset.courseCode || '',
-                courseName: row.dataset.courseName || '',
-                organizzazione: row.dataset.organizzazione || '',
-                ruolo: row.dataset.ruolo || '',
-                note: row.dataset.note || '',
-                privacy: row.dataset.privacy === 'true',
-                marketing: row.dataset.marketing === 'true',
-                profiling: row.dataset.profiling === 'true',
-                createdAt: row.dataset.createdAt || '',
-                anonymized: row.dataset.anonymized === 'true',
-                userName: row.dataset.userName || ''
+
+                formType:
+                    (row.dataset.formType || '')
+                        .toUpperCase()
+                        .trim(),
+
+                nome:
+                    row.dataset.nome || '',
+
+                cognome:
+                    row.dataset.cognome || '',
+
+                email:
+                    row.dataset.email || '',
+
+                telefono:
+                    row.dataset.telefono || '',
+
+                codiceFiscale:
+                    row.dataset.codiceFiscale || '',
+
+                citta:
+                    row.dataset.citta || '',
+
+                courseCode:
+                    row.dataset.courseCode || '',
+
+                courseName:
+                    row.dataset.courseName || '',
+
+                organizzazione:
+                    row.dataset.organizzazione || '',
+
+                ruolo:
+                    row.dataset.ruolo || '',
+
+                note:
+                    row.dataset.note || '',
+
+                privacy:
+                    row.dataset.privacy === 'true',
+
+                marketing:
+                    row.dataset.marketing === 'true',
+
+                profiling:
+                    row.dataset.profiling === 'true',
+
+                createdAt:
+                    row.dataset.createdAt || '',
+
+                anonymized:
+                    row.dataset.anonymized === 'true',
+
+                userName:
+                    row.dataset.userName || ''
             });
+
         });
+
 
         return data;
     }
+
 
     /* =========================================================
        CONFIGURAZIONE SCHEMI E COLONNE PER OGNI FORM
        ========================================================= */
 
     const FORM_CONFIGS = {
+
         'BOOKING': {
+
             title: 'Form Prenotazione Corso',
+
             icon: 'bi-journal-check',
+
             columns: [
+
                 { title: 'ID', field: 'id' },
+
                 { title: 'Nome e Cognome', field: 'user' },
+
                 { title: 'Email / Tel', field: 'contact' },
+
                 { title: 'Codice Fiscale', field: 'codiceFiscale' },
+
                 { title: 'Città', field: 'citta' },
+
                 { title: 'Codice Corso', field: 'courseCode' },
+
                 { title: 'Nome Corso', field: 'courseName' },
+
                 { title: 'PRIVACY', field: 'privacy', align: 'center' },
+
                 { title: 'MARKETING', field: 'marketing', align: 'center' },
+
                 { title: 'PROFILAZIONE', field: 'profiling', align: 'center' },
+
                 { title: 'Data Invio', field: 'createdAt' },
+
                 { title: 'Stato', field: 'status' },
+
                 { title: 'Azioni', field: 'actions', align: 'end' }
+
             ]
+
         },
+
 
         'INFO': {
+
             title: 'Form Richiesta Info',
+
             icon: 'bi-info-circle',
+
             columns: [
+
                 { title: 'ID', field: 'id' },
+
                 { title: 'Nome e Cognome', field: 'user' },
+
                 { title: 'Email / Tel', field: 'contact' },
+
                 { title: 'PRIVACY', field: 'privacy', align: 'center' },
+
                 { title: 'MARKETING', field: 'marketing', align: 'center' },
+
                 { title: 'PROFILAZIONE', field: 'profiling', align: 'center' },
+
                 { title: 'Data Invio', field: 'createdAt' },
+
                 { title: 'Stato', field: 'status' },
+
                 { title: 'Azioni', field: 'actions', align: 'end' }
+
             ]
+
         },
 
+
         'ORG_INFO': {
+
             title: 'Form Info Organizzazioni',
+
             icon: 'bi-building',
+
             columns: [
+
                 { title: 'ID', field: 'id' },
+
                 { title: 'Nome e Cognome', field: 'user' },
+
                 { title: 'Email / Tel', field: 'contact' },
+
                 { title: 'Organizzazione/Azienda', field: 'organizzazione' },
+
                 { title: 'Ruolo Aziendale', field: 'ruolo' },
+
                 { title: 'PRIVACY', field: 'privacy', align: 'center' },
+
                 { title: 'MARKETING', field: 'marketing', align: 'center' },
+
                 { title: 'PROFILAZIONE', field: 'profiling', align: 'center' },
+
                 { title: 'Data Invio', field: 'createdAt' },
+
                 { title: 'Stato', field: 'status' },
+
                 { title: 'Azioni', field: 'actions', align: 'end' }
+
             ]
+
         }
+
     };
+
 
     /* =========================================================
        HELPER RENDERING CELLE
        ========================================================= */
 
     function renderCellContent(item, field) {
+
         switch (field) {
 
             case 'id':
-                return `<span class="booking-id">#${item.id}</span>`;
 
-            case 'user':
-                return `<div class="booking-name">${escapeHtml(item.nome)} ${escapeHtml(item.cognome)}</div>`;
-
-            case 'contact':
                 return `
-                    <div>
-                        <a href="mailto:${escapeHtml(item.email)}" class="booking-email">${escapeHtml(item.email)}</a>
-                    </div>
-                    <small class="text-secondary">${escapeHtml(item.telefono)}</small>
+                    <span class="booking-id">
+                        #${item.id}
+                    </span>
                 `;
 
+
+            case 'user':
+
+                return `
+                    <div class="booking-name">
+                        ${escapeHtml(item.nome)}
+                        ${escapeHtml(item.cognome)}
+                    </div>
+                `;
+
+
+            case 'contact':
+
+                return `
+
+                    <div>
+
+                        <a href="mailto:${escapeHtml(item.email)}"
+                           class="booking-email">
+
+                            ${escapeHtml(item.email)}
+
+                        </a>
+
+                    </div>
+
+                    <small class="text-secondary">
+                        ${escapeHtml(item.telefono)}
+                    </small>
+
+                `;
+
+
             case 'codiceFiscale':
+
                 return item.codiceFiscale
-                    ? `<span>${escapeHtml(item.codiceFiscale)}</span>`
-                    : `<span class="text-secondary">—</span>`;
+
+                    ? `
+                        <span>
+                            ${escapeHtml(item.codiceFiscale)}
+                        </span>
+                    `
+
+                    : `
+                        <span class="text-secondary">
+                            —
+                        </span>
+                    `;
+
 
             case 'citta':
+
                 return item.citta
-                    ? `<span>${escapeHtml(item.citta)}</span>`
-                    : `<span class="text-secondary">—</span>`;
+
+                    ? `
+                        <span>
+                            ${escapeHtml(item.citta)}
+                        </span>
+                    `
+
+                    : `
+                        <span class="text-secondary">
+                            —
+                        </span>
+                    `;
+
 
             case 'courseCode':
+
                 return item.courseCode
-                    ? `<span class="course-code-badge">${escapeHtml(item.courseCode)}</span>`
-                    : `<span class="text-secondary">—</span>`;
+
+                    ? `
+                        <span class="course-code-badge">
+                            ${escapeHtml(item.courseCode)}
+                        </span>
+                    `
+
+                    : `
+                        <span class="text-secondary">
+                            —
+                        </span>
+                    `;
+
 
             case 'courseName':
+
                 return item.courseName
-                    ? `<span>${escapeHtml(item.courseName)}</span>`
-                    : `<span class="text-secondary">—</span>`;
+
+                    ? `
+                        <span>
+                            ${escapeHtml(item.courseName)}
+                        </span>
+                    `
+
+                    : `
+                        <span class="text-secondary">
+                            —
+                        </span>
+                    `;
+
 
             case 'organizzazione':
+
                 return item.organizzazione
-                    ? `<span>${escapeHtml(item.organizzazione)}</span>`
-                    : `<span class="text-secondary">—</span>`;
+
+                    ? `
+                        <span>
+                            ${escapeHtml(item.organizzazione)}
+                        </span>
+                    `
+
+                    : `
+                        <span class="text-secondary">
+                            —
+                        </span>
+                    `;
+
 
             case 'ruolo':
+
                 return item.ruolo
-                    ? `<span>${escapeHtml(item.ruolo)}</span>`
-                    : `<span class="text-secondary">—</span>`;
+
+                    ? `
+                        <span>
+                            ${escapeHtml(item.ruolo)}
+                        </span>
+                    `
+
+                    : `
+                        <span class="text-secondary">
+                            —
+                        </span>
+                    `;
+
 
             case 'privacy':
+
                 return item.privacy
-                    ? `<span class="privacy-check checked" title="Privacy accettata"><i class="bi bi-check-lg"></i></span>`
-                    : `<span class="privacy-check unchecked" title="Privacy non accettata"><i class="bi bi-x-lg"></i></span>`;
+
+                    ? `
+                        <span class="privacy-check checked"
+                              title="Privacy accettata">
+
+                            <i class="bi bi-check-lg"></i>
+
+                        </span>
+                    `
+
+                    : `
+                        <span class="privacy-check unchecked"
+                              title="Privacy non accettata">
+
+                            <i class="bi bi-x-lg"></i>
+
+                        </span>
+                    `;
+
 
             case 'marketing':
+
                 return item.marketing
-                    ? `<span class="privacy-check checked" title="Marketing accettato"><i class="bi bi-check-lg"></i></span>`
-                    : `<span class="privacy-check unchecked" title="Marketing non accettato"><i class="bi bi-x-lg"></i></span>`;
+
+                    ? `
+                        <span class="privacy-check checked"
+                              title="Marketing accettato">
+
+                            <i class="bi bi-check-lg"></i>
+
+                        </span>
+                    `
+
+                    : `
+                        <span class="privacy-check unchecked"
+                              title="Marketing non accettato">
+
+                            <i class="bi bi-x-lg"></i>
+
+                        </span>
+                    `;
+
 
             case 'profiling':
+
                 return item.profiling
-                    ? `<span class="privacy-check checked" title="Profilazione accettata"><i class="bi bi-check-lg"></i></span>`
-                    : `<span class="privacy-check unchecked" title="Profilazione non accettata"><i class="bi bi-x-lg"></i></span>`;
+
+                    ? `
+                        <span class="privacy-check checked"
+                              title="Profilazione accettata">
+
+                            <i class="bi bi-check-lg"></i>
+
+                        </span>
+                    `
+
+                    : `
+                        <span class="privacy-check unchecked"
+                              title="Profilazione non accettata">
+
+                            <i class="bi bi-x-lg"></i>
+
+                        </span>
+                    `;
+
 
             case 'createdAt':
+
                 return escapeHtml(item.createdAt);
 
+
             case 'status':
+
                 return item.anonymized
-                    ? `<span class="badge bg-light text-secondary border border-secondary-subtle badge-status"><i class="bi bi-shield-check me-1"></i>Anonimizzato</span>`
-                    : `<span class="badge bg-success-subtle text-success border border-success-subtle badge-status"><i class="bi bi-envelope-fill me-1"></i>Attivo</span>`;
+
+                    ? `
+                        <span class="badge bg-light text-secondary
+                                     border border-secondary-subtle
+                                     badge-status">
+
+                            <i class="bi bi-shield-check me-1"></i>
+
+                            Anonimizzato
+
+                        </span>
+                    `
+
+                    : `
+                        <span class="badge bg-success-subtle text-success
+                                     border border-success-subtle
+                                     badge-status">
+
+                            <i class="bi bi-envelope-fill me-1"></i>
+
+                            Attivo
+
+                        </span>
+                    `;
+
 
             case 'actions':
+
                 return `
+
                     <div class="btn-group btn-group-sm">
+
                         <button type="button"
                                 class="btn btn-outline-secondary"
                                 title="Dettaglio"
                                 onclick="openBookingDetail(${item.id})">
+
                             <i class="bi bi-eye-fill"></i>
+
                         </button>
-                        <a href="/admin/bookings/delete/${item.id}" class="btn btn-outline-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?');" title="Elimina">
+
+
+                        <button type="button"
+                                class="btn btn-outline-danger"
+                                onclick="showDeleteModal('/admin/bookings/delete/${item.id}')"
+                                title="Elimina">
+
                             <i class="bi bi-trash-fill"></i>
-                        </a>
+
+                        </button>
+
                     </div>
+
                 `;
 
+
             default:
+
                 return '';
         }
     }
+
 
     /* =========================================================
        CREAZIONE INTERFACCIA PAGINAZIONE
        ========================================================= */
 
     function buildPaginationUI(formType, totalItems, currentPage) {
-        const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
 
-        if (totalPages <= 1) return '';
+        const totalPages =
+            Math.ceil(totalItems / ROWS_PER_PAGE);
+
+
+        if (totalPages <= 1) {
+            return '';
+        }
+
 
         let paginationItems = '';
 
+
         paginationItems += `
+
             <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                <button class="page-link" onclick="changePage('${formType}', ${currentPage - 1})">
+
+                <button class="page-link"
+                        onclick="changePage('${formType}', ${currentPage - 1})">
+
                     <i class="bi bi-chevron-left"></i>
+
                 </button>
+
             </li>
+
         `;
 
+
         for (let page = 1; page <= totalPages; page++) {
-            if (page === 1 || page === totalPages || (page >= currentPage - 1 && page <= currentPage + 1)) {
+
+            if (
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 1 &&
+                 page <= currentPage + 1)
+            ) {
+
                 paginationItems += `
+
                     <li class="page-item ${page === currentPage ? 'active' : ''}">
-                        <button class="page-link" onclick="changePage('${formType}', ${page})">${page}</button>
+
+                        <button class="page-link"
+                                onclick="changePage('${formType}', ${page})">
+
+                            ${page}
+
+                        </button>
+
                     </li>
+
                 `;
-            } else if (page === currentPage - 2 || page === currentPage + 2) {
+
+            } else if (
+                page === currentPage - 2 ||
+                page === currentPage + 2
+            ) {
+
                 paginationItems += `
+
                     <li class="page-item pagination-dots">
-                        <span class="page-link">...</span>
+
+                        <span class="page-link">
+                            ...
+                        </span>
+
                     </li>
+
                 `;
             }
         }
 
+
         paginationItems += `
+
             <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                <button class="page-link" onclick="changePage('${formType}', ${currentPage + 1})">
+
+                <button class="page-link"
+                        onclick="changePage('${formType}', ${currentPage + 1})">
+
                     <i class="bi bi-chevron-right"></i>
+
                 </button>
+
             </li>
+
         `;
 
-        const startItem = ((currentPage - 1) * ROWS_PER_PAGE) + 1;
-        const endItem = Math.min(currentPage * ROWS_PER_PAGE, totalItems);
+
+        const startItem =
+            ((currentPage - 1) * ROWS_PER_PAGE) + 1;
+
+
+        const endItem =
+            Math.min(currentPage * ROWS_PER_PAGE, totalItems);
+
 
         return `
+
             <div class="pagination-wrapper">
+
                 <div class="pagination-info">
-                    Mostrati <strong>${startItem}-${endItem}</strong> di <strong>${totalItems}</strong> elementi
+
+                    Mostrati
+                    <strong>${startItem}-${endItem}</strong>
+                    di
+                    <strong>${totalItems}</strong>
+                    elementi
+
                 </div>
+
+
                 <ul class="pagination pagination-custom">
+
                     ${paginationItems}
+
                 </ul>
+
             </div>
+
         `;
     }
+
 
     /* =========================================================
        CAMBIO PAGINA
        ========================================================= */
 
     window.changePage = function (formType, page) {
+
         paginationState[formType] = page;
+
         renderTables();
     };
+
 
     /* =========================================================
        FILTRAGGIO E RENDERING TABELLE
        ========================================================= */
 
     function renderTables() {
-        const allData = getRawBookingsData();
-        const selectedForm = formFilter.value;
-        const query = searchQuery.value.trim().toLowerCase();
 
-        let filteredData = allData.filter(item => {
-            const matchesForm = (selectedForm === 'all') || (item.formType === selectedForm);
+        const allData =
+            getRawBookingsData();
 
-            const matchesQuery = !query ||
-                item.nome.toLowerCase().includes(query) ||
-                item.cognome.toLowerCase().includes(query) ||
-                item.email.toLowerCase().includes(query) ||
-                item.telefono.toLowerCase().includes(query) ||
-                item.codiceFiscale.toLowerCase().includes(query) ||
-                item.citta.toLowerCase().includes(query) ||
-                item.courseCode.toLowerCase().includes(query) ||
-                item.courseName.toLowerCase().includes(query) ||
-                item.organizzazione.toLowerCase().includes(query) ||
-                item.ruolo.toLowerCase().includes(query) ||
-                item.note.toLowerCase().includes(query);
 
-            return matchesForm && matchesQuery;
-        });
+        const selectedForm =
+            formFilter.value;
 
-        bookingCounter.textContent = filteredData.length;
+
+        const query =
+            searchQuery.value.trim().toLowerCase();
+
+
+        let filteredData =
+            allData.filter(item => {
+
+
+                const matchesForm =
+                    (selectedForm === 'all') ||
+                    (item.formType === selectedForm);
+
+
+                const matchesQuery =
+                    !query ||
+
+                    item.nome.toLowerCase().includes(query) ||
+
+                    item.cognome.toLowerCase().includes(query) ||
+
+                    item.email.toLowerCase().includes(query) ||
+
+                    item.telefono.toLowerCase().includes(query) ||
+
+                    item.codiceFiscale.toLowerCase().includes(query) ||
+
+                    item.citta.toLowerCase().includes(query) ||
+
+                    item.courseCode.toLowerCase().includes(query) ||
+
+                    item.courseName.toLowerCase().includes(query) ||
+
+                    item.organizzazione.toLowerCase().includes(query) ||
+
+                    item.ruolo.toLowerCase().includes(query) ||
+
+                    item.note.toLowerCase().includes(query);
+
+
+                return matchesForm && matchesQuery;
+            });
+
+
+        bookingCounter.textContent =
+            filteredData.length;
+
 
         dynamicTablesContainer.innerHTML = '';
 
-        // Definizione tipologie da mostrare sempre
-        const formsToDisplay = selectedForm === 'all' 
-            ? ['BOOKING', 'INFO', 'ORG_INFO'] 
-            : [selectedForm];
+
+        /* Definizione tipologie da mostrare sempre */
+
+        const formsToDisplay =
+            selectedForm === 'all'
+
+                ? ['BOOKING', 'INFO', 'ORG_INFO']
+
+                : [selectedForm];
+
 
         const groups = {
+
             'BOOKING': [],
+
             'INFO': [],
+
             'ORG_INFO': []
+
         };
 
+
         filteredData.forEach(item => {
-            const key = item.formType || 'BOOKING';
+
+            const key =
+                item.formType || 'BOOKING';
+
+
             if (groups[key]) {
+
                 groups[key].push(item);
+
             }
+
         });
 
+
         formsToDisplay.forEach(formType => {
-            const items = groups[formType] || [];
-            const config = FORM_CONFIGS[formType] || {
-                title: formType,
-                icon: 'bi-table',
-                columns: FORM_CONFIGS['BOOKING'].columns
-            };
 
-            const currentPage = paginationState[formType] || 1;
-            const totalItems = items.length;
+            const items =
+                groups[formType] || [];
 
-            let tableHeadersHtml = config.columns.map(col => {
-                const alignClass = col.align ? `text-${col.align}` : '';
-                return `<th class="${alignClass}">${col.title}</th>`;
-            }).join('');
+
+            const config =
+                FORM_CONFIGS[formType] || {
+
+                    title: formType,
+
+                    icon: 'bi-table',
+
+                    columns:
+                        FORM_CONFIGS['BOOKING'].columns
+                };
+
+
+            const currentPage =
+                paginationState[formType] || 1;
+
+
+            const totalItems =
+                items.length;
+
+
+            let tableHeadersHtml =
+                config.columns.map(col => {
+
+                    const alignClass =
+                        col.align
+                            ? `text-${col.align}`
+                            : '';
+
+
+                    return `
+                        <th class="${alignClass}">
+                            ${col.title}
+                        </th>
+                    `;
+
+                }).join('');
+
 
             let bodyContentHtml = '';
 
+
             if (totalItems === 0) {
+
                 bodyContentHtml = `
+
                     <tr>
-                        <td colspan="${config.columns.length}" class="text-center py-4 text-secondary">
-                            <i class="bi bi-inbox empty-icon d-block mb-2"></i>
-                            <span>Nessuna richiesta trovata per questa categoria.</span>
+
+                        <td colspan="${config.columns.length}"
+                            class="text-center py-4 text-secondary">
+
+                            <i class="bi bi-inbox empty-icon
+                                      d-block mb-2"></i>
+
+                            <span>
+                                Nessuna richiesta trovata per questa categoria.
+                            </span>
+
                         </td>
+
                     </tr>
+
                 `;
+
             } else {
-                const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
-                const pagedItems = items.slice(startIndex, startIndex + ROWS_PER_PAGE);
 
-                bodyContentHtml = pagedItems.map(item => {
-                    let rowCellsHtml = config.columns.map(col => {
-                        const alignClass = col.align ? `text-${col.align}` : '';
-                        return `<td class="${alignClass}">${renderCellContent(item, col.field)}</td>`;
+                const startIndex =
+                    (currentPage - 1) * ROWS_PER_PAGE;
+
+
+                const pagedItems =
+                    items.slice(
+                        startIndex,
+                        startIndex + ROWS_PER_PAGE
+                    );
+
+
+                bodyContentHtml =
+                    pagedItems.map(item => {
+
+
+                        let rowCellsHtml =
+                            config.columns.map(col => {
+
+                                const alignClass =
+                                    col.align
+                                        ? `text-${col.align}`
+                                        : '';
+
+
+                                return `
+
+                                    <td class="${alignClass}">
+
+                                        ${renderCellContent(
+                                            item,
+                                            col.field
+                                        )}
+
+                                    </td>
+
+                                `;
+
+                            }).join('');
+
+
+                        return `
+                            <tr>
+                                ${rowCellsHtml}
+                            </tr>
+                        `;
+
                     }).join('');
-
-                    return `<tr>${rowCellsHtml}</tr>`;
-                }).join('');
             }
 
-            const paginationHtml = buildPaginationUI(formType, totalItems, currentPage);
+
+            const paginationHtml =
+                buildPaginationUI(
+                    formType,
+                    totalItems,
+                    currentPage
+                );
+
 
             const cardHtml = `
+
                 <div class="card card-custom mb-4 overflow-hidden">
-                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-10 py-3 px-4 d-flex align-items-center justify-content-between">
+
+
+                    <div class="card-header
+                                bg-transparent
+                                border-bottom
+                                border-secondary
+                                border-opacity-10
+                                py-3
+                                px-4
+                                d-flex
+                                align-items-center
+                                justify-content-between">
+
+
                         <div class="d-flex align-items-center gap-2">
-                            <i class="bi ${config.icon} text-success fs-5"></i>
-                            <h5 class="mb-0 text-white font-weight-bold">${config.title}</h5>
+
+                            <i class="bi ${config.icon}
+                                      text-success
+                                      fs-5"></i>
+
+
+                            <h5 class="mb-0
+                                       text-white
+                                       font-weight-bold">
+
+                                ${config.title}
+
+                            </h5>
+
                         </div>
-                        <span class="badge bg-secondary bg-opacity-20 text-white border border-secondary border-opacity-25">
+
+
+                        <span class="badge
+                                     bg-secondary
+                                     bg-opacity-20
+                                     text-white
+                                     border
+                                     border-secondary
+                                     border-opacity-25">
+
                             Total: ${totalItems}
+
                         </span>
+
                     </div>
+
 
                     <div class="table-responsive">
-                        <table class="table table-custom align-middle">
+
+                        <table class="table
+                                      table-custom
+                                      align-middle">
+
                             <thead>
-                                <tr>${tableHeadersHtml}</tr>
+
+                                <tr>
+                                    ${tableHeadersHtml}
+                                </tr>
+
                             </thead>
+
+
                             <tbody>
+
                                 ${bodyContentHtml}
+
                             </tbody>
+
                         </table>
+
                     </div>
 
+
                     ${paginationHtml}
+
                 </div>
+
             `;
 
-            dynamicTablesContainer.insertAdjacentHTML('beforeend', cardHtml);
+
+            dynamicTablesContainer.insertAdjacentHTML(
+                'beforeend',
+                cardHtml
+            );
+
         });
     }
+
 
     /* =========================================================
        LISTENERS
        ========================================================= */
 
     formFilter.addEventListener('change', () => {
-        Object.keys(paginationState).forEach(k => paginationState[k] = 1);
+
+        Object.keys(paginationState)
+            .forEach(k => paginationState[k] = 1);
+
         renderTables();
     });
+
 
     searchQuery.addEventListener('input', () => {
-        Object.keys(paginationState).forEach(k => paginationState[k] = 1);
+
+        Object.keys(paginationState)
+            .forEach(k => paginationState[k] = 1);
+
         renderTables();
     });
 
+
     resetFilter.addEventListener('click', () => {
+
         formFilter.value = 'all';
+
         searchQuery.value = '';
-        Object.keys(paginationState).forEach(k => paginationState[k] = 1);
+
+
+        Object.keys(paginationState)
+            .forEach(k => paginationState[k] = 1);
+
+
         renderTables();
     });
+
 
     /* =========================================================
        INIZIALIZZAZIONE
        ========================================================= */
 
-    document.addEventListener('DOMContentLoaded', renderTables);
+    document.addEventListener(
+        'DOMContentLoaded',
+        renderTables
+    );
 
 </script>
 

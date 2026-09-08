@@ -504,6 +504,82 @@
             </div>
 
 
+            <!-- ==================================================
+                 IMMAGINE DI SFONDO DELLA RIGA
+                 ================================================== -->
+
+            <div id="backgroundImageUpload"
+                 class="mb-3 p-3 border rounded shadow-sm">
+
+                <label class="form-label fw-bold text-info">
+                    <i class="bi bi-image-fill"></i>
+                    Immagine di Sfondo Riga
+                </label>
+
+                <div class="form-text mb-2">
+                    L'immagine verrà utilizzata come sfondo dell'intera riga/blocco.
+                    Quando è presente, lo sfondo a colore viene automaticamente impostato in grigio e i relativi controlli vengono disabilitati.
+                </div>
+
+                <input type="file"
+                       name="backgroundImageFile"
+                       id="backgroundImageFile"
+                       class="form-control mb-2"
+                       accept="image/*"
+                       onchange="handleBackgroundImageSelection(this)" />
+
+                <input type="hidden"
+                       id="backgroundImageUrl"
+                       th:field="*{backgroundImageUrl}" />
+
+                <div th:if="${block.backgroundImageUrl != null and !block.backgroundImageUrl.empty}"
+                     id="currentBackgroundImageContainer"
+                     class="mt-2">
+
+                    <small class="text-muted d-block mb-1">
+                        Immagine di Sfondo Attualmente Caricata:
+                    </small>
+
+                    <img th:src="${block.backgroundImageUrl}"
+                         alt="Anteprima Sfondo Riga"
+                         id="currentBackgroundImagePreview"
+                         class="img-thumbnail"
+                         style="max-height: 160px; width: auto; max-width: 100%; object-fit: contain;" />
+
+                    <div class="form-check mt-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="removeBackgroundImage"
+                               name="removeBackgroundImage"
+                               value="true"
+                               onchange="toggleBackgroundImageRemoval()">
+
+                        <label class="form-check-label text-warning"
+                               for="removeBackgroundImage">
+                            <i class="bi bi-trash3 me-1"></i>
+                            Rimuovi immagine di sfondo e riattiva lo sfondo a colore
+                        </label>
+                    </div>
+                </div>
+
+                <div id="newBackgroundImagePreview"
+                     class="mt-2"
+                     style="display:none;">
+
+                    <small class="text-muted d-block mb-1">
+                        Nuova immagine selezionata:
+                    </small>
+
+                    <img id="newBackgroundImagePreviewImg"
+                         src=""
+                         alt="Anteprima nuova immagine di sfondo"
+                         class="img-thumbnail"
+                         style="max-height: 160px; width: auto; max-width: 100%; object-fit: contain;" />
+                </div>
+
+            </div>
+
+
             <!-- IMMAGINE PRINCIPALE -->
 
             <div id="mainImageUpload"
@@ -1403,6 +1479,7 @@
         const customHeight = document.getElementById('customHeightInput')?.value || 'auto';
         const bgColor = document.getElementById('bgColorInput')?.value || 'transparent';
         const imageUrl = document.getElementById('blockImageUrl')?.value || '';
+        const backgroundImageUrl = document.getElementById('backgroundImageUrl')?.value || '';
 
         let contentHtml = '';
         if (window.tinymce && tinymce.get('mainContentHtml')) {
@@ -1411,7 +1488,7 @@
             contentHtml = document.getElementById('mainContentHtml')?.value || '';
         }
 
-        let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border-radius: 8px; padding: 20px; transition: all 0.3s ease;`;
+        let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border-radius: 8px; padding: 20px; transition: all 0.3s ease;` + (backgroundImageUrl ? ` background-image: linear-gradient(rgba(15,23,42,0.35), rgba(15,23,42,0.35)), url('${backgroundImageUrl}'); background-size: cover; background-position: center; background-repeat: no-repeat;` : '');
 
         let htmlOutput = '';
 
@@ -1566,6 +1643,7 @@
 
         initBgColor();
         initItemBgColor();
+        updateBackgroundColorControls();
 
 
         if (blockTypeSelect) {
@@ -1741,6 +1819,72 @@
     /* ============================================================
        GESTIONE COLORE / OPACITÀ RIGA
        ============================================================ */
+
+
+    /* ============================================================
+       GESTIONE IMMAGINE DI SFONDO DELLA RIGA
+       ============================================================ */
+
+    function updateBackgroundColorControls() {
+        const bgInput = document.getElementById("bgColorInput");
+        const bgPicker = document.getElementById("bgPicker");
+        const transparentSwitch = document.getElementById("isTransparentSwitch");
+        const opacityRange = document.getElementById("bgOpacityRange");
+        const backgroundImageUrl = document.getElementById("backgroundImageUrl");
+        const removeBackgroundImage = document.getElementById("removeBackgroundImage");
+        const backgroundImageFile = document.getElementById("backgroundImageFile");
+
+        const hasExistingBackgroundImage = backgroundImageUrl && backgroundImageUrl.value.trim() !== "";
+        const hasNewBackgroundImage = backgroundImageFile && backgroundImageFile.files && backgroundImageFile.files.length > 0;
+        const removingBackgroundImage = removeBackgroundImage && removeBackgroundImage.checked;
+        const backgroundImageActive = !removingBackgroundImage && (hasExistingBackgroundImage || hasNewBackgroundImage);
+
+        if (backgroundImageActive) {
+            
+            if (transparentSwitch) { transparentSwitch.checked = false; transparentSwitch.disabled = true; }
+            if (opacityRange) { opacityRange.value = 100; opacityRange.disabled = true; }
+            return;
+        }
+
+        if (bgInput) { bgInput.disabled = false; bgInput.readOnly = false; }
+        if (bgPicker) bgPicker.disabled = false;
+        if (transparentSwitch) transparentSwitch.disabled = false;
+        if (opacityRange) opacityRange.disabled = false;
+    }
+
+    function handleBackgroundImageSelection(input) {
+        const preview = document.getElementById("newBackgroundImagePreview");
+        const previewImg = document.getElementById("newBackgroundImagePreviewImg");
+
+        if (input && input.files && input.files.length > 0) {
+            const file = input.files[0];
+            if (previewImg) {
+                const reader = new FileReader();
+                reader.onload = function (event) { previewImg.src = event.target.result; };
+                reader.readAsDataURL(file);
+            }
+            if (preview) preview.style.display = "";
+        } else if (preview) {
+            preview.style.display = "none";
+        }
+
+        const removeBackgroundImage = document.getElementById("removeBackgroundImage");
+        if (input && input.files && input.files.length > 0 && removeBackgroundImage) removeBackgroundImage.checked = false;
+        updateBackgroundColorControls();
+    }
+
+    function toggleBackgroundImageRemoval() {
+        const removeBackgroundImage = document.getElementById("removeBackgroundImage");
+        const backgroundImageFile = document.getElementById("backgroundImageFile");
+
+        if (removeBackgroundImage && removeBackgroundImage.checked && backgroundImageFile) {
+            backgroundImageFile.value = "";
+            const preview = document.getElementById("newBackgroundImagePreview");
+            if (preview) preview.style.display = "none";
+        }
+
+        updateBackgroundColorControls();
+    }
 
 
     function initBgColor() {

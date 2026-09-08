@@ -30,6 +30,8 @@ public class PageBlock {
 
     private String imageUrl;
 
+    private String backgroundImageUrl;
+
     private boolean draft = true; // Default: Inserita come Bozza
 
     @Lob
@@ -69,6 +71,9 @@ public class PageBlock {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getBackgroundImageUrl() { return backgroundImageUrl; }
+    public void setBackgroundImageUrl(String backgroundImageUrl) { this.backgroundImageUrl = backgroundImageUrl; }
 
     public boolean isDraft() { return draft; }
     public void setDraft(boolean draft) { this.draft = draft; }

@@ -150,7 +150,13 @@ public class AdminController {
                     value = "imageFile",
                     required = false
             )
-            MultipartFile imageFile) {
+            MultipartFile imageFile,
+
+            @RequestParam(value = "backgroundImageFile", required = false)
+            MultipartFile backgroundImageFile,
+
+            @RequestParam(value = "removeBackgroundImage", required = false, defaultValue = "false")
+            boolean removeBackgroundImage) {
 
 
         boolean isNewBlock =
@@ -262,6 +268,25 @@ public class AdminController {
                     formBlock.getBackgroundColor()
             );
         }
+
+
+        // ============================================================
+        // IMMAGINE DI SFONDO DELLA RIGA
+        // ============================================================
+
+        if (removeBackgroundImage) {
+            deleteUploadedFile(block.getBackgroundImageUrl());
+            block.setBackgroundImageUrl(null);
+        } else if (backgroundImageFile != null && !backgroundImageFile.isEmpty()) {
+            String oldBackgroundImageUrl = block.getBackgroundImageUrl();
+            String backgroundImageUrl = saveUploadedFile(backgroundImageFile);
+            if (backgroundImageUrl != null) {
+                deleteUploadedFile(oldBackgroundImageUrl);
+                block.setBackgroundImageUrl(backgroundImageUrl);
+            }
+        }
+
+        
 
 
         boolean imageAllowed =

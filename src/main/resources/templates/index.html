@@ -856,9 +856,9 @@
 
                 min-height: auto !important;
 
-                padding-top: 2.5rem !important;
+                padding-top: 1.5rem !important;
 
-                padding-bottom: 2.5rem !important;
+                padding-bottom: 1.5rem !important;
 
             }
 
@@ -902,9 +902,9 @@
 
                 margin-top: 0 !important;
 
-                padding-top: 1.5rem !important;
+                padding-top: 1rem !important;
 
-                padding-bottom: 1.5rem !important;
+                padding-bottom: 1rem !important;
 
             }
 
@@ -1093,12 +1093,14 @@
          th:if="${!block.draft or #authorization.expression('isAuthenticated()')}"
 
          th:class="${block.containerType.cssClass}
-                   + ' py-5 block-container position-relative'"
+                   + ' py-3 block-container position-relative'"
 
          th:classappend="${block.draft ? ' draft-block-hidden' : ''}"
 
          th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'}
-                   + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent') + ';'">
+                   + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent')
+                   + (${block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl)} ? '; background-image: linear-gradient(rgba(15,23,42,0.35), rgba(15,23,42,0.35)), url(\'' + ${block.backgroundImageUrl} + '\'); background-size: cover; background-position: center; background-repeat: no-repeat;' : '')
+                   + ';'">
 
 
         <!-- TAG BOZZA VISIBILE SOLO DALL'ADMIN SE IL BLOCCO È IN BOZZA -->

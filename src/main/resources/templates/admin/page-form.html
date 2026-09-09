@@ -282,113 +282,232 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        tinymce.init({
-            selector: '.wysiwyg-editor',
-            language: 'it',
-            language_url: '/tinymce/langs/it.js',
-            content_language: 'it',
-            min_height: 500,
-            menubar: true,
-            branding: false,
-            promotion: false,
-            license_key: 'gpl',
-            statusbar: true,
-            elementpath: true,
-            skin: 'oxide-dark',
-            image_advtab: true,
-            image_title: true,
-            image_caption: true,
-            automatic_uploads: true,
-            object_resizing: 'img',
-            resize_img_proportional: true,
+            tinymce.init({
+                selector: '.wysiwyg-editor',
+                language: 'it',
+                language_url: '/tinymce/langs/it.js',
+                content_language: 'it',
+                min_height: 400,
+                menubar: true,
+                branding: false,
+                promotion: false,
+                license_key: 'gpl',
+                statusbar: true,
+                elementpath: true,
+                skin: 'oxide-dark',
+                image_advtab: true,
+                image_title: true,
+                image_caption: true,
+                automatic_uploads: true,
+                object_resizing: 'img',
+                resize_img_proportional: true,
 
-            relative_urls: false,
-            remove_script_host: false,
-            convert_urls: false,
-            document_base_url: window.location.origin + '/',
+                relative_urls: false,
+                remove_script_host: false,
+                convert_urls: false,
+                document_base_url: window.location.origin + '/',
 
-            font_size_formats:
-                '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
-            font_size_input_default_unit: 'px',
+                font_size_formats:
+                    '12px 13px 14px 15px 16px 17px 18px 19px 20px 21px 22px 23px 24px 28px 32px 34px 36px 38px 40px 42px 44px 46px 48px',
+                font_size_input_default_unit: 'px',
 
-            plugins: [
-                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                'media', 'table', 'wordcount', 'help', 'emoticons'
-            ],
+                // 1. ELENCO FONT CON PLUS JAKARTA SANS
+                font_family_formats:
+                    'Andale Mono=andale mono,times;' +
+                    'Arial=arial,helvetica,sans-serif;' +
+                    'Arial Black=arial black,avant garde;' +
+                    'Book Antiqua=book antiqua,palatino;' +
+                    'Comic Sans MS=comic sans ms,sans-serif;' +
+                    'Courier New=courier new,courier;' +
+                    'Georgia=georgia,palatino;' +
+                    'Helvetica=helvetica;' +
+                    'Impact=impact,chicago;' +
+                    'Neue Haas Grotesk=Neue Haas Grotesk Display Pro, Helvetica Neue, Arial, sans-serif;' +
+                    'Plus Jakarta Sans=Plus Jakarta Sans,sans-serif;' + // <-- Aggiunto Plus Jakarta Sans
+                    'Roboto=Roboto,sans-serif;' +
+                    'Symbol=symbol;' +
+                    'Tahoma=tahoma,arial,helvetica,sans-serif;' +
+                    'Terminal=terminal,monaco;' +
+                    'Times New Roman=times new roman,times;' +
+                    'Trebuchet MS=trebuchet ms,geneva;' +
+                    'Verdana=verdana,geneva;' +
+                    'Webdings=webdings;' +
+                    'Wingdings=wingdings,zapf dingbats',
 
-            toolbar:
-                'undo redo | blocks fontfamily fontsize | ' +
-                'bold italic underline | ' +
-                'forecolor backcolor | ' +
-                'alignleft aligncenter alignright alignjustify | ' +
-                'bullist numlist | ' +
-                'link image media table emoticons | ' +
-                'code fullscreen | help',
+                plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'media', 'table', 'wordcount', 'help', 'emoticons'
+                ],
 
-            content_style: `
-                body {
-                    font-family: Arial, sans-serif;
-                    font-size: 18px;
-                    line-height: 1.6;
-                    background-color: #0d1b2a !important;
-                    color: #ffffff !important;
-                    padding: 15px;
-                }
-                p { font-size: 18px; color: #ffffff !important; }
-                h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
-                a { color: #36e4da !important; }
-                img { max-width: 100%; height: auto; }
-                figure.image.align-left { float: left; margin: 0 15px 10px 0; }
-                figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
-                figure.image.align-right { float: right; margin: 0 0 10px 15px; }
-                figure.image { display: inline-block; margin: 0 2px 0 1px; }
-                figure.image img { max-width: 100%; height: auto; }
-            `,
+                toolbar:
+                    'undo redo | blocks fontfamily fontsize | ' +
+                    'bold italic underline | ' +
+                    'forecolor backcolor | ' +
+                    'alignleft aligncenter alignright alignjustify | ' +
+                    'bullist numlist | ' +
+                    'link image media table emoticons | ' +
+                    'code fullscreen | help',
 
-            style_formats: [
-                { title: 'Immagine a sinistra', selector: 'img', styles: { 'float': 'left', 'margin': '0 15px 10px 0' } },
-                { title: 'Immagine centrata', selector: 'img', styles: { 'display': 'block', 'float': 'none', 'margin-left': 'auto', 'margin-right': 'auto' } },
-                { title: 'Immagine a destra', selector: 'img', styles: { 'float': 'right', 'margin': '0 0 10px 15px' } },
-                { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
-            ],
+                // 2. IMPORTAZIONE GOOGLE FONTS (Plus Jakarta Sans + Roboto) DENTRO L'IFRAME
+                content_style: `
+            @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;500;700&display=swap');
 
-            images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
-                const formData = new FormData();
-                formData.append('file', blobInfo.blob(), blobInfo.filename());
+    /* MAPPATURA NEUE HAAS GROTESK DISPLAY PRO */
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayRoman.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayRomanItalic.ttf') format('truetype');
+        font-weight: 400;
+        font-style: italic;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayMedium.ttf') format('truetype');
+        font-weight: 500;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayMediumItalic.ttf') format('truetype');
+        font-weight: 500;
+        font-style: italic;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayBold.ttf') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayBoldItalic.ttf') format('truetype');
+        font-weight: 700;
+        font-style: italic;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayBlack.ttf') format('truetype');
+        font-weight: 900;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayBlackItalic.ttf') format('truetype');
+        font-weight: 900;
+        font-style: italic;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayLight.ttf') format('truetype');
+        font-weight: 300;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayLightItalic.ttf') format('truetype');
+        font-weight: 300;
+        font-style: italic;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayThin.ttf') format('truetype');
+        font-weight: 200;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayThinItalic.ttf') format('truetype');
+        font-weight: 200;
+        font-style: italic;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayXThin.ttf') format('truetype');
+        font-weight: 100;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayXThinItalic.ttf') format('truetype');
+        font-weight: 100;
+        font-style: italic;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayXXThin.ttf') format('truetype');
+        font-weight: 100;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Neue Haas Grotesk Display Pro';
+        src: url('/fonts/NeueHaasDisplayXXThinItalic.ttf') format('truetype');
+        font-weight: 100;
+        font-style: italic;
+    }
 
-                fetch('/api/uploads/immagine', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            throw new Error('Errore HTTP ' + response.status + ': ' + text);
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 18px;
+                line-height: 1.6;
+                background-color: #0d1b2a !important;
+                color: #ffffff !important;
+                padding: 15px;
+            }
+            p { font-size: 18px; color: #ffffff !important; }
+            h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
+            a { color: #36e4da !important; }
+            img { max-width: 100%; height: auto; }
+            figure.image.align-left { float: left; margin: 0 15px 10px 0; }
+            figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
+            figure.image.align-right { float: right; margin: 0 0 10px 15px; }
+            figure.image { display: inline-block; margin: 0 2px 0 1px; }
+            figure.image img { max-width: 100%; height: auto; }
+        `,
+
+                style_formats: [
+                    { title: 'Immagine a sinistra', selector: 'img', styles: { 'float': 'left', 'margin': '0 15px 10px 0' } },
+                    { title: 'Immagine centrata', selector: 'img', styles: { 'display': 'block', 'float': 'none', 'margin-left': 'auto', 'margin-right': 'auto' } },
+                    { title: 'Immagine a destra', selector: 'img', styles: { 'float': 'right', 'margin': '0 0 10px 15px' } },
+                    { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
+                ],
+
+                images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
+                    const formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                    fetch('/api/uploads/immagine', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Errore durante il caricamento dell\'immagine nel server.');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            const imageUrl = data.location || data.url;
+                            if (!imageUrl) {
+                                throw new Error('Il server non ha restituito l\'URL dell\'immagine.');
+                            }
+                            resolve(imageUrl);
+                        })
+                        .catch(error => {
+                            console.error('Upload fallito:', error);
+                            reject({
+                                message: 'Caricamento immagine non riuscito',
+                                remove: true
+                            });
                         });
-                    }
-                    return response.json();
                 })
-                .then(data => {
-                    const imageUrl = data.location || data.url;
-                    if (!imageUrl) {
-                        throw new Error('Il server non ha restituito location oppure url.');
-                    }
-                    resolve(imageUrl);
-                })
-                .catch(error => {
-                    console.error('Upload fallito:', error);
-                    reject({
-                        message: 'Caricamento immagine non riuscito: ' + error.message,
-                        remove: true
-                    });
-                });
-            })
+            });
         });
-
-        // Inizializza visibilità pannello form
-        toggleCourseForm();
-    });
 
     function toggleCourseForm() {
         const formTypeSelect = document.getElementById('formTypeSelect');

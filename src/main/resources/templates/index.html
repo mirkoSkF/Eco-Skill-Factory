@@ -264,6 +264,31 @@
         }
 
 
+
+
+        /* ========================================================
+           IMMAGINE DI SFONDO DEL BLOCCO
+           ======================================================== */
+
+        .block-container.has-background-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: var(--block-background-image);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: var(--block-background-opacity, 1);
+            filter: saturate(var(--block-background-saturation, 1)) grayscale(var(--block-background-grayscale, 0));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .block-container.has-background-image > * {
+            position: relative;
+            z-index: 1;
+        }
+
         .block-container[style*="height"]:not([style*="height:auto"]):not([style*="height: auto"]) {
 
             padding-top: 0 !important;
@@ -1095,12 +1120,11 @@
          th:class="${block.containerType.cssClass}
                    + ' py-3 block-container position-relative'"
 
-         th:classappend="${block.draft ? ' draft-block-hidden' : ''}"
+         th:classappend="${(block.draft ? ' draft-block-hidden' : '') + (block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl) ? ' has-background-image' : '')}"
 
          th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'}
                    + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent')
-                   + (${block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl)} ? '; background-image: linear-gradient(rgba(15,23,42,0.35), rgba(15,23,42,0.35)), url(\'' + ${block.backgroundImageUrl} + '\'); background-size: cover; background-position: center; background-repeat: no-repeat;' : '')
-                   + ';'">
+                   + (${block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl)} ? '; --block-background-image: url(\'' + ${block.backgroundImageUrl} + '\'); --block-background-opacity: ' + (${block.bgImageOpacity != null ? block.bgImageOpacity : 100} / 100) + '; --block-background-saturation: ' + (${block.bgImageSaturation != null ? block.bgImageSaturation : 100} / 100) + '; --block-background-grayscale: ' + (${block.bgImageGrayscale != null ? block.bgImageGrayscale : 0} / 100) + ';' : '') + ';'">
 
 
         <!-- TAG BOZZA VISIBILE SOLO DALL'ADMIN SE IL BLOCCO È IN BOZZA -->

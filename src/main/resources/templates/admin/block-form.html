@@ -126,7 +126,25 @@
         
         .monaco-search-match{background:rgba(255,215,0,.28);border:1px solid rgba(255,215,0,.55);border-radius:2px}.monaco-search-match-current{background:rgba(0,220,130,.42);border:1px solid rgba(0,220,130,.9);border-radius:2px}@media(max-width:768px){.monaco-search-wrapper{flex-basis:100%;max-width:none}}
 
+
+        /* ========================================================
+           PANNELLO REGOLAZIONE IMMAGINE DI SFONDO RIGA
+           ======================================================== */
+
+        .background-image-controls { margin-top: 18px; padding: 16px; border: 1px solid #334155; border-radius: 10px; background: rgba(15, 23, 42, 0.65); }
+        .background-image-control-row { margin-bottom: 16px; }
+        .background-image-control-row:last-child { margin-bottom: 0; }
+        .background-image-control-label { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .background-image-control-value { min-width: 58px; text-align: center; }
+        #bgImageOpacityRange, #bgImageSaturationRange, #bgImageGrayscaleRange { accent-color: #00dc82; }
+        .background-image-preview-box { position: relative; width: 100%; min-height: 220px; border-radius: 10px; overflow: hidden; background-color: #0f172a; border: 1px solid #334155; margin-top: 18px; }
+        .background-image-preview-box::before { content: ''; position: absolute; inset: 0; background-image: var(--preview-background-image); background-size: cover; background-position: center; background-repeat: no-repeat; opacity: var(--preview-opacity, 1); filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0)); transition: opacity .15s ease, filter .15s ease; }
+        .background-image-preview-content { position: relative; z-index: 1; min-height: 220px; display: flex; align-items: center; justify-content: center; padding: 25px; text-align: center; background: rgba(15, 23, 42, 0.12); }
         /* STILI ANTEPRIMA INDEX */
+        .row-preview-block { position: relative; overflow: hidden; }
+        .row-preview-block::before { content: ''; position: absolute; inset: 0; background-image: var(--preview-background-image); background-size: cover; background-position: center; background-repeat: no-repeat; opacity: var(--preview-opacity, 0); filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0)); pointer-events: none; }
+        .row-preview-block > * { position: relative; z-index: 1; }
+
         .preview-container {
             background-color: #080c14;
             border: 2px dashed #334155;
@@ -401,7 +419,7 @@
                     <label class="form-label fw-bold">
 
                         <i class="bi bi-palette"></i>
-                        Sfondo Riga
+                        <span id="sfondoRigaLabel">Sfondo Riga</span>
 
                     </label>
 
@@ -518,7 +536,7 @@
 
                 <div class="form-text mb-2">
                     L'immagine verrà utilizzata come sfondo dell'intera riga/blocco.
-                    Quando è presente, lo sfondo a colore viene automaticamente impostato in grigio e i relativi controlli vengono disabilitati.
+                    Quando è presente, la gestione dello sfondo a colore viene disabilitata.
                 </div>
 
                 <input type="file"
@@ -579,6 +597,85 @@
 
             </div>
 
+
+                <!-- ==================================================
+                     PANNELLO REGOLAZIONE IMMAGINE DI SFONDO
+                     ================================================== -->
+                <div id="backgroundImageControls"
+                     class="background-image-controls"
+                     th:style="${block.backgroundImageUrl != null and !block.backgroundImageUrl.empty} ? '' : 'display:none;'">
+
+                    <div class="fw-bold text-info mb-2">
+                        <i class="bi bi-sliders me-1"></i>
+                        Regolazione Immagine di Sfondo
+                    </div>
+                    <div class="form-text mb-3">
+                        L'immagine mantiene le proporzioni e viene adattata alle dimensioni della riga con <strong>cover</strong>, senza deformarla.
+                    </div>
+
+                    <div class="background-image-control-row">
+                        <div class="background-image-control-label">
+                            <label class="form-label fw-bold mb-0" for="bgImageOpacityRange">
+                                <i class="bi bi-circle-half me-1"></i> Opacità Immagine
+                            </label>
+                            <span id="bgImageOpacityValue" class="badge bg-success background-image-control-value">100%</span>
+                        </div>
+                        <input type="range" class="form-range" id="bgImageOpacityRange"
+                               th:field="*{bgImageOpacity}" min="0" max="100" step="1"
+                               oninput="updateBackgroundImageControls()" />
+                    </div>
+
+                    <div class="background-image-control-row">
+                        <div class="background-image-control-label">
+                            <label class="form-label fw-bold mb-0" for="bgImageSaturationRange">
+                                <i class="bi bi-brightness-high me-1"></i> Saturazione
+                            </label>
+                            <span id="bgImageSaturationValue" class="badge bg-success background-image-control-value">100%</span>
+                        </div>
+                        <input type="range" class="form-range" id="bgImageSaturationRange"
+                               th:field="*{bgImageSaturation}" min="0" max="200" step="1"
+                               oninput="updateBackgroundImageControls()" />
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">0%</small>
+                            <small class="text-muted">100% Originale</small>
+                            <small class="text-muted">200%</small>
+                        </div>
+                    </div>
+
+                    <div class="background-image-control-row">
+                        <div class="background-image-control-label">
+                            <label class="form-label fw-bold mb-0" for="bgImageGrayscaleRange">
+                                <i class="bi bi-circle me-1"></i> Bianco e Nero
+                            </label>
+                            <span id="bgImageGrayscaleValue" class="badge bg-success background-image-control-value">0%</span>
+                        </div>
+                        <input type="range" class="form-range" id="bgImageGrayscaleRange"
+                               th:field="*{bgImageGrayscale}" min="0" max="100" step="1"
+                               oninput="updateBackgroundImageControls()" />
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">0% Colori</small>
+                            <small class="text-muted">100% B/N</small>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            onclick="resetBackgroundImageControls()">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>
+                        Ripristina regolazioni
+                    </button>
+
+                    <div id="backgroundImageLivePreview" class="background-image-preview-box">
+                        <div class="background-image-preview-content">
+                            <div>
+                                <i class="bi bi-image fs-1 text-info d-block mb-2"></i>
+                                <strong>Anteprima sfondo riga</strong>
+                                <div class="small text-muted mt-1">
+                                    Proporzioni mantenute e immagine adattata al blocco.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             <!-- IMMAGINE PRINCIPALE -->
 
@@ -1480,6 +1577,9 @@
         const bgColor = document.getElementById('bgColorInput')?.value || 'transparent';
         const imageUrl = document.getElementById('blockImageUrl')?.value || '';
         const backgroundImageUrl = document.getElementById('backgroundImageUrl')?.value || '';
+        const bgImageOpacity = parseInt(document.getElementById('bgImageOpacityRange')?.value || '100', 10);
+        const bgImageSaturation = parseInt(document.getElementById('bgImageSaturationRange')?.value || '100', 10);
+        const bgImageGrayscale = parseInt(document.getElementById('bgImageGrayscaleRange')?.value || '0', 10);
 
         let contentHtml = '';
         if (window.tinymce && tinymce.get('mainContentHtml')) {
@@ -1488,12 +1588,12 @@
             contentHtml = document.getElementById('mainContentHtml')?.value || '';
         }
 
-        let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border-radius: 8px; padding: 20px; transition: all 0.3s ease;` + (backgroundImageUrl ? ` background-image: linear-gradient(rgba(15,23,42,0.35), rgba(15,23,42,0.35)), url('${backgroundImageUrl}'); background-size: cover; background-position: center; background-repeat: no-repeat;` : '');
+        let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border-radius: 8px; padding: 20px; transition: all 0.3s ease; position: relative; overflow: hidden; --preview-background-image: url(\'${backgroundImageUrl}\'); --preview-opacity: ${bgImageOpacity / 100}; --preview-saturation: ${bgImageSaturation / 100}; --preview-grayscale: ${bgImageGrayscale / 100};`;
 
         let htmlOutput = '';
 
         if (blockType === 'CARDS') {
-            htmlOutput += `<div style="${containerStyles}">`;
+            htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
             htmlOutput += `<div class="row g-3">`;
 
             const cards = document.querySelectorAll('.existing-item-card');
@@ -1522,7 +1622,7 @@
             }
             htmlOutput += `</div></div>`;
         } else if (blockType === 'CAROUSEL') {
-            htmlOutput += `<div style="${containerStyles}">`;
+            htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
             htmlOutput += `<div class="p-3 border border-secondary rounded text-center">`;
             htmlOutput += `<h5 class="text-info"><i class="bi bi-images me-2"></i>Carosello di Elementi</h5>`;
             
@@ -1546,7 +1646,7 @@
             htmlOutput += `</div></div>`;
         } else if (blockType === 'JUMBO_DEMO_1') {
             // Immagine a Sinistra, Testo a Destra
-            htmlOutput += `<div style="${containerStyles}">`;
+            htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
             htmlOutput += `<div class="row align-items-center g-4">`;
             if (imageUrl) {
                 htmlOutput += `<div class="col-md-5 text-center"><img src="${imageUrl}" class="img-fluid rounded" style="max-height: 350px; width: 100%; object-fit: cover;"></div>`;
@@ -1555,7 +1655,7 @@
             htmlOutput += `</div></div>`;
         } else if (blockType === 'JUMBO_DEMO_2') {
             // Testo a Sinistra, Immagine a Destra
-            htmlOutput += `<div style="${containerStyles}">`;
+            htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
             htmlOutput += `<div class="row align-items-center g-4">`;
             htmlOutput += `<div class="${imageUrl ? 'col-md-7 order-md-1' : 'col-12'}">${contentHtml || '<span class="text-muted italic">Nessun contenuto inserito nell\'editor.</span>'}</div>`;
             if (imageUrl) {
@@ -1564,7 +1664,7 @@
             htmlOutput += `</div></div>`;
         } else {
             // Altri modelli JUMBO / STANDARD / HTML CUSTOM
-            htmlOutput += `<div style="${containerStyles}">`;
+            htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
             if (imageUrl) {
                 htmlOutput += `<div class="text-center mb-3"><img src="${imageUrl}" class="img-fluid rounded" style="max-height: 300px;"></div>`;
             }
@@ -1644,6 +1744,7 @@
         initBgColor();
         initItemBgColor();
         updateBackgroundColorControls();
+        updateBackgroundImageControls();
 
 
         if (blockTypeSelect) {
@@ -1839,11 +1940,21 @@
         const removingBackgroundImage = removeBackgroundImage && removeBackgroundImage.checked;
         const backgroundImageActive = !removingBackgroundImage && (hasExistingBackgroundImage || hasNewBackgroundImage);
 
+        const sfondoRigaLabel = document.getElementById("sfondoRigaLabel");
+
         if (backgroundImageActive) {
-            
-            if (transparentSwitch) { transparentSwitch.checked = false; transparentSwitch.disabled = true; }
-            if (opacityRange) { opacityRange.value = 100; opacityRange.disabled = true; }
+            if (sfondoRigaLabel) {
+                sfondoRigaLabel.style.color = "#9ca3af";
+            }
+            if (bgInput) { bgInput.readOnly = true; }
+            if (bgPicker) { bgPicker.disabled = true; }
+            if (transparentSwitch) { transparentSwitch.disabled = true; }
+            if (opacityRange) { opacityRange.disabled = true; }
             return;
+        }
+
+        if (sfondoRigaLabel) {
+            sfondoRigaLabel.style.color = "";
         }
 
         if (bgInput) { bgInput.disabled = false; bgInput.readOnly = false; }
@@ -1860,7 +1971,10 @@
             const file = input.files[0];
             if (previewImg) {
                 const reader = new FileReader();
-                reader.onload = function (event) { previewImg.src = event.target.result; };
+                reader.onload = function (event) {
+                    previewImg.src = event.target.result;
+                    updateBackgroundImageControls();
+                };
                 reader.readAsDataURL(file);
             }
             if (preview) preview.style.display = "";
@@ -1871,6 +1985,7 @@
         const removeBackgroundImage = document.getElementById("removeBackgroundImage");
         if (input && input.files && input.files.length > 0 && removeBackgroundImage) removeBackgroundImage.checked = false;
         updateBackgroundColorControls();
+        updateBackgroundImageControls();
     }
 
     function toggleBackgroundImageRemoval() {
@@ -1884,8 +1999,69 @@
         }
 
         updateBackgroundColorControls();
+        updateBackgroundImageControls();
     }
 
+
+    function updateBackgroundImageControls() {
+        const fileInput = document.getElementById("backgroundImageFile");
+        const existingUrlInput = document.getElementById("backgroundImageUrl");
+        const controls = document.getElementById("backgroundImageControls");
+        const opacityRange = document.getElementById("bgImageOpacityRange");
+        const saturationRange = document.getElementById("bgImageSaturationRange");
+        const grayscaleRange = document.getElementById("bgImageGrayscaleRange");
+        const opacityValue = document.getElementById("bgImageOpacityValue");
+        const saturationValue = document.getElementById("bgImageSaturationValue");
+        const grayscaleValue = document.getElementById("bgImageGrayscaleValue");
+        const preview = document.getElementById("backgroundImageLivePreview");
+        const currentImage = document.getElementById("currentBackgroundImagePreview");
+        const newImage = document.getElementById("newBackgroundImagePreviewImg");
+
+        const hasNewFile = fileInput && fileInput.files && fileInput.files.length > 0;
+        const existingUrl = existingUrlInput ? existingUrlInput.value.trim() : "";
+        const removeImageInput = document.getElementById("removeBackgroundImage");
+        const removingImage = removeImageInput && removeImageInput.checked;
+        const hasImage = !removingImage && (hasNewFile || existingUrl !== "");
+
+        if (controls) controls.style.display = hasImage ? "" : "none";
+
+        const opacity = opacityRange ? parseInt(opacityRange.value || "100", 10) : 100;
+        const saturation = saturationRange ? parseInt(saturationRange.value || "100", 10) : 100;
+        const grayscale = grayscaleRange ? parseInt(grayscaleRange.value || "0", 10) : 0;
+
+        if (opacityValue) opacityValue.textContent = opacity + "%";
+        if (saturationValue) saturationValue.textContent = saturation + "%";
+        if (grayscaleValue) grayscaleValue.textContent = grayscale + "%";
+
+        let imageSource = existingUrl;
+        if (hasNewFile && newImage && newImage.src) imageSource = newImage.src;
+        else if (currentImage && currentImage.src) imageSource = currentImage.src;
+
+        if (preview) {
+            preview.style.setProperty("--preview-background-image", imageSource ? `url("${imageSource}")` : "none");
+            preview.style.setProperty("--preview-opacity", opacity / 100);
+            preview.style.setProperty("--preview-saturation", saturation / 100);
+            preview.style.setProperty("--preview-grayscale", grayscale / 100);
+        }
+
+        renderRowPreviewIfOpen();
+    }
+
+    function resetBackgroundImageControls() {
+        const opacityRange = document.getElementById("bgImageOpacityRange");
+        const saturationRange = document.getElementById("bgImageSaturationRange");
+        const grayscaleRange = document.getElementById("bgImageGrayscaleRange");
+        if (opacityRange) opacityRange.value = 100;
+        if (saturationRange) saturationRange.value = 100;
+        if (grayscaleRange) grayscaleRange.value = 0;
+        updateBackgroundImageControls();
+    }
+
+    function renderRowPreviewIfOpen() {
+        const modal = document.getElementById("rowPreviewModal");
+        if (!modal || !modal.classList.contains("show")) return;
+        renderRowPreview();
+    }
 
     function initBgColor() {
 

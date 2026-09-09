@@ -271,22 +271,84 @@ public class AdminController {
 
 
         // ============================================================
+        // REGOLAZIONI IMMAGINE SFONDO
+        // ============================================================
+
+        Integer bgImageOpacity = formBlock.getBgImageOpacity();
+        if (bgImageOpacity == null) {
+            bgImageOpacity = 100;
+        }
+        if (bgImageOpacity < 0) {
+            bgImageOpacity = 0;
+        }
+        if (bgImageOpacity > 100) {
+            bgImageOpacity = 100;
+        }
+        block.setBgImageOpacity(bgImageOpacity);
+
+
+        Integer bgImageSaturation = formBlock.getBgImageSaturation();
+        if (bgImageSaturation == null) {
+            bgImageSaturation = 100;
+        }
+        if (bgImageSaturation < 0) {
+            bgImageSaturation = 0;
+        }
+        if (bgImageSaturation > 200) {
+            bgImageSaturation = 200;
+        }
+        block.setBgImageSaturation(bgImageSaturation);
+
+
+        Integer bgImageGrayscale = formBlock.getBgImageGrayscale();
+        if (bgImageGrayscale == null) {
+            bgImageGrayscale = 0;
+        }
+        if (bgImageGrayscale < 0) {
+            bgImageGrayscale = 0;
+        }
+        if (bgImageGrayscale > 100) {
+            bgImageGrayscale = 100;
+        }
+        block.setBgImageGrayscale(bgImageGrayscale);
+
+
+        // ============================================================
         // IMMAGINE DI SFONDO DELLA RIGA
         // ============================================================
 
         if (removeBackgroundImage) {
-            deleteUploadedFile(block.getBackgroundImageUrl());
-            block.setBackgroundImageUrl(null);
-        } else if (backgroundImageFile != null && !backgroundImageFile.isEmpty()) {
-            String oldBackgroundImageUrl = block.getBackgroundImageUrl();
-            String backgroundImageUrl = saveUploadedFile(backgroundImageFile);
+
+            deleteUploadedFile(
+                    block.getBackgroundImageUrl()
+            );
+
+            block.setBackgroundImageUrl(
+                    null
+            );
+
+        } else if (backgroundImageFile != null
+                && !backgroundImageFile.isEmpty()) {
+
+            String oldBackgroundImageUrl =
+                    block.getBackgroundImageUrl();
+
+            String backgroundImageUrl =
+                    saveUploadedFile(
+                            backgroundImageFile
+                    );
+
             if (backgroundImageUrl != null) {
-                deleteUploadedFile(oldBackgroundImageUrl);
-                block.setBackgroundImageUrl(backgroundImageUrl);
+
+                deleteUploadedFile(
+                        oldBackgroundImageUrl
+                );
+
+                block.setBackgroundImageUrl(
+                        backgroundImageUrl
+                );
             }
         }
-
-        
 
 
         boolean imageAllowed =

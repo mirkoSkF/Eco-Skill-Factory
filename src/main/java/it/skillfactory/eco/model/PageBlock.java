@@ -32,6 +32,11 @@ public class PageBlock {
 
     private String backgroundImageUrl;
 
+    // Regolazioni avanzate per l'immagine di sfondo
+    private Integer bgImageOpacity = 100;
+    private Integer bgImageSaturation = 100;
+    private Integer bgImageGrayscale = 0;
+
     private boolean draft = true; // Default: Inserita come Bozza
 
     @Lob
@@ -74,6 +79,15 @@ public class PageBlock {
 
     public String getBackgroundImageUrl() { return backgroundImageUrl; }
     public void setBackgroundImageUrl(String backgroundImageUrl) { this.backgroundImageUrl = backgroundImageUrl; }
+
+    public Integer getBgImageOpacity() { return bgImageOpacity; }
+    public void setBgImageOpacity(Integer bgImageOpacity) { this.bgImageOpacity = bgImageOpacity; }
+
+    public Integer getBgImageSaturation() { return bgImageSaturation; }
+    public void setBgImageSaturation(Integer bgImageSaturation) { this.bgImageSaturation = bgImageSaturation; }
+
+    public Integer getBgImageGrayscale() { return bgImageGrayscale; }
+    public void setBgImageGrayscale(Integer bgImageGrayscale) { this.bgImageGrayscale = bgImageGrayscale; }
 
     public boolean isDraft() { return draft; }
     public void setDraft(boolean draft) { this.draft = draft; }

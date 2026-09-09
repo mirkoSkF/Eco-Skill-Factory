@@ -1,146 +1,171 @@
 package it.skillfactory.eco.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.sksamuel.scrimage.ImmutableImage;
+import com.sksamuel.scrimage.webp.WebpWriter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.io.InputStream;
 
 @Controller
 public class ImageConverterController {
 
-    // Recupera il percorso della directory di upload (uguale a /api/uploads/immagine)
-    @Value("${upload.directory:uploads/}")
-    private String uploadDirectory;
-
+    /**
+     * Pagina del convertitore immagini.
+     * URL: /admin/image-converter
+     */
     @GetMapping("/admin/image-converter")
-    public String showConverterPage(Model model) {
-        model.addAttribute("activeMenu", "image-converter");
+    public String showConverterPage() {
         return "admin/image-converter";
     }
 
+    /**
+     * Conversione e ridimensionamento immagine.
+     * Endpoint: POST /api/tools/convert-image
+     */
     @PostMapping("/api/tools/convert-image")
     @ResponseBody
-    public ResponseEntity<?> convertImage(
+    public ResponseEntity<byte[]> convertImage(
             @RequestParam("file") MultipartFile file,
             @RequestParam("targetFormat") String targetFormat,
-            @RequestParam("width") Integer width,
-            @RequestParam("height") Integer height,
-            @RequestParam(value = "saveToServer", defaultValue = "false") boolean saveToServer
-    ) {
-        try {
-            if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("File non presente");
-            }
+            @RequestParam("width") int width,
+            @RequestParam("height") int height) {
 
-            BufferedImage originalImage = ImageIO.read(file.getInputStream());
-            if (originalImage == null) {
-                return ResponseEntity.badRequest().body("Formato immagine non valido");
-            }
+        // ---------------------------------------------------------
+        // VALIDAZIONE FILE E DIMENSIONI
+        // ---------------------------------------------------------
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-            int finalWidth = (width != null && width > 0) ? width : originalImage.getWidth();
-            int finalHeight = (height != null && height > 0) ? height : originalImage.getHeight();
+        if (width <= 0 || height <= 0 || width > 10000 || height > 10000) {
+            return ResponseEntity.badRequest().build();
+        }
 
-            int imageType = "jpg".equalsIgnoreCase(targetFormat) || "jpeg".equalsIgnoreCase(targetFormat)
-                    ? BufferedImage.TYPE_INT_RGB 
-                    : BufferedImage.TYPE_INT_ARGB;
+        // ---------------------------------------------------------
+        // NORMALIZZAZIONE FORMATO
+        // ---------------------------------------------------------
+        String format = targetFormat == null ? "" : targetFormat.toLowerCase().trim();
 
-            BufferedImage resizedImage = new BufferedImage(finalWidth, finalHeight, imageType);
-            Graphics2D g2d = resizedImage.createGraphics();
+        if ("jpeg".equals(format)) {
+            format = "jpg";
+        }
 
-            if (imageType == BufferedImage.TYPE_INT_RGB) {
-                g2d.setColor(java.awt.Color.WHITE);
-                g2d.fillRect(0, 0, finalWidth, finalHeight);
-            }
+        if (!format.equals("webp") && !format.equals("png") && !format.equals("jpg") && !format.equals("gif") && !format.equals("bmp")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
-            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            g2d.drawImage(originalImage, 0, 0, finalWidth, finalHeight, null);
-            g2d.dispose();
+        // Uso del try-with-resources per CHIUDERE AUTOMATICAMENTE lo stream di input del file
+        try (InputStream inputStream = file.getInputStream()) {
 
-            String formatName = targetFormat.toLowerCase();
-            if ("jpg".equals(formatName)) formatName = "jpeg";
+            byte[] imageBytes;
 
-            // CASO A: Salvataggio direttamente sul Server
-            if (saveToServer) {
-                Path uploadPath = Paths.get(uploadDirectory);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
+            // -----------------------------------------------------
+            // 1. CARICAMENTO E RIDIMENSIONAMENTO CON UNIFICATO CON SCRIMAGE
+            // Scrimage legge in nativo sia WebP che PNG, JPG, GIF e BMP
+            // -----------------------------------------------------
+            ImmutableImage image = ImmutableImage.loader()
+                    .fromStream(inputStream)
+                    .resizeTo(width, height);
+
+            // -----------------------------------------------------
+            // 2. SCRITTURA NEL FORMATO TARGET
+            // -----------------------------------------------------
+            if ("webp".equals(format)) {
+                
+                // Conversione in formato WebP via Scrimage
+                imageBytes = image.bytes(WebpWriter.DEFAULT);
+
+            } else {
+                
+                // Estragga l'immagine AWT gestita da Scrimage per gli altri formati
+                BufferedImage resizedImage = image.awt();
+                boolean supportsAlpha = format.equals("png") || format.equals("gif");
+
+                // Se la destinazione non supporta l'alfa (es. JPG), imposta sfondo bianco per evitare artefatti neri
+                if (!supportsAlpha && resizedImage.getColorModel().hasAlpha()) {
+                    BufferedImage rgbImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                    Graphics2D g2d = rgbImage.createGraphics();
+                    try {
+                        g2d.setColor(Color.WHITE);
+                        g2d.fillRect(0, 0, width, height);
+                        g2d.drawImage(resizedImage, 0, 0, null);
+                    } finally {
+                        g2d.dispose();
+                    }
+                    resizedImage = rgbImage;
                 }
 
-                String newFilename = UUID.randomUUID().toString() + "." + targetFormat.toLowerCase();
-                File destFile = uploadPath.resolve(newFilename).toFile();
+                // Scrittura stream di output mediante ImageIO
+                try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                    boolean written = ImageIO.write(resizedImage, format, baos);
 
-                boolean written = ImageIO.write(resizedImage, formatName, destFile);
-                if (!written) {
-                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("Formato non supportato");
+                    if (!written) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                    }
+
+                    imageBytes = baos.toByteArray();
                 }
-
-                // Genera la risposta JSON con l'URL statico del file salvato
-                Map<String, Object> response = new HashMap<>();
-                response.put("success", true);
-                response.put("location", "/uploads/" + newFilename);
-                response.put("filename", newFilename);
-
-                return ResponseEntity.ok(response);
-            } 
-            
-            // CASO B: Download immediato nel browser
-            else {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                boolean written = ImageIO.write(resizedImage, formatName, baos);
-                if (!written) {
-                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
-                }
-
-                byte[] imageBytes = baos.toByteArray();
-                String originalFilename = file.getOriginalFilename();
-                String baseName = (originalFilename != null && originalFilename.contains(".")) 
-                        ? originalFilename.substring(0, originalFilename.lastIndexOf('.')) 
-                        : "immagine_convertita";
-                String downloadFilename = baseName + "_resized." + targetFormat.toLowerCase();
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(getMediaTypeForFormat(targetFormat));
-                headers.setContentDispositionFormData("attachment", downloadFilename);
-
-                return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
             }
+
+            if (imageBytes == null || imageBytes.length == 0) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
+            // -----------------------------------------------------
+            // 3. CONTENT TYPE E HEADERS HTTP
+            // -----------------------------------------------------
+            MediaType mediaType;
+            switch (format) {
+                case "png":
+                    mediaType = MediaType.IMAGE_PNG;
+                    break;
+                case "jpg":
+                    mediaType = MediaType.IMAGE_JPEG;
+                    break;
+                case "gif":
+                    mediaType = MediaType.IMAGE_GIF;
+                    break;
+                case "webp":
+                    mediaType = MediaType.parseMediaType("image/webp");
+                    break;
+                case "bmp":
+                    mediaType = MediaType.parseMediaType("image/bmp");
+                    break;
+                default:
+                    mediaType = MediaType.APPLICATION_OCTET_STREAM;
+                    break;
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(mediaType);
+            headers.setContentLength(imageBytes.length);
+            headers.setContentDispositionFormData("attachment", "converted_image." + format);
+
+            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
 
         } catch (IOException e) {
+            System.err.println("Errore I/O durante la conversione dell'immagine:");
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore salvataggio file");
-        }
-    }
-
-    private MediaType getMediaTypeForFormat(String format) {
-        switch (format.toLowerCase()) {
-            case "png": return MediaType.IMAGE_PNG;
-            case "gif": return MediaType.IMAGE_GIF;
-            case "webp": return MediaType.parseMediaType("image/webp");
-            case "jpg":
-            case "jpeg": 
-            default: return MediaType.IMAGE_JPEG;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (Exception e) {
+            System.err.println("Errore inatteso durante la conversione dell'immagine:");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

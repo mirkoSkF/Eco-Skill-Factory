@@ -19,50 +19,37 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 @Controller
 public class ImageConverterController {
 
-    /**
-     * Pagina del convertitore immagini.
-     * URL: /admin/image-converter
-     */
     @GetMapping("/admin/image-converter")
     public String showConverterPage() {
         return "admin/image-converter";
     }
 
-    /**
-     * Conversione e ridimensionamento immagine.
-     * Endpoint: POST /api/tools/convert-image
-     */
     @PostMapping("/api/tools/convert-image")
     @ResponseBody
     public ResponseEntity<byte[]> convertImage(
             @RequestParam("file") MultipartFile file,
             @RequestParam("targetFormat") String targetFormat,
             @RequestParam("width") int width,
-            @RequestParam("height") int height) {
+            @RequestParam("height") int height,
+            @RequestParam(value = "cropX", required = false, defaultValue = "-1") int cropX,
+            @RequestParam(value = "cropY", required = false, defaultValue = "-1") int cropY,
+            @RequestParam(value = "cropWidth", required = false, defaultValue = "-1") int cropW,
+            @RequestParam(value = "cropHeight", required = false, defaultValue = "-1") int cropH) {
 
-        // ---------------------------------------------------------
-        // VALIDAZIONE FILE E DIMENSIONI
-        // ---------------------------------------------------------
         if (file == null || file.isEmpty() || width <= 0 || height <= 0 || width > 10000 || height > 10000) {
             return ResponseEntity.badRequest().build();
         }
 
-        // ---------------------------------------------------------
-        // NORMALIZZAZIONE E VALIDAZIONE FORMATO TARGET
-        // ---------------------------------------------------------
         String format = targetFormat == null ? "" : targetFormat.toLowerCase().trim();
-
         if ("jpeg".equals(format)) {
             format = "jpg";
         }
 
-        // Accetta esclusivamente WebP, PNG, JPG e GIF
         if (!format.equals("webp") && !format.equals("png") && !format.equals("jpg") && !format.equals("gif")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -71,18 +58,13 @@ public class ImageConverterController {
             byte[] rawBytes = file.getBytes();
             ImmutableImage image = null;
 
-            // -----------------------------------------------------
-            // 1. CARICAMENTO E SCALING DIRETTO CON scaleTo (SOLUZIONE 1)
-            // scaleTo adatta l'immagine esattamente a width e height senza aggiungere bordi
-            // -----------------------------------------------------
             try (InputStream is = new ByteArrayInputStream(rawBytes)) {
-                image = ImmutableImage.loader().fromStream(is).scaleTo(width, height);
+                image = ImmutableImage.loader().fromStream(is);
             } catch (Exception e) {
-                // Fallback con ImageIO per casi o formati specifici non letti al primo colpo
                 try (InputStream isFallback = new ByteArrayInputStream(rawBytes)) {
                     BufferedImage bufferedImg = ImageIO.read(isFallback);
                     if (bufferedImg != null) {
-                        image = ImmutableImage.fromAwt(bufferedImg).scaleTo(width, height);
+                        image = ImmutableImage.fromAwt(bufferedImg);
                     }
                 }
             }
@@ -91,19 +73,30 @@ public class ImageConverterController {
                 return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
             }
 
-            // -----------------------------------------------------
-            // 2. SCRITTURA NEL FORMATO DI DESTINAZIONE
-            // -----------------------------------------------------
-            byte[] imageBytes;
+            // 1. Ritaglio (Crop) usando subimage (compatibile con Scrimage 4+)
+            if (cropX >= 0 && cropY >= 0 && cropW > 0 && cropH > 0) {
+                // Assicuriamoci che i limiti non eccedano le dimensioni reali dell'immagine
+                int validX = Math.min(cropX, image.width - 1);
+                int validY = Math.min(cropY, image.height - 1);
+                int validW = Math.min(cropW, image.width - validX);
+                int validH = Math.min(cropH, image.height - validY);
 
+                if (validW > 0 && validH > 0) {
+                    image = image.subimage(validX, validY, validW, validH);
+                }
+            }
+
+            // 2. Ridimensionamento (Scale)
+            image = image.scaleTo(width, height);
+
+            // 3. Generazione Output
+            byte[] imageBytes;
             if ("webp".equals(format)) {
                 imageBytes = image.bytes(WebpWriter.DEFAULT);
             } else {
                 BufferedImage resizedImage = image.awt();
                 boolean supportsAlpha = format.equals("png") || format.equals("gif");
 
-                // Se il formato di destinazione non supporta la trasparenza (es. JPG),
-                // applichiamo lo sfondo bianco sull'immagine già scalata a dimensione esatta.
                 if (!supportsAlpha && resizedImage.getColorModel().hasAlpha()) {
                     BufferedImage rgbImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
                     Graphics2D g2d = rgbImage.createGraphics();
@@ -130,27 +123,13 @@ public class ImageConverterController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
 
-            // -----------------------------------------------------
-            // 3. GENERAZIONE HEADERS HTTP E CONTENT TYPE
-            // -----------------------------------------------------
-            MediaType mediaType;
-            switch (format) {
-                case "png":
-                    mediaType = MediaType.IMAGE_PNG;
-                    break;
-                case "jpg":
-                    mediaType = MediaType.IMAGE_JPEG;
-                    break;
-                case "gif":
-                    mediaType = MediaType.IMAGE_GIF;
-                    break;
-                case "webp":
-                    mediaType = MediaType.parseMediaType("image/webp");
-                    break;
-                default:
-                    mediaType = MediaType.APPLICATION_OCTET_STREAM;
-                    break;
-            }
+            MediaType mediaType = switch (format) {
+                case "png" -> MediaType.IMAGE_PNG;
+                case "jpg" -> MediaType.IMAGE_JPEG;
+                case "gif" -> MediaType.IMAGE_GIF;
+                case "webp" -> MediaType.parseMediaType("image/webp");
+                default -> MediaType.APPLICATION_OCTET_STREAM;
+            };
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(mediaType);
@@ -159,12 +138,7 @@ public class ImageConverterController {
 
             return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
 
-        } catch (IOException e) {
-            System.err.println("Errore I/O durante la conversione dell'immagine:");
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (Exception e) {
-            System.err.println("Errore inatteso durante la conversione dell'immagine:");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

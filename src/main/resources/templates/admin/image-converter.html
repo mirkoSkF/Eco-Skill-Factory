@@ -21,6 +21,9 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    <!-- CROPPER JS CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+
     <style>
 
         /* =========================================================
@@ -570,6 +573,15 @@
             }
         }
 
+        /* CROPPER OVERRIDES PER DARK THEME */
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 0.25rem;
+        }
+        .cropper-line, .cropper-point {
+            background-color: var(--brand-primary);
+        }
+
     </style>
 </head>
 
@@ -709,7 +721,8 @@
                             <option value="gif">
                                 GIF (Animazioni / Grafica)
                             </option>
-                            
+
+
                         </select>
 
                     </div>
@@ -791,6 +804,27 @@
                     </div>
 
 
+                    <!-- RITAGLIO IMMAGINE (CROP) -->
+
+                    <div class="form-check form-switch mb-3">
+
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="enableCropSwitch"
+                               onchange="toggleCropMode(this.checked)">
+
+                        <label class="form-check-label text-info"
+                               for="enableCropSwitch">
+
+                            <i class="bi bi-crop me-1"></i>
+
+                            Attiva Ritaglio (Crop)
+
+                        </label>
+
+                    </div>
+
+
                     <!-- DIMENSIONI -->
 
                     <div class="row g-2 mb-4">
@@ -866,11 +900,34 @@
                 <div class="card card-custom p-4 h-100">
 
 
-                    <h4 class="mb-3 text-info fw-bold">
+                    <h4 class="mb-3 text-info fw-bold d-flex justify-content-between align-items-center">
 
-                        <i class="bi bi-image me-2"></i>
+                        <span>
+                            <i class="bi bi-image me-2"></i>
+                            Anteprima Immagine
+                        </span>
 
-                        Anteprima Immagine
+                        <!-- CONTROLLI CROPPER JS -->
+
+                        <div id="cropControls" class="btn-group btn-group-sm" style="display: none;">
+
+                            <button type="button" class="btn btn-outline-info" onclick="resetCrop()" title="Ripristina Ritaglio">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-outline-info" onclick="setCropRatio(1)" title="1:1 Quadrato">
+                                1:1
+                            </button>
+
+                            <button type="button" class="btn btn-outline-info" onclick="setCropRatio(16/9)" title="16:9 Wide">
+                                16:9
+                            </button>
+
+                            <button type="button" class="btn btn-outline-info" onclick="setCropRatio(NaN)" title="Libero">
+                                Libero
+                            </button>
+
+                        </div>
 
                     </h4>
 
@@ -1063,6 +1120,16 @@
 
                     document.getElementById('imageInfo').style.display =
                         'block';
+
+                    /* Reset eventuale Cropper precedentemente attivo */
+                    if (cropper) {
+                        cropper.destroy();
+                        cropper = null;
+                    }
+
+                    if (document.getElementById('enableCropSwitch').checked) {
+                        initCropper();
+                    }
                 };
             };
 
@@ -1332,6 +1399,22 @@
             );
 
 
+            /* INVIO PARAMETRI CROP IN CASO DI ATTIVAZIONE */
+
+            if (cropper && document.getElementById('enableCropSwitch').checked) {
+
+                const cropData = cropper.getData(true);
+
+                formData.append('cropX', cropData.x);
+
+                formData.append('cropY', cropData.y);
+
+                formData.append('cropWidth', cropData.width);
+
+                formData.append('cropHeight', cropData.height);
+            }
+
+
             /* Chiamata API */
 
             fetch(
@@ -1396,6 +1479,133 @@
 
         }
     );
+
+</script>
+
+
+<!-- =========================================================
+     CROPPER JS & LOGICA CROP
+========================================================= -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+<script>
+
+    let cropper = null;
+
+
+    function initCropper() {
+
+        const img = document.getElementById('imagePreview');
+
+        if (!img || !img.src || img.style.display === 'none') {
+            return;
+        }
+
+
+        if (cropper) {
+            cropper.destroy();
+        }
+
+
+        cropper = new Cropper(img, {
+
+            viewMode: 1,
+
+            autoCropArea: 0.8,
+
+            responsive: true,
+
+            crop(event) {
+
+                const detail = event.detail;
+
+                /* Se l'utente sta usando il crop, aggiorniamo le dimensioni finali di output */
+
+                if (document.getElementById('enableCropSwitch').checked) {
+
+                    const unit = document.querySelector('input[name="unitType"]:checked').value;
+
+                    let cropW = Math.round(detail.width);
+
+                    let cropH = Math.round(detail.height);
+
+
+                    if (unit === '%') {
+
+                        document.getElementById('imgWidth').value = Math.round((cropW / originalWidth) * 100);
+
+                        document.getElementById('imgHeight').value = Math.round((cropH / originalHeight) * 100);
+
+                    } else {
+
+                        document.getElementById('imgWidth').value = cropW;
+
+                        document.getElementById('imgHeight').value = cropH;
+
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        document.getElementById('cropControls').style.display = 'inline-flex';
+
+    }
+
+
+    function toggleCropMode(enabled) {
+
+        if (enabled) {
+
+            initCropper();
+
+        } else {
+
+            if (cropper) {
+
+                cropper.destroy();
+
+                cropper = null;
+
+            }
+
+            document.getElementById('cropControls').style.display = 'none';
+
+            /* Ripristina i valori di input originali */
+
+            document.getElementById('imgWidth').value = originalWidth;
+
+            document.getElementById('imgHeight').value = originalHeight;
+
+        }
+
+    }
+
+
+    function resetCrop() {
+
+        if (cropper) {
+
+            cropper.reset();
+
+        }
+
+    }
+
+
+    function setCropRatio(ratio) {
+
+        if (cropper) {
+
+            cropper.setAspectRatio(ratio);
+
+        }
+
+    }
 
 </script>
 

@@ -5,271 +5,235 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-	<link th:if="${navbarSettings != null and navbarSettings.faviconUrl != null and !#strings.isEmpty(navbarSettings.faviconUrl)}" 
-      rel="icon" th:href="${navbarSettings.faviconUrl}">
+    <link th:if="${navbarSettings != null and navbarSettings.faviconUrl != null and !#strings.isEmpty(navbarSettings.faviconUrl)}" 
+          rel="icon" th:href="${navbarSettings.faviconUrl}">
     <title>Eco Skill Factory</title>
 
+    <!-- ========================================================
+         PRELOAD FONTS (Soluzione per il caricamento lento)
+         ======================================================== -->
+    <link rel="preload" href="/fonts/NeueHaasDisplayRoman.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/NeueHaasDisplayBold.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- ========================================================
          GOOGLE FONTS
          ======================================================== -->
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
-          rel="stylesheet">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <!-- ========================================================
          BOOTSTRAP
          ======================================================== -->
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <!-- ========================================================
          CSS
          ======================================================== -->
-
     <style>
 
         :root {
-
             --brand-primary: #00dc82;
-
             --brand-primary-hover: #00b368;
-
             --brand-dark: #0f172a;
-
         }
 
+        /* ========================================================
+           CONTENUTI TINYMCE (Font ottimizzati con .woff2)
+           ======================================================== */
+        @font-face {
+            font-family: 'Neue Haas Grotesk Display Pro';
+            src: url('/fonts/NeueHaasDisplayRoman.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Neue Haas Grotesk Display Pro';
+            src: url('/fonts/NeueHaasDisplayRomanItalic.woff2') format('woff2');
+            font-weight: 400;
+            font-style: italic;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Neue Haas Grotesk Display Pro';
+            src: url('/fonts/NeueHaasDisplayMedium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Neue Haas Grotesk Display Pro';
+            src: url('/fonts/NeueHaasDisplayBold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        .tinymce-content {
+            font-family: 'Neue Haas Grotesk Display Pro', Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #ffffff !important;
+        }
+        .tinymce-content p {
+            font-size: 18px;
+            color: #ffffff !important;
+        }
+        .tinymce-content h1,
+        .tinymce-content h2,
+        .tinymce-content h3,
+        .tinymce-content h4,
+        .tinymce-content h5,
+        .tinymce-content h6 {
+            color: #ffffff !important;
+        }
+        .tinymce-content a {
+            color: #36e4da !important;
+        }
+        .tinymce-content img {
+            max-width: 100%;
+            height: auto;
+        }
+        .tinymce-content figure.image.align-left {
+            float: left;
+            margin: 0 15px 10px 0;
+        }
+        .tinymce-content figure.image.align-center {
+            display: block;
+            text-align: center;
+            margin: 10px auto;
+        }
+        .tinymce-content figure.image.align-right {
+            float: right;
+            margin: 0 0 10px 15px;
+        }
+        .tinymce-content figure.image {
+            display: inline-block;
+            margin: 0 2px 0 1px;
+        }
+        .tinymce-content figure.image img {
+            max-width: 100%;
+            height: auto;
+        }
+        .tinymce-content::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
 
         /* ========================================================
            BODY
            ======================================================== */
-
         body {
-
             font-family: 'Plus Jakarta Sans', sans-serif;
-
             color: #334155;
-
             background-color: #080c14;
-
             min-height: 100vh;
-
             overflow-x: hidden;
-
             position: relative;
-
         }
-
 
         /* ========================================================
            SFONDO TECNOLOGICO
            ======================================================== */
-
         #tech-bg-canvas {
-
             position: fixed;
-
             top: 0;
-
             left: 0;
-
             width: 100vw;
-
             height: 100vh;
-
             z-index: -1;
-
             pointer-events: none;
-
         }
-
 
         /* ========================================================
            HEADER & NAVBAR
            ======================================================== */
-
         .glass-header {
-
             position: sticky;
-
             top: 0;
-
             z-index: 1030;
-
             background: rgba(15, 23, 42, 0.75) !important;
-
             backdrop-filter: blur(12px);
-
             -webkit-backdrop-filter: blur(12px);
-
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
         }
-
 
         .brand-text {
-
-            background: linear-gradient(
-                135deg,
-                #ffffff 0%,
-                #cbd5e1 100%
-            );
-
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
             -webkit-background-clip: text;
-
             -webkit-text-fill-color: transparent;
-
             letter-spacing: -0.5px;
-
         }
-
 
         .brand-accent {
-
-            background: linear-gradient(
-                135deg,
-                #00dc82 0%,
-                #36e4da 100%
-            );
-
+            background: linear-gradient(135deg, #00dc82 0%, #36e4da 100%);
             -webkit-background-clip: text;
-
             -webkit-text-fill-color: transparent;
-
         }
-
 
         .navbar-nav .nav-link {
-
             position: relative;
-
             transition: color 0.3s ease, transform 0.2s ease;
-
             font-weight: 500;
-
         }
-
 
         .navbar-nav .nav-link::after {
-
             content: '';
-
             position: absolute;
-
             bottom: 0;
-
             left: 50%;
-
             width: 0;
-
             height: 2px;
-
-            background: linear-gradient(
-                90deg,
-                #00dc82,
-                #36e4da
-            );
-
+            background: linear-gradient(90deg, #00dc82, #36e4da);
             transition: width 0.3s ease, left 0.3s ease;
-
             border-radius: 2px;
-
         }
-
 
         .navbar-nav .nav-link:hover {
-
             color: #00dc82 !important;
-
             opacity: 1 !important;
-
             transform: translateY(-1px);
-
         }
-
 
         .navbar-nav .nav-link:hover::after {
-
             width: 80%;
-
             left: 10%;
-
         }
-
 
         .dropdown-menu-dark .dropdown-item {
-
-            transition:
-                background-color 0.25s ease,
-                color 0.25s ease,
-                padding-left 0.25s ease;
-
+            transition: background-color 0.25s ease, color 0.25s ease, padding-left 0.25s ease;
             border-radius: 0.375rem;
-
         }
-
 
         .dropdown-menu-dark .dropdown-item:hover {
-
             background-color: rgba(0, 220, 130, 0.15) !important;
-
             color: #00dc82 !important;
-
             padding-left: 1.5rem;
-
         }
-
 
         /* ========================================================
            CONTENITORE BLOCCO
            ======================================================== */
-
         .block-container {
-
             display: flex !important;
-
             flex-direction: column !important;
-
             justify-content: flex-start !important;
-
             position: relative !important;
-
             width: 100% !important;
-
             box-sizing: border-box !important;
-
             transition: background-color 0.3s ease;
-
             margin-top: 0 !important;
-
             margin-bottom: 0 !important;
-
         }
-
-
-
 
         /* ========================================================
            IMMAGINE DI SFONDO DEL BLOCCO
            ======================================================== */
-
         .block-container.has-background-image::before {
             content: '';
             position: absolute;
@@ -290,755 +254,413 @@
         }
 
         .block-container[style*="height"]:not([style*="height:auto"]):not([style*="height: auto"]) {
-
             padding-top: 0 !important;
-
             padding-bottom: 0 !important;
-
             margin-top: 0 !important;
-
             margin-bottom: 0 !important;
-
         }
-
 
         .block-container > div {
-
             height: 100% !important;
-
         }
-
 
         /* ========================================================
            RESPONSIVITÀ PER MEDIA DINAMICI INIETTATI
            ======================================================== */
-
         .custom-jumbotron img,
         .card-text img,
         .carousel-caption-custom img,
         iframe, video, embed {
-
             max-width: 100% !important;
-
             height: auto !important;
-
         }
-
 
         .custom-jumbotron table,
         .card-text table,
         .carousel-caption-custom table {
-
             display: block;
-
             width: 100% !important;
-
             overflow-x: auto;
-
             -webkit-overflow-scrolling: touch;
-
         }
-
 
         .custom-jumbotron pre,
         .card-text pre,
         .carousel-caption-custom pre {
-
             max-width: 100%;
-
             overflow-x: auto;
-
             white-space: pre-wrap;
-
             word-break: break-word;
-
         }
-
 
         /* ========================================================
            JUMBOTRON
            ======================================================== */
-
         .custom-jumbotron {
-
             background: transparent !important;
-
             backdrop-filter: none !important;
-
             -webkit-backdrop-filter: none !important;
-
             border: none !important;
-
             color: #f1f5f9;
-
             box-shadow: none !important;
-
             word-wrap: break-word;
-
             overflow-wrap: break-word;
-
         }
-
 
         /* ========================================================
            CARD
            ======================================================== */
-
         .card-custom {
-
             border: none !important;
-
             border-radius: 1.25rem;
-
             background: transparent;
-
             backdrop-filter: none !important;
-
             -webkit-backdrop-filter: none !important;
-
             color: #f1f5f9;
-
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-
             box-shadow: none !important;
-
             word-wrap: break-word;
-
         }
-
 
         .card-custom:hover {
-
             transform: translateY(-8px);
-
             box-shadow: none !important;
-
             border-color: transparent !important;
-
         }
-
 
         .card-custom .card-title {
-
             color: #ffffff !important;
-
             font-size: clamp(1.2rem, 2vw, 1.5rem);
-
         }
-
 
         .card-custom .card-text {
-
             color: #cbd5e1 !important;
-
         }
-
 
         /* ========================================================
            IMMAGINE CARD RESPONSIVE
            ======================================================== */
-
         .card-img-wrapper {
-
             position: relative;
-
             overflow: hidden;
-
             border-radius: 1.25rem;
-
             width: 100%;
-
         }
 
-
         .card-img-wrapper img {
-
             transition: transform 0.5s ease;
-
             width: 100%;
-
             object-fit: cover;
-
         }
 
         .card-img-responsive {
-
             height: clamp(220px, 30vh, 400px);
-
         }
-
 
         .card-custom:hover .card-img-wrapper img {
-
             transform: scale(1.05);
-
         }
-
 
         /* ========================================================
            BOTTONE CARD
            ======================================================== */
-
         .btn-card-link {
-
             display: inline-flex;
-
             align-items: center;
-
             justify-content: center;
-
             gap: 0.45rem;
-
             padding: 0.55rem 1rem;
-
             border: 1px solid rgba(0, 220, 130, 0.45);
-
             border-radius: 999px;
-
             background: rgba(0, 220, 130, 0.08);
-
             color: #00dc82 !important;
-
             font-size: 0.82rem;
-
             font-weight: 600;
-
             text-decoration: none;
-
-            transition:
-                background 0.25s ease,
-                border-color 0.25s ease,
-                color 0.25s ease,
-                transform 0.25s ease;
-
+            transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
             max-width: 100%;
-
         }
-
 
         .btn-card-link:hover {
-
             background: #00dc82;
-
             border-color: #00dc82;
-
             color: #0f172a !important;
-
             transform: translateY(-1px);
-
         }
-
 
         .btn-card-link i {
-
             font-size: 1.05rem;
-
             transition: transform 0.25s ease;
-
         }
-
 
         .btn-card-link:hover i {
-
             transform: translateX(3px);
-
         }
-
 
         /* ========================================================
            CAROSELLO
            ======================================================== */
-
         .carousel-custom {
-
             border-radius: 1.5rem;
-
             box-shadow: none !important;
-
             border: none !important;
-
             background: transparent !important;
-
             width: 100%;
-
         }
-
 
         .carousel-item {
-
             position: relative;
-
         }
-
 
         .carousel-item img {
-
             display: block;
-
             width: 100%;
-
             object-fit: cover;
-
             height: clamp(300px, 45vh, 550px);
-
             filter: brightness(0.85);
-
             border-radius: 1.5rem;
-
         }
-
 
         /* ========================================================
            CAPTION
            ======================================================== */
-
         .carousel-caption-custom {
-
             background: rgba(15, 23, 42, 0.82);
-
             backdrop-filter: blur(16px);
-
             -webkit-backdrop-filter: blur(16px);
-
             border: 1px solid rgba(255, 255, 255, 0.14);
-
             border-radius: 1rem;
-
             padding: 1.5rem 1.75rem;
-
             bottom: 2rem;
-
             left: 5%;
-
             right: 5%;
-
             width: auto;
-
             pointer-events: none;
-
             z-index: 10;
-
             word-wrap: break-word;
-
         }
-
 
         .carousel-caption-custom h2 {
-
-            font-size: clamp(
-                1.3rem,
-                3vw,
-                2.2rem
-            );
-
+            font-size: clamp(1.3rem, 3vw, 2.2rem);
         }
-
 
         .carousel-caption-custom p {
-
             margin-bottom: 0.5rem;
-
         }
-
 
         /* ========================================================
            BOTTONE CAROSELLO
            ======================================================== */
-
         .carousel-button {
-
             display: inline-flex;
-
             align-items: center;
-
             gap: 0.4rem;
-
             margin-top: 1rem;
-
             padding: 0.55rem 1rem;
-
             border: 1px solid rgba(255, 255, 255, 0.35);
-
             border-radius: 999px;
-
             background: rgba(0, 0, 0, 0.25);
-
             color: #ffffff !important;
-
             font-size: 0.82rem;
-
             font-weight: 600;
-
             text-decoration: none;
-
             backdrop-filter: blur(8px);
-
             -webkit-backdrop-filter: blur(8px);
-
             pointer-events: auto;
-
             position: relative;
-
             z-index: 11;
-
             cursor: pointer;
-
-            transition:
-                background 0.25s ease,
-                border-color 0.25s ease,
-                transform 0.25s ease,
-                color 0.25s ease;
-
+            transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease, color 0.25s ease;
         }
-
 
         .carousel-button:hover {
-
             background: rgba(0, 220, 130, 0.9);
-
             border-color: #00dc82;
-
             color: #0f172a !important;
-
             transform: translateY(-1px);
-
         }
-
 
         .carousel-button i {
-
             transition: transform 0.25s ease;
-
         }
-
 
         .carousel-button:hover i {
-
             transform: translateX(3px);
-
         }
-
 
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
-
             background-size: 60% 60%;
-
         }
-
 
         /* ========================================================
            HERO FALLBACK
            ======================================================== */
-
         .hero-fallback {
-
             background: transparent !important;
-
             backdrop-filter: none !important;
-
             border: none !important;
-
             border-radius: 2rem;
-
             color: #ffffff;
-
             box-shadow: none !important;
-
         }
-
 
         /* ========================================================
            BOTTONE BRAND
            ======================================================== */
-
         .btn-brand {
-
-            background: linear-gradient(
-                135deg,
-                #00dc82 0%,
-                #00b368 100%
-            );
-
+            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
             color: #0f172a;
-
             font-weight: 700;
-
             border: none;
-
             border-radius: 0.75rem;
-
             padding: 0.75rem 1.5rem;
-
             transition: all 0.3s ease;
-
             box-shadow: 0 4px 12px rgba(0, 220, 130, 0.25);
-
         }
-
 
         .btn-brand:hover {
-
             transform: translateY(-2px);
-
             box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
-
             color: #0f172a;
-
         }
-
 
         /* ========================================================
            BOTTONE TORNA SU
            ======================================================== */
-
         .btn-back-to-top {
-
             position: fixed;
-
             bottom: 30px;
-
             right: 30px;
-
             width: 48px;
-
             height: 48px;
-
             border-radius: 50%;
-
-            background: linear-gradient(
-                135deg,
-                #00dc82 0%,
-                #00b368 100%
-            );
-
+            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
             color: #0f172a;
-
             border: none;
-
             outline: none;
-
             box-shadow: 0 4px 15px rgba(0, 220, 130, 0.4);
-
             cursor: pointer;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             font-size: 1.5rem;
-
             z-index: 9999;
-
             opacity: 0;
-
             visibility: hidden;
-
             transform: translateY(20px);
-
-            transition:
-                opacity 0.3s ease,
-                visibility 0.3s ease,
-                transform 0.3s ease,
-                box-shadow 0.3s ease;
-
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
-
 
         .btn-back-to-top.show {
-
             opacity: 1;
-
             visibility: visible;
-
             transform: translateY(0);
-
         }
-
 
         .btn-back-to-top:hover {
-
             transform: translateY(-3px);
-
             box-shadow: 0 6px 20px rgba(0, 220, 130, 0.6);
-
             color: #0f172a;
-
         }
-
 
         /* ========================================================
            RESPONSIVE TABLET & MOBILE (991.98px and below)
            ======================================================== */
-
         @media (max-width: 991.98px) {
-
             .block-container {
-
                 height: auto !important;
-
                 min-height: auto !important;
-
                 padding-top: 1.5rem !important;
-
                 padding-bottom: 1.5rem !important;
-
             }
-
 
             .block-container > div,
             .custom-jumbotron,
             .carousel-custom,
             .hero-fallback,
             .block-container [style*="width"] {
-
                 width: 100% !important;
-
                 max-width: 100% !important;
-
             }
-
 
             .custom-jumbotron {
-
                 padding: 1.5rem 1rem !important;
-
             }
-
 
             .card-img-wrapper img {
-
                 height: 280px !important;
-
             }
-
         }
-
 
         /* ========================================================
            RESPONSIVE SMARTPHONE (767.98px and below)
            ======================================================== */
-
         @media (max-width: 767.98px) {
-
             .block-container {
-
                 margin-top: 0 !important;
-
                 padding-top: 1rem !important;
-
                 padding-bottom: 1rem !important;
-
             }
-
 
             .card-img-wrapper img {
-
                 height: 220px !important;
-
             }
-
 
             .carousel-custom {
-
                 border-radius: 1rem;
-
             }
-
 
             .carousel-item img {
-
                 height: 280px;
-
                 min-height: 220px;
-
                 border-radius: 1rem 1rem 0 0;
-
             }
-
 
             .carousel-caption-custom {
-
                 position: relative;
-
                 left: 0;
-
                 right: 0;
-
                 bottom: 0;
-
                 width: 100%;
-
                 border-radius: 0 0 1rem 1rem;
-
                 padding: 1.25rem 1rem;
-
                 background: rgba(15, 23, 42, 0.95);
-
                 backdrop-filter: blur(12px);
-
                 -webkit-backdrop-filter: blur(12px);
-
                 border-top: none;
-
             }
-
 
             .carousel-caption-custom h2 {
-
                 font-size: 1.35rem;
-
                 margin-bottom: 0.6rem;
-
             }
-
 
             .carousel-caption-custom .carousel-button {
-
                 margin-top: 0.75rem;
-
             }
-
 
             .carousel-control-prev,
             .carousel-control-next {
-
                 width: 12%;
-
             }
-
 
             .card-custom:hover {
-
                 transform: none;
-
             }
-
 
             .btn-back-to-top {
-
                 bottom: 20px;
-
                 right: 20px;
-
                 width: 44px;
-
                 height: 44px;
-
                 font-size: 1.25rem;
-
             }
-
         }
-
-
 
         /* ========================================================
            GESTIONE BOZZE HOMEPAGE
            ======================================================== */
-
         .draft-block-hidden {
             display: none !important;
         }
@@ -1072,60 +694,46 @@
 
 </head>
 
-
 <body>
-
 
 <!-- ========================================================
      SFONDO ANIMATO
      ======================================================== -->
-
 <canvas id="tech-bg-canvas"></canvas>
-
 
 <!-- ========================================================
      NAVBAR CONDIVISA
      ======================================================== -->
-
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <!-- ========================================================
-         PULSANTE MOSTRA/NASCONDI BOZZE
-         VISIBILE SOLO AGLI UTENTI AUTENTICATI
-         ======================================================== -->
-
-    <div sec:authorize="isAuthenticated()" class="container py-3 draft-toggle-container">
-        <div class="d-flex justify-content-end">
-            <button type="button"
-                    id="btn-toggle-drafts"
-                    style="background-color: rgba(0, 220, 130, 0.15); border: 1px solid rgba(0, 220, 130, 0.4); color: #00dc82; font-weight: 600; padding: 0.45rem 0.9rem; border-radius: 0.6rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); cursor: pointer; transition: all 0.25s ease;"
-                    aria-expanded="false">
-                <i class="bi bi-eye me-2"></i>
-                <span>Mostra bozze</span>
-            </button>
-        </div>
+<!-- ========================================================
+     PULSANTE MOSTRA/NASCONDI BOZZE
+     VISIBILE SOLO AGLI UTENTI AUTENTICATI
+     ======================================================== -->
+<div sec:authorize="isAuthenticated()" class="container py-3 draft-toggle-container">
+    <div class="d-flex justify-content-end">
+        <button type="button"
+                id="btn-toggle-drafts"
+                style="background-color: rgba(0, 220, 130, 0.15); border: 1px solid rgba(0, 220, 130, 0.4); color: #00dc82; font-weight: 600; padding: 0.45rem 0.9rem; border-radius: 0.6rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); cursor: pointer; transition: all 0.25s ease;"
+                aria-expanded="false">
+            <i class="bi bi-eye me-2"></i>
+            <span>Mostra bozze</span>
+        </button>
     </div>
-
+</div>
 
 <!-- ========================================================
      MAIN CONTENT
      ======================================================== -->
-
 <main th:if="${not #lists.isEmpty(blocks)}">
 
     <div th:each="block : ${blocks}"
-
          th:if="${!block.draft or #authorization.expression('isAuthenticated()')}"
-
-         th:class="${block.containerType.cssClass}
-                   + ' py-3 block-container position-relative'"
-
+         th:class="${block.containerType.cssClass} + ' py-3 block-container position-relative'"
          th:classappend="${(block.draft ? ' draft-block-hidden' : '') + (block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl) ? ' has-background-image' : '')}"
-
          th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'}
                    + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent')
                    + (${block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl)} ? '; --block-background-image: url(\'' + ${block.backgroundImageUrl} + '\'); --block-background-opacity: ' + (${block.bgImageOpacity != null ? block.bgImageOpacity : 100} / 100) + '; --block-background-saturation: ' + (${block.bgImageSaturation != null ? block.bgImageSaturation : 100} / 100) + '; --block-background-grayscale: ' + (${block.bgImageGrayscale != null ? block.bgImageGrayscale : 0} / 100) + ';' : '') + ';'">
-
 
         <!-- TAG BOZZA VISIBILE SOLO DALL'ADMIN SE IL BLOCCO È IN BOZZA -->
         <div sec:authorize="isAuthenticated()" th:if="${block.draft}" 
@@ -1135,785 +743,306 @@
             </span>
         </div>
 
-
-        <!-- =================================================
-             JUMBOTRON
-             ================================================= -->
-
+        <!-- JUMBOTRON -->
         <div th:if="${block.blockType.name() == 'JUMBOTRON'}"
-
              class="p-4 p-md-5 custom-jumbotron mx-auto"
-
-             th:style="${block.widthPercent != null and block.widthPercent > 0}
-                       ? 'width: ' + ${block.widthPercent} + '%;'
-                       : 'width: 100%;'">
-
-            <div class="container-fluid py-2"
-                 th:utext="${block.contentHtml}">
-            </div>
-
+             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+            <div class="container-fluid py-2 tinymce-content" th:utext="${block.contentHtml}"></div>
         </div>
 
-
-        <!-- =================================================
-             CARDS
-             ================================================= -->
-
+        <!-- CARDS -->
         <div th:if="${block.blockType.name() == 'CARDS'}"
-
              class="mx-auto"
-
-             th:style="${block.widthPercent != null
-                        and block.widthPercent > 0}
-                        ? 'width: ' + ${block.widthPercent} + '%;'
-                        : 'width: 100%;'">
-
-            <div th:if="${block.contentHtml != null
-                         and !block.contentHtml.empty}"
-
-                 class="mb-4 text-center text-light"
-
+             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+            <div th:if="${block.contentHtml != null and !block.contentHtml.empty}"
+                 class="mb-4 text-center text-light tinymce-content"
                  th:utext="${block.contentHtml}">
             </div>
-
 
             <div class="row g-4 justify-content-between align-items-stretch">
-
-                <div th:each="item : ${block.items}"
-                     class="col-12 col-md-6 col-lg-4 d-flex">
-
+                <div th:each="item : ${block.items}" class="col-12 col-md-6 col-lg-4 d-flex">
                     <div class="card card-custom w-100 d-flex flex-column overflow-hidden"
-
-                         th:style="${item.backgroundColor != null
-                                    and !#strings.isEmpty(item.backgroundColor)}
-                                    ? 'background-color: ' + ${item.backgroundColor} + ' !important;'
-                                    : 'background-color: transparent !important;'">
-
-
-                        <div th:if="${item.imageUrl != null
-                                     and !item.imageUrl.empty}"
-
-                             class="card-img-wrapper">
-
-                            <img th:src="${item.imageUrl}"
-                                 class="card-img-top card-img-responsive"
-                                 alt="Card Image">
-
+                         th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : 'background-color: transparent !important;'">
+                        <div th:if="${item.imageUrl != null and !item.imageUrl.empty}" class="card-img-wrapper">
+                            <img th:src="${item.imageUrl}" class="card-img-top card-img-responsive" alt="Card Image">
                         </div>
-
-
                         <div class="card-body p-4 d-flex flex-column">
-
-                            <h4 class="card-title fw-bold mb-2"
-                                th:text="${item.title}">
-                                Titolo Card
-                            </h4>
-
-
-                            <h6 th:if="${item.subtitle != null}"
-                                class="card-subtitle mb-3 text-success opacity-75 fw-semibold"
-                                th:text="${item.subtitle}">
-                                Sottotitolo
-                            </h6>
-
-
-                            <div class="card-text flex-grow-1"
-                                 th:utext="${item.contentHtml}">
-                            </div>
-
-
-                            <div th:if="${item.buttonText != null
-                                         and !item.buttonText.trim().isEmpty()}"
-                                 class="mt-4 pt-2">
-
-                                <a th:if="${item.buttonUrl != null
-                                           and !item.buttonUrl.trim().isEmpty()}"
-
-                                   th:href="${item.buttonUrl}"
-
-                                   class="btn-card-link">
-
-                                    <span th:text="${item.buttonText}">
-                                        Scopri di più
-                                    </span>
-
+                            <h4 class="card-title fw-bold mb-2" th:text="${item.title}">Titolo Card</h4>
+                            <h6 th:if="${item.subtitle != null}" class="card-subtitle mb-3 text-success opacity-75 fw-semibold" th:text="${item.subtitle}">Sottotitolo</h6>
+                            <div class="card-text flex-grow-1 tinymce-content" th:utext="${item.contentHtml}"></div>
+                            <div th:if="${item.buttonText != null and !item.buttonText.trim().isEmpty()}" class="mt-4 pt-2">
+                                <a th:if="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}" th:href="${item.buttonUrl}" class="btn-card-link">
+                                    <span th:text="${item.buttonText}">Scopri di più</span>
                                     <i class="bi bi-arrow-right"></i>
-
                                 </a>
-
-
-                                <span th:unless="${item.buttonUrl != null
-                                                  and !item.buttonUrl.trim().isEmpty()}"
-
-                                      class="btn-card-link">
-
-                                    <span th:text="${item.buttonText}">
-                                        Scopri di più
-                                    </span>
-
+                                <span th:unless="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}" class="btn-card-link">
+                                    <span th:text="${item.buttonText}">Scopri di più</span>
                                     <i class="bi bi-arrow-right"></i>
-
                                 </span>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-        <!-- =================================================
-             CAROSELLO
-             ================================================= -->
-
+        <!-- CAROSELLO -->
         <div th:if="${block.blockType.name() == 'CAROUSEL'}"
-
              th:id="'carouselBlock-' + ${block.id}"
-
              class="carousel slide carousel-custom overflow-hidden mx-auto"
-
              data-bs-ride="carousel"
-
-             th:style="${block.widthPercent != null
-                        and block.widthPercent > 0}
-                        ? 'width: ' + ${block.widthPercent} + '%;'
-                        : 'width: 100%;'">
-
-
+             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
             <div class="carousel-inner">
-
                 <div th:each="item, iterStat : ${block.items}"
-
-                     th:class="'carousel-item '
-                               + ${iterStat.index == 0 ? 'active' : ''}">
-
-                    <img th:src="${item.imageUrl != null
-                                  and !item.imageUrl.empty
-                                  ? item.imageUrl
-                                  : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'}"
-
-                         class="d-block w-100"
-
-                         th:alt="${item.title}">
-
-
+                     th:class="'carousel-item ' + ${iterStat.index == 0 ? 'active' : ''}">
+                    <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'}"
+                         class="d-block w-100" th:alt="${item.title}">
                     <div class="carousel-caption carousel-caption-custom text-start mx-auto"
-
-                         th:style="${item.backgroundColor != null
-                                    and !#strings.isEmpty(item.backgroundColor)}
-                                    ? 'background-color: ' + ${item.backgroundColor} + ' !important;'
-                                    : ''">
-
-
-                        <h2 class="fw-extrabold text-white mb-2"
-                            th:text="${item.title}">
-                            Titolo Slide
-                        </h2>
-
-
-                        <div th:if="${item.contentHtml != null
-                                     and !item.contentHtml.trim().isEmpty()}"
-
-                             class="text-light opacity-90"
-
-                             th:utext="${item.contentHtml}">
-                        </div>
-
-
-                        <div th:if="${item.buttonText != null
-                                     and !item.buttonText.trim().isEmpty()}">
-
-                            <a th:if="${item.buttonUrl != null
-                                       and !item.buttonUrl.trim().isEmpty()}"
-
-                               th:href="${item.buttonUrl}"
-
-                               class="carousel-button">
-
-                                <span th:text="${item.buttonText}">
-                                    Scopri di più
-                                </span>
-
+                         th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
+                        <h2 class="fw-extrabold text-white mb-2" th:text="${item.title}">Titolo Slide</h2>
+                        <div th:if="${item.contentHtml != null and !item.contentHtml.trim().isEmpty()}" class="text-light opacity-90 tinymce-content" th:utext="${item.contentHtml}"></div>
+                        <div th:if="${item.buttonText != null and !item.buttonText.trim().isEmpty()}">
+                            <a th:if="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}" th:href="${item.buttonUrl}" class="carousel-button">
+                                <span th:text="${item.buttonText}">Scopri di più</span>
                                 <i class="bi bi-arrow-right"></i>
-
                             </a>
-
-
-                            <span th:unless="${item.buttonUrl != null
-                                              and !item.buttonUrl.trim().isEmpty()}"
-
-                                  class="carousel-button">
-
-                                <span th:text="${item.buttonText}">
-                                    Scopri di più
-                                </span>
-
+                            <span th:unless="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}" class="carousel-button">
+                                <span th:text="${item.buttonText}">Scopri di più</span>
                                 <i class="bi bi-arrow-right"></i>
-
                             </span>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
-
-            <button class="carousel-control-prev"
-                    type="button"
-                    th:data-bs-target="'#carouselBlock-' + ${block.id}"
-                    data-bs-slide="prev">
-
-                <span class="carousel-control-prev-icon p-3 bg-dark bg-opacity-50 rounded-circle"
-                      aria-hidden="true">
-                </span>
-
-                <span class="visually-hidden">
-                    Precedente
-                </span>
-
+            <button class="carousel-control-prev" type="button" th:data-bs-target="'#carouselBlock-' + ${block.id}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon p-3 bg-dark bg-opacity-50 rounded-circle" aria-hidden="true"></span>
+                <span class="visually-hidden">Precedente</span>
             </button>
-
-
-            <button class="carousel-control-next"
-                    type="button"
-                    th:data-bs-target="'#carouselBlock-' + ${block.id}"
-                    data-bs-slide="next">
-
-                <span class="carousel-control-next-icon p-3 bg-dark bg-opacity-50 rounded-circle"
-                      aria-hidden="true">
-                </span>
-
-                <span class="visually-hidden">
-                    Successivo
-                </span>
-
+            <button class="carousel-control-next" type="button" th:data-bs-target="'#carouselBlock-' + ${block.id}" data-bs-slide="next">
+                <span class="carousel-control-next-icon p-3 bg-dark bg-opacity-50 rounded-circle" aria-hidden="true"></span>
+                <span class="visually-hidden">Successivo</span>
             </button>
-
         </div>
 
-
-        <!-- =================================================
-             JUMBO DEMO 1
-             ================================================= -->
-
+        <!-- JUMBO DEMO 1 -->
         <div th:if="${block.blockType.name() == 'JUMBO_DEMO_1'}"
-
              class="p-4 p-md-5 custom-jumbotron mx-auto"
-
-             th:style="${block.widthPercent != null and block.widthPercent > 0}
-                       ? 'width: ' + ${block.widthPercent} + '%;'
-                       : 'width: 100%;'">
-
-
+             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
             <div class="row align-items-center g-4 g-md-5">
-
-                <div class="col-lg-7 text-light"
-                     th:utext="${block.contentHtml}">
-                </div>
-
-
+                <div class="col-lg-7 text-light tinymce-content" th:utext="${block.contentHtml}"></div>
                 <div class="col-lg-5 text-center">
-
-                    <div th:if="${block.imageUrl != null
-                                 and !block.imageUrl.empty}"
-                         class="overflow-hidden rounded-4">
-
-                        <img th:src="${block.imageUrl}"
-                             class="img-fluid w-100 object-fit-cover rounded-4"
-                             style="max-height: 450px;"
-                             alt="Demo 1 Image">
-
+                    <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="overflow-hidden rounded-4">
+                        <img th:src="${block.imageUrl}" class="img-fluid w-100 object-fit-cover rounded-4" style="max-height: 450px;" alt="Demo 1 Image">
                     </div>
-
-
-                    <div th:unless="${block.imageUrl != null
-                                     and !block.imageUrl.empty}"
-                         class="p-4 p-md-5 rounded-4 text-center text-muted">
-
+                    <div th:unless="${block.imageUrl != null and !block.imageUrl.empty}" class="p-4 p-md-5 rounded-4 text-center text-muted">
                         <i class="bi bi-image fs-1 opacity-50"></i>
-
-                        <p class="mb-0 mt-2 small">
-                            Carica un'immagine nel form principale
-                            del blocco per visualizzarla qui
-                        </p>
-
+                        <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per visualizzarla qui</p>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-
-        <!-- =================================================
-             JUMBO DEMO 2
-             ================================================= -->
-
+        <!-- JUMBO DEMO 2 -->
         <div th:if="${block.blockType.name() == 'JUMBO_DEMO_2'}"
-
              class="p-4 p-md-5 custom-jumbotron mx-auto"
-
-             th:style="${block.widthPercent != null and block.widthPercent > 0}
-                       ? 'width: ' + ${block.widthPercent} + '%;'
-                       : 'width: 100%;'">
-
-
+             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
             <div class="row align-items-center g-4 g-md-5">
-
                 <div class="col-lg-5 text-center order-2 order-lg-1">
-
-                    <div th:if="${block.imageUrl != null
-                                 and !block.imageUrl.empty}"
-                         class="overflow-hidden rounded-4">
-
-                        <img th:src="${block.imageUrl}"
-                             class="img-fluid w-100 object-fit-cover rounded-4"
-                             style="max-height: 450px;"
-                             alt="Demo 2 Image">
-
+                    <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="overflow-hidden rounded-4">
+                        <img th:src="${block.imageUrl}" class="img-fluid w-100 object-fit-cover rounded-4" style="max-height: 450px;" alt="Demo 2 Image">
                     </div>
-
-
-                    <div th:unless="${block.imageUrl != null
-                                     and !block.imageUrl.empty}"
-                         class="p-4 p-md-5 rounded-4 text-center text-muted">
-
+                    <div th:unless="${block.imageUrl != null and !block.imageUrl.empty}" class="p-4 p-md-5 rounded-4 text-center text-muted">
                         <i class="bi bi-image fs-1 opacity-50"></i>
-
-                        <p class="mb-0 mt-2 small">
-                            Carica un'immagine nel form principale
-                            del blocco per visualizzarla qui
-                        </p>
-
+                        <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per visualizzarla qui</p>
                     </div>
-
                 </div>
-
-
-                <div class="col-lg-7 text-light order-1 order-lg-2"
-                     th:utext="${block.contentHtml}">
-                </div>
-
+                <div class="col-lg-7 text-light order-1 order-lg-2 tinymce-content" th:utext="${block.contentHtml}"></div>
             </div>
-
         </div>
 
-
-        <!-- =================================================
-             JUMBO 2 COLONNE
-             ================================================= -->
-
+        <!-- JUMBO 2 COLONNE -->
         <div th:if="${block.blockType.name() == 'JUMBO_2_COL'}"
-
              class="p-4 p-md-5 custom-jumbotron mx-auto"
-
-             th:style="${block.widthPercent != null and block.widthPercent > 0}
-                       ? 'width: ' + ${block.widthPercent} + '%;'
-                       : 'width: 100%;'">
-
-            <div class="text-light"
-                 th:utext="${block.contentHtml}">
-            </div>
-
+             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+            <div class="text-light tinymce-content" th:utext="${block.contentHtml}"></div>
         </div>
 
     </div>
 
 </main>
 
-
 <!-- ========================================================
      FALLBACK
      ======================================================== -->
-
-<div th:if="${#lists.isEmpty(blocks)}"
-     class="container py-5 my-5">
-
+<div th:if="${#lists.isEmpty(blocks)}" class="container py-5 my-5">
     <div class="p-4 p-md-5 hero-fallback text-center position-relative overflow-hidden">
-
         <div class="position-relative z-1 py-4">
-
-            <h1 class="display-4 fw-bold mb-3">
-                Benvenuto su Eco Skill Factory
-            </h1>
-
-            <p class="lead text-slate-300 max-w-2xl mx-auto mb-4"
-               style="max-width: 600px;">
-
-                La tua piattaforma è pronta.
-                Non hai ancora configurato nessun blocco dinamico
-                per la homepage.
-
+            <h1 class="display-4 fw-bold mb-3">Benvenuto su Eco Skill Factory</h1>
+            <p class="lead text-slate-300 max-w-2xl mx-auto mb-4" style="max-width: 600px;">
+                La tua piattaforma è pronta. Non hai ancora configurato nessun blocco dinamico per la homepage.
             </p>
-
-
-            <a href="/login"
-               class="btn btn-brand btn-lg rounded-pill px-4 px-md-5">
-
-                Accedi al Dashboard CMS
-
-                <i class="bi bi-arrow-right ms-2"></i>
-
+            <a href="/login" class="btn btn-brand btn-lg rounded-pill px-4 px-md-5">
+                Accedi al Dashboard CMS <i class="bi bi-arrow-right ms-2"></i>
             </a>
-
         </div>
-
     </div>
-
 </div>
-
 
 <!-- ========================================================
      FOOTER CONDIVISO
      ======================================================== -->
-
 <div th:replace="~{fragments/footer :: footer}"></div>
-
 
 <!-- ========================================================
      BOTTONE TORNA SU
      ======================================================== -->
-
-<button type="button"
-        id="btn-back-to-top"
-        class="btn-back-to-top"
-        aria-label="Torna su">
-
+<button type="button" id="btn-back-to-top" class="btn-back-to-top" aria-label="Torna su">
     <i class="bi bi-arrow-up"></i>
-
 </button>
-
 
 <!-- ========================================================
      BOOTSTRAP JS
      ======================================================== -->
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- ========================================================
      SFONDO ANIMATO & SCRIPTS
      ======================================================== -->
-
 <script>
 
     /* ========================================================
        MOSTRA / NASCONDI BOZZE
        ======================================================== */
-
-    const toggleDraftsBtn =
-        document.getElementById('btn-toggle-drafts');
+    const toggleDraftsBtn = document.getElementById('btn-toggle-drafts');
 
     if (toggleDraftsBtn) {
-
-        const draftBlocks =
-            document.querySelectorAll('.draft-block-hidden');
+        const draftBlocks = document.querySelectorAll('.draft-block-hidden');
 
         toggleDraftsBtn.addEventListener('click', () => {
-
-            const draftsVisible =
-                toggleDraftsBtn.getAttribute('aria-expanded') === 'true';
+            const draftsVisible = toggleDraftsBtn.getAttribute('aria-expanded') === 'true';
 
             draftBlocks.forEach(block => {
-
                 if (draftsVisible) {
                     block.classList.add('draft-block-hidden');
                 } else {
                     block.classList.remove('draft-block-hidden');
                 }
-
             });
 
-            toggleDraftsBtn.setAttribute(
-                'aria-expanded',
-                String(!draftsVisible)
-            );
+            toggleDraftsBtn.setAttribute('aria-expanded', String(!draftsVisible));
 
-            const icon =
-                toggleDraftsBtn.querySelector('i');
-
-            const text =
-                toggleDraftsBtn.querySelector('span');
+            const icon = toggleDraftsBtn.querySelector('i');
+            const text = toggleDraftsBtn.querySelector('span');
 
             if (!draftsVisible) {
-
-                if (icon) {
-                    icon.className = 'bi bi-eye-slash me-2';
-                }
-
-                if (text) {
-                    text.textContent = 'Nascondi bozze';
-                }
-
+                if (icon) icon.className = 'bi bi-eye-slash me-2';
+                if (text) text.textContent = 'Nascondi bozze';
             } else {
-
-                if (icon) {
-                    icon.className = 'bi bi-eye me-2';
-                }
-
-                if (text) {
-                    text.textContent = 'Mostra bozze';
-                }
-
+                if (icon) icon.className = 'bi bi-eye me-2';
+                if (text) text.textContent = 'Mostra bozze';
             }
-
         });
-
     }
-
 
     /* ========================================================
        TORNA SU SCRIPT
        ======================================================== */
-
-    const backToTopBtn =
-        document.getElementById('btn-back-to-top');
-
+    const backToTopBtn = document.getElementById('btn-back-to-top');
 
     if (backToTopBtn) {
-
         window.addEventListener('scroll', () => {
-
             if (window.scrollY > 300) {
-
                 backToTopBtn.classList.add('show');
-
             } else {
-
                 backToTopBtn.classList.remove('show');
-
             }
-
         });
-
 
         backToTopBtn.addEventListener('click', () => {
-
-            window.scrollTo({
-
-                top: 0,
-
-                behavior: 'smooth'
-
-            });
-
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
     }
-
 
     /* ========================================================
        SFONDO ANIMATO
        ======================================================== */
-
-    const canvas =
-        document.getElementById('tech-bg-canvas');
-
-    const ctx =
-        canvas.getContext('2d');
-
-    let width;
-    let height;
-
+    const canvas = document.getElementById('tech-bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
 
     function resize() {
-
-        width =
-            canvas.width =
-            window.innerWidth;
-
-        height =
-            canvas.height =
-            window.innerHeight;
-
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
     }
 
-
     window.addEventListener('resize', resize);
-
     resize();
 
-
     class Circuit {
-
         constructor() {
             this.reset();
         }
 
-
         reset() {
-
             this.x = Math.random() * width;
             this.y = Math.random() * height;
-
-            this.length =
-                Math.floor(Math.random() * 8) + 4;
-
+            this.length = Math.floor(Math.random() * 8) + 4;
             this.currentStep = 0;
-
-            this.dir =
-                Math.floor(Math.random() * 4);
-
-            this.path = [
-                {
-                    x: this.x,
-                    y: this.y
-                }
-            ];
-
-            this.speed =
-                Math.random() * 1.5 + 0.5;
-
-            this.alpha =
-                Math.random() * 0.4 + 0.1;
-
+            this.dir = Math.floor(Math.random() * 4);
+            this.path = [{ x: this.x, y: this.y }];
+            this.speed = Math.random() * 1.5 + 0.5;
+            this.alpha = Math.random() * 0.4 + 0.1;
             this.size = 20;
-
         }
 
-
         update() {
-
             if (this.currentStep < this.length) {
-
-                let last =
-                    this.path[this.path.length - 1];
-
+                let last = this.path[this.path.length - 1];
                 let nx = last.x;
                 let ny = last.y;
 
-
                 if (Math.random() < 0.3) {
-
-                    this.dir =
-                        (
-                            this.dir +
-                            (
-                                Math.random() < 0.5
-                                    ? 1
-                                    : 3
-                            )
-                        ) % 4;
-
+                    this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
                 }
-
 
                 switch (this.dir) {
-
-                    case 0:
-                        ny -= this.size;
-                        break;
-
-                    case 1:
-                        nx += this.size;
-                        break;
-
-                    case 2:
-                        ny += this.size;
-                        break;
-
-                    case 3:
-                        nx -= this.size;
-                        break;
-
+                    case 0: ny -= this.size; break;
+                    case 1: nx += this.size; break;
+                    case 2: ny += this.size; break;
+                    case 3: nx -= this.size; break;
                 }
 
-
-                this.path.push({
-                    x: nx,
-                    y: ny
-                });
-
+                this.path.push({ x: nx, y: ny });
                 this.currentStep++;
-
             } else {
-
                 this.alpha -= 0.005;
-
-                if (this.alpha <= 0) {
-                    this.reset();
-                }
-
+                if (this.alpha <= 0) this.reset();
             }
-
         }
-
 
         draw() {
-
-            if (this.path.length < 2) {
-                return;
-            }
-
+            if (this.path.length < 2) return;
 
             ctx.beginPath();
+            ctx.moveTo(this.path[0].x, this.path[0].y);
 
-            ctx.moveTo(
-                this.path[0].x,
-                this.path[0].y
-            );
-
-
-            for (
-                let i = 1;
-                i < this.path.length;
-                i++
-            ) {
-
-                ctx.lineTo(
-                    this.path[i].x,
-                    this.path[i].y
-                );
-
+            for (let i = 1; i < this.path.length; i++) {
+                ctx.lineTo(this.path[i].x, this.path[i].y);
             }
 
-
-            ctx.strokeStyle =
-                `rgba(0, 220, 130, ${this.alpha})`;
-
+            ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
             ctx.lineWidth = 1.5;
-
             ctx.stroke();
 
-
-            let last =
-                this.path[this.path.length - 1];
-
-
+            let last = this.path[this.path.length - 1];
             ctx.beginPath();
-
-            ctx.arc(
-                last.x,
-                last.y,
-                3,
-                0,
-                Math.PI * 2
-            );
-
-
-            ctx.fillStyle =
-                `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-
+            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
             ctx.fill();
-
         }
-
     }
 
-
     const codeSnippets = [
-
         "class BlockManager {}",
         "import spring.boot.*;",
         "<div class='eco'>",
@@ -1926,144 +1055,55 @@
         "npm run build",
         "docker-compose up -d",
         "mvn clean install"
-
     ];
 
-
     class CodeText {
-
         constructor() {
             this.reset();
         }
 
-
         reset() {
-
-            this.x =
-                Math.random() * (width - 200);
-
-            this.y =
-                Math.random() * height;
-
-            this.text =
-                codeSnippets[
-                    Math.floor(
-                        Math.random() *
-                        codeSnippets.length
-                    )
-                ];
-
+            this.x = Math.random() * (width - 200);
+            this.y = Math.random() * height;
+            this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
             this.alpha = 0;
-
-            this.maxAlpha =
-                Math.random() * 0.3 + 0.1;
-
+            this.maxAlpha = Math.random() * 0.3 + 0.1;
             this.fadeIn = true;
-
-            this.speed =
-                Math.random() * 0.3 + 0.1;
-
+            this.speed = Math.random() * 0.3 + 0.1;
         }
-
 
         update() {
-
             this.y -= this.speed;
 
-
             if (this.fadeIn) {
-
                 this.alpha += 0.008;
-
-                if (this.alpha >= this.maxAlpha) {
-                    this.fadeIn = false;
-                }
-
+                if (this.alpha >= this.maxAlpha) this.fadeIn = false;
             } else {
-
                 this.alpha -= 0.005;
-
-                if (this.alpha <= 0) {
-                    this.reset();
-                }
-
+                if (this.alpha <= 0) this.reset();
             }
-
         }
-
 
         draw() {
-
-            ctx.font =
-                '12px "Fira Code", monospace';
-
-            ctx.fillStyle =
-                `rgba(0, 220, 130, ${this.alpha})`;
-
-            ctx.fillText(
-                this.text,
-                this.x,
-                this.y
-            );
-
+            ctx.font = '12px "Fira Code", monospace';
+            ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+            ctx.fillText(this.text, this.x, this.y);
         }
-
     }
 
-
-    const circuits =
-        Array.from(
-            {
-                length: 18
-            },
-            () => new Circuit()
-        );
-
-
-    const codeTexts =
-        Array.from(
-            {
-                length: 12
-            },
-            () => new CodeText()
-        );
-
+    const circuits = Array.from({ length: 18 }, () => new Circuit());
+    const codeTexts = Array.from({ length: 12 }, () => new CodeText());
 
     function animate() {
-
-        ctx.clearRect(
-            0,
-            0,
-            width,
-            height
-        );
-
-
-        circuits.forEach(c => {
-
-            c.update();
-            c.draw();
-
-        });
-
-
-        codeTexts.forEach(ct => {
-
-            ct.update();
-            ct.draw();
-
-        });
-
-
+        ctx.clearRect(0, 0, width, height);
+        circuits.forEach(c => { c.update(); c.draw(); });
+        codeTexts.forEach(ct => { ct.update(); ct.draw(); });
         requestAnimationFrame(animate);
-
     }
-
 
     animate();
 
 </script>
-
 
 </body>
 </html>

@@ -36,6 +36,7 @@ public class SecurityConfig {
                     "/images/**",
                     "/tinymce/**",
                     "/uploads/**",
+                    "/fonts/**",
                     "/api/uploads/**",
                     "/favicon.ico",
                     "/p/**"

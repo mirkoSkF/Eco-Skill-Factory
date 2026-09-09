@@ -69,45 +69,21 @@ public class ImageConverterController {
 
         try {
             byte[] rawBytes = file.getBytes();
-            BufferedImage originalBuffered = null;
-
-            // -----------------------------------------------------
-            // 1. CARICAMENTO E NORMALIZZAZIONE CANALI COLORE
-            // -----------------------------------------------------
-            try (InputStream is = new ByteArrayInputStream(rawBytes)) {
-                originalBuffered = ImageIO.read(is);
-            } catch (Exception ignored) {
-                // ImageIO potrebbe fallire se il file sorgente è già in formato WebP
-            }
-
             ImmutableImage image = null;
 
-            if (originalBuffered != null) {
-                boolean hasAlpha = originalBuffered.getColorModel().hasAlpha();
-                int type = hasAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;
-                
-                BufferedImage normalizedImage = new BufferedImage(
-                        originalBuffered.getWidth(), 
-                        originalBuffered.getHeight(), 
-                        type
-                );
-                
-                Graphics2D g2 = normalizedImage.createGraphics();
-                try {
-                    if (!hasAlpha) {
-                        g2.setColor(Color.WHITE);
-                        g2.fillRect(0, 0, originalBuffered.getWidth(), originalBuffered.getHeight());
+            // -----------------------------------------------------
+            // 1. CARICAMENTO E SCALING DIRETTO CON scaleTo (SOLUZIONE 1)
+            // scaleTo adatta l'immagine esattamente a width e height senza aggiungere bordi
+            // -----------------------------------------------------
+            try (InputStream is = new ByteArrayInputStream(rawBytes)) {
+                image = ImmutableImage.loader().fromStream(is).scaleTo(width, height);
+            } catch (Exception e) {
+                // Fallback con ImageIO per casi o formati specifici non letti al primo colpo
+                try (InputStream isFallback = new ByteArrayInputStream(rawBytes)) {
+                    BufferedImage bufferedImg = ImageIO.read(isFallback);
+                    if (bufferedImg != null) {
+                        image = ImmutableImage.fromAwt(bufferedImg).scaleTo(width, height);
                     }
-                    g2.drawImage(originalBuffered, 0, 0, null);
-                } finally {
-                    g2.dispose();
-                }
-
-                image = ImmutableImage.fromAwt(normalizedImage).resizeTo(width, height);
-            } else {
-                // Fallback su loader Scrimage per formati nativi come WebP in ingresso
-                try (InputStream is = new ByteArrayInputStream(rawBytes)) {
-                    image = ImmutableImage.loader().fromStream(is).resizeTo(width, height);
                 }
             }
 
@@ -126,7 +102,8 @@ public class ImageConverterController {
                 BufferedImage resizedImage = image.awt();
                 boolean supportsAlpha = format.equals("png") || format.equals("gif");
 
-                // Se la destinazione non supporta la trasparenza (es. JPG), si applica lo sfondo bianco
+                // Se il formato di destinazione non supporta la trasparenza (es. JPG),
+                // applichiamo lo sfondo bianco sull'immagine già scalata a dimensione esatta.
                 if (!supportsAlpha && resizedImage.getColorModel().hasAlpha()) {
                     BufferedImage rgbImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
                     Graphics2D g2d = rgbImage.createGraphics();

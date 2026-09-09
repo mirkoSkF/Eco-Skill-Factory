@@ -147,6 +147,11 @@
                 <i class="bi bi-border-bottom me-2"></i>
                 Gestione Footer
             </a>
+
+            <a th:class="${activeMenu == 'image-converter'} ? 'nav-link active' : 'nav-link'" th:href="@{/admin/image-converter}">
+                <i class="bi bi-aspect-ratio me-2"></i>
+                Convertitore Immagini
+            </a>
         </div>
     </aside>
 </body>

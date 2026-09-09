@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertitore & Resizer Immagini - Eco Skill Factory</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f1f5f9;
+            background-color: #080c14 !important;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #tech-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .card {
+            background-color: #0f172a !important;
+            border: 1px solid #1e293b !important;
+            color: #f1f5f9 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        label, h2, h4, h5, .form-label, .form-text, .text-muted {
+            color: #cbd5e1 !important;
+        }
+
+        .form-control, .form-select {
+            background-color: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #ffffff !important;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+            border-color: #00dc82 !important;
+            box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25) !important;
+        }
+
+        .preview-box {
+            background: #0b1329;
+            border: 2px dashed #334155;
+            border-radius: 8px;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 380px;
+            object-fit: contain;
+        }
+
+        /* Layout principale della pagina con Sidebar */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: var(--sidebar-width, 224px);
+            background: #0f172a;
+            border-right: 1px solid #1e293b;
+            flex-shrink: 0;
+        }
+
+        .admin-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+        }
+
+        .accent-text {
+            color: #36e4da !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="tech-bg-canvas"></canvas>
+
+    <div class="admin-layout">
+        
+        <div class="admin-sidebar">
+            <div th:replace="~{fragments/sidebar :: sidebar('image-converter')}"></div>
+        </div>
+
+        <div class="admin-content">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="bi bi-arrow-repeat accent-text me-2"></i>Convertitore & Resizer Immagini
+                </h2>
+                <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i>Torna alla Dashboard
+                </a>
+            </div>
+
+            <div class="row g-4">
+                
+                <div class="col-lg-5">
+                    <form id="convertForm" class="card p-4 h-100">
+                        <h4 class="mb-3 text-info fw-bold">
+                            <i class="bi bi-sliders me-2"></i>Parametri Immagine
+                        </h4>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Seleziona Immagine</label>
+                            <input type="file" id="imageInput" class="form-control" accept="image/*" required onchange="loadImagePreview(this)">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Formato di Destinazione</label>
+                            <select id="targetFormat" class="form-select">
+                                <option value="png">PNG (Trasparenza supportata)</option>
+                                <option value="jpg" selected>JPG / JPEG (Standard)</option>
+                                <option value="webp">WEBP (Web Ottimizzato)</option>
+                                <option value="gif">GIF</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Unità Dimensioni</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="unitType" id="unitPx" value="px" checked onchange="switchUnit()">
+                                    <label class="form-check-label text-light" for="unitPx">Pixel (px)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="unitType" id="unitPercent" value="%" onchange="switchUnit()">
+                                    <label class="form-check-label text-light" for="unitPercent">Percentuale (%)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="aspectRatioSwitch" checked>
+                            <label class="form-check-label text-warning" for="aspectRatioSwitch">
+                                <i class="bi bi-aspect-ratio me-1"></i>Mantieni proporzioni (Aspect Ratio)
+                            </label>
+                        </div>
+
+                        <div class="row g-2 mb-4">
+                            <div class="col-6">
+                                <label class="form-label fw-bold" id="widthLabel">Larghezza (px)</label>
+                                <input type="number" id="imgWidth" class="form-control" min="1" step="any" placeholder="es. 1920" oninput="onWidthChange()">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold" id="heightLabel">Altezza (px)</label>
+                                <input type="number" id="imgHeight" class="form-control" min="1" step="any" placeholder="es. 1080" oninput="onHeightChange()">
+                            </div>
+                        </div>
+
+                        <div class="mt-auto d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg fw-bold">
+                                <i class="bi bi-download me-2"></i>Converti & Scarica
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card p-4 h-100">
+                        <h4 class="mb-3 text-info fw-bold">
+                            <i class="bi bi-image me-2"></i>Anteprima Immagine
+                        </h4>
+                        
+                        <div class="preview-box mb-3" id="previewContainer">
+                            <div id="placeholderText" class="text-center text-muted">
+                                <i class="bi bi-cloud-upload fs-1 d-block mb-2 text-secondary"></i>
+                                Carica un'immagine per vederne l'anteprima e le dimensioni originali.
+                            </div>
+                            <img id="imagePreview" src="" alt="Anteprima" style="display: none;">
+                        </div>
+
+                        <div id="imageInfo" class="alert alert-secondary mb-0 bg-dark border-secondary" style="display: none;">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Larghezza Originale</small>
+                                    <strong id="origWidth" class="text-success">-</strong>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Altezza Originale</small>
+                                    <strong id="origHeight" class="text-success">-</strong>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Proporzione</small>
+                                    <strong id="origRatio" class="accent-text">-</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        let originalWidth = 0;
+        let originalHeight = 0;
+        let aspectRatio = 1;
+        let previousUnit = 'px';
+
+        function loadImagePreview(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    
+                    img.onload = function () {
+                        originalWidth = this.width;
+                        originalHeight = this.height;
+                        aspectRatio = originalWidth / originalHeight;
+
+                        // Reset unità a PX al caricamento di una nuova immagine
+                        document.getElementById('unitPx').checked = true;
+                        previousUnit = 'px';
+                        document.getElementById('widthLabel').innerText = 'Larghezza (px)';
+                        document.getElementById('heightLabel').innerText = 'Altezza (px)';
+
+                        document.getElementById('imgWidth').value = originalWidth;
+                        document.getElementById('imgHeight').value = originalHeight;
+
+                        // Mostra anteprima e metadati
+                        document.getElementById('imagePreview').src = e.target.result;
+                        document.getElementById('imagePreview').style.display = 'block';
+                        document.getElementById('placeholderText').style.display = 'none';
+
+                        document.getElementById('origWidth').innerText = originalWidth + ' px';
+                        document.getElementById('origHeight').innerText = originalHeight + ' px';
+                        document.getElementById('origRatio').innerText = aspectRatio.toFixed(2);
+                        document.getElementById('imageInfo').style.display = 'block';
+                    };
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function switchUnit() {
+            const currentUnit = document.querySelector('input[name="unitType"]:checked').value;
+            document.getElementById('widthLabel').innerText = `Larghezza (${currentUnit})`;
+            document.getElementById('heightLabel').innerText = `Altezza (${currentUnit})`;
+
+            if (originalWidth === 0 || previousUnit === currentUnit) return;
+
+            const wInput = document.getElementById('imgWidth');
+            const hInput = document.getElementById('imgHeight');
+
+            let currentW = parseFloat(wInput.value) || 0;
+            let currentH = parseFloat(hInput.value) || 0;
+
+            if (currentUnit === '%') {
+                // Conversione da PX a %
+                wInput.value = Math.round((currentW / originalWidth) * 100);
+                hInput.value = Math.round((currentH / originalHeight) * 100);
+            } else {
+                // Conversione da % a PX
+                wInput.value = Math.round((currentW * originalWidth) / 100);
+                hInput.value = Math.round((currentH * originalHeight) / 100);
+            }
+
+            previousUnit = currentUnit;
+        }
+
+        function onWidthChange() {
+            const keepRatio = document.getElementById('aspectRatioSwitch').checked;
+            if (!keepRatio || originalWidth === 0) return;
+
+            const unit = document.querySelector('input[name="unitType"]:checked').value;
+            const wVal = parseFloat(document.getElementById('imgWidth').value) || 0;
+
+            if (unit === 'px') {
+                document.getElementById('imgHeight').value = Math.round(wVal / aspectRatio);
+            } else {
+                document.getElementById('imgHeight').value = Math.round(wVal);
+            }
+        }
+
+        function onHeightChange() {
+            const keepRatio = document.getElementById('aspectRatioSwitch').checked;
+            if (!keepRatio || originalHeight === 0) return;
+
+            const unit = document.querySelector('input[name="unitType"]:checked').value;
+            const hVal = parseFloat(document.getElementById('imgHeight').value) || 0;
+
+            if (unit === 'px') {
+                document.getElementById('imgWidth').value = Math.round(hVal * aspectRatio);
+            } else {
+                document.getElementById('imgWidth').value = Math.round(hVal);
+            }
+        }
+
+        // INVIO DEL FORM E DOWNLOAD FILE
+        document.getElementById('convertForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('imageInput');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Seleziona un\'immagine prima di procedere.');
+                return;
+            }
+
+            const unit = document.querySelector('input[name="unitType"]:checked').value;
+            let targetW = parseFloat(document.getElementById('imgWidth').value) || 0;
+            let targetH = parseFloat(document.getElementById('imgHeight').value) || 0;
+
+            // Se inserito in percentuale, convertiamo in pixel prima di inviare al server
+            if (unit === '%') {
+                targetW = Math.round((originalWidth * targetW) / 100);
+                targetH = Math.round((originalHeight * targetH) / 100);
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('targetFormat', document.getElementById('targetFormat').value);
+            formData.append('width', Math.round(targetW));
+            formData.append('height', Math.round(targetH));
+
+            fetch('/api/tools/convert-image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Errore durante la conversione dell\'immagine');
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const targetFormat = document.getElementById('targetFormat').value;
+                a.href = url;
+                a.download = `converted_image.${targetFormat}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(err => {
+                alert('Errore durante la conversione: ' + err.message);
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const canvas = document.getElementById('tech-bg-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            const particles = Array.from({ length: 35 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5 + 0.5,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3
+            }));
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(54, 228, 218, 0.3)';
+
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

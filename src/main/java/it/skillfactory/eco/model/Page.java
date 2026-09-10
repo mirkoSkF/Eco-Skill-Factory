@@ -60,6 +60,41 @@ public class Page {
     private String courseName;      // Nome Corso (es. Corso Java Developer)
 
     private String recipientEmail;  // Email a cui inoltrare le iscrizioni / richieste
+    
+    @Column(name = "background_color", length = 50)
+    private String backgroundColor;
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+    
+    @Column(name = "title_color", length = 50)
+    private String titleColor;
+
+    @Column(name = "form_bg_color", length = 50)
+    private String formBgColor;
+
+    public String getTitleColor() {
+        return titleColor;
+    }
+
+    public void setTitleColor(String titleColor) {
+        this.titleColor = titleColor;
+    }
+
+    public String getFormBgColor() {
+        return formBgColor;
+    }
+
+    public void setFormBgColor(String formBgColor) {
+        this.formBgColor = formBgColor;
+    }
+
+
 
 
     // ============================================================

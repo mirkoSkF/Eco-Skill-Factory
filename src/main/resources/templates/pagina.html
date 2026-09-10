@@ -368,6 +368,67 @@
             box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25);
         }
 
+        /* ============================================================
+   ADATTAMENTO AUTOMATICO SFONDO FORM CHIARO / SCURO
+   ============================================================ */
+/* Quando lo sfondo scelto è CHIARO */
+.booking-card.theme-light {
+    border-color: rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+.booking-card.theme-light h3,
+.booking-card.theme-light .text-white {
+    color: #0f172a !important;
+}
+
+.booking-card.theme-light p,
+.booking-card.theme-light .text-secondary {
+    color: #475569 !important;
+}
+
+.booking-card.theme-light label,
+.booking-card.theme-light .form-check-label {
+    color: #1e293b !important;
+    font-weight: 600;
+}
+
+.booking-card.theme-light .border-secondary {
+    border-color: #e2e8f0 !important;
+}
+
+.booking-card.theme-light .form-control,
+.booking-card.theme-light .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+.booking-card.theme-light .form-control:focus,
+.booking-card.theme-light .form-select:focus {
+    background-color: #ffffff !important;
+    border-color: #00dc82 !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.2) !important;
+    color: #0f172a !important;
+}
+
+.booking-card.theme-light .form-control::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* Pulsante Submit ad alto contrasto per tema chiaro */
+.booking-card.theme-light .btn-booking {
+    background: #00dc82 !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 14px rgba(0, 220, 130, 0.35);
+}
+
+.booking-card.theme-light .btn-booking:hover {
+    background: #00b368 !important;
+    color: #ffffff !important;
+}
+
+
         .btn-booking {
             background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
             color: #0f172a;
@@ -412,10 +473,13 @@
     </style>
 </head>
 
-<body>
+<body <body th:style="${page.backgroundColor != null and !#strings.isEmpty(page.backgroundColor) ? 'background-color: ' + page.backgroundColor + ' !important; background-image: none !important;' : ''}">
+
 
     <!-- SFONDO ANIMATO -->
-    <canvas id="tech-bg-canvas"></canvas>
+        <!-- CANVAS SFONDO ANIMATO: renderizzato SOLO se NON è stato scelto un colore personalizzato -->
+    <canvas th:if="${page.backgroundColor == null or #strings.isEmpty(page.backgroundColor)}" id="tech-bg-canvas"></canvas>
+
 
     <!-- NAVBAR CONDIVISA -->
     <div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -428,7 +492,12 @@
             <div class="page-box">
 
                 <!-- TITOLO -->
-                <h1 class="page-title" th:text="${page.title}">Titolo pagina</h1>
+                <h1 class="page-title"
+    th:text="${page.title}"
+    th:style="${page.titleColor != null and !#strings.isEmpty(page.titleColor) ? 'color: ' + page.titleColor + ' !important;' : ''}">
+    Titolo pagina
+</h1>
+
 
                 <!-- CONTENUTO DALL'EDITOR TINYMCE -->
                 <div class="content-body" th:if="${page.contentHtml != null and !#strings.isEmpty(page.contentHtml)}"
@@ -442,7 +511,9 @@
 
                 <!-- BLOCCO FORM DINAMICO -->
                 <div th:if="${page.getFormType() != 'NONE'}" class="mt-5">
-                    <div class="booking-card p-4 p-md-5">
+                    <div class="booking-card p-4 p-md-5"
+     th:style="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? 'background-color: ' + page.formBgColor + ' !important;' : ''}">
+
 
                         <div class="border-bottom border-secondary pb-3 mb-4">
                             <!-- INTESTAZIONE PER PRENOTAZIONE CORSO -->
@@ -755,9 +826,17 @@
 
     <!-- SCRIPT SFONDO CANVAS ANIMATO -->
     <script>
-        const canvas = document.getElementById('tech-bg-canvas');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ========================================================
+    // 1. GESTIONE SFONDO ANIMATO TECH CANVAS
+    // ========================================================
+    /** @type {HTMLCanvasElement|null} */
+    const canvas = document.getElementById('tech-bg-canvas');
+
+    if (canvas && typeof canvas.getContext === 'function') {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
             let width, height, particles;
 
             function init() {
@@ -806,7 +885,34 @@
             init();
             animate();
         }
-    </script>
+    }
+
+    // ========================================================
+    // 2. ADATTAMENTO CONTRASTO AUTOMATICO CARD FORM
+    // ========================================================
+    const card = document.querySelector(".booking-card");
+    if (card) {
+        const bg = window.getComputedStyle(card).backgroundColor;
+        const match = bg.match(/\d+/g);
+
+        if (match && match.length >= 3) {
+            const r = parseInt(match[0], 10);
+            const g = parseInt(match[1], 10);
+            const b = parseInt(match[2], 10);
+
+            // Luminosità ITU-R BT.601
+            const luminance = (r * 299 + g * 587 + b * 114) / 1000;
+
+            if (luminance > 145) {
+                card.classList.add("theme-light");
+            } else {
+                card.classList.remove("theme-light");
+            }
+        }
+    }
+});
+</script>
+
 </body>
 
 </html>

@@ -643,6 +643,71 @@
 
             </div>
 
+                        <!-- ========================================================
+                 PERSONALIZZAZIONE COLORI (SFONDO, TITOLO, FORM)
+                 ======================================================== -->
+            <div class="mb-4 p-3 rounded" style="background-color: #0f172a; border: 1px solid #1e293b;">
+                <label class="form-label fw-bold d-flex align-items-center mb-3">
+                    <i class="bi bi-palette text-success me-2 fs-5"></i>
+                    Stile e Colori della Pagina
+                </label>
+
+                <div class="row g-3">
+                    <!-- 1. SFONDO PAGINA -->
+                    <div class="col-12">
+                        <label class="form-label text-light fw-semibold">Sfondo Pagina (Body)</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" class="form-control form-control-color" id="pageBgPicker"
+                                   th:value="${page.backgroundColor != null and !#strings.isEmpty(page.backgroundColor) ? page.backgroundColor : '#080c14'}"
+                                   oninput="document.getElementById('backgroundColorInput').value = this.value; updateBgStatusBadge();">
+
+                            <input type="text" id="backgroundColorInput" th:field="*{backgroundColor}"
+                                   class="form-control" placeholder="es. #0f172a (vuoto = sfondo animato)"
+                                   oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('pageBgPicker').value = this.value; updateBgStatusBadge();">
+
+                            <button type="button" class="btn btn-outline-secondary text-nowrap" onclick="resetToAnimatedBg()">
+                                <i class="bi bi-stars me-1 text-info"></i> Reset Animato
+                            </button>
+                        </div>
+                        <div class="mt-1 d-flex align-items-center justify-content-between">
+                            <small class="text-muted">Se vuoto, viene caricato il canvas animato.</small>
+                            <span id="pageBgStatusBadge" class="badge bg-info text-dark">Sfondo Animato</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. COLORE TITOLO PAGINA -->
+                    <div class="col-md-6">
+                        <label class="form-label text-light fw-semibold">Colore Titolo (H1)</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" class="form-control form-control-color" id="titleColorPicker"
+                                   th:value="${page.titleColor != null and !#strings.isEmpty(page.titleColor) ? page.titleColor : '#00dc82'}"
+                                   oninput="document.getElementById('titleColorInput').value = this.value">
+
+                            <input type="text" id="titleColorInput" th:field="*{titleColor}"
+                                   class="form-control" placeholder="es. #00dc82 (default brand)"
+                                   oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('titleColorPicker').value = this.value">
+                        </div>
+                        <div class="form-text">Lascia vuoto per usare il colore predefinito.</div>
+                    </div>
+
+                    <!-- 3. COLORE SFONDO FORM DI PRENOTAZIONE -->
+                    <div class="col-md-6">
+                        <label class="form-label text-light fw-semibold">Colore Sfondo Card Form</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" class="form-control form-control-color" id="formBgPicker"
+                                   th:value="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? page.formBgColor : '#0f172a'}"
+                                   oninput="document.getElementById('formBgColorInput').value = this.value">
+
+                            <input type="text" id="formBgColorInput" th:field="*{formBgColor}"
+                                   class="form-control" placeholder="es. #1e293b (default scuro)"
+                                   oninput="if(this.value.startsWith('#') && this.value.length === 7) document.getElementById('formBgPicker').value = this.value">
+                        </div>
+                        <div class="form-text">Lascia vuoto per usare il colore predefinito.</div>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- SELEZIONE MODALITÀ FORM -->
             <div class="mb-4 p-3 border rounded bg-dark">
 
@@ -3448,6 +3513,33 @@ document.addEventListener(
         }
     }
 );
+
+function resetToAnimatedBg() {
+    const input = document.getElementById("backgroundColorInput");
+    if (input) {
+        input.value = "";
+        updateBgStatusBadge();
+    }
+}
+
+function updateBgStatusBadge() {
+    const input = document.getElementById("backgroundColorInput");
+    const badge = document.getElementById("pageBgStatusBadge");
+    if (!badge || !input) return;
+
+    if (input.value && input.value.trim() !== "") {
+        badge.className = "badge bg-success";
+        badge.textContent = "Tinta Unita: " + input.value.trim();
+    } else {
+        badge.className = "badge bg-info text-dark";
+        badge.textContent = "Sfondo Animato Attivo";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    updateBgStatusBadge();
+});
+
 
 </script>
 

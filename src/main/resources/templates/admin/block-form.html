@@ -309,9 +309,11 @@
 
         #bgImageOpacityRange,
         #bgImageSaturationRange,
-        #bgImageGrayscaleRange {
+        #bgImageGrayscaleRange,
+        #bgImageBrightnessRange {
             accent-color: #00dc82;
         }
+
 
         .background-image-preview-box {
             position: relative;
@@ -333,7 +335,7 @@
             background-position: center;
             background-repeat: no-repeat;
             opacity: var(--preview-opacity, 1);
-            filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0));
+            filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0)) brightness(var(--preview-brightness, 1));
             transition: opacity .15s ease, filter .15s ease;
         }
 
@@ -364,7 +366,7 @@
             background-position: center;
             background-repeat: no-repeat;
             opacity: var(--preview-opacity, 0);
-            filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0));
+            filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0)) brightness(var(--preview-brightness, 1));
             pointer-events: none;
         }
 
@@ -951,6 +953,23 @@
                         <small class="text-muted">100% B/N</small>
                     </div>
                 </div>
+
+                <div class="background-image-control-row">
+                    <div class="background-image-control-label">
+                        <label class="form-label fw-bold mb-0" for="bgImageBrightnessRange">
+                            <i class="bi bi-sun me-1"></i> Luminosità
+                        </label>
+                        <span id="bgImageBrightnessValue"
+                            class="badge bg-success background-image-control-value">100%</span>
+                    </div>
+                    <input type="range" class="form-range" id="bgImageBrightnessRange" th:field="*{bgImageBrightness}"
+                        min="0" max="100" step="1" oninput="updateBackgroundImageControls()" />
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">0% Buio</small>
+                        <small class="text-muted">100% Originale</small>
+                    </div>
+                </div>
+
 
                 <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetBackgroundImageControls()">
                     <i class="bi bi-arrow-counterclockwise me-1"></i>
@@ -1798,6 +1817,7 @@
             const bgImageOpacity = parseInt(document.getElementById('bgImageOpacityRange')?.value || '100', 10);
             const bgImageSaturation = parseInt(document.getElementById('bgImageSaturationRange')?.value || '100', 10);
             const bgImageGrayscale = parseInt(document.getElementById('bgImageGrayscaleRange')?.value || '0', 10);
+            const bgImageBrightness = parseInt(document.getElementById('bgImageBrightnessRange')?.value || '100', 10);
 
             let contentHtml = '';
             if (window.tinymce && tinymce.get('mainContentHtml')) {
@@ -1806,7 +1826,7 @@
                 contentHtml = document.getElementById('mainContentHtml')?.value || '';
             }
 
-            let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border-radius: 8px; padding: 20px; transition: all 0.3s ease; position: relative; overflow: hidden; --preview-background-image: url(\'${backgroundImageUrl}\'); --preview-opacity: ${bgImageOpacity / 100}; --preview-saturation: ${bgImageSaturation / 100}; --preview-grayscale: ${bgImageGrayscale / 100};`;
+            let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border-radius: 8px; padding: 20px; transition: all 0.3s ease; position: relative; overflow: hidden; --preview-background-image: url('${backgroundImageUrl}'); --preview-opacity: ${bgImageOpacity / 100}; --preview-saturation: ${bgImageSaturation / 100}; --preview-grayscale: ${bgImageGrayscale / 100}; --preview-brightness: ${bgImageBrightness / 100};`;
 
             let htmlOutput = '';
 
@@ -2230,7 +2250,6 @@
             updateBackgroundImageControls();
         }
 
-
         function updateBackgroundImageControls() {
             const fileInput = document.getElementById("backgroundImageFile");
             const existingUrlInput = document.getElementById("backgroundImageUrl");
@@ -2238,9 +2257,13 @@
             const opacityRange = document.getElementById("bgImageOpacityRange");
             const saturationRange = document.getElementById("bgImageSaturationRange");
             const grayscaleRange = document.getElementById("bgImageGrayscaleRange");
+            const brightnessRange = document.getElementById("bgImageBrightnessRange"); // <-- NUOVO
+
             const opacityValue = document.getElementById("bgImageOpacityValue");
             const saturationValue = document.getElementById("bgImageSaturationValue");
             const grayscaleValue = document.getElementById("bgImageGrayscaleValue");
+            const brightnessValue = document.getElementById("bgImageBrightnessValue"); // <-- NUOVO
+
             const preview = document.getElementById("backgroundImageLivePreview");
             const currentImage = document.getElementById("currentBackgroundImagePreview");
             const newImage = document.getElementById("newBackgroundImagePreviewImg");
@@ -2251,15 +2274,19 @@
             const removingImage = removeImageInput && removeImageInput.checked;
             const hasImage = !removingImage && (hasNewFile || existingUrl !== "");
 
-            if (controls) controls.style.display = hasImage ? "" : "none";
+            if (controls) {
+                controls.style.display = hasImage ? "" : "none";
+            }
 
             const opacity = opacityRange ? parseInt(opacityRange.value || "100", 10) : 100;
             const saturation = saturationRange ? parseInt(saturationRange.value || "100", 10) : 100;
             const grayscale = grayscaleRange ? parseInt(grayscaleRange.value || "0", 10) : 0;
+            const brightness = brightnessRange ? parseInt(brightnessRange.value || "100", 10) : 100; // <-- NUOVO
 
             if (opacityValue) opacityValue.textContent = opacity + "%";
             if (saturationValue) saturationValue.textContent = saturation + "%";
             if (grayscaleValue) grayscaleValue.textContent = grayscale + "%";
+            if (brightnessValue) brightnessValue.textContent = brightness + "%"; // <-- NUOVO
 
             let imageSource = existingUrl;
             if (hasNewFile && newImage && newImage.src) imageSource = newImage.src;
@@ -2270,20 +2297,27 @@
                 preview.style.setProperty("--preview-opacity", opacity / 100);
                 preview.style.setProperty("--preview-saturation", saturation / 100);
                 preview.style.setProperty("--preview-grayscale", grayscale / 100);
+                preview.style.setProperty("--preview-brightness", brightness / 100); // <-- NUOVO
             }
 
             renderRowPreviewIfOpen();
         }
 
+
         function resetBackgroundImageControls() {
             const opacityRange = document.getElementById("bgImageOpacityRange");
             const saturationRange = document.getElementById("bgImageSaturationRange");
             const grayscaleRange = document.getElementById("bgImageGrayscaleRange");
+            const brightnessRange = document.getElementById("bgImageBrightnessRange"); // <-- NUOVO
+
             if (opacityRange) opacityRange.value = 100;
             if (saturationRange) saturationRange.value = 100;
             if (grayscaleRange) grayscaleRange.value = 0;
+            if (brightnessRange) brightnessRange.value = 100; // <-- NUOVO
+
             updateBackgroundImageControls();
         }
+
 
         function renderRowPreviewIfOpen() {
             const modal = document.getElementById("rowPreviewModal");

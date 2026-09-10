@@ -309,8 +309,7 @@
 
         #bgImageOpacityRange,
         #bgImageSaturationRange,
-        #bgImageGrayscaleRange,
-        #bgImageBrightnessRange {
+        #bgImageGrayscaleRange {
             accent-color: #00dc82;
         }
 
@@ -334,7 +333,7 @@
             background-position: center;
             background-repeat: no-repeat;
             opacity: var(--preview-opacity, 1);
-            filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0)) brightness(var(--preview-brightness, 1));
+            filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0));
             transition: opacity .15s ease, filter .15s ease;
         }
 
@@ -365,7 +364,7 @@
             background-position: center;
             background-repeat: no-repeat;
             opacity: var(--preview-opacity, 0);
-            filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0)) brightness(var(--preview-brightness, 1));
+            filter: saturate(var(--preview-saturation, 1)) grayscale(var(--preview-grayscale, 0));
             pointer-events: none;
         }
 
@@ -950,24 +949,6 @@
                     <div class="d-flex justify-content-between">
                         <small class="text-muted">0% Colori</small>
                         <small class="text-muted">100% B/N</small>
-                    </div>
-                </div>
-
-                <!-- LUMINOSITÀ -->
-                <div class="background-image-control-row">
-                    <div class="background-image-control-label">
-                        <label class="form-label fw-bold mb-0" for="bgImageBrightnessRange">
-                            <i class="bi bi-sun me-1"></i> Luminosità
-                        </label>
-                        <span id="bgImageBrightnessValue"
-                            class="badge bg-success background-image-control-value">100%</span>
-                    </div>
-                    <input type="range" class="form-range" id="bgImageBrightnessRange" th:field="*{bgImageBrightness}"
-                        min="0" max="200" step="1" oninput="updateBackgroundImageControls()" />
-                    <div class="d-flex justify-content-between">
-                        <small class="text-muted">0% Buio</small>
-                        <small class="text-muted">100% Originale</small>
-                        <small class="text-muted">200% Luce</small>
                     </div>
                 </div>
 
@@ -1817,7 +1798,6 @@
             const bgImageOpacity = parseInt(document.getElementById('bgImageOpacityRange')?.value || '100', 10);
             const bgImageSaturation = parseInt(document.getElementById('bgImageSaturationRange')?.value || '100', 10);
             const bgImageGrayscale = parseInt(document.getElementById('bgImageGrayscaleRange')?.value || '0', 10);
-            const bgImageBrightness = parseInt(document.getElementById('bgImageBrightnessRange')?.value || '100', 10);
 
             let contentHtml = '';
             if (window.tinymce && tinymce.get('mainContentHtml')) {
@@ -1826,7 +1806,7 @@
                 contentHtml = document.getElementById('mainContentHtml')?.value || '';
             }
 
-            let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border-radius: 8px; padding: 20px; transition: all 0.3s ease; position: relative; overflow: hidden; --preview-background-image: url(\'${backgroundImageUrl}\'); --preview-opacity: ${bgImageOpacity / 100}; --preview-saturation: ${bgImageSaturation / 100}; --preview-grayscale: ${bgImageGrayscale / 100}; --preview-brightness: ${bgImageBrightness / 100};`;
+            let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border-radius: 8px; padding: 20px; transition: all 0.3s ease; position: relative; overflow: hidden; --preview-background-image: url(\'${backgroundImageUrl}\'); --preview-opacity: ${bgImageOpacity / 100}; --preview-saturation: ${bgImageSaturation / 100}; --preview-grayscale: ${bgImageGrayscale / 100};`;
 
             let htmlOutput = '';
 
@@ -2258,11 +2238,9 @@
             const opacityRange = document.getElementById("bgImageOpacityRange");
             const saturationRange = document.getElementById("bgImageSaturationRange");
             const grayscaleRange = document.getElementById("bgImageGrayscaleRange");
-            const brightnessRange = document.getElementById("bgImageBrightnessRange");
             const opacityValue = document.getElementById("bgImageOpacityValue");
             const saturationValue = document.getElementById("bgImageSaturationValue");
             const grayscaleValue = document.getElementById("bgImageGrayscaleValue");
-            const brightnessValue = document.getElementById("bgImageBrightnessValue");
             const preview = document.getElementById("backgroundImageLivePreview");
             const currentImage = document.getElementById("currentBackgroundImagePreview");
             const newImage = document.getElementById("newBackgroundImagePreviewImg");
@@ -2278,12 +2256,10 @@
             const opacity = opacityRange ? parseInt(opacityRange.value || "100", 10) : 100;
             const saturation = saturationRange ? parseInt(saturationRange.value || "100", 10) : 100;
             const grayscale = grayscaleRange ? parseInt(grayscaleRange.value || "0", 10) : 0;
-            const brightness = brightnessRange ? parseInt(brightnessRange.value || "100", 10) : 100;
 
             if (opacityValue) opacityValue.textContent = opacity + "%";
             if (saturationValue) saturationValue.textContent = saturation + "%";
             if (grayscaleValue) grayscaleValue.textContent = grayscale + "%";
-            if (brightnessValue) brightnessValue.textContent = brightness + "%";
 
             let imageSource = existingUrl;
             if (hasNewFile && newImage && newImage.src) imageSource = newImage.src;
@@ -2294,7 +2270,6 @@
                 preview.style.setProperty("--preview-opacity", opacity / 100);
                 preview.style.setProperty("--preview-saturation", saturation / 100);
                 preview.style.setProperty("--preview-grayscale", grayscale / 100);
-                preview.style.setProperty("--preview-brightness", brightness / 100);
             }
 
             renderRowPreviewIfOpen();
@@ -2304,11 +2279,9 @@
             const opacityRange = document.getElementById("bgImageOpacityRange");
             const saturationRange = document.getElementById("bgImageSaturationRange");
             const grayscaleRange = document.getElementById("bgImageGrayscaleRange");
-            const brightnessRange = document.getElementById("bgImageBrightnessRange");
             if (opacityRange) opacityRange.value = 100;
             if (saturationRange) saturationRange.value = 100;
             if (grayscaleRange) grayscaleRange.value = 0;
-            if (brightnessRange) brightnessRange.value = 100;
             updateBackgroundImageControls();
         }
 
@@ -2754,7 +2727,7 @@
             }
 
 
-            if (/#[0-9A-F]{6}$/i.test(value)) {
+            if (/^#[0-9A-F]{6}$/i.test(value)) {
 
                 if (bgPicker) bgPicker.value = value;
 
@@ -2789,21 +2762,19 @@
                 document.getElementById("itemBgOpacityValue");
 
 
-            const opacity =
-                parseInt(value) / 100;
-
+            const opacity = parseInt(value) / 100;
 
             if (opacityValue) opacityValue.textContent = value + "%";
 
 
             if (parseInt(value) === 0) {
 
-                if (bgInput) bgInput.value = "rgba(" + getItemRgbFromPicker().join(",") + ",0)";
+                const rgb = getItemRgbFromPicker();
+
+                bgInput.value = "rgba(" + rgb.join(",") + ",0)";
 
                 if (bgPicker) bgPicker.disabled = true;
-
                 if (bgInput) bgInput.readOnly = true;
-
                 if (transparentSwitch) transparentSwitch.checked = true;
 
                 return;
@@ -2812,24 +2783,19 @@
 
 
             if (bgPicker) bgPicker.disabled = false;
-
             if (bgInput) bgInput.readOnly = false;
-
             if (transparentSwitch) transparentSwitch.checked = false;
 
 
             const rgb = getItemRgbFromPicker();
 
-
-            if (bgInput) {
-                bgInput.value =
-                    "rgba(" +
-                    rgb[0] + "," +
-                    rgb[1] + "," +
-                    rgb[2] + "," +
-                    opacity.toFixed(2) +
-                    ")";
-            }
+            bgInput.value =
+                "rgba(" +
+                rgb[0] + "," +
+                rgb[1] + "," +
+                rgb[2] + "," +
+                opacity.toFixed(2) +
+                ")";
 
         }
 
@@ -2848,27 +2814,24 @@
 
             const rgb = hexToRgb(val);
 
-
-            if (!rgb)
-                return;
+            if (!rgb) return;
 
 
-            const opacity = opacityRange ? parseInt(opacityRange.value) / 100 : 1;
+            const opacity =
+                parseInt(opacityRange ? opacityRange.value : 100) / 100;
 
 
-            if (bgInput) {
-                bgInput.value =
-                    "rgba(" +
-                    rgb.r + "," +
-                    rgb.g + "," +
-                    rgb.b + "," +
-                    opacity.toFixed(2) +
-                    ")";
-            }
+            bgInput.value =
+                "rgba(" +
+                rgb.r + "," +
+                rgb.g + "," +
+                rgb.b + "," +
+                opacity.toFixed(2) +
+                ")";
 
 
             if (transparentSwitch && opacityRange) {
-                transparentSwitch.checked = parseInt(opacityRange.value) === 0;
+                transparentSwitch.checked = (parseInt(opacityRange.value) === 0);
             }
 
         }
@@ -2892,39 +2855,36 @@
                 document.getElementById("itemBgOpacityValue");
 
 
-            if (!transparentSwitch) return;
-
-
             if (transparentSwitch.checked) {
 
                 if (opacityRange) opacityRange.value = 0;
-
                 if (opacityValue) opacityValue.textContent = "0%";
 
 
                 const rgb = getItemRgbFromPicker();
 
 
-                if (bgInput) bgInput.value = "rgba(" + rgb.join(",") + ",0)";
+                bgInput.value = "rgba(" + rgb.join(",") + ",0)";
 
-                if (bgInput) bgInput.readOnly = true;
-
+                bgInput.readOnly = true;
                 if (bgPicker) bgPicker.disabled = true;
 
-            } else {
+            }
+            else {
 
-                const previousOpacity = opacityRange ? parseInt(opacityRange.value) : 100;
+                const previousOpacity =
+                    opacityRange ? parseInt(opacityRange.value) : 0;
 
-                const newOpacity = previousOpacity === 0 ? 100 : previousOpacity;
+
+                const newOpacity =
+                    previousOpacity === 0 ? 100 : previousOpacity;
 
 
                 if (opacityRange) opacityRange.value = newOpacity;
-
                 if (opacityValue) opacityValue.textContent = newOpacity + "%";
 
 
-                if (bgInput) bgInput.readOnly = false;
-
+                bgInput.readOnly = false;
                 if (bgPicker) bgPicker.disabled = false;
 
 
@@ -2935,14 +2895,37 @@
         }
 
 
+        function getItemRgbFromPicker() {
+
+            const bgPicker =
+                document.getElementById("itemBgPicker");
+
+
+            const rgb =
+                hexToRgb(bgPicker ? bgPicker.value : "#0f172a");
+
+
+            if (!rgb) {
+                return [15, 23, 42];
+            }
+
+
+            return [rgb.r, rgb.g, rgb.b];
+
+        }
+
+
         /* ============================================================
-           UTILITY CONVERSIONE COLORE
+           CONVERSIONI COLORE UTILS
            ============================================================ */
 
         function hexToRgb(hex) {
 
             const result =
-                /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
+                    hex
+                );
+
 
             return result
                 ? {
@@ -2958,18 +2941,13 @@
         function rgbToHex(r, g, b) {
 
             return "#" +
-                componentToHex(r) +
-                componentToHex(g) +
-                componentToHex(b);
-
-        }
-
-
-        function componentToHex(c) {
-
-            const hex = c.toString(16);
-
-            return hex.length === 1 ? "0" + hex : hex;
+                [r, g, b]
+                    .map(
+                        x =>
+                            x.toString(16)
+                                .padStart(2, "0")
+                    )
+                    .join("");
 
         }
 
@@ -2977,30 +2955,473 @@
         function getRgbFromPicker() {
 
             const bgPicker =
-                document.getElementById("bgPicker");
+                document.getElementById(
+                    "bgPicker"
+                );
 
-            const hex = bgPicker ? bgPicker.value : "#0f172a";
 
-            const rgb = hexToRgb(hex);
+            const rgb =
+                hexToRgb(
+                    bgPicker.value
+                );
 
-            return rgb ? [rgb.r, rgb.g, rgb.b] : [15, 23, 42];
+
+            if (!rgb) {
+
+                return [
+                    15,
+                    23,
+                    42
+                ];
+
+            }
+
+
+            return [
+                rgb.r,
+                rgb.g,
+                rgb.b
+            ];
+
+        }
+
+    </script>
+
+
+    <!-- ========================================================
+         SCRIPT ANIMAZIONE SFONDO
+         ======================================================== -->
+
+    <script>
+
+        const canvas =
+            document.getElementById(
+                'tech-bg-canvas'
+            );
+
+        const ctx =
+            canvas.getContext('2d');
+
+        let width,
+            height;
+
+
+        function resize() {
+
+            width =
+                canvas.width =
+                window.innerWidth;
+
+            height =
+                canvas.height =
+                window.innerHeight;
 
         }
 
 
-        function getItemRgbFromPicker() {
+        window.addEventListener(
+            'resize',
+            resize
+        );
 
-            const bgPicker =
-                document.getElementById("itemBgPicker");
+        resize();
 
-            const hex = bgPicker ? bgPicker.value : "#0f172a";
 
-            const rgb = hexToRgb(hex);
+        class Circuit {
 
-            return rgb ? [rgb.r, rgb.g, rgb.b] : [15, 23, 42];
+            constructor() {
+
+                this.reset();
+
+            }
+
+            reset() {
+
+                this.x =
+                    Math.random() * width;
+
+                this.y =
+                    Math.random() * height;
+
+                this.length =
+                    Math.floor(
+                        Math.random() * 8
+                    ) + 4;
+
+                this.currentStep =
+                    0;
+
+                this.dir =
+                    Math.floor(
+                        Math.random() * 4
+                    );
+
+                this.path = [
+                    {
+                        x: this.x,
+                        y: this.y
+                    }
+                ];
+
+                this.speed =
+                    Math.random() * 1.5 + 0.5;
+
+                this.alpha =
+                    Math.random() * 0.4 + 0.1;
+
+                this.size =
+                    20;
+
+            }
+
+
+            update() {
+
+                if (
+                    this.currentStep
+                    <
+                    this.length
+                ) {
+
+                    let last =
+                        this.path[
+                        this.path.length - 1
+                        ];
+
+                    let nx =
+                        last.x;
+
+                    let ny =
+                        last.y;
+
+
+                    if (
+                        Math.random() < 0.3
+                    ) {
+
+                        this.dir =
+                            (
+                                this.dir +
+                                (
+                                    Math.random() < 0.5
+                                        ? 1
+                                        : 3
+                                )
+                            ) % 4;
+
+                    }
+
+
+                    switch (this.dir) {
+
+                        case 0:
+                            ny -= this.size;
+                            break;
+
+                        case 1:
+                            nx += this.size;
+                            break;
+
+                        case 2:
+                            ny += this.size;
+                            break;
+
+                        case 3:
+                            nx -= this.size;
+                            break;
+
+                    }
+
+
+                    this.path.push({
+                        x: nx,
+                        y: ny
+                    });
+
+                    this.currentStep++;
+
+                }
+
+                else {
+
+                    this.alpha -= 0.005;
+
+                    if (
+                        this.alpha <= 0
+                    ) {
+
+                        this.reset();
+
+                    }
+
+                }
+
+            }
+
+
+            draw() {
+
+                if (
+                    this.path.length < 2
+                ) {
+
+                    return;
+
+                }
+
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    this.path[0].x,
+                    this.path[0].y
+                );
+
+
+                for (
+                    let i = 1;
+                    i < this.path.length;
+                    i++
+                ) {
+
+                    ctx.lineTo(
+                        this.path[i].x,
+                        this.path[i].y
+                    );
+
+                }
+
+
+                ctx.strokeStyle =
+                    `rgba(0, 220, 130, ${this.alpha})`;
+
+                ctx.lineWidth =
+                    1.5;
+
+                ctx.stroke();
+
+
+                let last =
+                    this.path[
+                    this.path.length - 1
+                    ];
+
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    last.x,
+                    last.y,
+                    3,
+                    0,
+                    Math.PI * 2
+                );
+
+
+                ctx.fillStyle =
+                    `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+
+                ctx.fill();
+
+            }
 
         }
 
+
+        const codeSnippets = [
+
+            "class BlockManager {}",
+            "import spring.boot.*;",
+            "<div class='eco'>",
+            "SELECT * FROM blocks;",
+            "const init = () => {};",
+            "return new PageBlock();",
+            "01000101 01000011 01001111",
+            "public static void main()",
+            "async fetch('/api')",
+            "npm run build",
+            "docker-compose up -d",
+            "mvn clean install"
+
+        ];
+
+
+        class CodeText {
+
+            constructor() {
+
+                this.reset();
+
+            }
+
+
+            reset() {
+
+                this.x =
+                    Math.random() *
+                    (width - 200);
+
+                this.y =
+                    Math.random() *
+                    height;
+
+                this.text =
+                    codeSnippets[
+                    Math.floor(
+                        Math.random() *
+                        codeSnippets.length
+                    )
+                    ];
+
+                this.alpha =
+                    0;
+
+                this.maxAlpha =
+                    Math.random() * 0.3 + 0.1;
+
+                this.fadeIn =
+                    true;
+
+                this.speed =
+                    Math.random() * 0.3 + 0.1;
+
+            }
+
+
+            update() {
+
+                this.y -=
+                    this.speed;
+
+
+                if (this.fadeIn) {
+
+                    this.alpha +=
+                        0.008;
+
+
+                    if (
+                        this.alpha >=
+                        this.maxAlpha
+                    ) {
+
+                        this.fadeIn =
+                            false;
+
+                    }
+
+                }
+
+                else {
+
+                    this.alpha -=
+                        0.005;
+
+
+                    if (
+                        this.alpha <= 0
+                    ) {
+
+                        this.reset();
+
+                    }
+
+                }
+
+            }
+
+
+            draw() {
+
+                ctx.font =
+                    '12px "Fira Code", monospace';
+
+                ctx.fillStyle =
+                    `rgba(0, 220, 130, ${this.alpha})`;
+
+                ctx.fillText(
+                    this.text,
+                    this.x,
+                    this.y
+                );
+
+            }
+
+        }
+
+
+        const circuits =
+            Array.from(
+                { length: 18 },
+                () => new Circuit()
+            );
+
+
+        const codeTexts =
+            Array.from(
+                { length: 12 },
+                () => new CodeText()
+            );
+
+
+        function animate() {
+
+            ctx.clearRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            circuits.forEach(
+                c => {
+
+                    c.update();
+                    c.draw();
+
+                }
+            );
+
+
+            codeTexts.forEach(
+                ct => {
+
+                    ct.update();
+                    ct.draw();
+
+                }
+            );
+
+
+            requestAnimationFrame(
+                animate
+            );
+
+        }
+
+
+        animate();
+
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script>
+    <script>
+        let windowMonacoEditor = null, monacoTargetTextarea = null, monacoFontSize = 14, monacoMinimapVisible = true, monacoSearchMatches = [], monacoSearchIndex = 0, monacoSearchDecorations = [], monacoCurrentSearchDecoration = [], monacoLoaderPromise = null, monacoEmmetInitialized = false;
+        function loadMonaco() { if (monacoLoaderPromise) return monacoLoaderPromise; monacoLoaderPromise = new Promise((resolve, reject) => { if (window.monaco && window.monaco.editor) { initMonacoEmmet(); resolve(window.monaco); return } if (!window.require || !window.require.config) { reject(Error('Loader Monaco non disponibile.')); return } window.require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' } }); window.require(['vs/editor/editor.main'], m => { initMonacoEmmet(); resolve(m) }, reject) }); return monacoLoaderPromise }
+        function initMonacoEmmet() { if (monacoEmmetInitialized) return; try { if (window.emmetMonaco?.emmetHTML) { window.emmetMonaco.emmetHTML(window.monaco, ['html']); monacoEmmetInitialized = true } } catch (e) { console.error('Emmet Monaco:', e) } }
+        function getTinyEditor(t) { if (!t || !window.tinymce) return null; if (t.id) { const e = tinymce.get(t.id); if (e) return e } return (tinymce.editors || []).find(e => e.getElement?.() === t) || null }
+        function openMonacoFromButton(b) { let p = b, t = null; while (p && !t) { t = p.querySelector?.('.wysiwyg-editor'); p = p.parentElement } openMonacoForTextarea(t || document.querySelector('.wysiwyg-editor')) }
+        function openMonacoForTextarea(t) { if (!t) { alert('Editor HTML non trovato.'); return } monacoTargetTextarea = t; const te = getTinyEditor(t), value = te ? (te.getContent({ format: 'html' }) || '') : (t.value || ''), modal = document.getElementById('monacoEditorModal'); if (!modal) { alert('Finestra Monaco non disponibile.'); return } const modalInstance = bootstrap.Modal.getOrCreateInstance(modal); modalInstance.show(); loadMonaco().then(m => { const c = document.getElementById('monacoContainer'); if (!c) return; if (!windowMonacoEditor) { windowMonacoEditor = m.editor.create(c, { value, language: 'html', theme: 'vs-dark', fontSize: monacoFontSize, automaticLayout: true, minimap: { enabled: monacoMinimapVisible }, wordWrap: 'off', lineNumbers: 'on', scrollBeyondLastLine: false, autoClosingBrackets: 'always', autoClosingQuotes: 'always', autoClosingTags: true, suggestOnTriggerCharacters: true, quickSuggestions: { other: true, comments: true, strings: true }, suggest: { showWords: true, showSnippets: true }, formatOnPaste: true, formatOnType: true, fixedOverflowWidgets: true, tabSize: 2, insertSpaces: true }); installSuggestionPositioning() } else { windowMonacoEditor.setValue(value); windowMonacoEditor.updateOptions({ fontSize: monacoFontSize, minimap: { enabled: monacoMinimapVisible }, fixedOverflowWidgets: true }) } updateZoomLabel(); updateMinimapButton(); clearMonacoSearch(); setTimeout(() => windowMonacoEditor.layout(), 100); windowMonacoEditor.focus() }).catch(e => { console.error(e); alert('Impossibile caricare Monaco Editor. Controlla la connessione internet.') }) }
+        function saveMonacoContent() { if (!windowMonacoEditor || !monacoTargetTextarea) return; const v = windowMonacoEditor.getValue(), te = getTinyEditor(monacoTargetTextarea); if (te) { te.setContent(v); te.save() } else monacoTargetTextarea.value = v; bootstrap.Modal.getOrCreateInstance(document.getElementById('monacoEditorModal')).hide() }
+        function changeMonacoFontSize(d) { if (!windowMonacoEditor) return; monacoFontSize = Math.max(8, Math.min(32, monacoFontSize + d)); windowMonacoEditor.updateOptions({ fontSize: monacoFontSize }); updateZoomLabel() } function updateZoomLabel() { const e = document.getElementById('monacoZoomLabel'); if (e) e.textContent = Math.round(monacoFontSize / 14 * 100) + '%' }
+        function toggleMonacoPreview() { if (!windowMonacoEditor) return; monacoMinimapVisible = !monacoMinimapVisible; windowMonacoEditor.updateOptions({ minimap: { enabled: monacoMinimapVisible } }); updateMinimapButton() } function updateMinimapButton() { const t = document.getElementById('previewButtonText'), i = document.getElementById('previewIcon'), b = document.getElementById('btnTogglePreview'); if (t) t.textContent = monacoMinimapVisible ? 'Nascondi minimappa' : 'Mostra minimappa'; if (i) i.className = monacoMinimapVisible ? 'bi bi-map me-1' : 'bi bi-map-fill me-1'; if (b) b.title = monacoMinimapVisible ? 'Nascondi minimappa a destra' : 'Mostra minimappa a destra' }
+        function toggleMonacoFullscreen() { const d = document.getElementById('monacoModalDialog'), i = document.getElementById('fullscreenIcon'), b = document.getElementById('btnToggleFullscreen'), t = document.getElementById('btnToggleFullscreenText'); if (!d) return; const f = d.classList.toggle('modal-fullscreen-custom'); if (i) i.className = f ? 'bi bi-arrows-angle-contract me-1' : 'bi bi-arrows-angle-expand me-1'; if (t) t.textContent = f ? 'Esci da Schermo Intero' : 'Schermo Intero'; if (b) b.title = f ? 'Esci da Schermo Intero' : 'Schermo Intero'; if (windowMonacoEditor) [50, 250, 500].forEach(x => setTimeout(() => windowMonacoEditor.layout(), x)) }
+        function installSuggestionPositioning() { if (window.__monacoSuggestObserver) return; window.__monacoSuggestObserver = true; const o = new MutationObserver(positionSuggestion); o.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] }); window.addEventListener('resize', positionSuggestion) } function positionSuggestion() { if (!windowMonacoEditor) return; const w = document.querySelector('.monaco-editor .suggest-widget'); if (!w || getComputedStyle(w).display === 'none') return; const p = windowMonacoEditor.getPosition(), c = windowMonacoEditor.getScrolledVisiblePosition(p), n = windowMonacoEditor.getDomNode(); if (!p || !c || !n) return; const r = n.getBoundingClientRect(); w.style.position = 'fixed'; w.style.left = Math.max(4, r.left + c.left) + 'px'; w.style.top = Math.max(4, r.top + c.top + c.height + 2) + 'px'; w.style.zIndex = '10000' }
+        function performMonacoSearch() { if (!windowMonacoEditor) return; const q = document.getElementById('monacoSearchInput')?.value || ''; clearMonacoSearchDecorations(); if (!q) { monacoSearchMatches = []; monacoSearchIndex = 0; updateSearchResults(); return } monacoSearchMatches = windowMonacoEditor.getModel().findMatches(q, true, false, false, null, true); monacoSearchIndex = monacoSearchMatches.length ? 0 : -1; monacoSearchDecorations = windowMonacoEditor.deltaDecorations([], monacoSearchMatches.map(m => ({ range: m.range, options: { inlineClassName: 'monaco-search-match' } }))); updateCurrentSearchDecoration(); updateSearchResults() } function clearMonacoSearchDecorations() { if (windowMonacoEditor) { if (monacoSearchDecorations.length) windowMonacoEditor.deltaDecorations(monacoSearchDecorations, []); if (monacoCurrentSearchDecoration.length) windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration, []) } monacoSearchDecorations = []; monacoCurrentSearchDecoration = [] } function updateCurrentSearchDecoration() { if (!windowMonacoEditor || monacoSearchIndex < 0 || !monacoSearchMatches.length) return; if (monacoCurrentSearchDecoration.length) windowMonacoEditor.deltaDecorations(monacoCurrentSearchDecoration, []); monacoCurrentSearchDecoration = windowMonacoEditor.deltaDecorations([], [{ range: monacoSearchMatches[monacoSearchIndex].range, options: { inlineClassName: 'monaco-search-match-current' } }]) } function selectMonacoSearchMatch(i) { if (!windowMonacoEditor || !monacoSearchMatches.length) return; monacoSearchIndex = (i + monacoSearchMatches.length) % monacoSearchMatches.length; const m = monacoSearchMatches[monacoSearchIndex]; windowMonacoEditor.setSelection(m.range); windowMonacoEditor.revealRangeInCenter(m.range); updateCurrentSearchDecoration(); updateSearchResults() } function navigateMonacoSearch(d) { if (monacoSearchMatches.length) selectMonacoSearchMatch(monacoSearchIndex + d); document.getElementById('monacoSearchInput')?.focus() }
+        function updateSearchResults() { const w = document.querySelector('.monaco-search-wrapper'); if (!w) return; let r = document.getElementById('monacoSearchResults'); if (!r) { r = document.createElement('div'); r.id = 'monacoSearchResults'; r.className = 'monaco-search-results'; r.innerHTML = '<button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchPrev">↑</button><span class="monaco-search-count" id="monacoSearchCount">0 / 0</span><button type="button" class="btn btn-sm btn-outline-light" id="monacoSearchNext">↓</button>'; w.appendChild(r); document.getElementById('monacoSearchPrev').onmousedown = e => { e.preventDefault(); navigateMonacoSearch(-1) }; document.getElementById('monacoSearchNext').onmousedown = e => { e.preventDefault(); navigateMonacoSearch(1) } } const c = document.getElementById('monacoSearchCount'); if (!monacoSearchMatches.length || monacoSearchIndex < 0) { r.classList.remove('visible'); if (c) c.textContent = '0 / 0' } else { if (c) c.textContent = (monacoSearchIndex + 1) + ' / ' + monacoSearchMatches.length; r.classList.add('visible') } } function clearMonacoSearch() { const i = document.getElementById('monacoSearchInput'); if (i) i.value = ''; clearMonacoSearchDecorations(); monacoSearchMatches = []; monacoSearchIndex = 0; updateSearchResults() }
+        document.addEventListener('DOMContentLoaded', () => { const mm = document.getElementById('monacoEditorModal'); if (mm) mm.addEventListener('shown.bs.modal', () => { if (monacoTargetTextarea) loadMonaco().catch(e => console.error('Monaco:', e)); }); const i = document.getElementById('monacoSearchInput'), c = document.getElementById('btnMonacoSearchClear'); if (i) { i.oninput = performMonacoSearch; i.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); navigateMonacoSearch(e.shiftKey ? -1 : 1) } else if (e.key === 'Escape') { e.preventDefault(); clearMonacoSearch(); windowMonacoEditor?.focus() } } } if (c) c.onmousedown = e => { e.preventDefault(); clearMonacoSearch(); windowMonacoEditor?.focus() }; const m = document.getElementById('monacoEditorModal'); if (m) m.addEventListener('shown.bs.modal', () => setTimeout(() => windowMonacoEditor?.layout(), 100)) }); document.addEventListener('keydown', e => { if (e.key === 'F11' && windowMonacoEditor) { e.preventDefault(); toggleMonacoFullscreen() } });
     </script>
 </body>
 

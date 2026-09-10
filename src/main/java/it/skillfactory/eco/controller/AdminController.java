@@ -258,6 +258,32 @@ public class AdminController {
             block.setCarouselType("STANDARD");
         }
 
+        // Dimensioni Griglia Card
+        if (formBlock.getCardsPerRow() != null) {
+            block.setCardsPerRow(formBlock.getCardsPerRow());
+        } else {
+            block.setCardsPerRow(3);
+        }
+
+        if (formBlock.getCardImageHeight() != null && !formBlock.getCardImageHeight().isBlank()) {
+            block.setCardImageHeight(formBlock.getCardImageHeight().trim());
+        } else {
+            block.setCardImageHeight("280px");
+        }
+
+        // Dimensioni Caroselli
+        if (formBlock.getCarouselSlideHeight() != null && !formBlock.getCarouselSlideHeight().isBlank()) {
+            block.setCarouselSlideHeight(formBlock.getCarouselSlideHeight().trim());
+        } else {
+            block.setCarouselSlideHeight("500px");
+        }
+
+        if (formBlock.getMultiItemWidth() != null && formBlock.getMultiItemWidth() > 0) {
+            block.setMultiItemWidth(formBlock.getMultiItemWidth());
+        } else {
+            block.setMultiItemWidth(390);
+        }
+
 
 
         block.setContentHtml(
@@ -492,6 +518,8 @@ public class AdminController {
                                 &&
                                 label.contains("DYNAMIC")
                 );
+        
+        
 
 
         return isCardGrid

@@ -741,6 +741,72 @@
                     </div>
                 </div>
 
+                            <!-- ========================================================
+                 DIMENSIONI SPECIFICHE CARD (visibile solo per CARDS)
+                 ======================================================== -->
+            <div id="cardsDimensionsWrapper" class="p-3 mb-3 rounded" style="background-color: #1e293b; border: 1px solid #334155; display: none;">
+                <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
+                    <i class="bi bi-grid-3x3-gap text-success me-2 fs-5"></i>
+                    Configurazione Dimensioni Card
+                </label>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-light">Card per Riga (Desktop)</label>
+                        <select class="form-select" th:field="*{cardsPerRow}">
+                            <option value="2">2 Card per Riga (Grandi)</option>
+                            <option value="3" selected>3 Card per Riga (Standard)</option>
+                            <option value="4">4 Card per Riga (Compatte)</option>
+                        </select>
+                        <div class="form-text">Su tablet e smartphone le colonne si adatteranno automaticamente.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-light">Altezza Immagini Card</label>
+                        <select class="form-select" th:field="*{cardImageHeight}">
+                            <option value="220px">Compatta (220px)</option>
+                            <option value="280px" selected>Standard (280px)</option>
+                            <option value="360px">Grande / Verticale (360px)</option>
+                            <option value="440px">Panoramica Alta (440px)</option>
+                        </select>
+                        <div class="form-text">L'immagine manterrà sempre la proporzione con ritaglio uniforme.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================
+                 DIMENSIONI SPECIFICHE CAROSELLI (visibile solo per CAROUSEL)
+                 ======================================================== -->
+            <div id="carouselDimensionsWrapper" class="p-3 mb-3 rounded" style="background-color: #1e293b; border: 1px solid #334155; display: none;">
+                <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
+                    <i class="bi bi-aspect-ratio text-success me-2 fs-5"></i>
+                    Dimensioni Slide Carosello
+                </label>
+                <div class="row g-3">
+                    <!-- Altezza Hero Slide (visibile se STANDARD) -->
+                    <div class="col-md-6" id="standardHeightOption">
+                        <label class="form-label fw-bold text-light">Altezza Slide (Hero)</label>
+                        <select class="form-select" th:field="*{carouselSlideHeight}">
+                            <option value="400px">Compatta (400px)</option>
+                            <option value="500px" selected>Standard (500px)</option>
+                            <option value="650px">Alta (650px)</option>
+                            <option value="80vh">Quasi a tutto schermo (80vh)</option>
+                            <option value="100vh">Schermo intero (100vh)</option>
+                        </select>
+                        <div class="form-text">Altezza visibile della slide su schermi desktop.</div>
+                    </div>
+
+                    <!-- Larghezza Nastro Multi-Immagine (visibile se MULTI_IMAGE) -->
+                    <div class="col-md-6" id="multiWidthOption">
+                        <label class="form-label fw-bold text-light">Dimensione Tessere Nastro</label>
+                        <select class="form-select" th:field="*{multiItemWidth}">
+                            <option value="300">Compatte (300px larghezza x 200px altezza)</option>
+                            <option value="390" selected>Standard (390px larghezza x 260px altezza)</option>
+                            <option value="480">Grandi (480px larghezza x 320px altezza)</option>
+                        </select>
+                        <div class="form-text">Determina la dimensione di ciascuna card nel nastro continuo.</div>
+                    </div>
+                </div>
+            </div>
+
 
                 <div class="col-md-4">
 
@@ -1493,205 +1559,123 @@
                             th:action="${editingItem != null} ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} : @{/admin/block/{id}/item/add(id=${block.id})}"
                             method="post" enctype="multipart/form-data" class="row g-3">
 
-                            <div class="col-md-6">
-
+                            <!-- CAMPO TITOLO (nascosto se Carosello Multi-Immagine) -->
+                            <div class="col-md-6" id="itemTitleCol">
                                 <label class="form-label fw-bold">
-
-                                    <span id="itemTitleLabel">
-                                        Titolo Card
-                                    </span>
-
+                                    <span id="itemTitleLabel">Titolo Card</span>
                                 </label>
-
-                                <input type="text" name="title" class="form-control" placeholder="Titolo Card"
+                                <input type="text" name="title" id="itemTitleInput" class="form-control" placeholder="Titolo"
                                     th:value="${editingItem != null ? editingItem.title : ''}" required />
-
                             </div>
 
-
-                            <div class="col-md-6">
-
+                            <!-- UPLOAD IMMAGINE (sempre presente; a tutta larghezza se Multi-Immagine) -->
+                            <div class="col-md-6" id="itemImageCol">
                                 <label class="form-label fw-bold">
-
                                     <i class="bi bi-image"></i>
-
-                                    <span id="itemImageLabel">
-                                        Carica Immagine Card
-                                    </span>
-
+                                    <span id="itemImageLabel">Carica Immagine Card</span>
                                 </label>
-
                                 <input type="file" name="itemImageFile" class="form-control" accept="image/*" />
 
-                                <!-- ANTEPRIMA IMMAGINE CARD ATTUALE -->
+                                <!-- ANTEPRIMA IMMAGINE ATTUALE -->
                                 <div th:if="${editingItem != null and editingItem.imageUrl != null and !editingItem.imageUrl.empty}"
                                     class="mt-2">
-
-                                    <small class="text-muted d-block mb-1">
-                                        Immagine Attualmente Caricata:
-                                    </small>
-
-                                    <img th:src="${editingItem.imageUrl}" alt="Anteprima Card" class="img-thumbnail"
+                                    <small class="text-muted d-block mb-1">Immagine Attualmente Caricata:</small>
+                                    <img th:src="${editingItem.imageUrl}" alt="Anteprima" class="img-thumbnail"
                                         style="max-height: 100px; width: auto; object-fit: contain;" />
-
                                 </div>
-
                             </div>
 
+                            <!-- TUTTI GLI ALTRI CAMPI EXTRA (Sfondo, Descrizione, Pulsanti) RACCHIUSI IN UN WRAPPER -->
+                            <div id="itemExtraFields" class="row g-3 m-0 p-0">
 
-                            <!-- COLORE SFONDO SINGOLA CARD (CON TRASPARENZA E OPACITÀ) -->
-                            <div class="col-md-12">
-
-                                <label class="form-label fw-bold">
-
-                                    <i class="bi bi-palette text-success"></i>
-                                    Sfondo Card
-
-                                </label>
-
-                                <!-- SWITCH TRASPARENZA CARD -->
-                                <div class="form-check form-switch mb-2">
-
-                                    <input class="form-check-input" type="checkbox" id="itemIsTransparentSwitch"
-                                        onchange="toggleItemBackgroundType()">
-
-                                    <label class="form-check-label text-warning" for="itemIsTransparentSwitch">
-
-                                        <i class="bi bi-droplet"></i>
-                                        Sfondo Trasparente
-
+                                <!-- COLORE SFONDO SINGOLA CARD -->
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-palette text-success"></i> Sfondo Card
                                     </label>
-
-                                </div>
-
-                                <!-- PICKER E CAMPO TESTO -->
-                                <div class="color-picker-wrapper">
-
-                                    <input type="color" class="form-control form-control-color" id="itemBgPicker"
-                                        th:value="${editingItem != null and editingItem.backgroundColor != null and !#strings.isEmpty(editingItem.backgroundColor) ? editingItem.backgroundColor : '#0f172a'}"
-                                        oninput="syncItemColorText(this.value)">
-
-                                    <input type="text" name="backgroundColor" id="itemBgColorInput" class="form-control"
-                                        placeholder="es. #1e293b, rgba(30,41,59,0.8) o transparent"
-                                        th:value="${editingItem != null ? editingItem.backgroundColor : ''}" />
-
-                                </div>
-
-                                <!-- SLIDER OPACITÀ CARD -->
-                                <div class="opacity-control-wrapper">
-
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-
-                                        <label class="form-label fw-bold mb-0">
-
-                                            <i class="bi bi-circle-half"></i>
-                                            Opacità Sfondo Card
-
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="itemIsTransparentSwitch"
+                                            onchange="toggleItemBackgroundType()">
+                                        <label class="form-check-label text-warning" for="itemIsTransparentSwitch">
+                                            <i class="bi bi-droplet"></i> Sfondo Trasparente
                                         </label>
-
-                                        <span id="itemBgOpacityValue" class="badge bg-success opacity-value">
-                                            100%
-                                        </span>
-
                                     </div>
-
-                                    <input type="range" class="form-range" id="itemBgOpacityRange" min="0" max="100"
-                                        step="1" value="100" oninput="syncItemOpacity(this.value)">
-
-                                    <div class="d-flex justify-content-between">
-
-                                        <small class="text-muted">
-                                            0% - Trasparente
-                                        </small>
-
-                                        <small class="text-muted">
-                                            100% - Opaco
-                                        </small>
-
+                                    <div class="color-picker-wrapper">
+                                        <input type="color" class="form-control form-control-color" id="itemBgPicker"
+                                            th:value="${editingItem != null and editingItem.backgroundColor != null and !#strings.isEmpty(editingItem.backgroundColor) ? editingItem.backgroundColor : '#0f172a'}"
+                                            oninput="syncItemColorText(this.value)">
+                                        <input type="text" name="backgroundColor" id="itemBgColorInput" class="form-control"
+                                            placeholder="es. #1e293b, rgba(30,41,59,0.8) o transparent"
+                                            th:value="${editingItem != null ? editingItem.backgroundColor : ''}" />
                                     </div>
-
+                                    <div class="opacity-control-wrapper">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <label class="form-label fw-bold mb-0">
+                                                <i class="bi bi-circle-half"></i> Opacità Sfondo Card
+                                            </label>
+                                            <span id="itemBgOpacityValue" class="badge bg-success opacity-value">100%</span>
+                                        </div>
+                                        <input type="range" class="form-range" id="itemBgOpacityRange" min="0" max="100"
+                                            step="1" value="100" oninput="syncItemOpacity(this.value)">
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-muted">0% - Trasparente</small>
+                                            <small class="text-muted">100% - Opaco</small>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="form-text mt-2">
-                                    Scegli il colore di sfondo per questa singola card e regolane l'opacità o imposta lo
-                                    sfondo trasparente.
+                                <!-- DESCRIZIONE ELEMENTO -->
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Descrizione Elemento</label>
+                                    <div class="monaco-modal-editor-button">
+                                        <button type="button" class="btn btn-sm btn-outline-info monaco-open-button"
+                                            data-bs-toggle="modal" data-bs-target="#monacoEditorModal"
+                                            onclick="openMonacoFromButton(this)">
+                                            <i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)
+                                        </button>
+                                    </div>
+                                    <textarea name="contentHtml" class="wysiwyg-editor" placeholder="Testo descrittivo..."
+                                        th:text="${editingItem != null ? editingItem.contentHtml : ''}"></textarea>
+                                </div>
+
+                                <!-- TESTO PULSANTE -->
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        Testo Pulsante <span class="text-muted">(opzionale)</span>
+                                    </label>
+                                    <input type="text" name="buttonText" class="form-control" placeholder="es. Scopri di più"
+                                        th:value="${editingItem != null ? editingItem.buttonText : ''}" />
+                                </div>
+
+                                <!-- LINK PULSANTE -->
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        Link Pulsante <span class="text-muted">(opzionale)</span>
+                                    </label>
+                                    <input type="text" name="buttonUrl" class="form-control" placeholder="https://..."
+                                        th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
                                 </div>
 
                             </div>
-
-
-                            <div class="col-12">
-
-                                <label class="form-label fw-bold">
-                                    Descrizione Elemento
-                                </label>
-
-                                <div class="monaco-modal-editor-button"><button type="button"
-                                        class="btn btn-sm btn-outline-info monaco-open-button" data-bs-toggle="modal"
-                                        data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)"><i
-                                            class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato
-                                        (Monaco)</button></div>
-                                <textarea name="contentHtml" class="wysiwyg-editor" placeholder="Testo descrittivo..."
-                                    th:text="${editingItem != null ? editingItem.contentHtml : ''}">
-                                </textarea>
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Testo Pulsante
-                                    <span class="text-muted">
-                                        (opzionale)
-                                    </span>
-                                </label>
-
-                                <input type="text" name="buttonText" class="form-control"
-                                    placeholder="es. Scopri di più"
-                                    th:value="${editingItem != null ? editingItem.buttonText : ''}" />
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Link Pulsante
-                                    <span class="text-muted">
-                                        (opzionale)
-                                    </span>
-                                </label>
-
-                                <input type="text" name="buttonUrl" class="form-control" placeholder="https://..."
-                                    th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
-
-                            </div>
-
-
-                            <div class="col-12 text-end d-flex justify-content-end gap-2">
+<!-- ========================================================
+                                 PULSANTI AZIONE (Annulla / Salva Elemento)
+                                 Posto FUORI da itemExtraFields così resta visibile
+                                 anche nella modalità Nastro Multi-Immagine
+                                 ======================================================== -->
+                            <div class="col-12 text-end d-flex justify-content-end gap-2 mt-3">
 
                                 <a th:if="${editingItem != null}" th:href="@{/admin/block/edit/{id}(id=${block.id})}"
                                     class="btn btn-outline-light btn-lg">
-
                                     Annulla Modifica
-
                                 </a>
-
 
                                 <button type="button" onclick="showSaveItemModal()"
                                     th:class="${editingItem != null} ? 'btn btn-warning btn-lg' : 'btn btn-success btn-lg'">
-
-                                    <i th:class="${editingItem != null} ? 'bi bi-check-lg' : 'bi bi-plus-lg'">
-                                    </i>
-
+                                    <i th:class="${editingItem != null} ? 'bi bi-check-lg' : 'bi bi-plus-lg'"></i>
                                     <span id="addItemButtonText"
                                         th:text="${editingItem != null ? 'Salva Modifiche Elemento' : 'Aggiungi Card'}">
-
                                         Aggiungi Card
-
                                     </span>
-
                                 </button>
 
                             </div>
@@ -1973,7 +1957,7 @@
             modal.show();
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
+                document.addEventListener("DOMContentLoaded", function () {
 
             const blockTypeSelect =
                 document.getElementById("blockTypeSelect");
@@ -2014,6 +1998,11 @@
             const carouselTypeWrapper =
                 document.getElementById("carouselTypeWrapper");
 
+            // --- DICHIARAZIONI ELEMENTI DIMENSIONI (vanno qui in alto!) ---
+            const cardsDimensionsWrapper = document.getElementById("cardsDimensionsWrapper");
+            const carouselDimensionsWrapper = document.getElementById("carouselDimensionsWrapper");
+            const standardHeightOption = document.getElementById("standardHeightOption");
+            const multiWidthOption = document.getElementById("multiWidthOption");
 
             /* ========================================================
                INIZIALIZZAZIONE SFONDI
@@ -2024,77 +2013,77 @@
             updateBackgroundColorControls();
             updateBackgroundImageControls();
 
+            // Listener sui radio button del carosello per alternare Altezza Hero / Dimensione Nastro
+            const carouselRadios = document.querySelectorAll('input[name="carouselType"]');
+            carouselRadios.forEach(radio => {
+                radio.addEventListener("change", aggiornaInterfaccia);
+            });
 
             if (blockTypeSelect) {
-
                 blockTypeSelect.addEventListener(
                     "change",
                     aggiornaInterfaccia
                 );
-
                 aggiornaInterfaccia();
-
             }
 
-
             function aggiornaInterfaccia() {
+                const tipo = blockTypeSelect ? blockTypeSelect.value : "";
+                const isCards = tipo === "CARDS";
+                const isCarousel = tipo === "CAROUSEL";
 
-                const tipo =
-                    blockTypeSelect.value;
+                // Mostra/Nascondi selettore stile carosello
+                if (carouselTypeWrapper) {
+                    carouselTypeWrapper.style.display = isCarousel ? "" : "none";
+                }
+
+                // Mostra/Nascondi opzioni dimensioni Card
+                if (cardsDimensionsWrapper) {
+                    cardsDimensionsWrapper.style.display = isCards ? "" : "none";
+                }
+
+                // Mostra/Nascondi opzioni dimensioni Carosello
+                if (carouselDimensionsWrapper) {
+                    carouselDimensionsWrapper.style.display = isCarousel ? "" : "none";
+                }
+
+                // Se è carosello, differenzia tra Standard (Hero) e Multi-immagine (Nastro)
+                if (isCarousel) {
+                    const isMulti = document.getElementById("carouselTypeMulti")?.checked;
+                    if (standardHeightOption) standardHeightOption.style.display = isMulti ? "none" : "";
+                    if (multiWidthOption) multiWidthOption.style.display = isMulti ? "" : "none";
+                }
 
                 const mostraImmaginePrincipale =
                     tipo === "JUMBO_DEMO_1"
                     ||
                     tipo === "JUMBO_DEMO_2";
 
-
                 if (mainImageUpload) {
-
                     mainImageUpload.style.display =
                         mostraImmaginePrincipale
                             ? ""
                             : "none";
-
                 }
-
-
-                const isCards =
-                    tipo === "CARDS";
-
-                const isCarousel =
-                    tipo === "CAROUSEL";
-
-                if (carouselTypeWrapper) {
-                    carouselTypeWrapper.style.display = isCarousel ? "" : "none";
-                }
-
 
                 const isItemsBlock =
                     isCards || isCarousel;
 
-
                 if (mainEditorSection) {
-
                     mainEditorSection.style.display =
                         isItemsBlock
                             ? "none"
                             : "";
-
                 }
 
-
                 if (itemsSection) {
-
                     itemsSection.style.display =
                         isItemsBlock
                             ? ""
                             : "none";
-
                 }
 
-
                 if (isCards) {
-
                     if (itemsSectionTitle)
                         itemsSectionTitle.textContent =
                             "Gestione Griglia Cards";
@@ -2106,7 +2095,6 @@
                     if (addItemTitle &&
                         (!editingMode() ||
                             addItemTitle.textContent.trim() !== "Modifica Elemento")) {
-
                         addItemTitle.textContent =
                             "Aggiungi Card";
                     }
@@ -2121,36 +2109,31 @@
 
                     if (addItemButtonText &&
                         !editingMode()) {
-
                         addItemButtonText.textContent =
-                            "Aggiungi Card";
+                            "Salva Card";
                     }
 
                     if (existingItemsTitle)
                         existingItemsTitle.textContent =
-                            "Card inserite";
+                            "Card Esistenti";
 
                     if (itemsIcon)
-                        itemsIcon.innerHTML =
-                            '<i class="bi bi-grid-3x3-gap fs-4 text-success"></i>';
-
+                        itemsIcon.className =
+                            "bi bi-grid-3x3-gap-fill text-success me-2 fs-5";
                 }
 
-
                 if (isCarousel) {
-
                     if (itemsSectionTitle)
                         itemsSectionTitle.textContent =
-                            "Gestione Carosello";
+                            "Gestione Slide Carosello";
 
                     if (itemsSectionDescription)
                         itemsSectionDescription.textContent =
-                            "Gestisci le Slide che compongono questo carosello.";
+                            "Gestisci le immagini e i testi che scorreranno.";
 
                     if (addItemTitle &&
                         (!editingMode() ||
                             addItemTitle.textContent.trim() !== "Modifica Elemento")) {
-
                         addItemTitle.textContent =
                             "Aggiungi Slide";
                     }
@@ -2165,22 +2148,55 @@
 
                     if (addItemButtonText &&
                         !editingMode()) {
-
                         addItemButtonText.textContent =
-                            "Aggiungi Slide";
+                            "Salva Slide";
                     }
 
                     if (existingItemsTitle)
                         existingItemsTitle.textContent =
-                            "Slide inserite";
+                            "Slide Esistenti";
 
                     if (itemsIcon)
-                        itemsIcon.innerHTML =
-                            '<i class="bi bi-images fs-4 text-success"></i>';
-
+                        itemsIcon.className =
+                            "bi bi-images text-success me-2 fs-5";
                 }
 
+                                // Gestione campi: se Multi-Immagine mostra SOLO upload immagine
+                const itemTitleCol = document.getElementById("itemTitleCol");
+                const itemTitleInput = document.getElementById("itemTitleInput");
+                const itemImageCol = document.getElementById("itemImageCol");
+                const itemExtraFields = document.getElementById("itemExtraFields");
+                const isMultiCarousel = isCarousel && document.getElementById("carouselTypeMulti")?.checked;
+
+                if (isMultiCarousel) {
+                    if (itemTitleCol) itemTitleCol.style.display = "none";
+                    if (itemExtraFields) itemExtraFields.style.display = "none";
+                    if (itemImageCol) itemImageCol.className = "col-12";
+                    if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Nastro";
+                    if (addItemTitle && (!editingMode() || addItemTitle.textContent.trim() !== "Modifica Elemento")) {
+                        addItemTitle.textContent = "Aggiungi Immagine al Nastro";
+                    }
+                    if (addItemButtonText && !editingMode()) {
+                        addItemButtonText.textContent = "Salva Immagine";
+                    }
+                    
+                } else {
+                    if (itemTitleCol) itemTitleCol.style.display = "";
+                    if (itemExtraFields) itemExtraFields.style.display = "";
+                    if (itemImageCol) itemImageCol.className = "col-md-6";
+                    if (itemTitleInput) itemTitleInput.required = true;
+                }
+
+
+                if (typeof renderRowPreviewIfOpen === "function") {
+                    renderRowPreviewIfOpen();
+                }
             }
+
+            // Aggiungi l'ascoltatore anche sul cambio radio dei caroselli
+            document.querySelectorAll("input[name='carouselType']").forEach(radio => {
+                radio.addEventListener("change", aggiornaInterfaccia);
+            });
 
 
             function editingMode() {

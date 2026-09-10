@@ -53,6 +53,55 @@ public class PageBlock {
     @OneToMany(mappedBy = "pageBlock", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("itemOrder ASC")
     private List<BlockItem> items = new ArrayList<>();
+    
+    // ============================================================
+    // PERSONALIZZAZIONE DIMENSIONI CARD E CAROSELLI
+    // ============================================================
+    // Card per riga (2, 3 o 4 colonne su desktop)
+    @Column(name = "cards_per_row")
+    private Integer cardsPerRow = 3;
+
+    // Altezza immagine delle card (es. 220px, 280px, 360px)
+    @Column(name = "card_image_height")
+    private String cardImageHeight = "280px";
+
+    // Altezza slide per Carosello Standard (Hero)
+    @Column(name = "carousel_slide_height")
+    private String carouselSlideHeight = "500px";
+
+    // Larghezza singola slide per Carosello Multi-Immagine (in px)
+    @Column(name = "multi_item_width")
+    private Integer multiItemWidth = 390;
+
+    // --- GETTER E SETTER CON FALLBACK ---
+    public Integer getCardsPerRow() {
+        return cardsPerRow != null && cardsPerRow > 0 ? cardsPerRow : 3;
+    }
+    public void setCardsPerRow(Integer cardsPerRow) {
+        this.cardsPerRow = cardsPerRow;
+    }
+
+    public String getCardImageHeight() {
+        return cardImageHeight != null && !cardImageHeight.isBlank() ? cardImageHeight : "280px";
+    }
+    public void setCardImageHeight(String cardImageHeight) {
+        this.cardImageHeight = cardImageHeight;
+    }
+
+    public String getCarouselSlideHeight() {
+        return carouselSlideHeight != null && !carouselSlideHeight.isBlank() ? carouselSlideHeight : "500px";
+    }
+    public void setCarouselSlideHeight(String carouselSlideHeight) {
+        this.carouselSlideHeight = carouselSlideHeight;
+    }
+
+    public Integer getMultiItemWidth() {
+        return multiItemWidth != null && multiItemWidth > 0 ? multiItemWidth : 390;
+    }
+    public void setMultiItemWidth(Integer multiItemWidth) {
+        this.multiItemWidth = multiItemWidth;
+    }
+
 
     public PageBlock() {}
 

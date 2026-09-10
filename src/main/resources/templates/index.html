@@ -830,12 +830,15 @@
                     class="mb-4 text-center text-light tinymce-content" th:utext="${block.contentHtml}">
                 </div>
 
-                <div class="row g-4 justify-content-between align-items-stretch">
-                    <div th:each="item : ${block.items}" class="col-12 col-md-6 col-lg-4 d-flex">
+                                <div class="row g-4 justify-content-between align-items-stretch">
+                    <!-- Colonna dinamica: col-lg-6 (2 card), col-lg-4 (3 card), col-lg-3 (4 card) -->
+                    <div th:each="item : ${block.items}"
+                         th:class="${(block.cardsPerRow == 2 ? 'col-12 col-md-6 col-lg-6' : (block.cardsPerRow == 4 ? 'col-12 col-md-6 col-lg-3' : 'col-12 col-md-6 col-lg-4')) + ' d-flex'}">
                         <div class="card card-custom w-100 d-flex flex-column overflow-hidden"
                             th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : 'background-color: transparent !important;'">
                             <div th:if="${item.imageUrl != null and !item.imageUrl.empty}" class="card-img-wrapper">
                                 <img th:src="${item.imageUrl}" class="card-img-top card-img-responsive"
+                                    th:style="${block.cardImageHeight != null and !block.cardImageHeight.isEmpty()} ? 'height: ' + ${block.cardImageHeight} + ' !important; object-fit: cover;' : ''"
                                     alt="Card Image">
                             </div>
                             <div class="card-body p-4 d-flex flex-column">
@@ -851,16 +854,12 @@
                                         <span th:text="${item.buttonText}">Scopri di più</span>
                                         <i class="bi bi-arrow-right"></i>
                                     </a>
-                                    <span th:unless="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}"
-                                        class="btn-card-link">
-                                        <span th:text="${item.buttonText}">Scopri di più</span>
-                                        <i class="bi bi-arrow-right"></i>
-                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- CAROSELLO -->
@@ -872,11 +871,14 @@
                     class="carousel slide carousel-custom overflow-hidden mx-auto" data-bs-ride="carousel"
                     th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
                     <div class="carousel-inner">
-                        <div th:each="item, iterStat : ${block.items}"
+                                                                        <div th:each="item, iterStat : ${block.items}"
                             th:class="'carousel-item ' + ${iterStat.index == 0 ? 'active' : ''}">
                             <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'}"
-                                class="d-block w-100" th:alt="${item.title}">
+                                class="d-block w-100 object-fit-cover"
+                                th:style="'height: ' + (${block.carouselSlideHeight != null and !block.carouselSlideHeight.isEmpty()} ? ${block.carouselSlideHeight} : '500px') + ' !important;'"
+                                th:alt="${item.title}">
                             <div class="carousel-caption carousel-caption-custom text-start mx-auto"
+
                                 th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
                                 <h2 class="fw-extrabold text-white mb-2" th:text="${item.title}">Titolo Slide</h2>
                                 <div th:if="${item.contentHtml != null and !item.contentHtml.trim().isEmpty()}"
@@ -919,10 +921,31 @@
 
                         <!-- Primo gruppo di immagini -->
                         <div class="multi-image-marquee-group">
-                            <div th:each="item : ${block.items}" class="multi-image-item">
+                            <div th:each="item : ${block.items}" class="multi-image-item"
+     th:style="'width: ' + (${block.multiItemWidth != null and block.multiItemWidth > 0} ? ${block.multiItemWidth} + 'px;' : '390px;')">
+    <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3" style="background-color: #0f172a;">
+        <div class="position-relative overflow-hidden slide-img-wrapper"
+             th:style="'height: ' + (${block.multiItemWidth != null and block.multiItemWidth > 0} ? ${block.multiItemWidth * 260 / 390} + 'px;' : '260px;')">
+            <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'}"
+                class="w-100 h-100 object-fit-cover" th:alt="${item.title}">
+        </div>
+        <div th:if="${(item.title != null and !item.title.isEmpty()) or (item.contentHtml != null and !item.contentHtml.isEmpty())}" class="p-3">
+            <h6 th:if="${item.title != null and !item.title.isEmpty()}" class="fw-bold text-white mb-1" th:text="${item.title}"></h6>
+            <div th:if="${item.contentHtml != null and !item.contentHtml.isEmpty()}" class="small text-muted tinymce-content" th:utext="${item.contentHtml}"></div>
+        </div>
+    </div>
+</div>
+
+                        </div>
+
+                                                <!-- Secondo gruppo di immagini (replica identica) -->
+                        <div class="multi-image-marquee-group" aria-hidden="true">
+                            <div th:each="item : ${block.items}" class="multi-image-item"
+                                th:style="'width: ' + (${block.multiItemWidth != null and block.multiItemWidth > 0} ? ${block.multiItemWidth} + 'px;' : '390px;')">
                                 <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3"
                                     style="background-color: #0f172a;">
-                                    <div class="position-relative overflow-hidden slide-img-wrapper">
+                                    <div class="position-relative overflow-hidden slide-img-wrapper"
+                                        th:style="'height: ' + (${block.multiItemWidth != null and block.multiItemWidth > 0} ? ${block.multiItemWidth * 260 / 390} + 'px;' : '260px;')">
                                         <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'}"
                                             class="w-100 h-100 object-fit-cover" th:alt="${item.title}">
                                     </div>
@@ -938,26 +961,6 @@
                             </div>
                         </div>
 
-                        <!-- Secondo gruppo di immagini (replica identica) -->
-                        <div class="multi-image-marquee-group" aria-hidden="true">
-                            <div th:each="item : ${block.items}" class="multi-image-item">
-                                <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3"
-                                    style="background-color: #0f172a;">
-                                    <div class="position-relative overflow-hidden slide-img-wrapper">
-                                        <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'}"
-                                            class="w-100 h-100 object-fit-cover" th:alt="${item.title}">
-                                    </div>
-                                    <div th:if="${(item.title != null and !item.title.isEmpty()) or (item.contentHtml != null and !item.contentHtml.isEmpty())}"
-                                        class="p-3">
-                                        <h6 th:if="${item.title != null and !item.title.isEmpty()}"
-                                            class="fw-bold text-white mb-1" th:text="${item.title}"></h6>
-                                        <div th:if="${item.contentHtml != null and !item.contentHtml.isEmpty()}"
-                                            class="small text-muted tinymce-content" th:utext="${item.contentHtml}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
 

@@ -37,7 +37,6 @@ public class PageBlock {
     private Integer bgImageSaturation = 100;
     private Integer bgImageGrayscale = 0;
     private Integer bgImageBrightness = 100; // Default 100%
-    private Integer bgImageScale = 100;      // Default 100% (dimensione naturale)
 
     private boolean draft = true; // Default: Inserita come Bozza
 
@@ -91,13 +90,9 @@ public class PageBlock {
     public Integer getBgImageGrayscale() { return bgImageGrayscale; }
     public void setBgImageGrayscale(Integer bgImageGrayscale) { this.bgImageGrayscale = bgImageGrayscale; }
 
-        public Integer getBgImageBrightness() { return bgImageBrightness; }
+    public Integer getBgImageBrightness() { return bgImageBrightness; }
     public void setBgImageBrightness(Integer bgImageBrightness) { this.bgImageBrightness = bgImageBrightness; }
 
-    public Integer getBgImageScale() { return bgImageScale; }
-    public void setBgImageScale(Integer bgImageScale) { this.bgImageScale = bgImageScale; }
-
-    
     public boolean isDraft() { return draft; }
     public void setDraft(boolean draft) { this.draft = draft; }
 

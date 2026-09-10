@@ -339,7 +339,16 @@
 
         .multi-image-item {
             flex-shrink: 0;
+            width: 390px;
+            /* <--- Aumentata la larghezza della slide (era 340px) */
         }
+
+        .multi-image-item .slide-img-wrapper {
+            height: 260px;
+            /* <--- Aumentata l'altezza dell'immagine (era 230px) */
+            width: 100%;
+        }
+
 
         /* In pausa quando l'utente si sofferma con il cursore */
         .multi-image-marquee-container:hover .multi-image-marquee-group {
@@ -732,12 +741,18 @@
 
         .draft-toggle-container {
             position: fixed;
-            top: 85px;
+            top: 105px;
             right: 24px;
-            z-index: 1050;
+            z-index: 1015;
+            width: auto !important;
+            pointer-events: none;
+            /* L'area circostante è trasparente ai click */
         }
 
-        .draft-toggle-container .btn {
+        /* Usiamo 'button' invece di '.btn' */
+        .draft-toggle-container button {
+            pointer-events: auto !important;
+            /* Rende il bottone cliccabile */
             padding: 0.4rem 0.75rem;
             font-size: 0.78rem;
             border-radius: 0.6rem;
@@ -745,11 +760,11 @@
 
         @media (max-width: 767.98px) {
             .draft-toggle-container {
-                top: 75px;
+                top: 90px;
                 right: 15px;
             }
 
-            .draft-toggle-container .btn {
+            .draft-toggle-container button {
                 padding: 0.35rem 0.6rem;
                 font-size: 0.72rem;
             }
@@ -774,7 +789,7 @@
      PULSANTE MOSTRA/NASCONDI BOZZE
      VISIBILE SOLO AGLI UTENTI AUTENTICATI
      ======================================================== -->
-    <div sec:authorize="isAuthenticated()" class="container py-3 draft-toggle-container">
+    <div sec:authorize="isAuthenticated()" class="draft-toggle-container">
         <div class="d-flex justify-content-end">
             <button type="button" id="btn-toggle-drafts"
                 style="background-color: rgba(0, 220, 130, 0.15); border: 1px solid rgba(0, 220, 130, 0.4); color: #00dc82; font-weight: 600; padding: 0.45rem 0.9rem; border-radius: 0.6rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); cursor: pointer; transition: all 0.25s ease;"
@@ -910,12 +925,12 @@
                             <div th:each="item : ${block.items}" class="multi-image-item">
                                 <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3"
                                     style="background-color: #0f172a;">
-                                    <div class="position-relative overflow-hidden" style="height: 230px; width: 340px;">
+                                    <div class="position-relative overflow-hidden slide-img-wrapper">
                                         <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'}"
                                             class="w-100 h-100 object-fit-cover" th:alt="${item.title}">
                                     </div>
                                     <div th:if="${(item.title != null and !item.title.isEmpty()) or (item.contentHtml != null and !item.contentHtml.isEmpty())}"
-                                        class="p-3" style="width: 340px;">
+                                        class="p-3">
                                         <h6 th:if="${item.title != null and !item.title.isEmpty()}"
                                             class="fw-bold text-white mb-1" th:text="${item.title}"></h6>
                                         <div th:if="${item.contentHtml != null and !item.contentHtml.isEmpty()}"
@@ -926,17 +941,17 @@
                             </div>
                         </div>
 
-                        <!-- Secondo gruppo di immagini (replica identica per ciclo infinito fluido senza interruzioni) -->
+                        <!-- Secondo gruppo di immagini (replica identica) -->
                         <div class="multi-image-marquee-group" aria-hidden="true">
                             <div th:each="item : ${block.items}" class="multi-image-item">
                                 <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3"
                                     style="background-color: #0f172a;">
-                                    <div class="position-relative overflow-hidden" style="height: 230px; width: 340px;">
+                                    <div class="position-relative overflow-hidden slide-img-wrapper">
                                         <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'}"
                                             class="w-100 h-100 object-fit-cover" th:alt="${item.title}">
                                     </div>
                                     <div th:if="${(item.title != null and !item.title.isEmpty()) or (item.contentHtml != null and !item.contentHtml.isEmpty())}"
-                                        class="p-3" style="width: 340px;">
+                                        class="p-3">
                                         <h6 th:if="${item.title != null and !item.title.isEmpty()}"
                                             class="fw-bold text-white mb-1" th:text="${item.title}"></h6>
                                         <div th:if="${item.contentHtml != null and !item.contentHtml.isEmpty()}"
@@ -948,6 +963,7 @@
                         </div>
 
                     </div>
+
 
                 </div>
 
@@ -1241,6 +1257,27 @@
         animate();
 
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tracks = document.querySelectorAll(".multi-image-marquee-track");
+            tracks.forEach(track => {
+                const group = track.querySelector(".multi-image-marquee-group");
+                if (!group) return;
+
+                // Continua a clonare il gruppo finché non supera abbondantemente lo schermo (anche 4K o 32'')
+                let totalWidth = track.scrollWidth;
+                const minRequiredWidth = window.innerWidth * 2.5;
+
+                while (totalWidth < minRequiredWidth) {
+                    const clone = group.cloneNode(true);
+                    clone.setAttribute("aria-hidden", "true");
+                    track.appendChild(clone);
+                    totalWidth = track.scrollWidth;
+                }
+            });
+        });
+    </script>
+
 
 </body>
 

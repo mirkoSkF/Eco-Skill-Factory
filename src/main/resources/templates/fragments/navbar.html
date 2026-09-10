@@ -40,13 +40,13 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        /* ANIMAZIONE E COLORE LINEA UNDERLINE HOVER */
+                /* ANIMAZIONE E COLORE LINEA UNDERLINE HOVER (solo per i link normali) */
         .navbar-nav .nav-link {
             position: relative;
         }
 
-        /* Il !important su background-color forza la lettura della variabile stilizzata inline */
-        .navbar-nav .nav-link::after {
+        /* Escludiamo il dropdown-toggle così non cancella la freccia di Bootstrap */
+        .navbar-nav .nav-link:not(.dropdown-toggle)::after {
             content: '' !important;
             position: absolute !important;
             bottom: 0 !important;
@@ -58,11 +58,35 @@
             transition: width 0.3s ease-in-out, left 0.3s ease-in-out !important;
         }
 
-        .navbar-nav .nav-link:hover::after,
-        .navbar-nav .nav-link:focus::after {
+        .navbar-nav .nav-link:not(.dropdown-toggle):hover::after,
+        .navbar-nav .nav-link:not(.dropdown-toggle):focus::after {
             width: 80% !important;
             left: 10% !important;
         }
+
+        /* Assicura che la freccetta del dropdown sia visibile e allineata */
+        .navbar-nav .nav-link.dropdown-toggle::after {
+            display: inline-block !important;
+            margin-left: 0.35em !important;
+            vertical-align: 0.2em !important;
+            content: "" !important;
+            border-top: 0.35em solid !important;
+            border-right: 0.3em solid transparent !important;
+            border-bottom: 0 !important;
+            border-left: 0.3em solid transparent !important;
+            position: static !important;
+            width: auto !important;
+            height: auto !important;
+            background: none !important;
+            background-color: transparent !important;
+            transition: transform 0.25s ease-in-out !important;
+        }
+
+        /* Piccola chicca: la freccetta ruota elegantemente di 180° quando il menu si apre */
+        .navbar-nav .nav-link.dropdown-toggle.show::after {
+            transform: rotate(180deg);
+        }
+
     </style>
 
     <div class="container">

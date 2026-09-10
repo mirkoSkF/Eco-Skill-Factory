@@ -368,6 +368,22 @@
             box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25);
         }
 
+                /* Quando c'è un colore personalizzato (es. rosso, blu), l'input si adatta allo sfondo invece di restare petrolio */
+        .booking-card.custom-form-bg:not(.theme-light) .form-control,
+        .booking-card.custom-form-bg:not(.theme-light) .form-select {
+            background-color: rgba(0, 0, 0, 0.35) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            color: #ffffff !important;
+        }
+
+        .booking-card.custom-form-bg:not(.theme-light) .form-control:focus,
+        .booking-card.custom-form-bg:not(.theme-light) .form-select:focus {
+            background-color: rgba(0, 0, 0, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.15) !important;
+        }
+
+
         /* ============================================================
    ADATTAMENTO AUTOMATICO SFONDO FORM CHIARO / SCURO
    ============================================================ */
@@ -512,7 +528,9 @@
                 <!-- BLOCCO FORM DINAMICO -->
                 <div th:if="${page.getFormType() != 'NONE'}" class="mt-5">
                     <div class="booking-card p-4 p-md-5"
+     th:classappend="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor)} ? 'custom-form-bg' : ''"
      th:style="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? 'background-color: ' + page.formBgColor + ' !important;' : ''}">
+
 
 
                         <div class="border-bottom border-secondary pb-3 mb-4">

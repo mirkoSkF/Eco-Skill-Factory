@@ -312,6 +312,33 @@ public class AdminController {
         }
         block.setBgImageGrayscale(bgImageGrayscale);
 
+                // --- LUMINOSITÀ ---
+        Integer bgImageBrightness = formBlock.getBgImageBrightness();
+        if (bgImageBrightness == null) {
+            bgImageBrightness = 100;
+        }
+        if (bgImageBrightness < 0) {
+            bgImageBrightness = 0;
+        }
+        if (bgImageBrightness > 200) {
+            bgImageBrightness = 200;
+        }
+        block.setBgImageBrightness(bgImageBrightness);
+
+        // --- RIDIMENSIONAMENTO / SCALA (100% = dimensione originale) ---
+        Integer bgImageScale = formBlock.getBgImageScale();
+        if (bgImageScale == null) {
+            bgImageScale = 100;
+        }
+        if (bgImageScale < 10) {
+            bgImageScale = 10;
+        }
+        if (bgImageScale > 300) {
+            bgImageScale = 300;
+        }
+        block.setBgImageScale(bgImageScale);
+
+
 
         // ============================================================
         // IMMAGINE DI SFONDO DELLA RIGA

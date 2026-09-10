@@ -251,6 +251,14 @@ public class AdminController {
                 formBlock.getBlockType()
         );
 
+        // Tipologia Carosello (preserva "STANDARD" come fallback)
+        if (formBlock.getCarouselType() != null && !formBlock.getCarouselType().isBlank()) {
+            block.setCarouselType(formBlock.getCarouselType());
+        } else {
+            block.setCarouselType("STANDARD");
+        }
+
+
 
         block.setContentHtml(
                 formBlock.getContentHtml()

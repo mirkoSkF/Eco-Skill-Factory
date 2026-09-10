@@ -40,6 +40,12 @@ public class PageBlock {
 
     private boolean draft = true; // Default: Inserita come Bozza
 
+    // ============================================================
+    // TIPOLOGIA CAROSELLO (STANDARD / MULTI_IMAGE)
+    // ============================================================
+    @Column(name = "carousel_type")
+    private String carouselType = "STANDARD";
+
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String contentHtml;
@@ -101,4 +107,12 @@ public class PageBlock {
 
     public List<BlockItem> getItems() { return items; }
     public void setItems(List<BlockItem> items) { this.items = items; }
+
+     public String getCarouselType() {
+        return carouselType != null ? carouselType : "STANDARD";
+    }
+
+    public void setCarouselType(String carouselType) {
+        this.carouselType = carouselType;
+    }
 }

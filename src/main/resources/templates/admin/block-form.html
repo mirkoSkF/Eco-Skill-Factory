@@ -705,6 +705,43 @@
 
             <div class="row g-3 mb-3">
 
+                <!-- SELETTORE MODELLO CAROSELLO (visibile solo se CAROUSEL) -->
+                <div id="carouselTypeWrapper" class="mb-4 p-3 rounded"
+                    style="background-color: #1e293b; border: 1px solid #334155; display: none;">
+                    <label class="form-label fw-bold d-flex align-items-center mb-2 text-white">
+                        <i class="bi bi-view-list text-success me-2 fs-5"></i>
+                        Stile Carosello
+                    </label>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded h-100"
+                                style="background-color: #0f172a; border: 1px solid #334155;">
+                                <input class="form-check-input" type="radio" name="carouselType"
+                                    id="carouselTypeStandard" value="STANDARD" th:field="*{carouselType}" checked
+                                    onchange="renderRowPreviewIfOpen()">
+                                <label class="form-check-label ms-2 text-white" for="carouselTypeStandard">
+                                    <strong>Standard (Hero Slide)</strong>
+                                    <div class="small text-muted mt-1">Una slide a tutto schermo per volta con titolo,
+                                        descrizione e pulsante centrale.</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded h-100"
+                                style="background-color: #0f172a; border: 1px solid #334155;">
+                                <input class="form-check-input" type="radio" name="carouselType" id="carouselTypeMulti"
+                                    value="MULTI_IMAGE" th:field="*{carouselType}" onchange="renderRowPreviewIfOpen()">
+                                <label class="form-check-label ms-2 text-white" for="carouselTypeMulti">
+                                    <strong>Multi-Immagine (Nastro / Gallery)</strong>
+                                    <div class="small text-muted mt-1">Più immagini affiancate contemporaneamente a
+                                        scorrimento orizzontale (come gallery fotografica).</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="col-md-4">
 
                     <label class="form-label fw-bold">
@@ -1974,6 +2011,9 @@
             const existingItemsTitle =
                 document.getElementById("existingItemsTitle");
 
+            const carouselTypeWrapper =
+                document.getElementById("carouselTypeWrapper");
+
 
             /* ========================================================
                INIZIALIZZAZIONE SFONDI
@@ -2023,6 +2063,11 @@
 
                 const isCarousel =
                     tipo === "CAROUSEL";
+
+                if (carouselTypeWrapper) {
+                    carouselTypeWrapper.style.display = isCarousel ? "" : "none";
+                }
+
 
                 const isItemsBlock =
                     isCards || isCarousel;

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link th:if="${navbarSettings != null and navbarSettings.faviconUrl != null and !#strings.isEmpty(navbarSettings.faviconUrl)}" 
-          rel="icon" th:href="${navbarSettings.faviconUrl}">
+    <link
+        th:if="${navbarSettings != null and navbarSettings.faviconUrl != null and !#strings.isEmpty(navbarSettings.faviconUrl)}"
+        rel="icon" th:href="${navbarSettings.faviconUrl}">
     <title>Eco Skill Factory</title>
 
     <!-- ========================================================
@@ -22,7 +22,9 @@
          ======================================================== -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
 
     <!-- ========================================================
          BOOTSTRAP
@@ -34,7 +36,6 @@
          CSS
          ======================================================== -->
     <style>
-
         :root {
             --brand-primary: #00dc82;
             --brand-primary-hover: #00b368;
@@ -51,6 +52,7 @@
             font-style: normal;
             font-display: swap;
         }
+
         @font-face {
             font-family: 'Neue Haas Grotesk Display Pro';
             src: url('/fonts/NeueHaasDisplayRomanItalic.woff2') format('woff2');
@@ -58,6 +60,7 @@
             font-style: italic;
             font-display: swap;
         }
+
         @font-face {
             font-family: 'Neue Haas Grotesk Display Pro';
             src: url('/fonts/NeueHaasDisplayMedium.woff2') format('woff2');
@@ -65,6 +68,7 @@
             font-style: normal;
             font-display: swap;
         }
+
         @font-face {
             font-family: 'Neue Haas Grotesk Display Pro';
             src: url('/fonts/NeueHaasDisplayBold.woff2') format('woff2');
@@ -79,10 +83,12 @@
             line-height: 1.6;
             color: #ffffff !important;
         }
+
         .tinymce-content p {
             font-size: 18px;
             color: #ffffff !important;
         }
+
         .tinymce-content h1,
         .tinymce-content h2,
         .tinymce-content h3,
@@ -91,34 +97,42 @@
         .tinymce-content h6 {
             color: #ffffff !important;
         }
+
         .tinymce-content a {
             color: #36e4da !important;
         }
+
         .tinymce-content img {
             max-width: 100%;
             height: auto;
         }
+
         .tinymce-content figure.image.align-left {
             float: left;
             margin: 0 15px 10px 0;
         }
+
         .tinymce-content figure.image.align-center {
             display: block;
             text-align: center;
             margin: 10px auto;
         }
+
         .tinymce-content figure.image.align-right {
             float: right;
             margin: 0 0 10px 15px;
         }
+
         .tinymce-content figure.image {
             display: inline-block;
             margin: 0 2px 0 1px;
         }
+
         .tinymce-content figure.image img {
             max-width: 100%;
             height: auto;
         }
+
         .tinymce-content::after {
             content: '';
             display: block;
@@ -248,7 +262,7 @@
             z-index: 0;
         }
 
-        .block-container.has-background-image > * {
+        .block-container.has-background-image>* {
             position: relative;
             z-index: 1;
         }
@@ -260,7 +274,7 @@
             margin-bottom: 0 !important;
         }
 
-        .block-container > div {
+        .block-container>div {
             height: 100% !important;
         }
 
@@ -270,7 +284,9 @@
         .custom-jumbotron img,
         .card-text img,
         .carousel-caption-custom img,
-        iframe, video, embed {
+        iframe,
+        video,
+        embed {
             max-width: 100% !important;
             height: auto !important;
         }
@@ -292,6 +308,55 @@
             white-space: pre-wrap;
             word-break: break-word;
         }
+
+        .multi-image-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ========================================================
+   CAROSELLO MULTI-IMMAGINE AD ANIMAZIONE CONTINUA (MARQUEE)
+   ======================================================== */
+        .multi-image-marquee-container {
+            position: relative;
+            width: 100%;
+            mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+        }
+
+        .multi-image-marquee-track {
+            display: flex;
+            width: max-content;
+            gap: 1.25rem;
+        }
+
+        .multi-image-marquee-group {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            gap: 1.25rem;
+            animation: marqueeScroll 30s linear infinite;
+        }
+
+        .multi-image-item {
+            flex-shrink: 0;
+        }
+
+        /* In pausa quando l'utente si sofferma con il cursore */
+        .multi-image-marquee-container:hover .multi-image-marquee-group {
+            animation-play-state: paused;
+        }
+
+        @keyframes marqueeScroll {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(calc(-100% - 1.25rem));
+            }
+        }
+
+
 
         /* ========================================================
            JUMBOTRON
@@ -575,7 +640,7 @@
                 padding-bottom: 1.5rem !important;
             }
 
-            .block-container > div,
+            .block-container>div,
             .custom-jumbotron,
             .carousel-custom,
             .hero-fallback,
@@ -689,421 +754,494 @@
                 font-size: 0.72rem;
             }
         }
-
     </style>
 
 </head>
 
 <body>
 
-<!-- ========================================================
+    <!-- ========================================================
      SFONDO ANIMATO
      ======================================================== -->
-<canvas id="tech-bg-canvas"></canvas>
+    <canvas id="tech-bg-canvas"></canvas>
 
-<!-- ========================================================
+    <!-- ========================================================
      NAVBAR CONDIVISA
      ======================================================== -->
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<!-- ========================================================
+    <!-- ========================================================
      PULSANTE MOSTRA/NASCONDI BOZZE
      VISIBILE SOLO AGLI UTENTI AUTENTICATI
      ======================================================== -->
-<div sec:authorize="isAuthenticated()" class="container py-3 draft-toggle-container">
-    <div class="d-flex justify-content-end">
-        <button type="button"
-                id="btn-toggle-drafts"
+    <div sec:authorize="isAuthenticated()" class="container py-3 draft-toggle-container">
+        <div class="d-flex justify-content-end">
+            <button type="button" id="btn-toggle-drafts"
                 style="background-color: rgba(0, 220, 130, 0.15); border: 1px solid rgba(0, 220, 130, 0.4); color: #00dc82; font-weight: 600; padding: 0.45rem 0.9rem; border-radius: 0.6rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); cursor: pointer; transition: all 0.25s ease;"
                 aria-expanded="false">
-            <i class="bi bi-eye me-2"></i>
-            <span>Mostra bozze</span>
-        </button>
+                <i class="bi bi-eye me-2"></i>
+                <span>Mostra bozze</span>
+            </button>
+        </div>
     </div>
-</div>
 
-<!-- ========================================================
+    <!-- ========================================================
      MAIN CONTENT
      ======================================================== -->
-<main th:if="${not #lists.isEmpty(blocks)}">
+    <main th:if="${not #lists.isEmpty(blocks)}">
 
-    <div th:each="block : ${blocks}"
-         th:if="${!block.draft or #authorization.expression('isAuthenticated()')}"
-         th:class="${block.containerType.cssClass} + ' py-3 block-container position-relative'"
-         th:classappend="${(block.draft ? ' draft-block-hidden' : '') + (block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl) ? ' has-background-image' : '')}"
-         th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'}
+        <div th:each="block : ${blocks}" th:if="${!block.draft or #authorization.expression('isAuthenticated()')}"
+            th:class="${block.containerType.cssClass} + ' py-3 block-container position-relative'"
+            th:classappend="${(block.draft ? ' draft-block-hidden' : '') + (block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl) ? ' has-background-image' : '')}"
+            th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'}
                    + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent')
                    + (${block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl)} ? '; --block-background-image: url(\'' + ${block.backgroundImageUrl} + '\'); --block-background-opacity: ' + (${block.bgImageOpacity != null ? block.bgImageOpacity : 100} / 100) + '; --block-background-saturation: ' + (${block.bgImageSaturation != null ? block.bgImageSaturation : 100} / 100) + '; --block-background-grayscale: ' + (${block.bgImageGrayscale != null ? block.bgImageGrayscale : 0} / 100) + ';' : '') + '; --block-background-brightness: ' + (${block.bgImageBrightness != null ? block.bgImageBrightness : 100} / 100)+ ';'">
 
-        <!-- TAG BOZZA VISIBILE SOLO DALL'ADMIN SE IL BLOCCO È IN BOZZA -->
-        <div sec:authorize="isAuthenticated()" th:if="${block.draft}" 
-             class="position-absolute top-0 start-0 m-3 z-3">
-            <span class="badge bg-warning text-dark fs-6 px-3 py-2 shadow border border-warning border-2">
-                <i class="bi bi-pencil-square me-1"></i> Bozza
-            </span>
-        </div>
-
-        <!-- JUMBOTRON -->
-        <div th:if="${block.blockType.name() == 'JUMBOTRON'}"
-             class="p-4 p-md-5 custom-jumbotron mx-auto"
-             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
-            <div class="container-fluid py-2 tinymce-content" th:utext="${block.contentHtml}"></div>
-        </div>
-
-        <!-- CARDS -->
-        <div th:if="${block.blockType.name() == 'CARDS'}"
-             class="mx-auto"
-             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
-            <div th:if="${block.contentHtml != null and !block.contentHtml.empty}"
-                 class="mb-4 text-center text-light tinymce-content"
-                 th:utext="${block.contentHtml}">
+            <!-- TAG BOZZA VISIBILE SOLO DALL'ADMIN SE IL BLOCCO È IN BOZZA -->
+            <div sec:authorize="isAuthenticated()" th:if="${block.draft}"
+                class="position-absolute top-0 start-0 m-3 z-3">
+                <span class="badge bg-warning text-dark fs-6 px-3 py-2 shadow border border-warning border-2">
+                    <i class="bi bi-pencil-square me-1"></i> Bozza
+                </span>
             </div>
 
-            <div class="row g-4 justify-content-between align-items-stretch">
-                <div th:each="item : ${block.items}" class="col-12 col-md-6 col-lg-4 d-flex">
-                    <div class="card card-custom w-100 d-flex flex-column overflow-hidden"
-                         th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : 'background-color: transparent !important;'">
-                        <div th:if="${item.imageUrl != null and !item.imageUrl.empty}" class="card-img-wrapper">
-                            <img th:src="${item.imageUrl}" class="card-img-top card-img-responsive" alt="Card Image">
-                        </div>
-                        <div class="card-body p-4 d-flex flex-column">
-                            <h4 class="card-title fw-bold mb-2" th:text="${item.title}">Titolo Card</h4>
-                            <h6 th:if="${item.subtitle != null}" class="card-subtitle mb-3 text-success opacity-75 fw-semibold" th:text="${item.subtitle}">Sottotitolo</h6>
-                            <div class="card-text flex-grow-1 tinymce-content" th:utext="${item.contentHtml}"></div>
-                            <div th:if="${item.buttonText != null and !item.buttonText.trim().isEmpty()}" class="mt-4 pt-2">
-                                <a th:if="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}" th:href="${item.buttonUrl}" class="btn-card-link">
-                                    <span th:text="${item.buttonText}">Scopri di più</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                                <span th:unless="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}" class="btn-card-link">
-                                    <span th:text="${item.buttonText}">Scopri di più</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </span>
+            <!-- JUMBOTRON -->
+            <div th:if="${block.blockType.name() == 'JUMBOTRON'}" class="p-4 p-md-5 custom-jumbotron mx-auto"
+                th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+                <div class="container-fluid py-2 tinymce-content" th:utext="${block.contentHtml}"></div>
+            </div>
+
+            <!-- CARDS -->
+            <div th:if="${block.blockType.name() == 'CARDS'}" class="mx-auto"
+                th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+                <div th:if="${block.contentHtml != null and !block.contentHtml.empty}"
+                    class="mb-4 text-center text-light tinymce-content" th:utext="${block.contentHtml}">
+                </div>
+
+                <div class="row g-4 justify-content-between align-items-stretch">
+                    <div th:each="item : ${block.items}" class="col-12 col-md-6 col-lg-4 d-flex">
+                        <div class="card card-custom w-100 d-flex flex-column overflow-hidden"
+                            th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : 'background-color: transparent !important;'">
+                            <div th:if="${item.imageUrl != null and !item.imageUrl.empty}" class="card-img-wrapper">
+                                <img th:src="${item.imageUrl}" class="card-img-top card-img-responsive"
+                                    alt="Card Image">
+                            </div>
+                            <div class="card-body p-4 d-flex flex-column">
+                                <h4 class="card-title fw-bold mb-2" th:text="${item.title}">Titolo Card</h4>
+                                <h6 th:if="${item.subtitle != null}"
+                                    class="card-subtitle mb-3 text-success opacity-75 fw-semibold"
+                                    th:text="${item.subtitle}">Sottotitolo</h6>
+                                <div class="card-text flex-grow-1 tinymce-content" th:utext="${item.contentHtml}"></div>
+                                <div th:if="${item.buttonText != null and !item.buttonText.trim().isEmpty()}"
+                                    class="mt-4 pt-2">
+                                    <a th:if="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}"
+                                        th:href="${item.buttonUrl}" class="btn-card-link">
+                                        <span th:text="${item.buttonText}">Scopri di più</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                    <span th:unless="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}"
+                                        class="btn-card-link">
+                                        <span th:text="${item.buttonText}">Scopri di più</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- CAROSELLO -->
-        <div th:if="${block.blockType.name() == 'CAROUSEL'}"
-             th:id="'carouselBlock-' + ${block.id}"
-             class="carousel slide carousel-custom overflow-hidden mx-auto"
-             data-bs-ride="carousel"
-             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
-            <div class="carousel-inner">
-                <div th:each="item, iterStat : ${block.items}"
-                     th:class="'carousel-item ' + ${iterStat.index == 0 ? 'active' : ''}">
-                    <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'}"
-                         class="d-block w-100" th:alt="${item.title}">
-                    <div class="carousel-caption carousel-caption-custom text-start mx-auto"
-                         th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
-                        <h2 class="fw-extrabold text-white mb-2" th:text="${item.title}">Titolo Slide</h2>
-                        <div th:if="${item.contentHtml != null and !item.contentHtml.trim().isEmpty()}" class="text-light opacity-90 tinymce-content" th:utext="${item.contentHtml}"></div>
-                        <div th:if="${item.buttonText != null and !item.buttonText.trim().isEmpty()}">
-                            <a th:if="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}" th:href="${item.buttonUrl}" class="carousel-button">
-                                <span th:text="${item.buttonText}">Scopri di più</span>
-                                <i class="bi bi-arrow-right"></i>
-                            </a>
-                            <span th:unless="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}" class="carousel-button">
-                                <span th:text="${item.buttonText}">Scopri di più</span>
-                                <i class="bi bi-arrow-right"></i>
-                            </span>
+            <!-- CAROSELLO -->
+            <th:block th:if="${block.blockType.name() == 'CAROUSEL'}">
+
+                <!-- MODELLO 1: ORIGINALE (STANDARD HERO) - Inalterato al 100% -->
+                <div th:if="${block.carouselType == null or block.carouselType == 'STANDARD'}"
+                    th:id="'carouselBlock-' + ${block.id}"
+                    class="carousel slide carousel-custom overflow-hidden mx-auto" data-bs-ride="carousel"
+                    th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+                    <div class="carousel-inner">
+                        <div th:each="item, iterStat : ${block.items}"
+                            th:class="'carousel-item ' + ${iterStat.index == 0 ? 'active' : ''}">
+                            <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'}"
+                                class="d-block w-100" th:alt="${item.title}">
+                            <div class="carousel-caption carousel-caption-custom text-start mx-auto"
+                                th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
+                                <h2 class="fw-extrabold text-white mb-2" th:text="${item.title}">Titolo Slide</h2>
+                                <div th:if="${item.contentHtml != null and !item.contentHtml.trim().isEmpty()}"
+                                    class="text-light opacity-90 tinymce-content" th:utext="${item.contentHtml}"></div>
+                                <div th:if="${item.buttonText != null and !item.buttonText.trim().isEmpty()}">
+                                    <a th:if="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}"
+                                        th:href="${item.buttonUrl}" class="carousel-button">
+                                        <span th:text="${item.buttonText}">Scopri di più</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                    <span th:unless="${item.buttonUrl != null and !item.buttonUrl.trim().isEmpty()}"
+                                        class="carousel-button">
+                                        <span th:text="${item.buttonText}">Scopri di più</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button"
+                        th:data-bs-target="'#carouselBlock-' + ${block.id}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon p-3 bg-dark bg-opacity-50 rounded-circle"
+                            aria-hidden="true"></span>
+                        <span class="visually-hidden">Precedente</span>
+                    </button>
+                    <button class="carousel-control-next" type="button"
+                        th:data-bs-target="'#carouselBlock-' + ${block.id}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon p-3 bg-dark bg-opacity-50 rounded-circle"
+                            aria-hidden="true"></span>
+                        <span class="visually-hidden">Successivo</span>
+                    </button>
+                </div>
+
+                <!-- MODELLO 2: MULTI-IMMAGINE (SCORRIMENTO CONTINUO AUTOMATICO) -->
+                <div th:if="${block.carouselType == 'MULTI_IMAGE'}"
+                    class="multi-image-marquee-container overflow-hidden py-3 mx-auto"
+                    th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+
+                    <div class="multi-image-marquee-track">
+
+                        <!-- Primo gruppo di immagini -->
+                        <div class="multi-image-marquee-group">
+                            <div th:each="item : ${block.items}" class="multi-image-item">
+                                <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3"
+                                    style="background-color: #0f172a;">
+                                    <div class="position-relative overflow-hidden" style="height: 230px; width: 340px;">
+                                        <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'}"
+                                            class="w-100 h-100 object-fit-cover" th:alt="${item.title}">
+                                    </div>
+                                    <div th:if="${(item.title != null and !item.title.isEmpty()) or (item.contentHtml != null and !item.contentHtml.isEmpty())}"
+                                        class="p-3" style="width: 340px;">
+                                        <h6 th:if="${item.title != null and !item.title.isEmpty()}"
+                                            class="fw-bold text-white mb-1" th:text="${item.title}"></h6>
+                                        <div th:if="${item.contentHtml != null and !item.contentHtml.isEmpty()}"
+                                            class="small text-muted tinymce-content" th:utext="${item.contentHtml}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Secondo gruppo di immagini (replica identica per ciclo infinito fluido senza interruzioni) -->
+                        <div class="multi-image-marquee-group" aria-hidden="true">
+                            <div th:each="item : ${block.items}" class="multi-image-item">
+                                <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3"
+                                    style="background-color: #0f172a;">
+                                    <div class="position-relative overflow-hidden" style="height: 230px; width: 340px;">
+                                        <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'}"
+                                            class="w-100 h-100 object-fit-cover" th:alt="${item.title}">
+                                    </div>
+                                    <div th:if="${(item.title != null and !item.title.isEmpty()) or (item.contentHtml != null and !item.contentHtml.isEmpty())}"
+                                        class="p-3" style="width: 340px;">
+                                        <h6 th:if="${item.title != null and !item.title.isEmpty()}"
+                                            class="fw-bold text-white mb-1" th:text="${item.title}"></h6>
+                                        <div th:if="${item.contentHtml != null and !item.contentHtml.isEmpty()}"
+                                            class="small text-muted tinymce-content" th:utext="${item.contentHtml}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </th:block>
+
+
+            <!-- JUMBO DEMO 1 -->
+            <div th:if="${block.blockType.name() == 'JUMBO_DEMO_1'}" class="p-4 p-md-5 custom-jumbotron mx-auto"
+                th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+                <div class="row align-items-center g-4 g-md-5">
+                    <div class="col-lg-7 text-light tinymce-content" th:utext="${block.contentHtml}"></div>
+                    <div class="col-lg-5 text-center">
+                        <div th:if="${block.imageUrl != null and !block.imageUrl.empty}"
+                            class="overflow-hidden rounded-4">
+                            <img th:src="${block.imageUrl}" class="img-fluid w-100 object-fit-cover rounded-4"
+                                style="max-height: 450px;" alt="Demo 1 Image">
+                        </div>
+                        <div th:unless="${block.imageUrl != null and !block.imageUrl.empty}"
+                            class="p-4 p-md-5 rounded-4 text-center text-muted">
+                            <i class="bi bi-image fs-1 opacity-50"></i>
+                            <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per
+                                visualizzarla qui</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" th:data-bs-target="'#carouselBlock-' + ${block.id}" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon p-3 bg-dark bg-opacity-50 rounded-circle" aria-hidden="true"></span>
-                <span class="visually-hidden">Precedente</span>
-            </button>
-            <button class="carousel-control-next" type="button" th:data-bs-target="'#carouselBlock-' + ${block.id}" data-bs-slide="next">
-                <span class="carousel-control-next-icon p-3 bg-dark bg-opacity-50 rounded-circle" aria-hidden="true"></span>
-                <span class="visually-hidden">Successivo</span>
-            </button>
-        </div>
 
-        <!-- JUMBO DEMO 1 -->
-        <div th:if="${block.blockType.name() == 'JUMBO_DEMO_1'}"
-             class="p-4 p-md-5 custom-jumbotron mx-auto"
-             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
-            <div class="row align-items-center g-4 g-md-5">
-                <div class="col-lg-7 text-light tinymce-content" th:utext="${block.contentHtml}"></div>
-                <div class="col-lg-5 text-center">
-                    <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="overflow-hidden rounded-4">
-                        <img th:src="${block.imageUrl}" class="img-fluid w-100 object-fit-cover rounded-4" style="max-height: 450px;" alt="Demo 1 Image">
+            <!-- JUMBO DEMO 2 -->
+            <div th:if="${block.blockType.name() == 'JUMBO_DEMO_2'}" class="p-4 p-md-5 custom-jumbotron mx-auto"
+                th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+                <div class="row align-items-center g-4 g-md-5">
+                    <div class="col-lg-5 text-center order-2 order-lg-1">
+                        <div th:if="${block.imageUrl != null and !block.imageUrl.empty}"
+                            class="overflow-hidden rounded-4">
+                            <img th:src="${block.imageUrl}" class="img-fluid w-100 object-fit-cover rounded-4"
+                                style="max-height: 450px;" alt="Demo 2 Image">
+                        </div>
+                        <div th:unless="${block.imageUrl != null and !block.imageUrl.empty}"
+                            class="p-4 p-md-5 rounded-4 text-center text-muted">
+                            <i class="bi bi-image fs-1 opacity-50"></i>
+                            <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per
+                                visualizzarla qui</p>
+                        </div>
                     </div>
-                    <div th:unless="${block.imageUrl != null and !block.imageUrl.empty}" class="p-4 p-md-5 rounded-4 text-center text-muted">
-                        <i class="bi bi-image fs-1 opacity-50"></i>
-                        <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per visualizzarla qui</p>
+                    <div class="col-lg-7 text-light order-1 order-lg-2 tinymce-content" th:utext="${block.contentHtml}">
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- JUMBO DEMO 2 -->
-        <div th:if="${block.blockType.name() == 'JUMBO_DEMO_2'}"
-             class="p-4 p-md-5 custom-jumbotron mx-auto"
-             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
-            <div class="row align-items-center g-4 g-md-5">
-                <div class="col-lg-5 text-center order-2 order-lg-1">
-                    <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="overflow-hidden rounded-4">
-                        <img th:src="${block.imageUrl}" class="img-fluid w-100 object-fit-cover rounded-4" style="max-height: 450px;" alt="Demo 2 Image">
-                    </div>
-                    <div th:unless="${block.imageUrl != null and !block.imageUrl.empty}" class="p-4 p-md-5 rounded-4 text-center text-muted">
-                        <i class="bi bi-image fs-1 opacity-50"></i>
-                        <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per visualizzarla qui</p>
-                    </div>
-                </div>
-                <div class="col-lg-7 text-light order-1 order-lg-2 tinymce-content" th:utext="${block.contentHtml}"></div>
+            <!-- JUMBO 2 COLONNE -->
+            <div th:if="${block.blockType.name() == 'JUMBO_2_COL'}" class="p-4 p-md-5 custom-jumbotron mx-auto"
+                th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
+                <div class="text-light tinymce-content" th:utext="${block.contentHtml}"></div>
             </div>
+
         </div>
 
-        <!-- JUMBO 2 COLONNE -->
-        <div th:if="${block.blockType.name() == 'JUMBO_2_COL'}"
-             class="p-4 p-md-5 custom-jumbotron mx-auto"
-             th:style="${block.widthPercent != null and block.widthPercent > 0} ? 'width: ' + ${block.widthPercent} + '%;' : 'width: 100%;'">
-            <div class="text-light tinymce-content" th:utext="${block.contentHtml}"></div>
-        </div>
+    </main>
 
-    </div>
-
-</main>
-
-<!-- ========================================================
+    <!-- ========================================================
      FALLBACK
      ======================================================== -->
-<div th:if="${#lists.isEmpty(blocks)}" class="container py-5 my-5">
-    <div class="p-4 p-md-5 hero-fallback text-center position-relative overflow-hidden">
-        <div class="position-relative z-1 py-4">
-            <h1 class="display-4 fw-bold mb-3">Benvenuto su Eco Skill Factory</h1>
-            <p class="lead text-slate-300 max-w-2xl mx-auto mb-4" style="max-width: 600px;">
-                La tua piattaforma è pronta. Non hai ancora configurato nessun blocco dinamico per la homepage.
-            </p>
-            <a href="/login" class="btn btn-brand btn-lg rounded-pill px-4 px-md-5">
-                Accedi al Dashboard CMS <i class="bi bi-arrow-right ms-2"></i>
-            </a>
+    <div th:if="${#lists.isEmpty(blocks)}" class="container py-5 my-5">
+        <div class="p-4 p-md-5 hero-fallback text-center position-relative overflow-hidden">
+            <div class="position-relative z-1 py-4">
+                <h1 class="display-4 fw-bold mb-3">Benvenuto su Eco Skill Factory</h1>
+                <p class="lead text-slate-300 max-w-2xl mx-auto mb-4" style="max-width: 600px;">
+                    La tua piattaforma è pronta. Non hai ancora configurato nessun blocco dinamico per la homepage.
+                </p>
+                <a href="/login" class="btn btn-brand btn-lg rounded-pill px-4 px-md-5">
+                    Accedi al Dashboard CMS <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- ========================================================
+    <!-- ========================================================
      FOOTER CONDIVISO
      ======================================================== -->
-<div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-<!-- ========================================================
+    <!-- ========================================================
      BOTTONE TORNA SU
      ======================================================== -->
-<button type="button" id="btn-back-to-top" class="btn-back-to-top" aria-label="Torna su">
-    <i class="bi bi-arrow-up"></i>
-</button>
+    <button type="button" id="btn-back-to-top" class="btn-back-to-top" aria-label="Torna su">
+        <i class="bi bi-arrow-up"></i>
+    </button>
 
-<!-- ========================================================
+    <!-- ========================================================
      BOOTSTRAP JS
      ======================================================== -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- ========================================================
+    <!-- ========================================================
      SFONDO ANIMATO & SCRIPTS
      ======================================================== -->
-<script>
+    <script>
 
-    /* ========================================================
-       MOSTRA / NASCONDI BOZZE
-       ======================================================== */
-    const toggleDraftsBtn = document.getElementById('btn-toggle-drafts');
+        /* ========================================================
+           MOSTRA / NASCONDI BOZZE
+           ======================================================== */
+        const toggleDraftsBtn = document.getElementById('btn-toggle-drafts');
 
-    if (toggleDraftsBtn) {
-        const draftBlocks = document.querySelectorAll('.draft-block-hidden');
+        if (toggleDraftsBtn) {
+            const draftBlocks = document.querySelectorAll('.draft-block-hidden');
 
-        toggleDraftsBtn.addEventListener('click', () => {
-            const draftsVisible = toggleDraftsBtn.getAttribute('aria-expanded') === 'true';
+            toggleDraftsBtn.addEventListener('click', () => {
+                const draftsVisible = toggleDraftsBtn.getAttribute('aria-expanded') === 'true';
 
-            draftBlocks.forEach(block => {
-                if (draftsVisible) {
-                    block.classList.add('draft-block-hidden');
+                draftBlocks.forEach(block => {
+                    if (draftsVisible) {
+                        block.classList.add('draft-block-hidden');
+                    } else {
+                        block.classList.remove('draft-block-hidden');
+                    }
+                });
+
+                toggleDraftsBtn.setAttribute('aria-expanded', String(!draftsVisible));
+
+                const icon = toggleDraftsBtn.querySelector('i');
+                const text = toggleDraftsBtn.querySelector('span');
+
+                if (!draftsVisible) {
+                    if (icon) icon.className = 'bi bi-eye-slash me-2';
+                    if (text) text.textContent = 'Nascondi bozze';
                 } else {
-                    block.classList.remove('draft-block-hidden');
+                    if (icon) icon.className = 'bi bi-eye me-2';
+                    if (text) text.textContent = 'Mostra bozze';
+                }
+            });
+        }
+
+        /* ========================================================
+           TORNA SU SCRIPT
+           ======================================================== */
+        const backToTopBtn = document.getElementById('btn-back-to-top');
+
+        if (backToTopBtn) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
                 }
             });
 
-            toggleDraftsBtn.setAttribute('aria-expanded', String(!draftsVisible));
-
-            const icon = toggleDraftsBtn.querySelector('i');
-            const text = toggleDraftsBtn.querySelector('span');
-
-            if (!draftsVisible) {
-                if (icon) icon.className = 'bi bi-eye-slash me-2';
-                if (text) text.textContent = 'Nascondi bozze';
-            } else {
-                if (icon) icon.className = 'bi bi-eye me-2';
-                if (text) text.textContent = 'Mostra bozze';
-            }
-        });
-    }
-
-    /* ========================================================
-       TORNA SU SCRIPT
-       ======================================================== */
-    const backToTopBtn = document.getElementById('btn-back-to-top');
-
-    if (backToTopBtn) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-            }
-        });
-
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-
-    /* ========================================================
-       SFONDO ANIMATO
-       ======================================================== */
-    const canvas = document.getElementById('tech-bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Circuit {
-        constructor() {
-            this.reset();
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
         }
 
-        reset() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.length = Math.floor(Math.random() * 8) + 4;
-            this.currentStep = 0;
-            this.dir = Math.floor(Math.random() * 4);
-            this.path = [{ x: this.x, y: this.y }];
-            this.speed = Math.random() * 1.5 + 0.5;
-            this.alpha = Math.random() * 0.4 + 0.1;
-            this.size = 20;
+        /* ========================================================
+           SFONDO ANIMATO
+           ======================================================== */
+        const canvas = document.getElementById('tech-bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
 
-        update() {
-            if (this.currentStep < this.length) {
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Circuit {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.length = Math.floor(Math.random() * 8) + 4;
+                this.currentStep = 0;
+                this.dir = Math.floor(Math.random() * 4);
+                this.path = [{ x: this.x, y: this.y }];
+                this.speed = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.4 + 0.1;
+                this.size = 20;
+            }
+
+            update() {
+                if (this.currentStep < this.length) {
+                    let last = this.path[this.path.length - 1];
+                    let nx = last.x;
+                    let ny = last.y;
+
+                    if (Math.random() < 0.3) {
+                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+                    }
+
+                    switch (this.dir) {
+                        case 0: ny -= this.size; break;
+                        case 1: nx += this.size; break;
+                        case 2: ny += this.size; break;
+                        case 3: nx -= this.size; break;
+                    }
+
+                    this.path.push({ x: nx, y: ny });
+                    this.currentStep++;
+                } else {
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
+                }
+            }
+
+            draw() {
+                if (this.path.length < 2) return;
+
+                ctx.beginPath();
+                ctx.moveTo(this.path[0].x, this.path[0].y);
+
+                for (let i = 1; i < this.path.length; i++) {
+                    ctx.lineTo(this.path[i].x, this.path[i].y);
+                }
+
+                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
                 let last = this.path[this.path.length - 1];
-                let nx = last.x;
-                let ny = last.y;
+                ctx.beginPath();
+                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+                ctx.fill();
+            }
+        }
 
-                if (Math.random() < 0.3) {
-                    this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+        const codeSnippets = [
+            "class BlockManager {}",
+            "import spring.boot.*;",
+            "<div class='eco'>",
+            "SELECT * FROM blocks;",
+            "const init = () => {};",
+            "return new PageBlock();",
+            "01000101 01000011 01001111",
+            "public static void main()",
+            "async fetch('/api')",
+            "npm run build",
+            "docker-compose up -d",
+            "mvn clean install"
+        ];
+
+        class CodeText {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * (width - 200);
+                this.y = Math.random() * height;
+                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                this.alpha = 0;
+                this.maxAlpha = Math.random() * 0.3 + 0.1;
+                this.fadeIn = true;
+                this.speed = Math.random() * 0.3 + 0.1;
+            }
+
+            update() {
+                this.y -= this.speed;
+
+                if (this.fadeIn) {
+                    this.alpha += 0.008;
+                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+                } else {
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
                 }
+            }
 
-                switch (this.dir) {
-                    case 0: ny -= this.size; break;
-                    case 1: nx += this.size; break;
-                    case 2: ny += this.size; break;
-                    case 3: nx -= this.size; break;
-                }
-
-                this.path.push({ x: nx, y: ny });
-                this.currentStep++;
-            } else {
-                this.alpha -= 0.005;
-                if (this.alpha <= 0) this.reset();
+            draw() {
+                ctx.font = '12px "Fira Code", monospace';
+                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.fillText(this.text, this.x, this.y);
             }
         }
 
-        draw() {
-            if (this.path.length < 2) return;
+        const circuits = Array.from({ length: 18 }, () => new Circuit());
+        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
 
-            ctx.beginPath();
-            ctx.moveTo(this.path[0].x, this.path[0].y);
-
-            for (let i = 1; i < this.path.length; i++) {
-                ctx.lineTo(this.path[i].x, this.path[i].y);
-            }
-
-            ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-
-            let last = this.path[this.path.length - 1];
-            ctx.beginPath();
-            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-            ctx.fill();
-        }
-    }
-
-    const codeSnippets = [
-        "class BlockManager {}",
-        "import spring.boot.*;",
-        "<div class='eco'>",
-        "SELECT * FROM blocks;",
-        "const init = () => {};",
-        "return new PageBlock();",
-        "01000101 01000011 01001111",
-        "public static void main()",
-        "async fetch('/api')",
-        "npm run build",
-        "docker-compose up -d",
-        "mvn clean install"
-    ];
-
-    class CodeText {
-        constructor() {
-            this.reset();
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            circuits.forEach(c => { c.update(); c.draw(); });
+            codeTexts.forEach(ct => { ct.update(); ct.draw(); });
+            requestAnimationFrame(animate);
         }
 
-        reset() {
-            this.x = Math.random() * (width - 200);
-            this.y = Math.random() * height;
-            this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-            this.alpha = 0;
-            this.maxAlpha = Math.random() * 0.3 + 0.1;
-            this.fadeIn = true;
-            this.speed = Math.random() * 0.3 + 0.1;
-        }
+        animate();
 
-        update() {
-            this.y -= this.speed;
-
-            if (this.fadeIn) {
-                this.alpha += 0.008;
-                if (this.alpha >= this.maxAlpha) this.fadeIn = false;
-            } else {
-                this.alpha -= 0.005;
-                if (this.alpha <= 0) this.reset();
-            }
-        }
-
-        draw() {
-            ctx.font = '12px "Fira Code", monospace';
-            ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
-            ctx.fillText(this.text, this.x, this.y);
-        }
-    }
-
-    const circuits = Array.from({ length: 18 }, () => new Circuit());
-    const codeTexts = Array.from({ length: 12 }, () => new CodeText());
-
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-        circuits.forEach(c => { c.update(); c.draw(); });
-        codeTexts.forEach(ct => { ct.update(); ct.draw(); });
-        requestAnimationFrame(animate);
-    }
-
-    animate();
-
-</script>
+    </script>
 
 </body>
+
 </html>

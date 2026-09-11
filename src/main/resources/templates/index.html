@@ -469,6 +469,61 @@
         }
 
         /* ========================================================
+           PERSONALIZZAZIONI DINAMICHE DA PAGEBLOCK
+           ======================================================== */
+        .block-container.dynamic-pageblock-border {
+            border: var(--block-border, none) !important;
+        }
+
+        .block-container.cards-radius-rounded .card-custom,
+        .block-container.cards-radius-rounded .card-custom .card-img-wrapper {
+            border-radius: 1.25rem !important;
+        }
+
+        .block-container.cards-radius-squared .card-custom,
+        .block-container.cards-radius-squared .card-custom .card-img-wrapper {
+            border-radius: 0 !important;
+        }
+
+        .block-container.cards-radius-top-rounded .card-custom {
+            border-radius: 1.25rem 1.25rem 0 0 !important;
+        }
+
+        .block-container.cards-radius-top-rounded .card-custom .card-img-wrapper {
+            border-radius: 1.25rem 1.25rem 0 0 !important;
+        }
+
+        .block-container.cards-radius-top-rounded .card-custom .card-body,
+        .block-container.cards-radius-top-rounded .card-custom .card-footer {
+            border-radius: 0 !important;
+        }
+
+        .block-container.carousel-radius-rounded .carousel-custom,
+        .block-container.carousel-radius-rounded .carousel-custom .carousel-item img {
+            border-radius: 1.5rem !important;
+        }
+
+        .block-container.carousel-radius-squared .carousel-custom,
+        .block-container.carousel-radius-squared .carousel-custom .carousel-item img {
+            border-radius: 0 !important;
+        }
+
+        .block-container.dynamic-button-style .btn-card-link,
+        .block-container.dynamic-button-style .carousel-button {
+            background: var(--block-button-bg, #00dc82) !important;
+            border-color: var(--block-button-bg, #00dc82) !important;
+            color: var(--block-button-text, #0f172a) !important;
+            border-radius: var(--block-button-radius, 999px) !important;
+        }
+
+        .block-container.dynamic-button-style .btn-card-link:hover,
+        .block-container.dynamic-button-style .carousel-button:hover {
+            background: var(--block-button-bg, #00dc82) !important;
+            border-color: var(--block-button-bg, #00dc82) !important;
+            color: var(--block-button-text, #0f172a) !important;
+        }
+
+        /* ========================================================
            CAROSELLO
            ======================================================== */
         .carousel-custom {
@@ -804,10 +859,11 @@
 
         <div th:each="block : ${blocks}" th:if="${!block.draft or #authorization.expression('isAuthenticated()')}"
             th:class="${block.containerType.cssClass} + ' py-3 block-container position-relative'"
-            th:classappend="${(block.draft ? ' draft-block-hidden' : '') + (block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl) ? ' has-background-image' : '')}"
+            th:classappend="${(block.draft ? ' draft-block-hidden' : '') + (block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl) ? ' has-background-image' : '') + (block.borderStyle != null and block.borderStyle != 'NONE' ? ' dynamic-pageblock-border' : '') + (block.cardRadiusStyle == 'SQUARED' ? ' cards-radius-squared' : (block.cardRadiusStyle == 'TOP_ROUNDED' ? ' cards-radius-top-rounded' : ' cards-radius-rounded')) + (block.carouselRadiusStyle == 'SQUARED' ? ' carousel-radius-squared' : ' carousel-radius-rounded') + ' dynamic-button-style'}"
             th:style="'height:' + ${block.customHeight != null ? block.customHeight : 'auto'}
                    + '; background-color: ' + (${block.backgroundColor != null and !#strings.isEmpty(block.backgroundColor)} ? ${block.backgroundColor} : 'transparent')
-                   + (${block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl)} ? '; --block-background-image: url(\'' + ${block.backgroundImageUrl} + '\'); --block-background-opacity: ' + (${block.bgImageOpacity != null ? block.bgImageOpacity : 100} / 100) + '; --block-background-saturation: ' + (${block.bgImageSaturation != null ? block.bgImageSaturation : 100} / 100) + '; --block-background-grayscale: ' + (${block.bgImageGrayscale != null ? block.bgImageGrayscale : 0} / 100) + ';' : '') + '; --block-background-brightness: ' + (${block.bgImageBrightness != null ? block.bgImageBrightness : 100} / 100)+ ';'">
+                   + (${block.backgroundImageUrl != null and !#strings.isEmpty(block.backgroundImageUrl)} ? '; --block-background-image: url(\'' + ${block.backgroundImageUrl} + '\'); --block-background-opacity: ' + (${block.bgImageOpacity != null ? block.bgImageOpacity : 100} / 100) + '; --block-background-saturation: ' + (${block.bgImageSaturation != null ? block.bgImageSaturation : 100} / 100) + '; --block-background-grayscale: ' + (${block.bgImageGrayscale != null ? block.bgImageGrayscale : 0} / 100) + ';' : '') + '; --block-background-brightness: ' + (${block.bgImageBrightness != null ? block.bgImageBrightness : 100} / 100)+ ';'"
+            th:styleappend="${'--block-border: ' + block.borderCssValue + '; --block-button-bg: ' + block.buttonBackgroundColor + '; --block-button-text: ' + block.buttonTextColor + '; --block-button-radius: ' + block.buttonRadiusCssValue + ';'}">
 
             <!-- TAG BOZZA VISIBILE SOLO DALL'ADMIN SE IL BLOCCO È IN BOZZA -->
             <div sec:authorize="isAuthenticated()" th:if="${block.draft}"

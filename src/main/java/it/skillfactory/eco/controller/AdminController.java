@@ -285,6 +285,116 @@ public class AdminController {
         }
 
 
+        // ============================================================
+        // STILE BORDO RIGA / BLOCCO
+        // ============================================================
+
+        if (formBlock.getBorderStyle() != null
+                && !formBlock.getBorderStyle().isBlank()) {
+
+            block.setBorderStyle(
+                    formBlock.getBorderStyle().trim()
+            );
+
+        } else {
+
+            block.setBorderStyle("NONE");
+        }
+
+                // ============================================================
+        // COLORE BORDO RIGA / BLOCCO
+        // ============================================================
+        if (formBlock.getBorderColor() != null && !formBlock.getBorderColor().isBlank()) {
+            block.setBorderColor(formBlock.getBorderColor().trim());
+        } else {
+            block.setBorderColor("#334155");
+        }
+
+
+        // ============================================================
+        // STILE ANGOLI CARD
+        // ============================================================
+
+        if (formBlock.getCardRadiusStyle() != null
+                && !formBlock.getCardRadiusStyle().isBlank()) {
+
+            block.setCardRadiusStyle(
+                    formBlock.getCardRadiusStyle().trim()
+            );
+
+        } else {
+
+            block.setCardRadiusStyle("ROUNDED");
+        }
+
+
+        // ============================================================
+        // STILE ANGOLI CAROSELLO
+        // ============================================================
+
+        if (formBlock.getCarouselRadiusStyle() != null
+                && !formBlock.getCarouselRadiusStyle().isBlank()) {
+
+            block.setCarouselRadiusStyle(
+                    formBlock.getCarouselRadiusStyle().trim()
+            );
+
+        } else {
+
+            block.setCarouselRadiusStyle("ROUNDED");
+        }
+
+
+        // ============================================================
+        // COLORE SFONDO PULSANTI
+        // ============================================================
+
+        if (formBlock.getButtonBackgroundColor() != null
+                && !formBlock.getButtonBackgroundColor().isBlank()) {
+
+            block.setButtonBackgroundColor(
+                    formBlock.getButtonBackgroundColor().trim()
+            );
+
+        } else {
+
+            block.setButtonBackgroundColor("#00dc82");
+        }
+
+
+        // ============================================================
+        // COLORE TESTO PULSANTI
+        // ============================================================
+
+        if (formBlock.getButtonTextColor() != null
+                && !formBlock.getButtonTextColor().isBlank()) {
+
+            block.setButtonTextColor(
+                    formBlock.getButtonTextColor().trim()
+            );
+
+        } else {
+
+            block.setButtonTextColor("#0f172a");
+        }
+
+
+        // ============================================================
+        // STILE PULSANTI
+        // ============================================================
+
+        if (formBlock.getButtonRadiusStyle() != null
+                && !formBlock.getButtonRadiusStyle().isBlank()) {
+
+            block.setButtonRadiusStyle(
+                    formBlock.getButtonRadiusStyle().trim()
+            );
+
+        } else {
+
+            block.setButtonRadiusStyle("ROUNDED");
+        }
+
 
         block.setContentHtml(
                 formBlock.getContentHtml()
@@ -346,7 +456,8 @@ public class AdminController {
         }
         block.setBgImageGrayscale(bgImageGrayscale);
 
-                 // --- LUMINOSITÀ ---
+
+        // --- LUMINOSITÀ ---
         Integer bgImageBrightness = formBlock.getBgImageBrightness();
         if (bgImageBrightness == null) {
             bgImageBrightness = 100;
@@ -518,8 +629,6 @@ public class AdminController {
                                 &&
                                 label.contains("DYNAMIC")
                 );
-        
-        
 
 
         return isCardGrid
@@ -1157,3 +1266,4 @@ public class AdminController {
                 + blockId;
     }
 }
+

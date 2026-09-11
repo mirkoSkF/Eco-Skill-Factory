@@ -53,7 +53,7 @@ public class PageBlock {
     @OneToMany(mappedBy = "pageBlock", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("itemOrder ASC")
     private List<BlockItem> items = new ArrayList<>();
-    
+
     // ============================================================
     // PERSONALIZZAZIONE DIMENSIONI CARD E CAROSELLI
     // ============================================================
@@ -73,10 +73,54 @@ public class PageBlock {
     @Column(name = "multi_item_width")
     private Integer multiItemWidth = 390;
 
-    // --- GETTER E SETTER CON FALLBACK ---
+    // ============================================================
+    // BORDO RIGA / BLOCCO
+    // ============================================================
+    // NONE, THIN_SOLID, MEDIUM_SOLID, THICK_SOLID, DASHED, DOTTED
+    @Column(name = "border_style")
+    private String borderStyle = "NONE";
+
+    @Column(name = "border_color")
+    private String borderColor = "#334155"; // Default dark/slate
+
+    // ============================================================
+    // PERSONALIZZAZIONI GRAFICHE CARD E CAROSELLO
+    // ============================================================
+    // Stile spigoli Card: ROUNDED, SQUARED, TOP_ROUNDED
+    @Column(name = "card_radius_style")
+    private String cardRadiusStyle = "ROUNDED";
+
+    // Stile spigoli Carosello Standard: ROUNDED, SQUARED
+    @Column(name = "carousel_radius_style")
+    private String carouselRadiusStyle = "ROUNDED";
+
+    // Colore di sfondo del pulsante Card / Carosello Standard
+    @Column(name = "button_background_color")
+    private String buttonBackgroundColor = "#00dc82";
+
+    // Colore del testo del pulsante Card / Carosello Standard
+    @Column(name = "button_text_color")
+    private String buttonTextColor = "#0f172a";
+
+    // Stile spigoli del pulsante: ROUNDED, SQUARED
+    @Column(name = "button_radius_style")
+    private String buttonRadiusStyle = "ROUNDED";
+
+
+    // ============================================================
+    // COSTRUTTORI
+    // ============================================================
+    public PageBlock() {}
+
+
+    // ============================================================
+    // GETTER E SETTER CON FALLBACK
+    // ============================================================
+
     public Integer getCardsPerRow() {
         return cardsPerRow != null && cardsPerRow > 0 ? cardsPerRow : 3;
     }
+
     public void setCardsPerRow(Integer cardsPerRow) {
         this.cardsPerRow = cardsPerRow;
     }
@@ -84,6 +128,7 @@ public class PageBlock {
     public String getCardImageHeight() {
         return cardImageHeight != null && !cardImageHeight.isBlank() ? cardImageHeight : "280px";
     }
+
     public void setCardImageHeight(String cardImageHeight) {
         this.cardImageHeight = cardImageHeight;
     }
@@ -91,6 +136,7 @@ public class PageBlock {
     public String getCarouselSlideHeight() {
         return carouselSlideHeight != null && !carouselSlideHeight.isBlank() ? carouselSlideHeight : "500px";
     }
+
     public void setCarouselSlideHeight(String carouselSlideHeight) {
         this.carouselSlideHeight = carouselSlideHeight;
     }
@@ -98,14 +144,100 @@ public class PageBlock {
     public Integer getMultiItemWidth() {
         return multiItemWidth != null && multiItemWidth > 0 ? multiItemWidth : 390;
     }
+
     public void setMultiItemWidth(Integer multiItemWidth) {
         this.multiItemWidth = multiItemWidth;
     }
 
+    public String getBorderStyle() {
+        return borderStyle != null && !borderStyle.isBlank() ? borderStyle : "NONE";
+    }
 
-    public PageBlock() {}
+    public void setBorderStyle(String borderStyle) {
+        this.borderStyle = borderStyle;
+    }
 
-    // GETTER E SETTER
+    public String getBorderColor() {
+        return borderColor != null && !borderColor.isBlank() ? borderColor : "#334155";
+    }
+
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public String getCardRadiusStyle() {
+        return cardRadiusStyle != null && !cardRadiusStyle.isBlank() ? cardRadiusStyle : "ROUNDED";
+    }
+
+    public void setCardRadiusStyle(String cardRadiusStyle) {
+        this.cardRadiusStyle = cardRadiusStyle;
+    }
+
+    public String getCarouselRadiusStyle() {
+        return carouselRadiusStyle != null && !carouselRadiusStyle.isBlank() ? carouselRadiusStyle : "ROUNDED";
+    }
+
+    public void setCarouselRadiusStyle(String carouselRadiusStyle) {
+        this.carouselRadiusStyle = carouselRadiusStyle;
+    }
+
+    public String getButtonBackgroundColor() {
+        return buttonBackgroundColor != null && !buttonBackgroundColor.isBlank()
+                ? buttonBackgroundColor
+                : "#00dc82";
+    }
+
+    public void setButtonBackgroundColor(String buttonBackgroundColor) {
+        this.buttonBackgroundColor = buttonBackgroundColor;
+    }
+
+    public String getButtonTextColor() {
+        return buttonTextColor != null && !buttonTextColor.isBlank()
+                ? buttonTextColor
+                : "#0f172a";
+    }
+
+    public void setButtonTextColor(String buttonTextColor) {
+        this.buttonTextColor = buttonTextColor;
+    }
+
+    public String getButtonRadiusStyle() {
+        return buttonRadiusStyle != null && !buttonRadiusStyle.isBlank()
+                ? buttonRadiusStyle
+                : "ROUNDED";
+    }
+
+    public void setButtonRadiusStyle(String buttonRadiusStyle) {
+        this.buttonRadiusStyle = buttonRadiusStyle;
+    }
+
+    // ============================================================
+    // METODI HELPER PER IL RENDERING CSS IN THYMELEAF
+    // ============================================================
+
+    public String getBorderCssValue() {
+        if (this.borderStyle == null || "NONE".equalsIgnoreCase(this.borderStyle)) {
+            return "none";
+        }
+        String color = getBorderColor();
+        return switch (this.borderStyle) {
+            case "THIN_SOLID"   -> "1px solid " + color;
+            case "MEDIUM_SOLID" -> "2px solid " + color;
+            case "THICK_SOLID"  -> "4px solid " + color;
+            case "DASHED"       -> "2px dashed " + color;
+            case "DOTTED"       -> "2px dotted " + color;
+            default             -> "none";
+        };
+    }
+
+    public String getButtonRadiusCssValue() {
+        return "SQUARED".equalsIgnoreCase(this.buttonRadiusStyle) ? "0" : "999px";
+    }
+
+    // ============================================================
+    // GETTER E SETTER STANDARD
+    // ============================================================
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -157,7 +289,7 @@ public class PageBlock {
     public List<BlockItem> getItems() { return items; }
     public void setItems(List<BlockItem> items) { this.items = items; }
 
-     public String getCarouselType() {
+    public String getCarouselType() {
         return carouselType != null ? carouselType : "STANDARD";
     }
 

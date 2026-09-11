@@ -756,253 +756,283 @@
                     </div>
                 </div>
 
-                            <!-- ========================================================
+                <!-- ========================================================
                  DIMENSIONI SPECIFICHE CARD (visibile solo per CARDS)
                  ======================================================== -->
-            <div id="cardsDimensionsWrapper" class="p-3 mb-3 rounded" style="background-color: #1e293b; border: 1px solid #334155; display: none;">
-                <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
-                    <i class="bi bi-grid-3x3-gap text-success me-2 fs-5"></i>
-                    Configurazione Dimensioni Card
-                </label>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold text-light">Card per Riga (Desktop)</label>
-                        <select class="form-select" th:field="*{cardsPerRow}">
-                            <option value="2">2 Card per Riga (Grandi)</option>
-                            <option value="3" selected>3 Card per Riga (Standard)</option>
-                            <option value="4">4 Card per Riga (Compatte)</option>
-                        </select>
-                        <div class="form-text">Su tablet e smartphone le colonne si adatteranno automaticamente.</div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold text-light">Altezza Immagini Card</label>
-                        <select id="cardImageHeightSelect" class="form-select" th:field="*{cardImageHeight}">
-                            <option value="220px">Compatta (220px)</option>
-                            <option value="280px" selected>Standard (280px)</option>
-                            <option value="360px">Grande / Verticale (360px)</option>
-                            <option value="440px">Panoramica Alta (440px)</option>
-                        </select>
-                        <div class="form-text">L'immagine manterrà sempre la proporzione con ritaglio uniforme.</div>
+                <div id="cardsDimensionsWrapper" class="p-3 mb-3 rounded"
+                    style="background-color: #1e293b; border: 1px solid #334155; display: none;">
+                    <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
+                        <i class="bi bi-grid-3x3-gap text-success me-2 fs-5"></i>
+                        Configurazione Dimensioni Card
+                    </label>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-light">Card per Riga (Desktop)</label>
+                            <select class="form-select" th:field="*{cardsPerRow}">
+                                <option value="2">2 Card per Riga (Grandi)</option>
+                                <option value="3" selected>3 Card per Riga (Standard)</option>
+                                <option value="4">4 Card per Riga (Compatte)</option>
+                            </select>
+                            <div class="form-text">Su tablet e smartphone le colonne si adatteranno automaticamente.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-light">Altezza Immagini Card</label>
+                            <select id="cardImageHeightSelect" class="form-select" th:field="*{cardImageHeight}">
+                                <option value="220px">Compatta (220px)</option>
+                                <option value="280px" selected>Standard (280px)</option>
+                                <option value="360px">Grande / Verticale (360px)</option>
+                                <option value="440px">Panoramica Alta (440px)</option>
+                            </select>
+                            <div class="form-text">L'immagine manterrà sempre la proporzione con ritaglio uniforme.
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ========================================================
+                <!-- ========================================================
                  DIMENSIONI SPECIFICHE CAROSELLI (visibile solo per CAROUSEL)
                  ======================================================== -->
-            <div id="carouselDimensionsWrapper" class="p-3 mb-3 rounded" style="background-color: #1e293b; border: 1px solid #334155; display: none;">
-                <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
-                    <i class="bi bi-aspect-ratio text-success me-2 fs-5"></i>
-                    Dimensioni Slide Carosello
-                </label>
-                <div class="row g-3">
-                    <!-- Altezza Hero Slide (visibile se STANDARD) -->
-                    <div class="col-md-6" id="standardHeightOption">
-                        <label class="form-label fw-bold text-light">Altezza Slide (Hero)</label>
-                        <select id="carouselSlideHeightSelect" class="form-select" th:field="*{carouselSlideHeight}">
-                            <option value="400px">Compatta (400px)</option>
-                            <option value="500px" selected>Standard (500px)</option>
-                            <option value="650px">Alta (650px)</option>
-                            <option value="80vh">Quasi a tutto schermo (80vh)</option>
-                            <option value="100vh">Schermo intero (100vh)</option>
-                        </select>
-                        <div class="form-text">Altezza visibile della slide su schermi desktop.</div>
-                    </div>
+                <div id="carouselDimensionsWrapper" class="p-3 mb-3 rounded"
+                    style="background-color: #1e293b; border: 1px solid #334155; display: none;">
+                    <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
+                        <i class="bi bi-aspect-ratio text-success me-2 fs-5"></i>
+                        Dimensioni Slide Carosello
+                    </label>
+                    <div class="row g-3">
+                        <!-- Altezza Hero Slide (visibile se STANDARD) -->
+                        <div class="col-md-6" id="standardHeightOption">
+                            <label class="form-label fw-bold text-light">Altezza Slide (Hero)</label>
+                            <select id="carouselSlideHeightSelect" class="form-select"
+                                th:field="*{carouselSlideHeight}">
+                                <option value="400px">Compatta (400px)</option>
+                                <option value="500px" selected>Standard (500px)</option>
+                                <option value="650px">Alta (650px)</option>
+                                <option value="80vh">Quasi a tutto schermo (80vh)</option>
+                                <option value="100vh">Schermo intero (100vh)</option>
+                            </select>
+                            <div class="form-text">Altezza visibile della slide su schermi desktop.</div>
+                        </div>
 
-                    <!-- Larghezza Nastro Multi-Immagine (visibile se MULTI_IMAGE) -->
-                    <div class="col-md-6" id="multiWidthOption">
-                        <label class="form-label fw-bold text-light">Dimensione Tessere Nastro</label>
-                        <select id="multiItemWidthSelect" class="form-select" th:field="*{multiItemWidth}">
-                            <option value="300">Compatte (300px larghezza x 200px altezza)</option>
-                            <option value="390" selected>Standard (390px larghezza x 260px altezza)</option>
-                            <option value="480">Grandi (480px larghezza x 320px altezza)</option>
-                        </select>
-                        <div class="form-text">Determina la dimensione di ciascuna card nel nastro continuo.</div>
+                        <!-- Larghezza Nastro Multi-Immagine (visibile se MULTI_IMAGE) -->
+                        <div class="col-md-6" id="multiWidthOption">
+                            <label class="form-label fw-bold text-light">Dimensione Tessere Nastro</label>
+                            <select id="multiItemWidthSelect" class="form-select" th:field="*{multiItemWidth}">
+                                <option value="300">Compatte (300px larghezza x 200px altezza)</option>
+                                <option value="390" selected>Standard (390px larghezza x 260px altezza)</option>
+                                <option value="480">Grandi (480px larghezza x 320px altezza)</option>
+                            </select>
+                            <div class="form-text">Determina la dimensione di ciascuna card nel nastro continuo.</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ========================================================
+                <!-- ========================================================
                  PERSONALIZZAZIONE CARD / CAROSELLO / BORDO RIGA
                  ======================================================== -->
-                        <!-- ========================================================
+                <!-- ========================================================
                  1. BORDO RIGA (Sempre accessibile per Jumbotron, Card e Caroselli)
                  ======================================================== -->
-            <div id="rowBorderWrapper" class="p-3 mb-3 rounded"
-                style="background-color: #1e293b; border: 1px solid #334155;">
+                <div id="rowBorderWrapper" class="p-3 mb-3 rounded"
+                    style="background-color: #1e293b; border: 1px solid #334155;">
 
-                <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
-                    <i class="bi bi-border-outer text-success me-2 fs-5"></i>
-                    Bordo Riga / Sezione
-                </label>
+                    <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
+                        <i class="bi bi-border-outer text-success me-2 fs-5"></i>
+                        Bordo Riga / Sezione
+                    </label>
 
-                <div class="row g-3">
-                    <!-- STILE BORDO -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold text-light">Stile Bordo</label>
-                        <select class="form-select" th:field="*{borderStyle}" id="borderStyleSelect">
-                            <option value="NONE">Nessun bordo</option>
-                            <option value="THIN_SOLID">Sottile continuo (1px)</option>
-                            <option value="MEDIUM_SOLID">Medio continuo (2px)</option>
-                            <option value="THICK_SOLID">Spesso continuo (4px)</option>
-                            <option value="DASHED">Tratteggiato (2px dashed)</option>
-                            <option value="DOTTED">Punteggiato (2px dotted)</option>
-                        </select>
-                        <div class="form-text">Bordo applicato all'intero contenitore del blocco.</div>
-                    </div>
-
-                    <!-- COLORE BORDO -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold text-light">Colore Bordo</label>
-                        <div class="color-picker-wrapper">
-                            <input type="color" class="form-control form-control-color"
-                                id="borderColorPicker"
-                                th:value="${block.borderColor != null and !block.borderColor.empty ? block.borderColor : '#334155'}"
-                                oninput="syncBorderColor(this.value)">
-                            <input type="text" class="form-control" id="borderColorInput"
-                                th:field="*{borderColor}"
-                                placeholder="#334155"
-                                oninput="syncBorderColorPicker(this.value)">
+                    <div class="row g-3">
+                        <!-- STILE BORDO -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-light">Stile Bordo</label>
+                            <select class="form-select" th:field="*{borderStyle}" id="borderStyleSelect">
+                                <option value="NONE">Nessun bordo</option>
+                                <option value="THIN_SOLID">Sottile continuo (1px)</option>
+                                <option value="MEDIUM_SOLID">Medio continuo (2px)</option>
+                                <option value="THICK_SOLID">Spesso continuo (4px)</option>
+                                <option value="DASHED">Tratteggiato (2px dashed)</option>
+                                <option value="DOTTED">Punteggiato (2px dotted)</option>
+                            </select>
+                            <div class="form-text">Bordo applicato all'intero contenitore del blocco.</div>
                         </div>
-                        <div class="form-text">Colore del contorno della riga.</div>
+
+                        <!-- COLORE BORDO -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-light">Colore Bordo</label>
+                            <div class="color-picker-wrapper">
+                                <input type="color" class="form-control form-control-color" id="borderColorPicker"
+                                    th:value="${block.borderColor != null and !block.borderColor.empty ? block.borderColor : '#334155'}"
+                                    oninput="syncBorderColor(this.value)">
+                                <input type="text" class="form-control" id="borderColorInput" th:field="*{borderColor}"
+                                    placeholder="#334155" oninput="syncBorderColorPicker(this.value)">
+                            </div>
+                            <div class="form-text">Colore del contorno della riga.</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ========================================================
+                <!-- ========================================================
                  2. ASPETTO CARD E CAROSELLO (Visibile SOLO per CARDS e CAROUSEL)
                  ======================================================== -->
-            <div id="cardCarouselAppearanceWrapper" class="p-3 mb-3 rounded"
-                style="background-color: #1e293b; border: 1px solid #334155; display: none;">
+                <div id="cardCarouselAppearanceWrapper" class="p-3 mb-3 rounded"
+                    style="background-color: #1e293b; border: 1px solid #334155; display: none;">
 
-                <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
-                    <i class="bi bi-brush text-success me-2 fs-5"></i>
-                    Aspetto Elementi (Card e Carosello)
-                </label>
+                    <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
+                        <i class="bi bi-brush text-success me-2 fs-5"></i>
+                        Aspetto Elementi (Card e Carosello)
+                    </label>
 
-                <div class="row g-3">
-                    <!-- RAGGI CARD (visibile solo se CARDS) -->
-                    <div class="col-md-6" id="cardRadiusOption">
-                        <label class="form-label fw-bold text-light">
-                            <i class="bi bi-square me-1"></i> Spigoli Card
-                        </label>
-                        <select class="form-select" th:field="*{cardRadiusStyle}">
-                            <option value="ROUNDED">Arrotondati</option>
-                            <option value="SQUARED">Squadrati</option>
-                            <option value="TOP_ROUNDED">Solo superiori arrotondati</option>
-                        </select>
-                        <div class="form-text">Spigoli per le tessere della griglia.</div>
-                    </div>
+                    <div class="row g-3">
+                        <!-- RAGGI CARD (visibile solo se CARDS) -->
+                        <div class="col-md-6" id="cardRadiusOption">
+                            <label class="form-label fw-bold text-light">
+                                <i class="bi bi-square me-1"></i> Spigoli Card
+                            </label>
+                            <select class="form-select" th:field="*{cardRadiusStyle}">
+                                <option value="ROUNDED">Arrotondati</option>
+                                <option value="SQUARED">Squadrati</option>
+                                <option value="TOP_ROUNDED">Solo superiori arrotondati</option>
+                            </select>
+                            <div class="form-text">Spigoli per le tessere della griglia.</div>
+                        </div>
 
-                    <!-- RAGGI CAROSELLO (visibile solo se CAROUSEL) -->
-                    <div class="col-md-6" id="carouselRadiusOption">
-                        <label class="form-label fw-bold text-light">
-                            <i class="bi bi-aspect-ratio me-1"></i> Spigoli Carosello
-                        </label>
-                        <select class="form-select" th:field="*{carouselRadiusStyle}">
-                            <option value="ROUNDED">Arrotondati</option>
-                            <option value="SQUARED">Squadrati</option>
-                        </select>
-                        <div class="form-text">Spigoli per le slide del carosello Hero.</div>
-                    </div>
-                </div>
-
-                <hr class="border-secondary my-4">
-
-                <!-- CONFIGURAZIONE PULSANTI (Card / Slide) -->
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold text-light">
-                            <i class="bi bi-paint-bucket me-1"></i> Colore Sfondo Bottone
-                        </label>
-                        <div class="color-picker-wrapper">
-                            <input type="color" class="form-control form-control-color"
-                                id="buttonBackgroundColorPicker"
-                                th:value="${block.buttonBackgroundColor != null and !block.buttonBackgroundColor.empty ? block.buttonBackgroundColor : '#00dc82'}"
-                                oninput="syncButtonBackgroundColor(this.value)">
-                            <input type="text" class="form-control" id="buttonBackgroundColorInput"
-                                th:field="*{buttonBackgroundColor}"
-                                placeholder="#00dc82">
+                        <!-- RAGGI CAROSELLO (visibile solo se CAROUSEL) -->
+                        <div class="col-md-6" id="carouselRadiusOption">
+                            <label class="form-label fw-bold text-light">
+                                <i class="bi bi-aspect-ratio me-1"></i> Spigoli Carosello
+                            </label>
+                            <select class="form-select" th:field="*{carouselRadiusStyle}">
+                                <option value="ROUNDED">Arrotondati</option>
+                                <option value="SQUARED">Squadrati</option>
+                            </select>
+                            <div class="form-text">Spigoli per le slide del carosello Hero.</div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold text-light">
-                            <i class="bi bi-fonts me-1"></i> Colore Testo Bottone
-                        </label>
-                        <div class="color-picker-wrapper">
-                            <input type="color" class="form-control form-control-color"
-                                id="buttonTextColorPicker"
-                                th:value="${block.buttonTextColor != null and !block.buttonTextColor.empty ? block.buttonTextColor : '#0f172a'}"
-                                oninput="syncButtonTextColor(this.value)">
-                            <input type="text" class="form-control" id="buttonTextColorInput"
-                                th:field="*{buttonTextColor}"
-                                placeholder="#0f172a">
+                    <hr class="border-secondary my-4">
+
+                    <!-- CONFIGURAZIONE PULSANTI (Card / Slide) -->
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-light">
+                                <i class="bi bi-paint-bucket me-1"></i> Colore Sfondo Bottone
+                            </label>
+                            <div class="color-picker-wrapper">
+                                <input type="color" class="form-control form-control-color"
+                                    id="buttonBackgroundColorPicker"
+                                    th:value="${block.buttonBackgroundColor != null and !block.buttonBackgroundColor.empty ? block.buttonBackgroundColor : '#00dc82'}"
+                                    oninput="syncButtonBackgroundColor(this.value)">
+                                <input type="text" class="form-control" id="buttonBackgroundColorInput"
+                                    th:field="*{buttonBackgroundColor}" placeholder="#00dc82">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-light">
+                                <i class="bi bi-fonts me-1"></i> Colore Testo Bottone
+                            </label>
+                            <div class="color-picker-wrapper">
+                                <input type="color" class="form-control form-control-color" id="buttonTextColorPicker"
+                                    th:value="${block.buttonTextColor != null and !block.buttonTextColor.empty ? block.buttonTextColor : '#0f172a'}"
+                                    oninput="syncButtonTextColor(this.value)">
+                                <input type="text" class="form-control" id="buttonTextColorInput"
+                                    th:field="*{buttonTextColor}" placeholder="#0f172a">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-light">
+                                <i class="bi bi-capsule me-1"></i> Stile Spigoli Bottone
+                            </label>
+                            <select class="form-select" th:field="*{buttonRadiusStyle}">
+                                <option value="ROUNDED">Arrotondati (Pillola)</option>
+                                <option value="SQUARED">Squadrati</option>
+                            </select>
                         </div>
                     </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold text-light">
-                            <i class="bi bi-capsule me-1"></i> Stile Spigoli Bottone
-                        </label>
-                        <select class="form-select" th:field="*{buttonRadiusStyle}">
-                            <option value="ROUNDED">Arrotondati (Pillola)</option>
-                            <option value="SQUARED">Squadrati</option>
-                        </select>
-                    </div>
                 </div>
-            </div>
 
-            <!-- ========================================================
+                <!-- ========================================================
                  DIMENSIONI LIBERE CARD / CAROSELLO
                  ======================================================== -->
-            <div id="customDimensionsWrapper" class="p-3 mb-3 rounded"
-                style="background-color: #1e293b; border: 1px solid #334155;">
+                <!-- ========================================================
+     DIMENSIONI PERSONALIZZATE (Visibile solo per CARDS e CAROUSEL)
+     ======================================================== -->
+                <div id="customDimensionsWrapper" class="p-3 mb-3 rounded"
+                    style="background-color: #1e293b; border: 1px solid #334155; display: none;">
 
-                <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
-                    <i class="bi bi-rulers text-success me-2 fs-5"></i>
-                    Dimensioni Personalizzate
-                </label>
+                    <label class="form-label fw-bold d-flex align-items-center mb-3 text-white">
+                        <i class="bi bi-rulers text-success me-2 fs-5"></i>
+                        Dimensioni Personalizzate (Altezza e Larghezza)
+                    </label>
 
-                <div class="row g-3">
+                    <div class="row g-3">
 
-                    <div class="col-md-4" id="customCardHeightOption">
-                        <label class="form-label fw-bold text-light">Altezza Immagine Card Personalizzata (px)</label>
-                        <input type="number" class="form-control" id="customCardImageHeightInput"
-                            min="50" max="2000" step="1"
-                            placeholder="es. 320"
-                            th:value="${block.cardImageHeight != null and block.cardImageHeight.matches('[0-9]+px') ? #strings.replace(block.cardImageHeight, 'px', '') : ''}"
-                            oninput="syncCustomDimension('cardImageHeight', this.value)">
-                        <div class="form-text">Scrivi solo il numero. Il valore viene salvato in px.</div>
+                        <!-- ================= OPZIONI CARD ================= -->
+                        <!-- Altezza Immagine Card -->
+                        <div class="col-md-6 custom-card-dim" id="customCardHeightOption">
+                            <label class="form-label fw-bold text-light">Altezza Immagine Card (px)</label>
+                            <input type="number" class="form-control" id="customCardImageHeightInput" min="50"
+                                max="1500" step="10" placeholder="es. 280"
+                                th:value="${block.cardImageHeight != null and block.cardImageHeight.matches('[0-9]+px') ? #strings.replace(block.cardImageHeight, 'px', '') : ''}"
+                                oninput="syncCustomDimension('cardImageHeight', this.value); renderRowPreviewIfOpen();">
+                            <div class="form-text">Altezza del riquadro immagine superiore delle card.</div>
+                        </div>
+
+                        <!-- Larghezza Massima Card -->
+                        <div class="col-md-6 custom-card-dim" id="customCardWidthOption">
+                            <label class="form-label fw-bold text-light">Larghezza Massima Card (px)</label>
+                            <input type="number" class="form-control" id="customCardMaxWidthInput" min="150" max="1200"
+                                step="10" placeholder="es. 380 (vuoto = auto)" th:field="*{cardMaxWidth}"
+                                oninput="renderRowPreviewIfOpen();">
+                            <div class="form-text">Larghezza max di ciascuna card nella griglia (lascia vuoto per
+                                colonna fluida).</div>
+                        </div>
+
+                        <!-- ================= OPZIONI CAROSELLO STANDARD ================= -->
+                        <!-- Altezza Slide Hero -->
+                        <div class="col-md-6 custom-standard-carousel" id="customCarouselHeightOption">
+                            <label class="form-label fw-bold text-light">Altezza Slide Carosello Hero (px)</label>
+                            <input type="number" class="form-control" id="customCarouselHeightInput" min="100"
+                                max="2000" step="10" placeholder="es. 500"
+                                th:value="${block.carouselSlideHeight != null and block.carouselSlideHeight.matches('[0-9]+px') ? #strings.replace(block.carouselSlideHeight, 'px', '') : ''}"
+                                oninput="syncCustomDimension('carouselSlideHeight', this.value); renderRowPreviewIfOpen();">
+                            <div class="form-text">Altezza visibile della slide su desktop.</div>
+                        </div>
+
+                        <!-- Larghezza Massima Carosello Hero -->
+                        <div class="col-md-6 custom-standard-carousel" id="customCarouselWidthOption">
+                            <label class="form-label fw-bold text-light">Larghezza Massima Carosello (px o %)</label>
+                            <input type="text" class="form-control" id="customCarouselWidthInput"
+                                placeholder="es. 1200px oppure 90%" th:field="*{carouselMaxWidth}"
+                                oninput="renderRowPreviewIfOpen();">
+                            <div class="form-text">Limita la larghezza massima del carosello Hero centrato nella pagina.
+                            </div>
+                        </div>
+
+                        <!-- ================= OPZIONI CAROSELLO MULTI-IMMAGINE ================= -->
+                        <!-- Larghezza Tessera Nastro -->
+                        <div class="col-md-6 custom-multi-carousel" id="customMultiWidthOption">
+                            <label class="form-label fw-bold text-light">Larghezza Tessera Nastro (px)</label>
+                            <input type="number" class="form-control" id="customMultiWidthInput" min="100" max="1500"
+                                step="10" placeholder="es. 390"
+                                th:value="${block.multiItemWidth != null ? block.multiItemWidth : ''}"
+                                oninput="syncCustomDimension('multiItemWidth', this.value); renderRowPreviewIfOpen();">
+                            <div class="form-text">Larghezza di ciascuna immagine nel nastro continuo.</div>
+                        </div>
+
+                        <!-- Altezza Tessera Nastro -->
+                        <div class="col-md-6 custom-multi-carousel" id="customMultiHeightOption">
+                            <label class="form-label fw-bold text-light">Altezza Tessera Nastro (px)</label>
+                            <input type="number" class="form-control" id="customMultiHeightInput" min="80" max="1200"
+                                step="10" placeholder="es. 260" th:field="*{multiItemHeight}"
+                                oninput="renderRowPreviewIfOpen();">
+                            <div class="form-text">Altezza di ciascuna tessera nel nastro continuo.</div>
+                        </div>
+
                     </div>
-
-                    <div class="col-md-4" id="customCarouselHeightOption">
-                        <label class="form-label fw-bold text-light">Altezza Carosello Standard Personalizzata (px)</label>
-                        <input type="number" class="form-control" id="customCarouselHeightInput"
-                            min="100" max="2000" step="1"
-                            placeholder="es. 560"
-                            th:value="${block.carouselSlideHeight != null and block.carouselSlideHeight.matches('[0-9]+px') ? #strings.replace(block.carouselSlideHeight, 'px', '') : ''}"
-                            oninput="syncCustomDimension('carouselSlideHeight', this.value)">
-                        <div class="form-text">Scrivi solo il numero. Sostituisce il valore scelto nel menu.</div>
-                    </div>
-
-                    <div class="col-md-4" id="customMultiWidthOption">
-                        <label class="form-label fw-bold text-light">Larghezza Tessera Nastro Personalizzata (px)</label>
-                        <input type="number" class="form-control" id="customMultiWidthInput"
-                            min="100" max="1500" step="1"
-                            placeholder="es. 420"
-                            th:value="${block.multiItemWidth != null ? block.multiItemWidth : ''}"
-                            oninput="syncCustomDimension('multiItemWidth', this.value)">
-                        <div class="form-text">Scrivi solo il numero. Sostituisce il valore scelto nel menu.</div>
-                    </div>
-
                 </div>
 
-                <div class="form-text mt-3">
-                    I menu a tendina originali restano disponibili: il campo numerico permette di impostare liberamente
-                    una misura personalizzata in pixel.
-                </div>
-            </div>
 
                 <div class="col-md-4">
 
@@ -1760,8 +1790,9 @@
                                 <label class="form-label fw-bold">
                                     <span id="itemTitleLabel">Titolo Card</span>
                                 </label>
-                                <input type="text" name="title" id="itemTitleInput" class="form-control" placeholder="Titolo"
-                                    th:value="${editingItem != null ? editingItem.title : ''}" required />
+                                <input type="text" name="title" id="itemTitleInput" class="form-control"
+                                    placeholder="Titolo" th:value="${editingItem != null ? editingItem.title : ''}"
+                                    required />
                             </div>
 
                             <!-- UPLOAD IMMAGINE (sempre presente; a tutta larghezza se Multi-Immagine) -->
@@ -1800,7 +1831,8 @@
                                         <input type="color" class="form-control form-control-color" id="itemBgPicker"
                                             th:value="${editingItem != null and editingItem.backgroundColor != null and !#strings.isEmpty(editingItem.backgroundColor) ? editingItem.backgroundColor : '#0f172a'}"
                                             oninput="syncItemColorText(this.value)">
-                                        <input type="text" name="backgroundColor" id="itemBgColorInput" class="form-control"
+                                        <input type="text" name="backgroundColor" id="itemBgColorInput"
+                                            class="form-control"
                                             placeholder="es. #1e293b, rgba(30,41,59,0.8) o transparent"
                                             th:value="${editingItem != null ? editingItem.backgroundColor : ''}" />
                                     </div>
@@ -1809,7 +1841,8 @@
                                             <label class="form-label fw-bold mb-0">
                                                 <i class="bi bi-circle-half"></i> Opacità Sfondo Card
                                             </label>
-                                            <span id="itemBgOpacityValue" class="badge bg-success opacity-value">100%</span>
+                                            <span id="itemBgOpacityValue"
+                                                class="badge bg-success opacity-value">100%</span>
                                         </div>
                                         <input type="range" class="form-range" id="itemBgOpacityRange" min="0" max="100"
                                             step="1" value="100" oninput="syncItemOpacity(this.value)">
@@ -1830,7 +1863,8 @@
                                             <i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)
                                         </button>
                                     </div>
-                                    <textarea name="contentHtml" class="wysiwyg-editor" placeholder="Testo descrittivo..."
+                                    <textarea name="contentHtml" class="wysiwyg-editor"
+                                        placeholder="Testo descrittivo..."
                                         th:text="${editingItem != null ? editingItem.contentHtml : ''}"></textarea>
                                 </div>
 
@@ -1839,7 +1873,8 @@
                                     <label class="form-label">
                                         Testo Pulsante <span class="text-muted">(opzionale)</span>
                                     </label>
-                                    <input type="text" name="buttonText" class="form-control" placeholder="es. Scopri di più"
+                                    <input type="text" name="buttonText" class="form-control"
+                                        placeholder="es. Scopri di più"
                                         th:value="${editingItem != null ? editingItem.buttonText : ''}" />
                                 </div>
 
@@ -1853,7 +1888,7 @@
                                 </div>
 
                             </div>
-<!-- ========================================================
+                            <!-- ========================================================
                                  PULSANTI AZIONE (Annulla / Salva Elemento)
                                  Posto FUORI da itemExtraFields così resta visibile
                                  anche nella modalità Nastro Multi-Immagine
@@ -2035,20 +2070,41 @@
             const bgImageSaturation = parseInt(document.getElementById('bgImageSaturationRange')?.value || '100', 10);
             const bgImageGrayscale = parseInt(document.getElementById('bgImageGrayscaleRange')?.value || '0', 10);
             const bgImageBrightness = parseInt(document.getElementById('bgImageBrightnessRange')?.value || '100', 10);
+
+            // Stile Bordo e Colori
+            const borderStyle = document.querySelector('[name="borderStyle"]')?.value || 'NONE';
+            const borderColor = document.getElementById('borderColorInput')?.value || '#334155';
             const buttonBackgroundColor = document.getElementById('buttonBackgroundColorInput')?.value || '#00dc82';
             const buttonTextColor = document.getElementById('buttonTextColorInput')?.value || '#0f172a';
             const buttonRadiusStyle = document.querySelector('[name="buttonRadiusStyle"]')?.value || 'ROUNDED';
             const cardRadiusStyle = document.querySelector('[name="cardRadiusStyle"]')?.value || 'ROUNDED';
             const carouselRadiusStyle = document.querySelector('[name="carouselRadiusStyle"]')?.value || 'ROUNDED';
-            const borderStyle = document.querySelector('[name="borderStyle"]')?.value || 'NONE';
 
+            // Dimensioni dinamiche
+            const cardsPerRow = document.querySelector('[name="cardsPerRow"]')?.value || '3';
+            const cardImgHeight = document.getElementById('customCardImageHeightInput')?.value
+                ? document.getElementById('customCardImageHeightInput').value + 'px'
+                : (document.querySelector('[name="cardImageHeight"]')?.value || '280px');
+            const cardMaxWidth = document.getElementById('customCardMaxWidthInput')?.value
+                ? document.getElementById('customCardMaxWidthInput').value + 'px'
+                : 'none';
+
+            const carouselHeight = document.getElementById('customCarouselHeightInput')?.value
+                ? document.getElementById('customCarouselHeightInput').value + 'px'
+                : (document.querySelector('[name="carouselSlideHeight"]')?.value || '500px');
+            const carouselMaxWidth = document.getElementById('customCarouselWidthInput')?.value || '100%';
+
+            const multiItemWidth = document.getElementById('customMultiWidthInput')?.value || (document.querySelector('[name="multiItemWidth"]')?.value || '390');
+            const multiItemHeight = document.getElementById('customMultiHeightInput')?.value || Math.round(multiItemWidth * 0.66);
+
+            // Mappe CSS
             const borderMap = {
                 NONE: 'none',
-                THIN_SOLID: '1px solid rgba(255,255,255,.25)',
-                MEDIUM_SOLID: '2px solid rgba(255,255,255,.35)',
-                THICK_SOLID: '4px solid rgba(255,255,255,.45)',
-                DASHED: '2px dashed rgba(255,255,255,.35)',
-                DOTTED: '2px dotted rgba(255,255,255,.35)'
+                THIN_SOLID: `1px solid ${borderColor}`,
+                MEDIUM_SOLID: `2px solid ${borderColor}`,
+                THICK_SOLID: `4px solid ${borderColor}`,
+                DASHED: `2px dashed ${borderColor}`,
+                DOTTED: `2px dotted ${borderColor}`
             };
             const cardRadiusMap = {
                 ROUNDED: '1.25rem',
@@ -2058,99 +2114,115 @@
             const carouselRadius = carouselRadiusStyle === 'SQUARED' ? '0' : '1.5rem';
             const buttonRadius = buttonRadiusStyle === 'SQUARED' ? '0' : '999px';
 
-            let contentHtml = '';
-            if (window.tinymce && tinymce.get('mainContentHtml')) {
-                contentHtml = tinymce.get('mainContentHtml').getContent();
-            } else {
-                contentHtml = document.getElementById('mainContentHtml')?.value || '';
-            }
-
-            let containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border: ${borderMap[borderStyle] || 'none'}; border-radius: 8px; padding: 20px; transition: all 0.3s ease; position: relative; overflow: hidden; --preview-background-image: url('${backgroundImageUrl}'); --preview-opacity: ${bgImageOpacity / 100}; --preview-saturation: ${bgImageSaturation / 100}; --preview-grayscale: ${bgImageGrayscale / 100}; --preview-brightness: ${bgImageBrightness / 100};`;
+            const containerStyles = `background-color: ${bgColor}; width: ${widthPercent}%; margin: 0 auto; min-height: ${customHeight}; border: ${borderMap[borderStyle] || 'none'}; border-radius: 8px; padding: 24px; position: relative; overflow: hidden; --preview-background-image: url('${backgroundImageUrl}'); --preview-opacity: ${bgImageOpacity / 100}; --preview-saturation: ${bgImageSaturation / 100}; --preview-grayscale: ${bgImageGrayscale / 100}; --preview-brightness: ${bgImageBrightness / 100};`;
 
             let htmlOutput = '';
 
+            // 1. GRIGLIA CARD
             if (blockType === 'CARDS') {
+                const colClass = cardsPerRow == '2' ? 'col-md-6' : (cardsPerRow == '4' ? 'col-md-3' : 'col-md-4');
                 htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
-                htmlOutput += `<div class="row g-3">`;
+                htmlOutput += `<div class="row g-4 justify-content-center">`;
 
                 const cards = document.querySelectorAll('.existing-item-card');
                 if (cards.length === 0) {
-                    htmlOutput += `<div class="col-12 text-center text-muted py-4"><i class="bi bi-grid-3x3-gap fs-1 d-block mb-2"></i>Nessuna Card inserita in questa riga.</div>`;
+                    htmlOutput += `<div class="col-12 text-center text-muted py-5"><i class="bi bi-grid-3x3-gap fs-1 d-block mb-2 text-success"></i>Nessuna Card inserita finora.</div>`;
                 } else {
                     cards.forEach(card => {
-                        const renderCard = card.querySelector('.item-render-target');
-                        const bgStyle = renderCard ? renderCard.getAttribute('style') : '';
-                        const title = card.querySelector('.item-title-target')?.innerHTML || '';
+                        const title = card.querySelector('.item-title-target')?.innerHTML || 'Titolo Card';
                         const content = card.querySelector('.item-content-target')?.innerHTML || '';
                         const img = card.querySelector('.item-img-target')?.getAttribute('src') || '';
                         const btn = card.querySelector('.item-btn-target');
 
                         htmlOutput += `
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3" style="${bgStyle}; border-radius:${cardRadiusMap[cardRadiusStyle] || '1.25rem'};">
-                                ${img ? `<img src="${img}" class="img-fluid mb-2" style="max-height: 150px; object-fit: cover; width:100%; border-radius:${cardRadiusMap[cardRadiusStyle] || '1.25rem'};">` : ''}
-                                <h5 class="card-title">${title}</h5>
-                                <div class="card-text small text-muted">${content}</div>
-                                ${btn ? `<div class="mt-3"><span class="btn btn-sm" style="background:${buttonBackgroundColor};border-color:${buttonBackgroundColor};color:${buttonTextColor};border-radius:${buttonRadius};">${btn.innerText}</span></div>` : ''}
+                        <div class="${colClass} d-flex justify-content-center">
+                            <div class="card h-100 shadow border-0 text-white w-100" style="background-color: #0f172a; border-radius:${cardRadiusMap[cardRadiusStyle] || '1.25rem'}; max-width: ${cardMaxWidth}; overflow:hidden;">
+                                ${img ? `<img src="${img}" style="height:${cardImgHeight}; object-fit:cover; width:100%; border-radius:${cardRadiusStyle === 'ROUNDED' ? '1.25rem 1.25rem 0 0' : (cardRadiusStyle === 'SQUARED' ? '0' : '1.25rem 1.25rem 0 0')};">` : ''}
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <h4 class="card-title fw-bold mb-2">${title}</h4>
+                                    <div class="card-text flex-grow-1 text-light opacity-75 small">${content}</div>
+                                    ${btn ? `<div class="mt-4"><span class="btn btn-sm px-4 py-2 fw-semibold" style="background:${buttonBackgroundColor}; border-color:${buttonBackgroundColor}; color:${buttonTextColor}; border-radius:${buttonRadius};">${btn.innerText} <i class="bi bi-arrow-right ms-1"></i></span></div>` : ''}
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                     });
                 }
                 htmlOutput += `</div></div>`;
+
+                // 2. CAROSELLO
             } else if (blockType === 'CAROUSEL') {
+                const isMulti = document.getElementById("carouselTypeMulti")?.checked;
                 htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
-                htmlOutput += `<div class="p-3 border border-secondary rounded text-center">`;
-                htmlOutput += `<h5 class="text-info"><i class="bi bi-images me-2"></i>Carosello di Elementi</h5>`;
 
                 const slides = document.querySelectorAll('.existing-item-card');
-                if (slides.length === 0) {
-                    htmlOutput += `<p class="text-muted small">Nessuna slide presente per questo carosello.</p>`;
+
+                if (isMulti) {
+                    // Carosello Multi-Immagine (Nastro continuo)
+                    htmlOutput += `<div class="overflow-hidden py-2"><div class="d-flex gap-3 overflow-auto py-2">`;
+                    if (slides.length === 0) {
+                        htmlOutput += `<div class="text-center text-muted w-100 py-4"><i class="bi bi-images fs-1 d-block mb-2 text-info"></i>Nessuna immagine nel nastro.</div>`;
+                    } else {
+                        slides.forEach(slide => {
+                            const img = slide.querySelector('.item-img-target')?.getAttribute('src') || '';
+                            htmlOutput += `
+                            <div class="flex-shrink-0 rounded-4 overflow-hidden shadow" style="width: ${multiItemWidth}px; height: ${multiItemHeight}px;">
+                                ${img ? `<img src="${img}" style="width:100%; height:100%; object-fit:cover;">` : '<div class="h-100 bg-secondary d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image fs-1"></i></div>'}
+                            </div>`;
+                        });
+                    }
+                    htmlOutput += `</div></div>`;
                 } else {
-                    htmlOutput += `<div class="d-flex overflow-auto gap-3 py-2">`;
-                    slides.forEach(slide => {
-                        const title = slide.querySelector('.item-title-target')?.innerHTML || '';
-                        const img = slide.querySelector('.item-img-target')?.getAttribute('src') || '';
+                    // Carosello Standard Hero
+                    htmlOutput += `<div class="carousel slide rounded overflow-hidden mx-auto shadow position-relative" style="max-width: ${carouselMaxWidth}; border-radius: ${carouselRadius};">`;
+                    if (slides.length === 0) {
+                        htmlOutput += `<div class="text-center text-muted py-5" style="height:${carouselHeight}; background:rgba(0,0,0,0.3); display:flex; flex-direction:column; justify-content:center; align-items:center;"><i class="bi bi-aspect-ratio fs-1 mb-2 text-success"></i>Nessuna slide inserita nel carosello Hero.</div>`;
+                    } else {
+                        const firstSlide = slides[0];
+                        const title = firstSlide.querySelector('.item-title-target')?.innerHTML || 'Titolo Slide';
+                        const content = firstSlide.querySelector('.item-content-target')?.innerHTML || '';
+                        const img = firstSlide.querySelector('.item-img-target')?.getAttribute('src') || 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80';
+                        const btn = firstSlide.querySelector('.item-btn-target');
+
                         htmlOutput += `
-                        <div class="p-2 border border-secondary rounded text-center" style="min-width: 180px; background: rgba(255,255,255,0.05);">
-                            ${img ? `<img src="${img}" style="height:80px; object-fit:cover;" class="rounded mb-1">` : '<i class="bi bi-image fs-2 d-block text-muted"></i>'}
-                            <div class="small fw-bold text-truncate" style="max-width: 160px;">${title}</div>
-                        </div>
-                    `;
-                    });
+                        <div class="position-relative" style="height:${carouselHeight};">
+                            <img src="${img}" style="width:100%; height:100%; object-fit:cover;">
+                            <div class="position-absolute bottom-0 start-0 p-4 w-100" style="background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);">
+                                <h2 class="fw-bold text-white mb-2">${title}</h2>
+                                <div class="text-light opacity-90 small mb-3">${content}</div>
+                                ${btn ? `<span class="btn px-4 py-2 fw-semibold" style="background:${buttonBackgroundColor}; border-color:${buttonBackgroundColor}; color:${buttonTextColor}; border-radius:${buttonRadius};">${btn.innerText} <i class="bi bi-arrow-right ms-1"></i></span>` : ''}
+                            </div>
+                        </div>`;
+                    }
                     htmlOutput += `</div>`;
                 }
-                htmlOutput += `</div></div>`;
-            } else if (blockType === 'JUMBO_DEMO_1') {
-                // Immagine a Sinistra, Testo a Destra
-                htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
-                htmlOutput += `<div class="row align-items-center g-4">`;
-                if (imageUrl) {
-                    htmlOutput += `<div class="col-md-5 text-center"><img src="${imageUrl}" class="img-fluid rounded" style="max-height: 350px; width: 100%; object-fit: cover;"></div>`;
-                }
-                htmlOutput += `<div class="${imageUrl ? 'col-md-7' : 'col-12'}">${contentHtml || '<span class="text-muted italic">Nessun contenuto inserito nell\'editor.</span>'}</div>`;
-                htmlOutput += `</div></div>`;
-            } else if (blockType === 'JUMBO_DEMO_2') {
-                // Testo a Sinistra, Immagine a Destra
-                htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
-                htmlOutput += `<div class="row align-items-center g-4">`;
-                htmlOutput += `<div class="${imageUrl ? 'col-md-7 order-md-1' : 'col-12'}">${contentHtml || '<span class="text-muted italic">Nessun contenuto inserito nell\'editor.</span>'}</div>`;
-                if (imageUrl) {
-                    htmlOutput += `<div class="col-md-5 order-md-2 text-center"><img src="${imageUrl}" class="img-fluid rounded" style="max-height: 350px; width: 100%; object-fit: cover;"></div>`;
-                }
-                htmlOutput += `</div></div>`;
+
+                htmlOutput += `</div>`;
+
+                // 3. JUMBOTRON & ALTRI MODELLI
             } else {
-                // Altri modelli JUMBO / STANDARD / HTML CUSTOM
+                let contentHtml = (window.tinymce && tinymce.get('mainContentHtml'))
+                    ? tinymce.get('mainContentHtml').getContent()
+                    : (document.getElementById('mainContentHtml')?.value || '');
+
                 htmlOutput += `<div class="row-preview-block" style="${containerStyles}">`;
                 if (imageUrl) {
-                    htmlOutput += `<div class="text-center mb-3"><img src="${imageUrl}" class="img-fluid rounded" style="max-height: 300px;"></div>`;
+                    htmlOutput += `<div class="text-center mb-3"><img src="${imageUrl}" class="img-fluid rounded" style="max-height: 320px;"></div>`;
                 }
-                htmlOutput += `<div>${contentHtml || '<span class="text-muted italic">Nessun contenuto inserito nell\'editor.</span>'}</div>`;
+                htmlOutput += `<div>${contentHtml || '<span class="text-muted fst-italic">Nessun contenuto inserito nell\'editor.</span>'}</div>`;
                 htmlOutput += `</div>`;
             }
 
             renderArea.innerHTML = htmlOutput;
         }
+
+        // Funzione per aggiornare l'anteprima in tempo reale solo se il modale è visibile
+        function renderRowPreviewIfOpen() {
+            const modalEl = document.getElementById('rowPreviewModal');
+            if (modalEl && modalEl.classList.contains('show')) {
+                renderRowPreview();
+            }
+        }
+
     </script>
 
     <!-- ========================================================
@@ -2175,7 +2247,7 @@
             modal.show();
         }
 
-                document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
 
             const blockTypeSelect =
                 document.getElementById("blockTypeSelect");
@@ -2249,173 +2321,129 @@
                 const tipo = blockTypeSelect ? blockTypeSelect.value : "";
                 const isCards = tipo === "CARDS";
                 const isCarousel = tipo === "CAROUSEL";
+                // Calcolato una sola volta: true se è carosello ed è selezionato il radio Multi-Immagine
+                const isMultiCarousel = isCarousel && (document.getElementById("carouselTypeMulti")?.checked || false);
 
-                    const cardCarouselAppearanceWrapper = document.getElementById("cardCarouselAppearanceWrapper");
-    const cardRadiusOption = document.getElementById("cardRadiusOption");
-    const carouselRadiusOption = document.getElementById("carouselRadiusOption");
+                // ========================================================
+                // 1. Aspetto Card e Carosello (Raggi e Stili)
+                // ========================================================
+                const cardCarouselAppearanceWrapper = document.getElementById("cardCarouselAppearanceWrapper");
+                const cardRadiusOption = document.getElementById("cardRadiusOption");
+                const carouselRadiusOption = document.getElementById("carouselRadiusOption");
 
-    // Mostra la sezione Aspetto Card/Carosello SOLO per CARDS e CAROUSEL
-    if (cardCarouselAppearanceWrapper) {
-        cardCarouselAppearanceWrapper.style.display = (isCards || isCarousel) ? "" : "none";
-    }
+                if (cardCarouselAppearanceWrapper) {
+                    cardCarouselAppearanceWrapper.style.display = (isCards || isCarousel) ? "" : "none";
+                }
+                if (cardRadiusOption) {
+                    cardRadiusOption.style.display = isCards ? "" : "none";
+                }
+                if (carouselRadiusOption) {
+                    carouselRadiusOption.style.display = isCarousel ? "" : "none";
+                }
 
-    // All'interno mostra i raggi specifici per Card o Carosello
-    if (cardRadiusOption) {
-        cardRadiusOption.style.display = isCards ? "" : "none";
-    }
-    if (carouselRadiusOption) {
-        carouselRadiusOption.style.display = isCarousel ? "" : "none";
-    }
-
-
-                // Mostra/Nascondi selettore stile carosello
+                // ========================================================
+                // 2. Selettore Stile Carosello (Standard vs Multi)
+                // ========================================================
                 if (carouselTypeWrapper) {
                     carouselTypeWrapper.style.display = isCarousel ? "" : "none";
                 }
 
-                // Mostra/Nascondi opzioni dimensioni Card
+                // ========================================================
+                // 3. Dimensioni Predefinite (Menu a tendina)
+                // ========================================================
                 if (cardsDimensionsWrapper) {
                     cardsDimensionsWrapper.style.display = isCards ? "" : "none";
                 }
-
-                // Mostra/Nascondi opzioni dimensioni Carosello
                 if (carouselDimensionsWrapper) {
                     carouselDimensionsWrapper.style.display = isCarousel ? "" : "none";
                 }
 
-                // Se è carosello, differenzia tra Standard (Hero) e Multi-immagine (Nastro)
-                if (isCarousel) {
-                    const isMulti = document.getElementById("carouselTypeMulti")?.checked;
-                    if (standardHeightOption) standardHeightOption.style.display = isMulti ? "none" : "";
-                    if (multiWidthOption) multiWidthOption.style.display = isMulti ? "" : "none";
+                // Selettori specifici Standard / Multi
+                if (standardHeightOption) {
+                    standardHeightOption.style.display = (isCarousel && !isMultiCarousel) ? "" : "none";
+                }
+                if (multiWidthOption) {
+                    multiWidthOption.style.display = isMultiCarousel ? "" : "none";
                 }
 
-                const mostraImmaginePrincipale =
-                    tipo === "JUMBO_DEMO_1"
-                    ||
-                    tipo === "JUMBO_DEMO_2";
+                // ========================================================
+                // 4. Dimensioni Personalizzate (Input liberi in px)
+                // ========================================================
+                const customDimensionsWrapper = document.getElementById("customDimensionsWrapper");
+                if (customDimensionsWrapper) {
+                    customDimensionsWrapper.style.display = (isCards || isCarousel) ? "" : "none";
+                }
 
+                // Mostra/Nascondi i campi interni in base a Card, Carosello Standard o Multi-Immagine
+                document.querySelectorAll(".custom-card-dim").forEach(el => el.style.display = isCards ? "" : "none");
+                document.querySelectorAll(".custom-standard-carousel").forEach(el => el.style.display = (isCarousel && !isMultiCarousel) ? "" : "none");
+                document.querySelectorAll(".custom-multi-carousel").forEach(el => el.style.display = isMultiCarousel ? "" : "none");
+
+                // ========================================================
+                // 5. Immagine Principale e Sezione Editor (Jumbotron)
+                // ========================================================
+                const mostraImmaginePrincipale = tipo === "JUMBO_DEMO_1" || tipo === "JUMBO_DEMO_2";
                 if (mainImageUpload) {
-                    mainImageUpload.style.display =
-                        mostraImmaginePrincipale
-                            ? ""
-                            : "none";
+                    mainImageUpload.style.display = mostraImmaginePrincipale ? "" : "none";
                 }
 
-                const isItemsBlock =
-                    isCards || isCarousel;
-
+                const isItemsBlock = isCards || isCarousel;
                 if (mainEditorSection) {
-                    mainEditorSection.style.display =
-                        isItemsBlock
-                            ? "none"
-                            : "";
+                    mainEditorSection.style.display = isItemsBlock ? "none" : "";
                 }
-
                 if (itemsSection) {
-                    itemsSection.style.display =
-                        isItemsBlock
-                            ? ""
-                            : "none";
+                    itemsSection.style.display = isItemsBlock ? "" : "none";
                 }
 
+                // ========================================================
+                // 6. Testi ed etichette dinamiche (Card vs Carosello)
+                // ========================================================
                 if (isCards) {
-                    if (itemsSectionTitle)
-                        itemsSectionTitle.textContent =
-                            "Gestione Griglia Cards";
-
-                    if (itemsSectionDescription)
-                        itemsSectionDescription.textContent =
-                            "Gestisci le Card che compongono questa riga.";
-
-                    if (addItemTitle &&
-                        (!editingMode() ||
-                            addItemTitle.textContent.trim() !== "Modifica Elemento")) {
-                        addItemTitle.textContent =
-                            "Aggiungi Card";
+                    if (itemsSectionTitle) itemsSectionTitle.textContent = "Gestione Griglia Cards";
+                    if (itemsSectionDescription) itemsSectionDescription.textContent = "Gestisci le Card che compongono questa riga.";
+                    if (addItemTitle && (!editingMode() || addItemTitle.textContent.trim() !== "Modifica Elemento")) {
+                        addItemTitle.textContent = "Aggiungi Card";
                     }
-
-                    if (itemTitleLabel)
-                        itemTitleLabel.textContent =
-                            "Titolo Card";
-
-                    if (itemImageLabel)
-                        itemImageLabel.textContent =
-                            "Carica Immagine Card";
-
-                    if (addItemButtonText &&
-                        !editingMode()) {
-                        addItemButtonText.textContent =
-                            "Salva Card";
-                    }
-
-                    if (existingItemsTitle)
-                        existingItemsTitle.textContent =
-                            "Card Esistenti";
-
-                    if (itemsIcon)
-                        itemsIcon.className =
-                            "bi bi-grid-3x3-gap-fill text-success me-2 fs-5";
+                    if (itemTitleLabel) itemTitleLabel.textContent = "Titolo Card";
+                    if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Card";
+                    if (addItemButtonText && !editingMode()) addItemButtonText.textContent = "Salva Card";
+                    if (existingItemsTitle) existingItemsTitle.textContent = "Card Esistenti";
+                    if (itemsIcon) itemsIcon.className = "bi bi-grid-3x3-gap-fill text-success me-2 fs-5";
                 }
 
                 if (isCarousel) {
-                    if (itemsSectionTitle)
-                        itemsSectionTitle.textContent =
-                            "Gestione Slide Carosello";
-
-                    if (itemsSectionDescription)
-                        itemsSectionDescription.textContent =
-                            "Gestisci le immagini e i testi che scorreranno.";
-
-                    if (addItemTitle &&
-                        (!editingMode() ||
-                            addItemTitle.textContent.trim() !== "Modifica Elemento")) {
-                        addItemTitle.textContent =
-                            "Aggiungi Slide";
+                    if (itemsSectionTitle) itemsSectionTitle.textContent = "Gestione Slide Carosello";
+                    if (itemsSectionDescription) itemsSectionDescription.textContent = "Gestisci le immagini e i testi che scorreranno.";
+                    if (addItemTitle && (!editingMode() || addItemTitle.textContent.trim() !== "Modifica Elemento")) {
+                        addItemTitle.textContent = "Aggiungi Slide";
                     }
-
-                    if (itemTitleLabel)
-                        itemTitleLabel.textContent =
-                            "Titolo Slide";
-
-                    if (itemImageLabel)
-                        itemImageLabel.textContent =
-                            "Carica Immagine Slide";
-
-                    if (addItemButtonText &&
-                        !editingMode()) {
-                        addItemButtonText.textContent =
-                            "Salva Slide";
-                    }
-
-                    if (existingItemsTitle)
-                        existingItemsTitle.textContent =
-                            "Slide Esistenti";
-
-                    if (itemsIcon)
-                        itemsIcon.className =
-                            "bi bi-images text-success me-2 fs-5";
+                    if (itemTitleLabel) itemTitleLabel.textContent = "Titolo Slide";
+                    if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Slide";
+                    if (addItemButtonText && !editingMode()) addItemButtonText.textContent = "Salva Slide";
+                    if (existingItemsTitle) existingItemsTitle.textContent = "Slide Esistenti";
+                    if (itemsIcon) itemsIcon.className = "bi bi-images text-success me-2 fs-5";
                 }
 
-                                // Gestione campi: se Multi-Immagine mostra SOLO upload immagine
+                // ========================================================
+                // 7. Campi Form Slide/Card: Se Multi-Immagine mostra SOLO upload immagine
+                // ========================================================
                 const itemTitleCol = document.getElementById("itemTitleCol");
                 const itemTitleInput = document.getElementById("itemTitleInput");
                 const itemImageCol = document.getElementById("itemImageCol");
                 const itemExtraFields = document.getElementById("itemExtraFields");
-                const isMultiCarousel = isCarousel && document.getElementById("carouselTypeMulti")?.checked;
 
                 if (isMultiCarousel) {
                     if (itemTitleCol) itemTitleCol.style.display = "none";
                     if (itemExtraFields) itemExtraFields.style.display = "none";
                     if (itemImageCol) itemImageCol.className = "col-12";
                     if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Nastro";
+                    if (itemTitleInput) itemTitleInput.required = false;
                     if (addItemTitle && (!editingMode() || addItemTitle.textContent.trim() !== "Modifica Elemento")) {
                         addItemTitle.textContent = "Aggiungi Immagine al Nastro";
                     }
                     if (addItemButtonText && !editingMode()) {
                         addItemButtonText.textContent = "Salva Immagine";
                     }
-                    
                 } else {
                     if (itemTitleCol) itemTitleCol.style.display = "";
                     if (itemExtraFields) itemExtraFields.style.display = "";
@@ -2423,16 +2451,24 @@
                     if (itemTitleInput) itemTitleInput.required = true;
                 }
 
-
+                // Aggiorna l'anteprima in tempo reale se il modale è aperto
                 if (typeof renderRowPreviewIfOpen === "function") {
                     renderRowPreviewIfOpen();
                 }
             }
 
+
             // Aggiungi l'ascoltatore anche sul cambio radio dei caroselli
             document.querySelectorAll("input[name='carouselType']").forEach(radio => {
                 radio.addEventListener("change", aggiornaInterfaccia);
             });
+
+            // Aggiorna l'anteprima in tempo reale mentre scrivi o cambi qualsiasi parametro
+            document.querySelectorAll('input, select, textarea').forEach(el => {
+                el.addEventListener('input', renderRowPreviewIfOpen);
+                el.addEventListener('change', renderRowPreviewIfOpen);
+            });
+
 
 
             function editingMode() {
@@ -3866,18 +3902,18 @@
         }
 
         function syncBorderColor(color) {
-    const input = document.getElementById("borderColorInput");
-    if (input) input.value = color;
-    if (typeof renderRowPreviewIfOpen === "function") renderRowPreviewIfOpen();
-}
+            const input = document.getElementById("borderColorInput");
+            if (input) input.value = color;
+            if (typeof renderRowPreviewIfOpen === "function") renderRowPreviewIfOpen();
+        }
 
-function syncBorderColorPicker(color) {
-    const picker = document.getElementById("borderColorPicker");
-    if (picker && /^#[0-9A-Fa-f]{6}$/.test(color)) {
-        picker.value = color;
-    }
-    if (typeof renderRowPreviewIfOpen === "function") renderRowPreviewIfOpen();
-}
+        function syncBorderColorPicker(color) {
+            const picker = document.getElementById("borderColorPicker");
+            if (picker && /^#[0-9A-Fa-f]{6}$/.test(color)) {
+                picker.value = color;
+            }
+            if (typeof renderRowPreviewIfOpen === "function") renderRowPreviewIfOpen();
+        }
 
 
 

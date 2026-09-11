@@ -65,13 +65,25 @@ public class PageBlock {
     @Column(name = "card_image_height")
     private String cardImageHeight = "280px";
 
+    // Larghezza massima singola card in px (opzionale)
+    @Column(name = "card_max_width")
+    private Integer cardMaxWidth;
+
     // Altezza slide per Carosello Standard (Hero)
     @Column(name = "carousel_slide_height")
     private String carouselSlideHeight = "500px";
 
+    // Larghezza massima blocco carosello in px (opzionale)
+    @Column(name = "carousel_max_width")
+    private Integer carouselMaxWidth;
+
     // Larghezza singola slide per Carosello Multi-Immagine (in px)
     @Column(name = "multi_item_width")
     private Integer multiItemWidth = 390;
+
+    // Altezza singola slide per Carosello Multi-Immagine (in px, opzionale)
+    @Column(name = "multi_item_height")
+    private Integer multiItemHeight;
 
     // ============================================================
     // BORDO RIGA / BLOCCO
@@ -118,7 +130,7 @@ public class PageBlock {
     // ============================================================
 
     public Integer getCardsPerRow() {
-        return cardsPerRow != null && cardsPerRow > 0 ? cardsPerRow : 3;
+        return (cardsPerRow != null && cardsPerRow >= 1 && cardsPerRow <= 6) ? cardsPerRow : 3;
     }
 
     public void setCardsPerRow(Integer cardsPerRow) {
@@ -126,27 +138,51 @@ public class PageBlock {
     }
 
     public String getCardImageHeight() {
-        return cardImageHeight != null && !cardImageHeight.isBlank() ? cardImageHeight : "280px";
+        return (cardImageHeight != null && !cardImageHeight.isBlank()) ? cardImageHeight : "280px";
     }
 
     public void setCardImageHeight(String cardImageHeight) {
         this.cardImageHeight = cardImageHeight;
     }
 
+    public Integer getCardMaxWidth() {
+        return cardMaxWidth;
+    }
+
+    public void setCardMaxWidth(Integer cardMaxWidth) {
+        this.cardMaxWidth = cardMaxWidth;
+    }
+
     public String getCarouselSlideHeight() {
-        return carouselSlideHeight != null && !carouselSlideHeight.isBlank() ? carouselSlideHeight : "500px";
+        return (carouselSlideHeight != null && !carouselSlideHeight.isBlank()) ? carouselSlideHeight : "500px";
     }
 
     public void setCarouselSlideHeight(String carouselSlideHeight) {
         this.carouselSlideHeight = carouselSlideHeight;
     }
 
+    public Integer getCarouselMaxWidth() {
+        return carouselMaxWidth;
+    }
+
+    public void setCarouselMaxWidth(Integer carouselMaxWidth) {
+        this.carouselMaxWidth = carouselMaxWidth;
+    }
+
     public Integer getMultiItemWidth() {
-        return multiItemWidth != null && multiItemWidth > 0 ? multiItemWidth : 390;
+        return (multiItemWidth != null && multiItemWidth >= 100) ? multiItemWidth : 390;
     }
 
     public void setMultiItemWidth(Integer multiItemWidth) {
         this.multiItemWidth = multiItemWidth;
+    }
+
+    public Integer getMultiItemHeight() {
+        return multiItemHeight;
+    }
+
+    public void setMultiItemHeight(Integer multiItemHeight) {
+        this.multiItemHeight = multiItemHeight;
     }
 
     public String getBorderStyle() {

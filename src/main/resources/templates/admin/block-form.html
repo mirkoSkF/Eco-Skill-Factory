@@ -13,7 +13,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet">
 
     <style>
         body {
@@ -110,10 +112,12 @@
             .editor-workspace-layout {
                 flex-direction: column;
             }
+
             .live-preview-container-column {
                 width: 100%;
                 position: static;
             }
+
             .sidebar-controls-column {
                 flex: 1 1 100%;
                 max-width: 100%;
@@ -127,7 +131,7 @@
             border-radius: 12px;
             padding: 24px;
             min-height: 450px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
             transition: all 0.3s ease;
         }
 
@@ -557,7 +561,8 @@
     <div class="container-fluid px-4 py-3">
 
         <!-- INTESTAZIONE -->
-        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+        <div
+            class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
             <h2 class="fw-bold m-0" th:text="${block.id == null ? 'Nuova Riga' : 'Modifica Riga #' + block.id}">
                 Editor Riga
             </h2>
@@ -573,7 +578,8 @@
         </div>
 
         <!-- STRUTTURA A 2 COLONNE: 80% ANTEPRIMA LIVE - 20% SIDEBAR INPUT -->
-        <form id="blockForm" th:action="@{/admin/block/save}" th:object="${block}" method="post" enctype="multipart/form-data">
+        <form id="blockForm" th:action="@{/admin/block/save}" th:object="${block}" method="post"
+            enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}" />
 
             <div class="editor-workspace-layout">
@@ -586,12 +592,8 @@
                                 <i class="bi bi-eye me-2"></i>Anteprima Live Blocco (Pubblica)
                             </span>
                             <div class="d-flex gap-2">
-                                <button type="button" class="btn btn-sm btn-outline-info" onclick="toggleInlinePreviewFullscreen()" id="btnToggleInlineFullscreen">
-                                    <i class="bi bi-arrows-angle-expand me-1" id="inlineFullscreenIcon"></i>
-                                    <span id="btnToggleInlineFullscreenText">Anteprima 100% (Schermo Intero)</span>
-                                </button>
                                 <button type="button" class="btn btn-sm btn-outline-light" onclick="openRowPreview()">
-                                    <i class="bi bi-window me-1"></i> Apri in Modale
+                                    <i class="bi bi-window me-1"></i> Anteprima in Finestra
                                 </button>
                             </div>
                         </div>
@@ -608,7 +610,9 @@
                             <i class="bi bi-file-text me-1 text-info"></i> Testo / Contenuto Principale (Editor TinyMCE)
                         </label>
                         <div class="monaco-modal-editor-button">
-                            <button type="button" class="btn btn-sm btn-outline-info monaco-open-button mb-2" data-bs-toggle="modal" data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)">
+                            <button type="button" class="btn btn-sm btn-outline-info monaco-open-button mb-2"
+                                data-bs-toggle="modal" data-bs-target="#monacoEditorModal"
+                                onclick="openMonacoFromButton(this)">
                                 <i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)
                             </button>
                         </div>
@@ -616,19 +620,24 @@
                     </div>
 
                     <!-- SEZIONE ELEMENTI CARDS / CAROUSEL -->
-                    <div id="itemsSection" class="card p-3 shadow-sm mb-4" th:style="${block.blockType != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')} ? '' : 'display:none;'">
+                    <div id="itemsSection" class="card p-3 shadow-sm mb-4"
+                        th:style="${block.blockType != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')} ? '' : 'display:none;'">
                         <div class="d-flex align-items-center mb-3">
-                            <div id="itemsIcon" class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                            <div id="itemsIcon"
+                                class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center me-3"
+                                style="width: 45px; height: 45px;">
                                 <i class="bi bi-grid-3x3-gap fs-4 text-success"></i>
                             </div>
                             <div>
                                 <h5 id="itemsSectionTitle" class="mb-0 fw-bold">Gestione Griglia Cards</h5>
-                                <div id="itemsSectionDescription" class="small text-muted">Gestisci gli elementi interni della riga.</div>
+                                <div id="itemsSectionDescription" class="small text-muted">Gestisci gli elementi interni
+                                    della riga.</div>
                             </div>
                         </div>
 
                         <div th:if="${block.id == null}" id="newBlockItemsMessage" class="alert alert-info border-0">
-                            <i class="bi bi-info-circle-fill me-2"></i>Salva prima la configurazione iniziale per aggiungere elementi.
+                            <i class="bi bi-info-circle-fill me-2"></i>Salva prima la configurazione iniziale per
+                            aggiungere elementi.
                         </div>
 
                         <div th:if="${block.id != null}">
@@ -640,22 +649,33 @@
 
                                 <div class="row g-3 mb-4">
                                     <div class="col-md-4 existing-item-card" th:each="item : ${block.items}">
-                                        <div class="card h-100 border shadow-sm item-render-target" th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
+                                        <div class="card h-100 border shadow-sm item-render-target"
+                                            th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : ''">
                                             <div th:if="${item.imageUrl != null and !item.imageUrl.empty}">
-                                                <img th:src="${item.imageUrl}" class="card-img-top item-img-target" th:alt="${item.title}" style="height: 120px; object-fit: cover;">
+                                                <img th:src="${item.imageUrl}" class="card-img-top item-img-target"
+                                                    th:alt="${item.title}" style="height: 120px; object-fit: cover;">
                                             </div>
-                                            <div th:unless="${item.imageUrl != null and !item.imageUrl.empty}" class="d-flex align-items-center justify-content-center item-no-img-target" style="height: 120px; background: rgba(0,0,0,0.2);">
+                                            <div th:unless="${item.imageUrl != null and !item.imageUrl.empty}"
+                                                class="d-flex align-items-center justify-content-center item-no-img-target"
+                                                style="height: 120px; background: rgba(0,0,0,0.2);">
                                                 <i class="bi bi-image fs-3 text-muted"></i>
                                             </div>
                                             <div class="card-body p-2">
-                                                <h6 class="card-title item-title-target fw-bold mb-1" th:text="${item.title}">Titolo</h6>
-                                                <div th:if="${item.contentHtml != null and !item.contentHtml.empty}" class="card-text small text-muted item-content-target text-truncate" th:utext="${item.contentHtml}"></div>
+                                                <h6 class="card-title item-title-target fw-bold mb-1"
+                                                    th:text="${item.title}">Titolo</h6>
+                                                <div th:if="${item.contentHtml != null and !item.contentHtml.empty}"
+                                                    class="card-text small text-muted item-content-target text-truncate"
+                                                    th:utext="${item.contentHtml}"></div>
                                             </div>
-                                            <div class="card-footer p-2 bg-transparent d-flex justify-content-end gap-1">
-                                                <a th:href="@{/admin/block/{bId}/item/edit/{iId}(bId=${block.id}, iId=${item.id})}" class="btn btn-xs btn-outline-warning py-0 px-2">
+                                            <div
+                                                class="card-footer p-2 bg-transparent d-flex justify-content-end gap-1">
+                                                <a th:href="@{/admin/block/{bId}/item/edit/{iId}(bId=${block.id}, iId=${item.id})}"
+                                                    class="btn btn-xs btn-outline-warning py-0 px-2">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
-                                                <a th:href="@{/admin/block/{bId}/item/delete/{iId}(bId=${block.id}, iId=${item.id})}" class="btn btn-xs btn-outline-danger py-0 px-2" onclick="confirmDeleteItem(this.href); return false;">
+                                                <a th:href="@{/admin/block/{bId}/item/delete/{iId}(bId=${block.id}, iId=${item.id})}"
+                                                    class="btn btn-xs btn-outline-danger py-0 px-2"
+                                                    onclick="confirmDeleteItem(this.href); return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </a>
                                             </div>
@@ -674,15 +694,19 @@
                         <!-- SEZIONE 1: IMPOSTAZIONI GENERALI RIGA -->
                         <div class="accordion-item card mb-3">
                             <h2 class="accordion-header" id="headingGeneral">
-                                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGeneral" aria-expanded="true" aria-controls="collapseGeneral">
+                                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseGeneral" aria-expanded="true"
+                                    aria-controls="collapseGeneral">
                                     <i class="bi bi-gear-fill me-2 text-info"></i> Parametri Generali
                                 </button>
                             </h2>
-                            <div id="collapseGeneral" class="accordion-collapse collapse show" aria-labelledby="headingGeneral">
+                            <div id="collapseGeneral" class="accordion-collapse collapse show"
+                                aria-labelledby="headingGeneral">
                                 <div class="accordion-body p-3">
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Titolo Riga (Uso Interno)</label>
-                                        <input type="text" class="form-control" th:field="*{titleAdmin}" required placeholder="es. Sezione Servizi" />
+                                        <input type="text" class="form-control" th:field="*{titleAdmin}" required
+                                            placeholder="es. Sezione Servizi" />
                                     </div>
 
                                     <div class="mb-3">
@@ -693,18 +717,21 @@
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Modello Blocco</label>
                                         <select id="blockTypeSelect" class="form-select" th:field="*{blockType}">
-                                            <option th:each="type : ${blockTypes}" th:value="${type}" th:text="${type.label}"></option>
+                                            <option th:each="type : ${blockTypes}" th:value="${type}"
+                                                th:text="${type.label}"></option>
                                         </select>
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Larghezza Blocco (%)</label>
-                                        <input type="number" class="form-control" id="widthPercentInput" th:field="*{widthPercent}" min="10" max="100" placeholder="100" />
+                                        <input type="number" class="form-control" id="widthPercentInput"
+                                            th:field="*{widthPercent}" min="10" max="100" placeholder="100" />
                                     </div>
 
                                     <div class="mb-0">
                                         <label class="form-label fw-bold">Altezza Riga</label>
-                                        <input type="text" class="form-control" id="customHeightInput" th:field="*{customHeight}" placeholder="auto, 400px, 50vh" />
+                                        <input type="text" class="form-control" id="customHeightInput"
+                                            th:field="*{customHeight}" placeholder="auto, 400px, 50vh" />
                                     </div>
                                 </div>
                             </div>
@@ -713,28 +740,39 @@
                         <!-- SEZIONE 2: LAYOUT & DIMENSIONI SPECIFICHE -->
                         <div class="accordion-item card mb-3">
                             <h2 class="accordion-header" id="headingLayout">
-                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLayout" aria-expanded="false" aria-controls="collapseLayout">
+                                <button class="accordion-button collapsed fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseLayout" aria-expanded="false"
+                                    aria-controls="collapseLayout">
                                     <i class="bi bi-sliders me-2 text-warning"></i> Stile & Dimensioni
                                 </button>
                             </h2>
-                            <div id="collapseLayout" class="accordion-collapse collapse" aria-labelledby="headingLayout">
+                            <div id="collapseLayout" class="accordion-collapse collapse"
+                                aria-labelledby="headingLayout">
                                 <div class="accordion-body p-3">
 
                                     <!-- STILE CAROSELLO -->
-                                    <div id="carouselTypeWrapper" class="mb-3 p-2 rounded" style="background-color: #1e293b; display: none;">
+                                    <div id="carouselTypeWrapper" class="mb-3 p-2 rounded"
+                                        style="background-color: #1e293b; display: none;">
                                         <label class="form-label fw-bold text-white small mb-2">Stile Carosello</label>
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="carouselType" id="carouselTypeStandard" value="STANDARD" th:field="*{carouselType}" checked onchange="renderRowPreviewIfOpen()">
-                                            <label class="form-check-label text-white small" for="carouselTypeStandard">Standard (Hero Slide)</label>
+                                            <input class="form-check-input" type="radio" name="carouselType"
+                                                id="carouselTypeStandard" value="STANDARD" th:field="*{carouselType}"
+                                                checked onchange="renderRowPreviewIfOpen()">
+                                            <label class="form-check-label text-white small"
+                                                for="carouselTypeStandard">Standard (Hero Slide)</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="carouselType" id="carouselTypeMulti" value="MULTI_IMAGE" th:field="*{carouselType}" onchange="renderRowPreviewIfOpen()">
-                                            <label class="form-check-label text-white small" for="carouselTypeMulti">Multi-Immagine (Nastro)</label>
+                                            <input class="form-check-input" type="radio" name="carouselType"
+                                                id="carouselTypeMulti" value="MULTI_IMAGE" th:field="*{carouselType}"
+                                                onchange="renderRowPreviewIfOpen()">
+                                            <label class="form-check-label text-white small"
+                                                for="carouselTypeMulti">Multi-Immagine (Nastro)</label>
                                         </div>
                                     </div>
 
                                     <!-- CONFIG CARD -->
-                                    <div id="cardsDimensionsWrapper" class="mb-3 p-2 rounded" style="background-color: #1e293b; display: none;">
+                                    <div id="cardsDimensionsWrapper" class="mb-3 p-2 rounded"
+                                        style="background-color: #1e293b; display: none;">
                                         <div class="mb-2">
                                             <label class="form-label fw-bold text-light small">Card per Riga</label>
                                             <select class="form-select form-select-sm" th:field="*{cardsPerRow}">
@@ -744,8 +782,10 @@
                                             </select>
                                         </div>
                                         <div>
-                                            <label class="form-label fw-bold text-light small">Altezza Immagini Card</label>
-                                            <select id="cardImageHeightSelect" class="form-select form-select-sm" th:field="*{cardImageHeight}">
+                                            <label class="form-label fw-bold text-light small">Altezza Immagini
+                                                Card</label>
+                                            <select id="cardImageHeightSelect" class="form-select form-select-sm"
+                                                th:field="*{cardImageHeight}">
                                                 <option value="220px">Compatta (220px)</option>
                                                 <option value="280px" selected>Standard (280px)</option>
                                                 <option value="360px">Grande (360px)</option>
@@ -754,18 +794,23 @@
                                     </div>
 
                                     <!-- CONFIG CAROSELLO -->
-                                    <div id="carouselDimensionsWrapper" class="mb-3 p-2 rounded" style="background-color: #1e293b; display: none;">
+                                    <div id="carouselDimensionsWrapper" class="mb-3 p-2 rounded"
+                                        style="background-color: #1e293b; display: none;">
                                         <div id="standardHeightOption" class="mb-2">
-                                            <label class="form-label fw-bold text-light small">Altezza Slide (Hero)</label>
-                                            <select id="carouselSlideHeightSelect" class="form-select form-select-sm" th:field="*{carouselSlideHeight}">
+                                            <label class="form-label fw-bold text-light small">Altezza Slide
+                                                (Hero)</label>
+                                            <select id="carouselSlideHeightSelect" class="form-select form-select-sm"
+                                                th:field="*{carouselSlideHeight}">
                                                 <option value="400px">Compatta (400px)</option>
                                                 <option value="500px" selected>Standard (500px)</option>
                                                 <option value="650px">Alta (650px)</option>
                                             </select>
                                         </div>
                                         <div id="multiWidthOption">
-                                            <label class="form-label fw-bold text-light small">Dimensione Tessere Nastro</label>
-                                            <select id="multiItemWidthSelect" class="form-select form-select-sm" th:field="*{multiItemWidth}">
+                                            <label class="form-label fw-bold text-light small">Dimensione Tessere
+                                                Nastro</label>
+                                            <select id="multiItemWidthSelect" class="form-select form-select-sm"
+                                                th:field="*{multiItemWidth}">
                                                 <option value="300">Compatte (300px)</option>
                                                 <option value="390" selected>Standard (390px)</option>
                                                 <option value="480">Grandi (480px)</option>
@@ -774,30 +819,52 @@
                                     </div>
 
                                     <!-- DIMENSIONI LIBERE -->
-                                    <div id="customDimensionsWrapper" class="mb-3 p-2 rounded" style="background-color: #1e293b; display: none;">
+                                    <div id="customDimensionsWrapper" class="mb-3 p-2 rounded"
+                                        style="background-color: #1e293b; display: none;">
                                         <div class="custom-card-dim mb-2" id="customCardHeightOption">
-                                            <label class="form-label fw-bold text-light small">Altezza Immagine Card (px)</label>
-                                            <input type="number" class="form-control form-control-sm" id="customCardImageHeightInput" placeholder="es. 280" th:value="${block.cardImageHeight != null and block.cardImageHeight.matches('[0-9]+px') ? #strings.replace(block.cardImageHeight, 'px', '') : ''}" oninput="syncCustomDimension('cardImageHeight', this.value); renderRowPreviewIfOpen();">
+                                            <label class="form-label fw-bold text-light small">Altezza Immagine Card
+                                                (px)</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                id="customCardImageHeightInput" placeholder="es. 280"
+                                                th:value="${block.cardImageHeight != null and block.cardImageHeight.matches('[0-9]+px') ? #strings.replace(block.cardImageHeight, 'px', '') : ''}"
+                                                oninput="syncCustomDimension('cardImageHeight', this.value); renderRowPreviewIfOpen();">
                                         </div>
                                         <div class="custom-card-dim mb-2" id="customCardWidthOption">
-                                            <label class="form-label fw-bold text-light small">Larghezza Max Card (px)</label>
-                                            <input type="number" class="form-control form-control-sm" id="customCardMaxWidthInput" placeholder="es. 380" th:field="*{cardMaxWidth}" oninput="renderRowPreviewIfOpen();">
+                                            <label class="form-label fw-bold text-light small">Larghezza Max Card
+                                                (px)</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                id="customCardMaxWidthInput" placeholder="es. 380"
+                                                th:field="*{cardMaxWidth}" oninput="renderRowPreviewIfOpen();">
                                         </div>
                                         <div class="custom-standard-carousel mb-2" id="customCarouselHeightOption">
-                                            <label class="form-label fw-bold text-light small">Altezza Slide Hero (px)</label>
-                                            <input type="number" class="form-control form-control-sm" id="customCarouselHeightInput" placeholder="es. 500" th:value="${block.carouselSlideHeight != null and block.carouselSlideHeight.matches('[0-9]+px') ? #strings.replace(block.carouselSlideHeight, 'px', '') : ''}" oninput="syncCustomDimension('carouselSlideHeight', this.value); renderRowPreviewIfOpen();">
+                                            <label class="form-label fw-bold text-light small">Altezza Slide Hero
+                                                (px)</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                id="customCarouselHeightInput" placeholder="es. 500"
+                                                th:value="${block.carouselSlideHeight != null and block.carouselSlideHeight.matches('[0-9]+px') ? #strings.replace(block.carouselSlideHeight, 'px', '') : ''}"
+                                                oninput="syncCustomDimension('carouselSlideHeight', this.value); renderRowPreviewIfOpen();">
                                         </div>
                                         <div class="custom-standard-carousel mb-2" id="customCarouselWidthOption">
-                                            <label class="form-label fw-bold text-light small">Larghezza Max Carosello</label>
-                                            <input type="text" class="form-control form-control-sm" id="customCarouselWidthInput" placeholder="es. 1200px" th:field="*{carouselMaxWidth}" oninput="renderRowPreviewIfOpen();">
+                                            <label class="form-label fw-bold text-light small">Larghezza Max
+                                                Carosello</label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="customCarouselWidthInput" placeholder="es. 1200px"
+                                                th:field="*{carouselMaxWidth}" oninput="renderRowPreviewIfOpen();">
                                         </div>
                                         <div class="custom-multi-carousel mb-2" id="customMultiWidthOption">
-                                            <label class="form-label fw-bold text-light small">Larghezza Nastro (px)</label>
-                                            <input type="number" class="form-control form-control-sm" id="customMultiWidthInput" placeholder="es. 390" th:value="${block.multiItemWidth != null ? block.multiItemWidth : ''}" oninput="syncCustomDimension('multiItemWidth', this.value); renderRowPreviewIfOpen();">
+                                            <label class="form-label fw-bold text-light small">Larghezza Nastro
+                                                (px)</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                id="customMultiWidthInput" placeholder="es. 390"
+                                                th:value="${block.multiItemWidth != null ? block.multiItemWidth : ''}"
+                                                oninput="syncCustomDimension('multiItemWidth', this.value); renderRowPreviewIfOpen();">
                                         </div>
                                         <div class="custom-multi-carousel mb-2" id="customMultiHeightOption">
-                                            <label class="form-label fw-bold text-light small">Altezza Nastro (px)</label>
-                                            <input type="number" class="form-control form-control-sm" id="customMultiHeightInput" placeholder="es. 260" th:field="*{multiItemHeight}" oninput="renderRowPreviewIfOpen();">
+                                            <label class="form-label fw-bold text-light small">Altezza Nastro
+                                                (px)</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                id="customMultiHeightInput" placeholder="es. 260"
+                                                th:field="*{multiItemHeight}" oninput="renderRowPreviewIfOpen();">
                                         </div>
                                     </div>
 
@@ -805,7 +872,8 @@
                                     <div id="rowBorderWrapper">
                                         <div class="mb-2">
                                             <label class="form-label fw-bold text-light small">Stile Bordo Riga</label>
-                                            <select class="form-select form-select-sm" th:field="*{borderStyle}" id="borderStyleSelect">
+                                            <select class="form-select form-select-sm" th:field="*{borderStyle}"
+                                                id="borderStyleSelect">
                                                 <option value="NONE">Nessun bordo</option>
                                                 <option value="THIN_SOLID">Sottile continuo (1px)</option>
                                                 <option value="MEDIUM_SOLID">Medio continuo (2px)</option>
@@ -817,8 +885,13 @@
                                         <div class="mb-2">
                                             <label class="form-label fw-bold text-light small">Colore Bordo</label>
                                             <div class="color-picker-wrapper">
-                                                <input type="color" class="form-control form-control-color" id="borderColorPicker" th:value="${block.borderColor != null and !block.borderColor.empty ? block.borderColor : '#334155'}" oninput="syncBorderColor(this.value)">
-                                                <input type="text" class="form-control form-control-sm" id="borderColorInput" th:field="*{borderColor}" placeholder="#334155" oninput="syncBorderColorPicker(this.value)">
+                                                <input type="color" class="form-control form-control-color"
+                                                    id="borderColorPicker"
+                                                    th:value="${block.borderColor != null and !block.borderColor.empty ? block.borderColor : '#334155'}"
+                                                    oninput="syncBorderColor(this.value)">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    id="borderColorInput" th:field="*{borderColor}"
+                                                    placeholder="#334155" oninput="syncBorderColorPicker(this.value)">
                                             </div>
                                         </div>
                                     </div>
@@ -836,23 +909,36 @@
                                         </div>
                                         <div class="mb-2" id="carouselRadiusOption">
                                             <label class="form-label fw-bold text-light small">Spigoli Carosello</label>
-                                            <select class="form-select form-select-sm" th:field="*{carouselRadiusStyle}">
+                                            <select class="form-select form-select-sm"
+                                                th:field="*{carouselRadiusStyle}">
                                                 <option value="ROUNDED">Arrotondati</option>
                                                 <option value="SQUARED">Squadrati</option>
                                             </select>
                                         </div>
                                         <div class="mb-2">
-                                            <label class="form-label fw-bold text-light small">Colore Sfondo Bottone</label>
+                                            <label class="form-label fw-bold text-light small">Colore Sfondo
+                                                Bottone</label>
                                             <div class="color-picker-wrapper">
-                                                <input type="color" class="form-control form-control-color" id="buttonBackgroundColorPicker" th:value="${block.buttonBackgroundColor != null and !block.buttonBackgroundColor.empty ? block.buttonBackgroundColor : '#00dc82'}" oninput="syncButtonBackgroundColor(this.value)">
-                                                <input type="text" class="form-control form-control-sm" id="buttonBackgroundColorInput" th:field="*{buttonBackgroundColor}" placeholder="#00dc82">
+                                                <input type="color" class="form-control form-control-color"
+                                                    id="buttonBackgroundColorPicker"
+                                                    th:value="${block.buttonBackgroundColor != null and !block.buttonBackgroundColor.empty ? block.buttonBackgroundColor : '#00dc82'}"
+                                                    oninput="syncButtonBackgroundColor(this.value)">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    id="buttonBackgroundColorInput" th:field="*{buttonBackgroundColor}"
+                                                    placeholder="#00dc82">
                                             </div>
                                         </div>
                                         <div class="mb-2">
-                                            <label class="form-label fw-bold text-light small">Colore Testo Bottone</label>
+                                            <label class="form-label fw-bold text-light small">Colore Testo
+                                                Bottone</label>
                                             <div class="color-picker-wrapper">
-                                                <input type="color" class="form-control form-control-color" id="buttonTextColorPicker" th:value="${block.buttonTextColor != null and !block.buttonTextColor.empty ? block.buttonTextColor : '#0f172a'}" oninput="syncButtonTextColor(this.value)">
-                                                <input type="text" class="form-control form-control-sm" id="buttonTextColorInput" th:field="*{buttonTextColor}" placeholder="#0f172a">
+                                                <input type="color" class="form-control form-control-color"
+                                                    id="buttonTextColorPicker"
+                                                    th:value="${block.buttonTextColor != null and !block.buttonTextColor.empty ? block.buttonTextColor : '#0f172a'}"
+                                                    oninput="syncButtonTextColor(this.value)">
+                                                <input type="text" class="form-control form-control-sm"
+                                                    id="buttonTextColorInput" th:field="*{buttonTextColor}"
+                                                    placeholder="#0f172a">
                                             </div>
                                         </div>
                                         <div class="mb-2">
@@ -871,29 +957,39 @@
                         <!-- SEZIONE 3: SFONDO & IMMAGINE DI SFONDO -->
                         <div class="accordion-item card mb-3">
                             <h2 class="accordion-header" id="headingBackground">
-                                <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBackground" aria-expanded="false" aria-controls="collapseBackground">
+                                <button class="accordion-button collapsed fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseBackground" aria-expanded="false"
+                                    aria-controls="collapseBackground">
                                     <i class="bi bi-palette-fill me-2 text-success"></i> Colore & Sfondo
                                 </button>
                             </h2>
-                            <div id="collapseBackground" class="accordion-collapse collapse" aria-labelledby="headingBackground">
+                            <div id="collapseBackground" class="accordion-collapse collapse"
+                                aria-labelledby="headingBackground">
                                 <div class="accordion-body p-3">
                                     <!-- COLORE SFONDO -->
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold"><span id="sfondoRigaLabel">Sfondo Colore</span></label>
+                                        <label class="form-label fw-bold"><span id="sfondoRigaLabel">Sfondo
+                                                Colore</span></label>
                                         <div class="form-check form-switch mb-2">
-                                            <input class="form-check-input" type="checkbox" id="isTransparentSwitch" onchange="toggleBackgroundType()">
-                                            <label class="form-check-label text-warning small" for="isTransparentSwitch">Sfondo Trasparente</label>
+                                            <input class="form-check-input" type="checkbox" id="isTransparentSwitch"
+                                                onchange="toggleBackgroundType()">
+                                            <label class="form-check-label text-warning small"
+                                                for="isTransparentSwitch">Sfondo Trasparente</label>
                                         </div>
                                         <div id="colorPickerContainer" class="color-picker-wrapper mb-2">
-                                            <input type="color" class="form-control form-control-color" id="bgPicker" value="#0f172a" oninput="syncColorText(this.value)">
-                                            <input type="text" class="form-control form-control-sm" id="bgColorInput" th:field="*{backgroundColor}" placeholder="#0f172a" />
+                                            <input type="color" class="form-control form-control-color" id="bgPicker"
+                                                value="#0f172a" oninput="syncColorText(this.value)">
+                                            <input type="text" class="form-control form-control-sm" id="bgColorInput"
+                                                th:field="*{backgroundColor}" placeholder="#0f172a" />
                                         </div>
                                         <div class="opacity-control-wrapper">
                                             <div class="d-flex justify-content-between align-items-center mb-1">
                                                 <label class="form-label fw-bold mb-0 small">Opacità Sfondo</label>
-                                                <span id="bgOpacityValue" class="badge bg-success opacity-value">100%</span>
+                                                <span id="bgOpacityValue"
+                                                    class="badge bg-success opacity-value">100%</span>
                                             </div>
-                                            <input type="range" class="form-range" id="bgOpacityRange" min="0" max="100" step="1" value="100" oninput="syncOpacity(this.value)">
+                                            <input type="range" class="form-range" id="bgOpacityRange" min="0" max="100"
+                                                step="1" value="100" oninput="syncOpacity(this.value)">
                                         </div>
                                     </div>
 
@@ -902,31 +998,44 @@
                                     <!-- IMMAGINE SFONDO -->
                                     <div id="backgroundImageUpload" class="mb-3">
                                         <label class="form-label fw-bold text-info small">Immagine Sfondo Riga</label>
-                                        <input type="file" name="backgroundImageFile" id="backgroundImageFile" class="form-control form-control-sm mb-2" accept="image/*" onchange="handleBackgroundImageSelection(this)" />
+                                        <input type="file" name="backgroundImageFile" id="backgroundImageFile"
+                                            class="form-control form-control-sm mb-2" accept="image/*"
+                                            onchange="handleBackgroundImageSelection(this)" />
                                         <input type="hidden" id="backgroundImageUrl" th:field="*{backgroundImageUrl}" />
 
-                                        <div th:if="${block.backgroundImageUrl != null and !block.backgroundImageUrl.empty}" id="currentBackgroundImageContainer" class="mt-2">
-                                            <img th:src="${block.backgroundImageUrl}" alt="Anteprima Sfondo Riga" id="currentBackgroundImagePreview" class="img-thumbnail" style="max-height: 80px;" />
+                                        <div th:if="${block.backgroundImageUrl != null and !block.backgroundImageUrl.empty}"
+                                            id="currentBackgroundImageContainer" class="mt-2">
+                                            <img th:src="${block.backgroundImageUrl}" alt="Anteprima Sfondo Riga"
+                                                id="currentBackgroundImagePreview" class="img-thumbnail"
+                                                style="max-height: 80px;" />
                                             <div class="form-check mt-1">
-                                                <input class="form-check-input" type="checkbox" id="removeBackgroundImage" name="removeBackgroundImage" value="true" onchange="toggleBackgroundImageRemoval()">
-                                                <label class="form-check-label text-warning small" for="removeBackgroundImage">Rimuovi immagine</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="removeBackgroundImage" name="removeBackgroundImage" value="true"
+                                                    onchange="toggleBackgroundImageRemoval()">
+                                                <label class="form-check-label text-warning small"
+                                                    for="removeBackgroundImage">Rimuovi immagine</label>
                                             </div>
                                         </div>
                                         <div id="newBackgroundImagePreview" class="mt-2" style="display:none;">
-                                            <img id="newBackgroundImagePreviewImg" src="" alt="Nuova Immagine" class="img-thumbnail" style="max-height: 80px;" />
+                                            <img id="newBackgroundImagePreviewImg" src="" alt="Nuova Immagine"
+                                                class="img-thumbnail" style="max-height: 80px;" />
                                         </div>
                                     </div>
 
                                     <!-- FILTRI REGOLAZIONE SFONDO -->
-                                    <div id="backgroundImageControls" class="background-image-controls" th:style="${block.backgroundImageUrl != null and !block.backgroundImageUrl.empty} ? '' : 'display:none;'">
-                                        <div class="fw-bold text-info small mb-2"><i class="bi bi-sliders me-1"></i>Filtri Immagine Sfondo</div>
+                                    <div id="backgroundImageControls" class="background-image-controls"
+                                        th:style="${block.backgroundImageUrl != null and !block.backgroundImageUrl.empty} ? '' : 'display:none;'">
+                                        <div class="fw-bold text-info small mb-2"><i
+                                                class="bi bi-sliders me-1"></i>Filtri Immagine Sfondo</div>
 
                                         <div class="background-image-control-row mb-2">
                                             <div class="background-image-control-label small">
                                                 <span>Opacità</span>
                                                 <span id="bgImageOpacityValue" class="badge bg-success">100%</span>
                                             </div>
-                                            <input type="range" class="form-range" id="bgImageOpacityRange" th:field="*{bgImageOpacity}" min="0" max="100" step="1" oninput="updateBackgroundImageControls()" />
+                                            <input type="range" class="form-range" id="bgImageOpacityRange"
+                                                th:field="*{bgImageOpacity}" min="0" max="100" step="1"
+                                                oninput="updateBackgroundImageControls()" />
                                         </div>
 
                                         <div class="background-image-control-row mb-2">
@@ -934,7 +1043,9 @@
                                                 <span>Saturazione</span>
                                                 <span id="bgImageSaturationValue" class="badge bg-success">100%</span>
                                             </div>
-                                            <input type="range" class="form-range" id="bgImageSaturationRange" th:field="*{bgImageSaturation}" min="0" max="200" step="1" oninput="updateBackgroundImageControls()" />
+                                            <input type="range" class="form-range" id="bgImageSaturationRange"
+                                                th:field="*{bgImageSaturation}" min="0" max="200" step="1"
+                                                oninput="updateBackgroundImageControls()" />
                                         </div>
 
                                         <div class="background-image-control-row mb-2">
@@ -942,7 +1053,9 @@
                                                 <span>Bianco/Nero</span>
                                                 <span id="bgImageGrayscaleValue" class="badge bg-success">0%</span>
                                             </div>
-                                            <input type="range" class="form-range" id="bgImageGrayscaleRange" th:field="*{bgImageGrayscale}" min="0" max="100" step="1" oninput="updateBackgroundImageControls()" />
+                                            <input type="range" class="form-range" id="bgImageGrayscaleRange"
+                                                th:field="*{bgImageGrayscale}" min="0" max="100" step="1"
+                                                oninput="updateBackgroundImageControls()" />
                                         </div>
 
                                         <div class="background-image-control-row mb-2">
@@ -950,22 +1063,29 @@
                                                 <span>Luminosità</span>
                                                 <span id="bgImageBrightnessValue" class="badge bg-success">100%</span>
                                             </div>
-                                            <input type="range" class="form-range" id="bgImageBrightnessRange" th:field="*{bgImageBrightness}" min="0" max="100" step="1" oninput="updateBackgroundImageControls()" />
+                                            <input type="range" class="form-range" id="bgImageBrightnessRange"
+                                                th:field="*{bgImageBrightness}" min="0" max="100" step="1"
+                                                oninput="updateBackgroundImageControls()" />
                                         </div>
 
-                                        <button type="button" class="btn btn-xs btn-outline-secondary w-100 mt-2" onclick="resetBackgroundImageControls()">Ripristina Filtri</button>
+                                        <button type="button" class="btn btn-xs btn-outline-secondary w-100 mt-2"
+                                            onclick="resetBackgroundImageControls()">Ripristina Filtri</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- SEZIONE 4: IMMAGINE PRINCIPALE JUMBO (Demo 1 e 2) -->
-                        <div id="mainImageUpload" class="card p-3 mb-3" th:style="${block.blockType != null and (block.blockType.name() == 'JUMBO_DEMO_1' or block.blockType.name() == 'JUMBO_DEMO_2')} ? '' : 'display:none;'">
-                            <label class="form-label fw-bold text-success small"><i class="bi bi-upload me-1"></i> Immagine Principale Riga</label>
-                            <input type="file" name="imageFile" class="form-control form-control-sm mb-2" accept="image/*" />
+                        <div id="mainImageUpload" class="card p-3 mb-3"
+                            th:style="${block.blockType != null and (block.blockType.name() == 'JUMBO_DEMO_1' or block.blockType.name() == 'JUMBO_DEMO_2')} ? '' : 'display:none;'">
+                            <label class="form-label fw-bold text-success small"><i class="bi bi-upload me-1"></i>
+                                Immagine Principale Riga</label>
+                            <input type="file" name="imageFile" class="form-control form-control-sm mb-2"
+                                accept="image/*" />
                             <input type="hidden" id="blockImageUrl" th:field="*{imageUrl}" />
                             <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="mt-2">
-                                <img th:src="${block.imageUrl}" alt="Anteprima" class="img-thumbnail" style="max-height: 80px;" />
+                                <img th:src="${block.imageUrl}" alt="Anteprima" class="img-thumbnail"
+                                    style="max-height: 80px;" />
                             </div>
                         </div>
 
@@ -976,69 +1096,95 @@
         </form>
 
         <!-- FORM AGGIUNTA / MODIFICA ELEMENTO SINGOLO CARD/SLIDE -->
-        <div id="itemFormContainerSection" th:if="${block.id != null}" th:style="${block.blockType != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')} ? '' : 'display:none;'" class="card p-4 mt-4 shadow-sm">
-            <h5 id="addItemTitle" class="fw-bold mb-3" th:text="${editingItem != null ? 'Modifica Elemento' : 'Aggiungi Card'}">Aggiungi Card</h5>
+        <div id="itemFormContainerSection" th:if="${block.id != null}"
+            th:style="${block.blockType != null and (block.blockType.name() == 'CARDS' or block.blockType.name() == 'CAROUSEL')} ? '' : 'display:none;'"
+            class="card p-4 mt-4 shadow-sm">
+            <h5 id="addItemTitle" class="fw-bold mb-3"
+                th:text="${editingItem != null ? 'Modifica Elemento' : 'Aggiungi Card'}">Aggiungi Card</h5>
 
-            <form id="itemForm" th:action="${editingItem != null} ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} : @{/admin/block/{id}/item/add(id=${block.id})}" method="post" enctype="multipart/form-data" class="row g-3">
+            <form id="itemForm"
+                th:action="${editingItem != null} ? @{/admin/block/{bId}/item/update/{iId}(bId=${block.id}, iId=${editingItem.id})} : @{/admin/block/{id}/item/add(id=${block.id})}"
+                method="post" enctype="multipart/form-data" class="row g-3">
                 <div class="col-md-6" id="itemTitleCol">
                     <label class="form-label fw-bold"><span id="itemTitleLabel">Titolo Card</span></label>
-                    <input type="text" name="title" id="itemTitleInput" class="form-control" placeholder="Titolo" th:value="${editingItem != null ? editingItem.title : ''}" required />
+                    <input type="text" name="title" id="itemTitleInput" class="form-control" placeholder="Titolo"
+                        th:value="${editingItem != null ? editingItem.title : ''}" required />
                 </div>
 
                 <div class="col-md-6" id="itemImageCol">
-                    <label class="form-label fw-bold"><i class="bi bi-image"></i> <span id="itemImageLabel">Carica Immagine Card</span></label>
+                    <label class="form-label fw-bold"><i class="bi bi-image"></i> <span id="itemImageLabel">Carica
+                            Immagine Card</span></label>
                     <input type="file" name="itemImageFile" class="form-control" accept="image/*" />
-                    <div th:if="${editingItem != null and editingItem.imageUrl != null and !editingItem.imageUrl.empty}" class="mt-2">
-                        <img th:src="${editingItem.imageUrl}" alt="Anteprima" class="img-thumbnail" style="max-height: 80px;" />
+                    <div th:if="${editingItem != null and editingItem.imageUrl != null and !editingItem.imageUrl.empty}"
+                        class="mt-2">
+                        <img th:src="${editingItem.imageUrl}" alt="Anteprima" class="img-thumbnail"
+                            style="max-height: 80px;" />
                     </div>
                 </div>
 
                 <div id="itemExtraFields" class="row g-3 m-0 p-0">
                     <div class="col-md-12">
-                        <label class="form-label fw-bold"><i class="bi bi-palette text-success"></i> Sfondo Elemento</label>
+                        <label class="form-label fw-bold"><i class="bi bi-palette text-success"></i> Sfondo
+                            Elemento</label>
                         <div class="form-check form-switch mb-2">
-                            <input class="form-check-input" type="checkbox" id="itemIsTransparentSwitch" onchange="toggleItemBackgroundType()">
-                            <label class="form-check-label text-warning small" for="itemIsTransparentSwitch">Sfondo Trasparente</label>
+                            <input class="form-check-input" type="checkbox" id="itemIsTransparentSwitch"
+                                onchange="toggleItemBackgroundType()">
+                            <label class="form-check-label text-warning small" for="itemIsTransparentSwitch">Sfondo
+                                Trasparente</label>
                         </div>
                         <div class="color-picker-wrapper">
-                            <input type="color" class="form-control form-control-color" id="itemBgPicker" th:value="${editingItem != null and editingItem.backgroundColor != null and !#strings.isEmpty(editingItem.backgroundColor) ? editingItem.backgroundColor : '#0f172a'}" oninput="syncItemColorText(this.value)">
-                            <input type="text" name="backgroundColor" id="itemBgColorInput" class="form-control" placeholder="rgba(30,41,59,0.8) o #1e293b" th:value="${editingItem != null ? editingItem.backgroundColor : ''}" />
+                            <input type="color" class="form-control form-control-color" id="itemBgPicker"
+                                th:value="${editingItem != null and editingItem.backgroundColor != null and !#strings.isEmpty(editingItem.backgroundColor) ? editingItem.backgroundColor : '#0f172a'}"
+                                oninput="syncItemColorText(this.value)">
+                            <input type="text" name="backgroundColor" id="itemBgColorInput" class="form-control"
+                                placeholder="rgba(30,41,59,0.8) o #1e293b"
+                                th:value="${editingItem != null ? editingItem.backgroundColor : ''}" />
                         </div>
                         <div class="opacity-control-wrapper">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <label class="form-label fw-bold mb-0 small">Opacità Sfondo Elemento</label>
                                 <span id="itemBgOpacityValue" class="badge bg-success opacity-value">100%</span>
                             </div>
-                            <input type="range" class="form-range" id="itemBgOpacityRange" min="0" max="100" step="1" value="100" oninput="syncItemOpacity(this.value)">
+                            <input type="range" class="form-range" id="itemBgOpacityRange" min="0" max="100" step="1"
+                                value="100" oninput="syncItemOpacity(this.value)">
                         </div>
                     </div>
 
                     <div class="col-12">
                         <label class="form-label fw-bold">Descrizione Elemento</label>
                         <div class="monaco-modal-editor-button">
-                            <button type="button" class="btn btn-sm btn-outline-info monaco-open-button mb-1" data-bs-toggle="modal" data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)">
+                            <button type="button" class="btn btn-sm btn-outline-info monaco-open-button mb-1"
+                                data-bs-toggle="modal" data-bs-target="#monacoEditorModal"
+                                onclick="openMonacoFromButton(this)">
                                 <i class="bi bi-code-square me-1"></i> HTML Editor Avanzato (Monaco)
                             </button>
                         </div>
-                        <textarea name="contentHtml" class="wysiwyg-editor" placeholder="Testo descrittivo..." th:text="${editingItem != null ? editingItem.contentHtml : ''}"></textarea>
+                        <textarea name="contentHtml" class="wysiwyg-editor" placeholder="Testo descrittivo..."
+                            th:text="${editingItem != null ? editingItem.contentHtml : ''}"></textarea>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Testo Pulsante</label>
-                        <input type="text" name="buttonText" class="form-control" placeholder="es. Scopri di più" th:value="${editingItem != null ? editingItem.buttonText : ''}" />
+                        <input type="text" name="buttonText" class="form-control" placeholder="es. Scopri di più"
+                            th:value="${editingItem != null ? editingItem.buttonText : ''}" />
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Link Pulsante</label>
-                        <input type="text" name="buttonUrl" class="form-control" placeholder="https://..." th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
+                        <input type="text" name="buttonUrl" class="form-control" placeholder="https://..."
+                            th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
                     </div>
                 </div>
 
                 <div class="col-12 text-end d-flex justify-content-end gap-2 mt-3">
-                    <a th:if="${editingItem != null}" th:href="@{/admin/block/edit/{id}(id=${block.id})}" class="btn btn-outline-light">Annulla</a>
-                    <button type="button" onclick="showSaveItemModal()" th:class="${editingItem != null} ? 'btn btn-warning' : 'btn btn-success'">
+                    <a th:if="${editingItem != null}" th:href="@{/admin/block/edit/{id}(id=${block.id})}"
+                        class="btn btn-outline-light">Annulla</a>
+                    <button type="button" onclick="showSaveItemModal()"
+                        th:class="${editingItem != null} ? 'btn btn-warning' : 'btn btn-success'">
                         <i th:class="${editingItem != null} ? 'bi bi-check-lg' : 'bi bi-plus-lg'"></i>
-                        <span id="addItemButtonText" th:text="${editingItem != null ? 'Salva Modifiche Elemento' : 'Aggiungi Card'}">Aggiungi Card</span>
+                        <span id="addItemButtonText"
+                            th:text="${editingItem != null ? 'Salva Modifiche Elemento' : 'Aggiungi Card'}">Aggiungi
+                            Card</span>
                     </button>
                 </div>
             </form>
@@ -1056,26 +1202,35 @@
                         <small class="text-muted fs-6 ms-2">(Emmet abilitato - Premi TAB)</small>
                     </h5>
                     <div>
-                        <button type="button" class="btn btn-sm btn-outline-light me-2" onclick="toggleMonacoFullscreen()" id="btnToggleFullscreen" title="Schermo Intero">
-                            <i class="bi bi-arrows-angle-expand me-1" id="fullscreenIcon"></i><span id="btnToggleFullscreenText">Schermo Intero</span>
+                        <button type="button" class="btn btn-sm btn-outline-light me-2"
+                            onclick="toggleMonacoFullscreen()" id="btnToggleFullscreen" title="Schermo Intero">
+                            <i class="bi bi-arrows-angle-expand me-1" id="fullscreenIcon"></i><span
+                                id="btnToggleFullscreenText">Schermo Intero</span>
                         </button>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                 </div>
                 <div class="modal-body p-0">
                     <div class="monaco-extra-toolbar">
                         <div class="input-group input-group-sm monaco-search-wrapper">
                             <span class="input-group-text"><i class="bi bi-search"></i></span>
-                            <input type="text" id="monacoSearchInput" class="form-control monaco-search-input" placeholder="Cerca nel codice..." autocomplete="off">
-                            <button type="button" class="btn btn-outline-secondary" id="btnMonacoSearchClear" title="Cancella"><i class="bi bi-x-lg"></i></button>
+                            <input type="text" id="monacoSearchInput" class="form-control monaco-search-input"
+                                placeholder="Cerca nel codice..." autocomplete="off">
+                            <button type="button" class="btn btn-outline-secondary" id="btnMonacoSearchClear"
+                                title="Cancella"><i class="bi bi-x-lg"></i></button>
                         </div>
                         <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(-1)"><i class="bi bi-zoom-out"></i></button>
+                            <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(-1)"><i
+                                    class="bi bi-zoom-out"></i></button>
                             <span class="btn btn-outline-secondary monaco-zoom-label" id="monacoZoomLabel">100%</span>
-                            <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(1)"><i class="bi bi-zoom-in"></i></button>
+                            <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(1)"><i
+                                    class="bi bi-zoom-in"></i></button>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-warning" id="btnTogglePreview" onclick="toggleMonacoPreview()">
-                            <i class="bi bi-map me-1" id="previewIcon"></i><span id="previewButtonText">Nascondi minimappa</span>
+                        <button type="button" class="btn btn-sm btn-outline-warning" id="btnTogglePreview"
+                            onclick="toggleMonacoPreview()">
+                            <i class="bi bi-map me-1" id="previewIcon"></i><span id="previewButtonText">Nascondi
+                                minimappa</span>
                         </button>
                     </div>
                     <div id="monacoWorkspace" class="monaco-editor-workspace">
@@ -1083,10 +1238,13 @@
                     </div>
                 </div>
                 <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
-                    <div class="text-muted small"><span class="badge bg-secondary me-1">Emmet</span>Usa scorciatoie come <code>div.card>h2</code> + TAB</div>
+                    <div class="text-muted small"><span class="badge bg-secondary me-1">Emmet</span>Usa scorciatoie come
+                        <code>div.card>h2</code> + TAB
+                    </div>
                     <div>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                        <button type="button" class="btn btn-info" onclick="saveMonacoContent()">Applica Modifiche</button>
+                        <button type="button" class="btn btn-info" onclick="saveMonacoContent()">Applica
+                            Modifiche</button>
                     </div>
                 </div>
             </div>
@@ -1098,12 +1256,16 @@
         <div class="modal-dialog modal-xl modal-dialog-centered" id="rowPreviewModalDialog">
             <div class="modal-content modal-content-dark">
                 <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
-                    <h5 class="modal-title fw-bold text-white mb-0"><i class="bi bi-eye text-info me-2"></i>Anteprima Blocco nell'Index</h5>
+                    <h5 class="modal-title fw-bold text-white mb-0"><i class="bi bi-eye text-info me-2"></i>Anteprima
+                        Blocco nell'Index</h5>
                     <div>
-                        <button type="button" class="btn btn-sm btn-outline-light me-2" onclick="toggleRowPreviewFullscreen()" id="btnToggleRowPreviewFullscreen">
-                            <i class="bi bi-arrows-angle-expand me-1" id="rowPreviewFullscreenIcon"></i><span id="btnToggleRowPreviewFullscreenText">Schermo Intero</span>
+                        <button type="button" class="btn btn-sm btn-outline-light me-2"
+                            onclick="toggleRowPreviewFullscreen()" id="btnToggleRowPreviewFullscreen">
+                            <i class="bi bi-arrows-angle-expand me-1" id="rowPreviewFullscreenIcon"></i><span
+                                id="btnToggleRowPreviewFullscreenText">Schermo Intero</span>
                         </button>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                 </div>
                 <div class="modal-body p-4">
@@ -1112,7 +1274,8 @@
                     </div>
                 </div>
                 <div class="modal-footer border-top border-secondary border-opacity-25">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Chiudi Anteprima</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Chiudi
+                        Anteprima</button>
                 </div>
             </div>
         </div>
@@ -1123,13 +1286,16 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-dark">
                 <div class="modal-header border-bottom border-success">
-                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-save text-success me-2"></i>Conferma Salvataggio Riga</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-save text-success me-2"></i>Conferma
+                        Salvataggio Riga</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-light">Sei sicuro di voler salvare la configurazione di questa riga?</div>
                 <div class="modal-footer border-top border-secondary border-opacity-25">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                    <button type="button" class="btn btn-success" onclick="document.getElementById('blockForm').submit()">Conferma e Salva</button>
+                    <button type="button" class="btn btn-success"
+                        onclick="document.getElementById('blockForm').submit()">Conferma e Salva</button>
                 </div>
             </div>
         </div>
@@ -1139,13 +1305,16 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-dark">
                 <div class="modal-header border-bottom border-success">
-                    <h5 class="modal-title fw-bold text-white"><i class="bi bi-check-circle text-success me-2"></i>Conferma Salvataggio Elemento</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold text-white"><i
+                            class="bi bi-check-circle text-success me-2"></i>Conferma Salvataggio Elemento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-light">Sei sicuro di voler salvare i dati di questo elemento?</div>
                 <div class="modal-footer border-top border-secondary border-opacity-25">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                    <button type="button" class="btn btn-success" onclick="document.getElementById('itemForm').submit()">Conferma e Salva</button>
+                    <button type="button" class="btn btn-success"
+                        onclick="document.getElementById('itemForm').submit()">Conferma e Salva</button>
                 </div>
             </div>
         </div>
@@ -1155,10 +1324,13 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-dark">
                 <div class="modal-header border-bottom border-danger bg-danger bg-opacity-25 text-white">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Conferma Rimozione</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold"><i
+                            class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Conferma Rimozione</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
-                <div class="modal-body text-light">Vuoi davvero rimuovere questo elemento? L'azione non potrà essere annullata.</div>
+                <div class="modal-body text-light">Vuoi davvero rimuovere questo elemento? L'azione non potrà essere
+                    annullata.</div>
                 <div class="modal-footer border-top border-secondary border-opacity-25">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
                     <a id="btnConfirmDeleteItem" href="#" class="btn btn-danger">Rimuovi</a>
@@ -1791,6 +1963,1283 @@
         function syncCustomDimension(field, val) {
             renderRowPreviewIfOpen();
         }
+    </script>
+
+    <!-- ============================================================
+     MONACO EDITOR
+     ============================================================ -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script>
+
+    <script>
+        // Registrazione suggerimenti, autocompletamento e snippet per HTML, attributi e Bootstrap
+        function registerMonacoHtmlSuggestions(m) {
+            if (window.__monacoHtmlSuggestionsRegistered) return;
+            window.__monacoHtmlSuggestionsRegistered = true;
+
+            m.languages.registerCompletionItemProvider('html', {
+                triggerCharacters: ['<', ' ', ':', '"', "'", '.', '-'],
+                provideCompletionItems: function (model, position) {
+                    var word = model.getWordUntilPosition(position);
+                    var range = {
+                        startLineNumber: position.lineNumber,
+                        endLineNumber: position.lineNumber,
+                        startColumn: word.startColumn,
+                        endColumn: word.endColumn
+                    };
+                    var lineContent = model.getLineContent(position.lineNumber);
+                    var prefix = lineContent.substring(0, position.column - 1);
+                    var suggestions = [];
+
+                    // 1. Tag HTML con autocompletamento snippet
+                    var tags = [
+                        { label: 'div', insert: 'div class="${1}">${2}</div>', detail: 'Elemento contenitore <div>' },
+                        { label: 'span', insert: 'span class="${1}">${2}</span>', detail: 'Elemento inline <span>' },
+                        { label: 'p', insert: 'p class="${1}">${2}</p>', detail: 'Paragrafo <p>' },
+                        { label: 'a', insert: 'a href="${1:#}" class="${2}">${3}</a>', detail: 'Collegamento <a>' },
+                        { label: 'button', insert: 'button type="button" class="btn ${1:btn-primary}">${2}</button>', detail: 'Pulsante <button>' },
+                        { label: 'img', insert: 'img src="${1}" alt="${2}" class="img-fluid ${3}">', detail: 'Immagine <img>' },
+                        { label: 'h1', insert: 'h1 class="${1}">${2}</h1>', detail: 'Titolo <h1>' },
+                        { label: 'h2', insert: 'h2 class="${1}">${2}</h2>', detail: 'Titolo <h2>' },
+                        { label: 'h3', insert: 'h3 class="${1}">${2}</h3>', detail: 'Titolo <h3>' },
+                        { label: 'h4', insert: 'h4 class="${1}">${2}</h4>', detail: 'Titolo <h4>' },
+                        { label: 'h5', insert: 'h5 class="${1}">${2}</h5>', detail: 'Titolo <h5>' },
+                        { label: 'ul', insert: 'ul class="${1}">\n\t<li>${2}</li>\n</ul>', detail: 'Elenco puntato <ul>' },
+                        { label: 'ol', insert: 'ol class="${1}">\n\t<li>${2}</li>\n</ol>', detail: 'Elenco numerato <ol>' },
+                        { label: 'li', insert: 'li class="${1}">${2}</li>', detail: 'Voce elenco <li>' },
+                        { label: 'section', insert: 'section class="${1}">\n\t${2}\n</section>', detail: 'Sezione <section>' },
+                        { label: 'article', insert: 'article class="${1}">\n\t${2}\n</article>', detail: 'Articolo <article>' },
+                        { label: 'i', insert: 'i class="bi ${1}"></i>', detail: 'Icona Bootstrap <i>' }
+                    ];
+
+                    tags.forEach(function (t) {
+                        suggestions.push({
+                            label: t.label,
+                            kind: m.languages.CompletionItemKind.Snippet,
+                            insertText: prefix.trim().endsWith('<') ? t.insert : '<' + t.insert,
+                            insertTextRules: m.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            detail: t.detail,
+                            range: range
+                        });
+                    });
+
+                    // 2. Attributi HTML e Thymeleaf
+                    var attrs = [
+                        { label: 'class', insert: 'class="${1}"', detail: 'Classi CSS' },
+                        { label: 'id', insert: 'id="${1}"', detail: 'ID univoco' },
+                        { label: 'style', insert: 'style="${1}"', detail: 'Stile inline CSS' },
+                        { label: 'src', insert: 'src="${1}"', detail: 'Percorso sorgente' },
+                        { label: 'href', insert: 'href="${1}"', detail: 'URL destinazione' },
+                        { label: 'alt', insert: 'alt="${1}"', detail: 'Testo alternativo' },
+                        { label: 'type', insert: 'type="${1:button}"', detail: 'Attributo type' },
+                        { label: 'target', insert: 'target="_blank"', detail: 'Apertura link' },
+                        { label: 'th:text', insert: 'th:text="${${1}}"', detail: 'Thymeleaf text dinamico' },
+                        { label: 'th:href', insert: 'th:href="@{${1}}"', detail: 'Thymeleaf link URL' },
+                        { label: 'th:src', insert: 'th:src="@{${1}}"', detail: 'Thymeleaf src dinamico' },
+                        { label: 'th:if', insert: 'th:if="${${1}}"', detail: 'Thymeleaf condizione if' },
+                        { label: 'th:each', insert: 'th:each="item : ${${1}}"', detail: 'Thymeleaf ciclo each' }
+                    ];
+
+                    attrs.forEach(function (a) {
+                        suggestions.push({
+                            label: a.label,
+                            kind: m.languages.CompletionItemKind.Property,
+                            insertText: a.insert,
+                            insertTextRules: m.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            detail: a.detail,
+                            range: range
+                        });
+                    });
+
+                    // 3. Classi Bootstrap 5 più utilizzate
+                    var bsClasses = [
+                        'container', 'container-fluid', 'row', 'col-12', 'col-md-6', 'col-md-4', 'col-md-3', 'col-lg-8', 'col-lg-4',
+                        'd-flex', 'flex-column', 'flex-wrap', 'justify-content-center', 'justify-content-between', 'align-items-center',
+                        'text-center', 'text-start', 'text-end', 'text-white', 'text-muted', 'text-primary', 'text-success', 'text-danger',
+                        'bg-dark', 'bg-light', 'bg-primary', 'bg-transparent',
+                        'p-0', 'p-2', 'p-3', 'p-4', 'p-5', 'px-3', 'py-2', 'py-3', 'py-4',
+                        'm-0', 'mb-2', 'mb-3', 'mb-4', 'mt-3', 'mt-4', 'my-3', 'mx-auto', 'gap-2', 'gap-3', 'gap-4',
+                        'btn', 'btn-primary', 'btn-secondary', 'btn-success', 'btn-danger', 'btn-outline-primary', 'btn-sm', 'btn-lg',
+                        'card', 'card-body', 'card-title', 'card-text', 'rounded', 'rounded-pill', 'shadow', 'border', 'border-0',
+                        'w-100', 'h-100', 'img-fluid', 'overflow-hidden'
+                    ];
+
+                    bsClasses.forEach(function (cls) {
+                        suggestions.push({
+                            label: cls,
+                            kind: m.languages.CompletionItemKind.Value,
+                            insertText: cls,
+                            detail: 'Classe Bootstrap 5',
+                            range: range
+                        });
+                    });
+
+                    return { suggestions: suggestions };
+                }
+            });
+        }
+
+
+        let windowMonacoEditor = null,
+            monacoTargetTextarea = null,
+            monacoFontSize = 14,
+            monacoMinimapVisible = true,
+            monacoSearchMatches = [],
+            monacoSearchIndex = 0,
+            monacoSearchDecorations = [],
+            monacoCurrentSearchDecoration = [],
+            monacoLoaderPromise = null,
+            monacoEmmetInitialized = false;
+
+
+
+
+        function loadMonaco() {
+            if (monacoLoaderPromise) {
+                return monacoLoaderPromise;
+            }
+
+            monacoLoaderPromise = new Promise((resolve, reject) => {
+                // 1. Monaco è già completamente caricato ed inizializzato
+                if (window.monaco && window.monaco.editor) {
+                    initMonacoEmmet();
+                    if (typeof registerMonacoHtmlSuggestions === 'function') {
+                        registerMonacoHtmlSuggestions(window.monaco);
+                    }
+                    resolve(window.monaco);
+                    return;
+                }
+
+                // Funzione interna per configurare ed avviare il modulo editor
+                const configureAndRequireMonaco = () => {
+                    try {
+                        window.require.config({
+                            paths: {
+                                vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'
+                            }
+                        });
+
+                        window.require(['vs/editor/editor.main'], function (m) {
+                            const monacoInstance = window.monaco || m;
+
+                            // Inizializza Emmet (se disponibile)
+                            initMonacoEmmet();
+
+                            // Registra il provider di autocompletamento e suggerimenti HTML / Bootstrap / Thymeleaf
+                            if (typeof registerMonacoHtmlSuggestions === 'function') {
+                                registerMonacoHtmlSuggestions(monacoInstance);
+                            }
+
+                            resolve(monacoInstance);
+                        }, function (err) {
+                            reject(err);
+                        });
+                    } catch (err) {
+                        reject(err);
+                    }
+                };
+
+                // 2. Se window.require è già presente, procedi subito
+                if (window.require && window.require.config) {
+                    configureAndRequireMonaco();
+                    return;
+                }
+
+                // 3. Se window.require non è presente, carica vs/loader.min.js on-demand senza bloccare la pagina
+                let loaderScript = document.querySelector('script[src*="vs/loader"]');
+                if (!loaderScript) {
+                    loaderScript = document.createElement('script');
+                    loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js';
+                    loaderScript.async = true;
+                    document.head.appendChild(loaderScript);
+                }
+
+                loaderScript.addEventListener('load', () => {
+                    if (window.require && window.require.config) {
+                        configureAndRequireMonaco();
+                    } else {
+                        reject(new Error('Loader Monaco (vs/loader.min.js) caricato ma require non disponibile.'));
+                    }
+                });
+
+                loaderScript.addEventListener('error', () => {
+                    reject(new Error('Impossibile caricare il loader di Monaco Editor da CDN.'));
+                });
+            });
+
+            return monacoLoaderPromise;
+        }
+
+
+
+        function initMonacoEmmet() {
+
+            if (
+                monacoEmmetInitialized
+            ) {
+                return;
+            }
+
+            try {
+
+                if (
+                    window.emmetMonaco?.emmetHTML
+                ) {
+
+                    window.emmetMonaco.emmetHTML(
+                        window.monaco,
+                        ['html']
+                    );
+
+                    monacoEmmetInitialized =
+                        true;
+                }
+
+            } catch (e) {
+
+                console.error(
+                    'Emmet Monaco:',
+                    e
+                );
+            }
+        }
+
+
+        function getTinyEditor(t) {
+
+            if (
+                !t ||
+                !window.tinymce
+            ) {
+                return null;
+            }
+
+            if (t.id) {
+
+                const e =
+                    tinymce.get(t.id);
+
+                if (e) {
+                    return e;
+                }
+            }
+
+            return (
+                tinymce.editors || []
+            ).find(
+                e =>
+                    e.getElement?.() === t
+            ) || null;
+        }
+
+
+        function openMonacoFromButton(b) {
+
+            let p = b,
+                t = null;
+
+            while (
+                p &&
+                !t
+            ) {
+
+                t =
+                    p.querySelector?.(
+                        '.wysiwyg-editor'
+                    );
+
+                p =
+                    p.parentElement;
+            }
+
+            openMonacoForTextarea(
+                t ||
+                document.querySelector(
+                    '.wysiwyg-editor'
+                )
+            );
+        }
+
+
+        function openMonacoForTextarea(t) {
+
+            if (!t) {
+
+                alert(
+                    'Editor HTML non trovato.'
+                );
+
+                return;
+            }
+
+            monacoTargetTextarea =
+                t;
+
+            const te =
+                getTinyEditor(t);
+
+            const value =
+                te
+                    ? (
+                        te.getContent({
+                            format: 'html'
+                        }) || ''
+                    )
+                    : (
+                        t.value || ''
+                    );
+
+            const modal =
+                document.getElementById(
+                    'monacoEditorModal'
+                );
+
+            if (!modal) {
+
+                alert(
+                    'Finestra Monaco non disponibile.'
+                );
+
+                return;
+            }
+
+            const modalInstance =
+                bootstrap.Modal
+                    .getOrCreateInstance(
+                        modal
+                    );
+
+            modalInstance.show();
+
+            loadMonaco()
+                .then(
+                    m => {
+
+                        const c =
+                            document.getElementById(
+                                'monacoContainer'
+                            );
+
+                        if (!c) {
+                            return;
+                        }
+
+                        if (
+                            !windowMonacoEditor
+                        ) {
+
+                            windowMonacoEditor = m.editor.create(c, {
+                                value,
+                                language: 'html',
+                                theme: 'vs-dark',
+                                fontSize: monacoFontSize,
+                                automaticLayout: true,
+                                minimap: { enabled: monacoMinimapVisible },
+                                wordWrap: 'off',
+                                lineNumbers: 'on',
+                                scrollBeyondLastLine: false,
+                                autoClosingBrackets: 'always',
+                                autoClosingQuotes: 'always',
+                                autoClosingTags: true,
+                                suggestOnTriggerCharacters: true,
+                                quickSuggestions: {
+                                    other: true,
+                                    comments: false,
+                                    strings: true
+                                },
+                                suggest: {
+                                    showWords: true,
+                                    showSnippets: true,
+                                    showClasses: true,
+                                    showFunctions: true,
+                                    showVariables: true
+                                },
+                                snippetSuggestions: 'top',          // Mostra gli snippet e i tag HTML in cima
+                                acceptSuggestionOnEnter: 'on',      // Invio conferma il suggerimento
+                                tabCompletion: 'on',                // Tab applica il completamento
+                                wordBasedSuggestions: true,
+                                formatOnPaste: true,
+                                formatOnType: true,
+                                fixedOverflowWidgets: true,
+                                tabSize: 2,
+                                insertSpaces: true
+                            });
+
+                        }
+
+                        updateZoomLabel();
+                        updateMinimapButton();
+                        clearMonacoSearch();
+
+                        setTimeout(
+                            () =>
+                                windowMonacoEditor.layout(),
+                            100
+                        );
+
+                        windowMonacoEditor.focus();
+                    }
+                )
+                .catch(
+                    e => {
+
+                        console.error(e);
+
+                        alert(
+                            'Impossibile caricare Monaco Editor. Controlla la connessione internet.'
+                        );
+                    }
+                );
+        }
+
+
+        function saveMonacoContent() {
+
+            if (
+                !windowMonacoEditor ||
+                !monacoTargetTextarea
+            ) {
+                return;
+            }
+
+            const v =
+                windowMonacoEditor.getValue();
+
+            const te =
+                getTinyEditor(
+                    monacoTargetTextarea
+                );
+
+            if (te) {
+
+                te.setContent(v);
+                te.save();
+
+            } else {
+
+                monacoTargetTextarea.value =
+                    v;
+            }
+
+            bootstrap.Modal
+                .getOrCreateInstance(
+                    document.getElementById(
+                        'monacoEditorModal'
+                    )
+                )
+                .hide();
+        }
+
+
+        function changeMonacoFontSize(d) {
+
+            if (
+                !windowMonacoEditor
+            ) {
+                return;
+            }
+
+            monacoFontSize =
+                Math.max(
+                    8,
+                    Math.min(
+                        32,
+                        monacoFontSize + d
+                    )
+                );
+
+            windowMonacoEditor.updateOptions({
+                fontSize:
+                    monacoFontSize
+            });
+
+            updateZoomLabel();
+        }
+
+
+        function updateZoomLabel() {
+
+            const e =
+                document.getElementById(
+                    'monacoZoomLabel'
+                );
+
+            if (e) {
+
+                e.textContent =
+                    Math.round(
+                        monacoFontSize / 14 * 100
+                    ) + '%';
+            }
+        }
+
+
+        function toggleMonacoPreview() {
+
+            if (
+                !windowMonacoEditor
+            ) {
+                return;
+            }
+
+            monacoMinimapVisible =
+                !monacoMinimapVisible;
+
+            windowMonacoEditor.updateOptions({
+                minimap: {
+                    enabled:
+                        monacoMinimapVisible
+                }
+            });
+
+            updateMinimapButton();
+        }
+
+
+        function updateMinimapButton() {
+
+            const t =
+                document.getElementById(
+                    'previewButtonText'
+                );
+
+            const i =
+                document.getElementById(
+                    'previewIcon'
+                );
+
+            const b =
+                document.getElementById(
+                    'btnTogglePreview'
+                );
+
+            if (t) {
+
+                t.textContent =
+                    monacoMinimapVisible
+                        ? 'Nascondi minimappa'
+                        : 'Mostra minimappa';
+            }
+
+            if (i) {
+
+                i.className =
+                    monacoMinimapVisible
+                        ? 'bi bi-map me-1'
+                        : 'bi bi-map-fill me-1';
+            }
+
+            if (b) {
+
+                b.title =
+                    monacoMinimapVisible
+                        ? 'Nascondi minimappa a destra'
+                        : 'Mostra minimappa a destra';
+            }
+        }
+
+
+        function toggleMonacoFullscreen() {
+
+            const d =
+                document.getElementById(
+                    'monacoModalDialog'
+                );
+
+            const i =
+                document.getElementById(
+                    'fullscreenIcon'
+                );
+
+            const b =
+                document.getElementById(
+                    'btnToggleFullscreen'
+                );
+
+            const t =
+                document.getElementById(
+                    'btnToggleFullscreenText'
+                );
+
+            if (!d) {
+                return;
+            }
+
+            const f =
+                d.classList.toggle(
+                    'modal-fullscreen-custom'
+                );
+
+            if (i) {
+
+                i.className =
+                    f
+                        ? 'bi bi-arrows-angle-contract me-1'
+                        : 'bi bi-arrows-angle-expand me-1';
+            }
+
+            if (t) {
+
+                t.textContent =
+                    f
+                        ? 'Esci da Schermo Intero'
+                        : 'Schermo Intero';
+            }
+
+            if (b) {
+
+                b.title =
+                    f
+                        ? 'Esci da Schermo Intero'
+                        : 'Schermo Intero';
+            }
+
+            if (
+                windowMonacoEditor
+            ) {
+
+                [50, 250, 500]
+                    .forEach(
+                        x =>
+                            setTimeout(
+                                () =>
+                                    windowMonacoEditor.layout(),
+                                x
+                            )
+                    );
+            }
+        }
+
+
+        function installSuggestionPositioning() {
+
+            if (
+                window.__monacoSuggestObserver
+            ) {
+                return;
+            }
+
+            window.__monacoSuggestObserver =
+                true;
+
+            const o =
+                new MutationObserver(
+                    positionSuggestion
+                );
+
+            o.observe(
+                document.body,
+                {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    attributeFilter: [
+                        'style',
+                        'class'
+                    ]
+                }
+            );
+
+            window.addEventListener(
+                'resize',
+                positionSuggestion
+            );
+        }
+
+
+        function positionSuggestion() {
+
+            if (
+                !windowMonacoEditor
+            ) {
+                return;
+            }
+
+            const w =
+                document.querySelector(
+                    '.monaco-editor .suggest-widget'
+                );
+
+            if (
+                !w ||
+                getComputedStyle(w).display === 'none'
+            ) {
+                return;
+            }
+
+            const p =
+                windowMonacoEditor.getPosition();
+
+            const c =
+                windowMonacoEditor
+                    .getScrolledVisiblePosition(p);
+
+            const n =
+                windowMonacoEditor.getDomNode();
+
+            if (
+                !p ||
+                !c ||
+                !n
+            ) {
+                return;
+            }
+
+            const r =
+                n.getBoundingClientRect();
+
+            w.style.position =
+                'fixed';
+
+            w.style.left =
+                Math.max(
+                    4,
+                    r.left + c.left
+                ) + 'px';
+
+            w.style.top =
+                Math.max(
+                    4,
+                    r.top + c.top + c.height + 2
+                ) + 'px';
+
+            w.style.zIndex =
+                '10000';
+        }
+
+
+        /* ============================================================
+           RICERCA MONACO
+           ============================================================ */
+
+        function performMonacoSearch() {
+
+            if (
+                !windowMonacoEditor
+            ) {
+                return;
+            }
+
+            const q =
+                document.getElementById(
+                    'monacoSearchInput'
+                )?.value || '';
+
+            clearMonacoSearchDecorations();
+
+            if (!q) {
+
+                monacoSearchMatches = [];
+                monacoSearchIndex = 0;
+
+                updateSearchResults();
+
+                return;
+            }
+
+            monacoSearchMatches =
+                windowMonacoEditor
+                    .getModel()
+                    .findMatches(
+                        q,
+                        true,
+                        false,
+                        false,
+                        null,
+                        true
+                    );
+
+            monacoSearchIndex =
+                monacoSearchMatches.length
+                    ? 0
+                    : -1;
+
+            monacoSearchDecorations =
+                windowMonacoEditor.deltaDecorations(
+                    [],
+                    monacoSearchMatches.map(
+                        m => ({
+                            range: m.range,
+                            options: {
+                                inlineClassName:
+                                    'monaco-search-match'
+                            }
+                        })
+                    )
+                );
+
+            updateCurrentSearchDecoration();
+
+            updateSearchResults();
+        }
+
+
+        function clearMonacoSearchDecorations() {
+
+            if (
+                windowMonacoEditor
+            ) {
+
+                if (
+                    monacoSearchDecorations.length
+                ) {
+
+                    windowMonacoEditor.deltaDecorations(
+                        monacoSearchDecorations,
+                        []
+                    );
+                }
+
+                if (
+                    monacoCurrentSearchDecoration.length
+                ) {
+
+                    windowMonacoEditor.deltaDecorations(
+                        monacoCurrentSearchDecoration,
+                        []
+                    );
+                }
+            }
+
+            monacoSearchDecorations = [];
+            monacoCurrentSearchDecoration = [];
+        }
+
+
+        function updateCurrentSearchDecoration() {
+
+            if (
+                !windowMonacoEditor ||
+                monacoSearchIndex < 0 ||
+                !monacoSearchMatches.length
+            ) {
+                return;
+            }
+
+            if (
+                monacoCurrentSearchDecoration.length
+            ) {
+
+                windowMonacoEditor.deltaDecorations(
+                    monacoCurrentSearchDecoration,
+                    []
+                );
+            }
+
+            const currentMatch =
+                monacoSearchMatches[
+                monacoSearchIndex
+                ];
+
+            if (!currentMatch) {
+                return;
+            }
+
+            monacoCurrentSearchDecoration =
+                windowMonacoEditor.deltaDecorations(
+                    [],
+                    [
+                        {
+                            range:
+                                currentMatch.range,
+
+                            options: {
+                                inlineClassName:
+                                    'monaco-search-match-current'
+                            }
+                        }
+                    ]
+                );
+        }
+
+
+        function selectMonacoSearchMatch(i) {
+
+            if (
+                !windowMonacoEditor ||
+                !monacoSearchMatches.length
+            ) {
+                return;
+            }
+
+            monacoSearchIndex =
+                (
+                    i +
+                    monacoSearchMatches.length
+                ) %
+                monacoSearchMatches.length;
+
+            const m =
+                monacoSearchMatches[
+                monacoSearchIndex
+                ];
+
+            windowMonacoEditor.setSelection(
+                m.range
+            );
+
+            windowMonacoEditor.revealRangeInCenter(
+                m.range
+            );
+
+            updateCurrentSearchDecoration();
+
+            updateSearchResults();
+        }
+
+
+        function navigateMonacoSearch(d) {
+
+            if (
+                monacoSearchMatches.length
+            ) {
+
+                selectMonacoSearchMatch(
+                    monacoSearchIndex + d
+                );
+            }
+
+            document
+                .getElementById(
+                    'monacoSearchInput'
+                )
+                ?.focus();
+        }
+
+
+        /* ============================================================
+           VISUALIZZAZIONE FRECCE RICERCA
+           ============================================================ */
+
+        function updateSearchResults() {
+
+            const w =
+                document.querySelector(
+                    '.monaco-search-wrapper'
+                );
+
+            if (!w) {
+                return;
+            }
+
+            let r =
+                document.getElementById(
+                    'monacoSearchResults'
+                );
+
+            if (!r) {
+
+                r =
+                    document.createElement(
+                        'div'
+                    );
+
+                r.id =
+                    'monacoSearchResults';
+
+                r.className =
+                    'monaco-search-results';
+
+                r.innerHTML = `
+            <button type="button"
+                    class="btn btn-sm btn-outline-light"
+                    id="monacoSearchPrev"
+                    title="Corrispondenza precedente"
+                    aria-label="Corrispondenza precedente">
+
+                <i class="bi bi-chevron-up"></i>
+
+            </button>
+
+            <span class="monaco-search-count"
+                  id="monacoSearchCount">
+                0 / 0
+            </span>
+
+            <button type="button"
+                    class="btn btn-sm btn-outline-light"
+                    id="monacoSearchNext"
+                    title="Corrispondenza successiva"
+                    aria-label="Corrispondenza successiva">
+
+                <i class="bi bi-chevron-down"></i>
+
+            </button>
+        `;
+
+                w.appendChild(r);
+
+
+                const prev =
+                    document.getElementById(
+                        'monacoSearchPrev'
+                    );
+
+                const next =
+                    document.getElementById(
+                        'monacoSearchNext'
+                    );
+
+
+                if (prev) {
+
+                    prev.onmousedown =
+                        e => {
+
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            navigateMonacoSearch(
+                                -1
+                            );
+                        };
+                }
+
+
+                if (next) {
+
+                    next.onmousedown =
+                        e => {
+
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            navigateMonacoSearch(
+                                1
+                            );
+                        };
+                }
+            }
+
+
+            const c =
+                document.getElementById(
+                    'monacoSearchCount'
+                );
+
+
+            if (
+                !monacoSearchMatches.length ||
+                monacoSearchIndex < 0
+            ) {
+
+                r.classList.remove(
+                    'visible'
+                );
+
+                if (c) {
+                    c.textContent =
+                        '0 / 0';
+                }
+
+            } else {
+
+                if (c) {
+
+                    c.textContent =
+                        (
+                            monacoSearchIndex + 1
+                        ) +
+                        ' / ' +
+                        monacoSearchMatches.length;
+                }
+
+                r.classList.add(
+                    'visible'
+                );
+            }
+        }
+
+
+        function clearMonacoSearch() {
+
+            const i =
+                document.getElementById(
+                    'monacoSearchInput'
+                );
+
+            if (i) {
+                i.value = '';
+            }
+
+            clearMonacoSearchDecorations();
+
+            monacoSearchMatches = [];
+            monacoSearchIndex = 0;
+
+            updateSearchResults();
+        }
+
+
+        /* ============================================================
+           INIZIALIZZAZIONE MONACO
+           ============================================================ */
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            () => {
+
+                const mm =
+                    document.getElementById(
+                        'monacoEditorModal'
+                    );
+
+                if (mm) {
+
+                    mm.addEventListener(
+                        'shown.bs.modal',
+                        () => {
+
+                            if (
+                                monacoTargetTextarea
+                            ) {
+
+                                loadMonaco()
+                                    .catch(
+                                        e =>
+                                            console.error(
+                                                'Monaco:',
+                                                e
+                                            )
+                                    );
+                            }
+                        }
+                    );
+                }
+
+
+                const i =
+                    document.getElementById(
+                        'monacoSearchInput'
+                    );
+
+                const c =
+                    document.getElementById(
+                        'btnMonacoSearchClear'
+                    );
+
+
+                if (i) {
+
+                    i.oninput =
+                        performMonacoSearch;
+
+                    i.onkeydown =
+                        e => {
+
+                            if (
+                                e.key === 'Enter'
+                            ) {
+
+                                e.preventDefault();
+
+                                navigateMonacoSearch(
+                                    e.shiftKey
+                                        ? -1
+                                        : 1
+                                );
+
+                            } else if (
+                                e.key === 'Escape'
+                            ) {
+
+                                e.preventDefault();
+
+                                clearMonacoSearch();
+
+                                windowMonacoEditor
+                                    ?.focus();
+                            }
+                        };
+                }
+
+
+                if (c) {
+
+                    c.onmousedown =
+                        e => {
+
+                            e.preventDefault();
+
+                            clearMonacoSearch();
+
+                            windowMonacoEditor
+                                ?.focus();
+                        };
+                }
+
+
+                const m =
+                    document.getElementById(
+                        'monacoEditorModal'
+                    );
+
+                if (m) {
+
+                    m.addEventListener(
+                        'shown.bs.modal',
+                        () =>
+                            setTimeout(
+                                () =>
+                                    windowMonacoEditor
+                                        ?.layout(),
+                                100
+                            )
+                    );
+                }
+            }
+        );
+
+
+        /* ============================================================
+           F11
+           ============================================================ */
+
+        document.addEventListener(
+            'keydown',
+            e => {
+
+                if (
+                    e.key === 'F11' &&
+                    windowMonacoEditor
+                ) {
+
+                    e.preventDefault();
+
+                    toggleMonacoFullscreen();
+                }
+            }
+        );
+
+        function resetToAnimatedBg() {
+            const input = document.getElementById("backgroundColorInput");
+            if (input) {
+                input.value = "";
+                updateBgStatusBadge();
+            }
+        }
+
+        function updateBgStatusBadge() {
+            const input = document.getElementById("backgroundColorInput");
+            const badge = document.getElementById("pageBgStatusBadge");
+            if (!badge || !input) return;
+
+            if (input.value && input.value.trim() !== "") {
+                badge.className = "badge bg-success";
+                badge.textContent = "Tinta Unita: " + input.value.trim();
+            } else {
+                badge.className = "badge bg-info text-dark";
+                badge.textContent = "Sfondo Animato Attivo";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateBgStatusBadge();
+        });
+
+
     </script>
 
 </body>

@@ -508,6 +508,14 @@
                     { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
                 ],
 
+                setup: function (editor) {
+                    editor.on('init change KeyUp ExecCommand', function () {
+                        if (typeof renderRowPreviewIfOpen === 'function') {
+                            renderRowPreviewIfOpen();
+                        }
+                    });
+                },
+
                 images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
                     const formData = new FormData();
                     formData.append('file', blobInfo.blob(), blobInfo.filename());
@@ -1488,6 +1496,8 @@
                 const button = document.getElementById("addItemButtonText");
                 return button ? button.textContent.trim() === "Salva Modifiche Elemento" : false;
             }
+
+            renderRowPreviewIfOpen();
         });
 
         /* FUNZIONI COLORI E SFONDO COMPATIBILI CON LO SCRIPT ORIGINALE */
@@ -1656,6 +1666,7 @@
         function syncColorText(val) {
             const bgInput = document.getElementById("bgColorInput");
             if (bgInput) bgInput.value = val;
+            renderRowPreviewIfOpen();
         }
 
         function toggleBackgroundType() {
@@ -1676,60 +1687,112 @@
                 if (bgInput) { bgInput.readOnly = false; if (bgPicker) bgInput.value = bgPicker.value; }
                 if (bgPicker) bgPicker.disabled = false;
             }
+            renderRowPreviewIfOpen();
         }
 
         function initItemBgColor() {
             const bgInput = document.getElementById("itemBgColorInput");
             const bgPicker = document.getElementById("itemBgPicker");
-            if (!bgInput) return;
-            if (/^#[0-9A-F]{6}$/i.test(bgInput.value.trim()) && bgPicker) bgPicker.value = bgInput.value.trim();
-        }
-
-        function syncItemOpacity(value) {
+            const transparentSwitch = document.getElementById("itemIsTransparentSwitch");
+            const opacityRange = document.getElementById("itemBgOpacityRange");
             const opacityValue = document.getElementById("itemBgOpacityValue");
-            if (opacityValue) opacityValue.textContent = value + "%";
+
+            if (!bgInput) return;
+            let value = bgInput.value.trim();
+
+            if (value === "transparent") {
+                if (transparentSwitch) transparentSwitch.checked = true;
+                if (bgPicker) bgPicker.disabled = true;
+                if (bgInput) bgInput.readOnly = true;
+                if (opacityRange) opacityRange.value = 0;
+                if (opacityValue) opacityValue.textContent = "0%";
+                return;
+            }
+
+            if (/^#[0-9A-F]{6}$/i.test(value) && bgPicker) bgPicker.value = value;
+            if (opacityRange) opacityRange.value = 100;
+            if (opacityValue) opacityValue.textContent = "100%";
         }
 
         function syncItemColorText(val) {
             const bgInput = document.getElementById("itemBgColorInput");
             if (bgInput) bgInput.value = val;
+            renderRowPreviewIfOpen();
+        }
+
+        function syncItemOpacity(value) {
+            const bgInput = document.getElementById("itemBgColorInput");
+            const bgPicker = document.getElementById("itemBgPicker");
+            const transparentSwitch = document.getElementById("itemIsTransparentSwitch");
+            const opacityValue = document.getElementById("itemBgOpacityValue");
+
+            if (opacityValue) opacityValue.textContent = value + "%";
+
+            if (parseInt(value) === 0) {
+                if (bgInput) bgInput.value = "transparent";
+                if (bgPicker) bgPicker.disabled = true;
+                if (bgInput) bgInput.readOnly = true;
+                if (transparentSwitch) transparentSwitch.checked = true;
+                return;
+            }
+
+            if (bgPicker) bgPicker.disabled = false;
+            if (bgInput) bgInput.readOnly = false;
+            if (transparentSwitch) transparentSwitch.checked = false;
+            if (bgInput && bgPicker) bgInput.value = bgPicker.value;
+            renderRowPreviewIfOpen();
         }
 
         function toggleItemBackgroundType() {
             const transparentSwitch = document.getElementById("itemIsTransparentSwitch");
             const bgInput = document.getElementById("itemBgColorInput");
-            if (transparentSwitch && transparentSwitch.checked && bgInput) {
-                bgInput.value = "transparent";
+            const bgPicker = document.getElementById("itemBgPicker");
+            const opacityRange = document.getElementById("itemBgOpacityRange");
+            const opacityValue = document.getElementById("itemBgOpacityValue");
+
+            if (transparentSwitch.checked) {
+                if (opacityRange) opacityRange.value = 0;
+                if (opacityValue) opacityValue.textContent = "0%";
+                if (bgInput) { bgInput.value = "transparent"; bgInput.readOnly = true; }
+                if (bgPicker) bgPicker.disabled = true;
+            } else {
+                if (opacityRange) opacityRange.value = 100;
+                if (opacityValue) opacityValue.textContent = "100%";
+                if (bgInput) { bgInput.readOnly = false; if (bgPicker) bgInput.value = bgPicker.value; }
+                if (bgPicker) bgPicker.disabled = false;
             }
-        }
-
-        function syncButtonBackgroundColor(value) {
-            const input = document.getElementById("buttonBackgroundColorInput");
-            if (input) input.value = value;
             renderRowPreviewIfOpen();
         }
 
-        function syncButtonTextColor(value) {
-            const input = document.getElementById("buttonTextColorInput");
-            if (input) input.value = value;
-            renderRowPreviewIfOpen();
-        }
-
-        function syncBorderColor(value) {
+        function syncBorderColor(val) {
             const input = document.getElementById("borderColorInput");
-            if (input) input.value = value;
+            if (input) input.value = val;
             renderRowPreviewIfOpen();
         }
 
-        function syncBorderColorPicker(value) {
+        function syncBorderColorPicker(val) {
             const picker = document.getElementById("borderColorPicker");
-            if (picker && /^#[0-9A-F]{6}$/i.test(value)) picker.value = value;
+            if (picker && /^#[0-9A-F]{6}$/i.test(val)) picker.value = val;
             renderRowPreviewIfOpen();
         }
 
-        function syncCustomDimension(fieldName, val) {
+        function syncButtonBackgroundColor(val) {
+            const input = document.getElementById("buttonBackgroundColorInput");
+            if (input) input.value = val;
+            renderRowPreviewIfOpen();
+        }
+
+        function syncButtonTextColor(val) {
+            const input = document.getElementById("buttonTextColorInput");
+            if (input) input.value = val;
+            renderRowPreviewIfOpen();
+        }
+
+        function syncCustomDimension(field, val) {
             renderRowPreviewIfOpen();
         }
     </script>
+
 </body>
+
 </html>

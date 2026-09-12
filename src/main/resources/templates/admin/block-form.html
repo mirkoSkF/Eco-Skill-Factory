@@ -593,7 +593,7 @@
                             </span>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-sm btn-outline-light" onclick="openRowPreview()">
-                                    <i class="bi bi-window me-1"></i> Anteprima in Finestra
+                                    <i class="bi bi-window me-1"></i> Anteprima in Schermo Intero
                                 </button>
                             </div>
                         </div>
@@ -1253,17 +1253,13 @@
 
     <!-- MODALE ANTEPRIMA IN POPUP -->
     <div class="modal fade" id="rowPreviewModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" id="rowPreviewModalDialog">
+        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable" id="rowPreviewModalDialog">
             <div class="modal-content modal-content-dark">
                 <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
                     <h5 class="modal-title fw-bold text-white mb-0"><i class="bi bi-eye text-info me-2"></i>Anteprima
                         Blocco nell'Index</h5>
                     <div>
-                        <button type="button" class="btn btn-sm btn-outline-light me-2"
-                            onclick="toggleRowPreviewFullscreen()" id="btnToggleRowPreviewFullscreen">
-                            <i class="bi bi-arrows-angle-expand me-1" id="rowPreviewFullscreenIcon"></i><span
-                                id="btnToggleRowPreviewFullscreenText">Schermo Intero</span>
-                        </button>
+                       
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -1823,41 +1819,61 @@
 
             if (parseInt(value) === 0) {
                 if (bgInput) bgInput.value = "transparent";
-                if (bgPicker) bgPicker.disabled = true;
-                if (bgInput) bgInput.readOnly = true;
                 if (transparentSwitch) transparentSwitch.checked = true;
+                if (bgPicker) bgPicker.disabled = true;
+                renderRowPreviewIfOpen();
                 return;
             }
 
-            if (bgPicker) bgPicker.disabled = false;
-            if (bgInput) bgInput.readOnly = false;
             if (transparentSwitch) transparentSwitch.checked = false;
-            if (bgInput && bgPicker) bgInput.value = bgPicker.value;
+            if (bgPicker) bgPicker.disabled = false;
+
+            let hexColor = bgPicker ? bgPicker.value : "#0f172a";
+            if (opacity === 1) {
+                if (bgInput) bgInput.value = hexColor;
+            } else {
+                let r = parseInt(hexColor.slice(1, 3), 16);
+                let g = parseInt(hexColor.slice(3, 5), 16);
+                let b = parseInt(hexColor.slice(5, 7), 16);
+                if (bgInput) bgInput.value = `rgba(${r}, ${g}, ${b}, ${opacity.toFixed(2)})`;
+            }
+            renderRowPreviewIfOpen();
         }
 
-        function syncColorText(val) {
+        function syncColorText(hexValue) {
             const bgInput = document.getElementById("bgColorInput");
-            if (bgInput) bgInput.value = val;
+            const opacityRange = document.getElementById("bgOpacityRange");
+            const opacity = opacityRange ? parseInt(opacityRange.value) / 100 : 1;
+
+            if (opacity === 1) {
+                if (bgInput) bgInput.value = hexValue;
+            } else {
+                let r = parseInt(hexValue.slice(1, 3), 16);
+                let g = parseInt(hexValue.slice(3, 5), 16);
+                let b = parseInt(hexValue.slice(5, 7), 16);
+                if (bgInput) bgInput.value = `rgba(${r}, ${g}, ${b}, ${opacity.toFixed(2)})`;
+            }
             renderRowPreviewIfOpen();
         }
 
         function toggleBackgroundType() {
-            const transparentSwitch = document.getElementById("isTransparentSwitch");
             const bgInput = document.getElementById("bgColorInput");
             const bgPicker = document.getElementById("bgPicker");
+            const transparentSwitch = document.getElementById("isTransparentSwitch");
             const opacityRange = document.getElementById("bgOpacityRange");
             const opacityValue = document.getElementById("bgOpacityValue");
 
-            if (transparentSwitch.checked) {
+            if (transparentSwitch && transparentSwitch.checked) {
+                if (bgInput) bgInput.value = "transparent";
+                if (bgPicker) bgPicker.disabled = true;
                 if (opacityRange) opacityRange.value = 0;
                 if (opacityValue) opacityValue.textContent = "0%";
-                if (bgInput) { bgInput.value = "transparent"; bgInput.readOnly = true; }
-                if (bgPicker) bgPicker.disabled = true;
             } else {
+                let fallback = (bgPicker && bgPicker.value) ? bgPicker.value : "#0f172a";
+                if (bgInput) bgInput.value = fallback;
+                if (bgPicker) bgPicker.disabled = false;
                 if (opacityRange) opacityRange.value = 100;
                 if (opacityValue) opacityValue.textContent = "100%";
-                if (bgInput) { bgInput.readOnly = false; if (bgPicker) bgInput.value = bgPicker.value; }
-                if (bgPicker) bgPicker.disabled = false;
             }
             renderRowPreviewIfOpen();
         }
@@ -1886,52 +1902,72 @@
             if (opacityValue) opacityValue.textContent = "100%";
         }
 
-        function syncItemColorText(val) {
-            const bgInput = document.getElementById("itemBgColorInput");
-            if (bgInput) bgInput.value = val;
-            renderRowPreviewIfOpen();
-        }
-
         function syncItemOpacity(value) {
             const bgInput = document.getElementById("itemBgColorInput");
             const bgPicker = document.getElementById("itemBgPicker");
             const transparentSwitch = document.getElementById("itemIsTransparentSwitch");
             const opacityValue = document.getElementById("itemBgOpacityValue");
 
+            const opacity = parseInt(value) / 100;
             if (opacityValue) opacityValue.textContent = value + "%";
 
             if (parseInt(value) === 0) {
                 if (bgInput) bgInput.value = "transparent";
-                if (bgPicker) bgPicker.disabled = true;
-                if (bgInput) bgInput.readOnly = true;
                 if (transparentSwitch) transparentSwitch.checked = true;
+                if (bgPicker) bgPicker.disabled = true;
+                renderRowPreviewIfOpen();
                 return;
             }
 
-            if (bgPicker) bgPicker.disabled = false;
-            if (bgInput) bgInput.readOnly = false;
             if (transparentSwitch) transparentSwitch.checked = false;
-            if (bgInput && bgPicker) bgInput.value = bgPicker.value;
+            if (bgPicker) bgPicker.disabled = false;
+
+            let hexColor = bgPicker ? bgPicker.value : "#0f172a";
+            if (opacity === 1) {
+                if (bgInput) bgInput.value = hexColor;
+            } else {
+                let r = parseInt(hexColor.slice(1, 3), 16);
+                let g = parseInt(hexColor.slice(3, 5), 16);
+                let b = parseInt(hexColor.slice(5, 7), 16);
+                if (bgInput) bgInput.value = `rgba(${r}, ${g}, ${b}, ${opacity.toFixed(2)})`;
+            }
+            renderRowPreviewIfOpen();
+        }
+
+        function syncItemColorText(hexValue) {
+            const bgInput = document.getElementById("itemBgColorInput");
+            const opacityRange = document.getElementById("itemBgOpacityRange");
+            const opacity = opacityRange ? parseInt(opacityRange.value) / 100 : 1;
+
+            if (opacity === 1) {
+                if (bgInput) bgInput.value = hexValue;
+            } else {
+                let r = parseInt(hexValue.slice(1, 3), 16);
+                let g = parseInt(hexValue.slice(3, 5), 16);
+                let b = parseInt(hexValue.slice(5, 7), 16);
+                if (bgInput) bgInput.value = `rgba(${r}, ${g}, ${b}, ${opacity.toFixed(2)})`;
+            }
             renderRowPreviewIfOpen();
         }
 
         function toggleItemBackgroundType() {
-            const transparentSwitch = document.getElementById("itemIsTransparentSwitch");
             const bgInput = document.getElementById("itemBgColorInput");
             const bgPicker = document.getElementById("itemBgPicker");
+            const transparentSwitch = document.getElementById("itemIsTransparentSwitch");
             const opacityRange = document.getElementById("itemBgOpacityRange");
             const opacityValue = document.getElementById("itemBgOpacityValue");
 
-            if (transparentSwitch.checked) {
+            if (transparentSwitch && transparentSwitch.checked) {
+                if (bgInput) bgInput.value = "transparent";
+                if (bgPicker) bgPicker.disabled = true;
                 if (opacityRange) opacityRange.value = 0;
                 if (opacityValue) opacityValue.textContent = "0%";
-                if (bgInput) { bgInput.value = "transparent"; bgInput.readOnly = true; }
-                if (bgPicker) bgPicker.disabled = true;
             } else {
+                let fallback = (bgPicker && bgPicker.value) ? bgPicker.value : "#0f172a";
+                if (bgInput) bgInput.value = fallback;
+                if (bgPicker) bgPicker.disabled = false;
                 if (opacityRange) opacityRange.value = 100;
                 if (opacityValue) opacityValue.textContent = "100%";
-                if (bgInput) { bgInput.readOnly = false; if (bgPicker) bgInput.value = bgPicker.value; }
-                if (bgPicker) bgPicker.disabled = false;
             }
             renderRowPreviewIfOpen();
         }
@@ -1960,1288 +1996,14 @@
             renderRowPreviewIfOpen();
         }
 
-        function syncCustomDimension(field, val) {
-            renderRowPreviewIfOpen();
+        function syncCustomDimension(fieldName, val) {
+            const selectEl = document.querySelector(`[name="${fieldName}"]`);
+            if (selectEl && val) {
+                let foundOption = Array.from(selectEl.options).some(opt => opt.value === (fieldName === 'multiItemWidth' ? val : val + 'px'));
+                if (!foundOption) selectEl.selectedIndex = -1;
+            }
         }
     </script>
-
-    <!-- ============================================================
-     MONACO EDITOR
-     ============================================================ -->
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/emmet-monaco-es@5.3.0/dist/emmet-monaco.min.js"></script>
-
-    <script>
-        // Registrazione suggerimenti, autocompletamento e snippet per HTML, attributi e Bootstrap
-        function registerMonacoHtmlSuggestions(m) {
-            if (window.__monacoHtmlSuggestionsRegistered) return;
-            window.__monacoHtmlSuggestionsRegistered = true;
-
-            m.languages.registerCompletionItemProvider('html', {
-                triggerCharacters: ['<', ' ', ':', '"', "'", '.', '-'],
-                provideCompletionItems: function (model, position) {
-                    var word = model.getWordUntilPosition(position);
-                    var range = {
-                        startLineNumber: position.lineNumber,
-                        endLineNumber: position.lineNumber,
-                        startColumn: word.startColumn,
-                        endColumn: word.endColumn
-                    };
-                    var lineContent = model.getLineContent(position.lineNumber);
-                    var prefix = lineContent.substring(0, position.column - 1);
-                    var suggestions = [];
-
-                    // 1. Tag HTML con autocompletamento snippet
-                    var tags = [
-                        { label: 'div', insert: 'div class="${1}">${2}</div>', detail: 'Elemento contenitore <div>' },
-                        { label: 'span', insert: 'span class="${1}">${2}</span>', detail: 'Elemento inline <span>' },
-                        { label: 'p', insert: 'p class="${1}">${2}</p>', detail: 'Paragrafo <p>' },
-                        { label: 'a', insert: 'a href="${1:#}" class="${2}">${3}</a>', detail: 'Collegamento <a>' },
-                        { label: 'button', insert: 'button type="button" class="btn ${1:btn-primary}">${2}</button>', detail: 'Pulsante <button>' },
-                        { label: 'img', insert: 'img src="${1}" alt="${2}" class="img-fluid ${3}">', detail: 'Immagine <img>' },
-                        { label: 'h1', insert: 'h1 class="${1}">${2}</h1>', detail: 'Titolo <h1>' },
-                        { label: 'h2', insert: 'h2 class="${1}">${2}</h2>', detail: 'Titolo <h2>' },
-                        { label: 'h3', insert: 'h3 class="${1}">${2}</h3>', detail: 'Titolo <h3>' },
-                        { label: 'h4', insert: 'h4 class="${1}">${2}</h4>', detail: 'Titolo <h4>' },
-                        { label: 'h5', insert: 'h5 class="${1}">${2}</h5>', detail: 'Titolo <h5>' },
-                        { label: 'ul', insert: 'ul class="${1}">\n\t<li>${2}</li>\n</ul>', detail: 'Elenco puntato <ul>' },
-                        { label: 'ol', insert: 'ol class="${1}">\n\t<li>${2}</li>\n</ol>', detail: 'Elenco numerato <ol>' },
-                        { label: 'li', insert: 'li class="${1}">${2}</li>', detail: 'Voce elenco <li>' },
-                        { label: 'section', insert: 'section class="${1}">\n\t${2}\n</section>', detail: 'Sezione <section>' },
-                        { label: 'article', insert: 'article class="${1}">\n\t${2}\n</article>', detail: 'Articolo <article>' },
-                        { label: 'i', insert: 'i class="bi ${1}"></i>', detail: 'Icona Bootstrap <i>' }
-                    ];
-
-                    tags.forEach(function (t) {
-                        suggestions.push({
-                            label: t.label,
-                            kind: m.languages.CompletionItemKind.Snippet,
-                            insertText: prefix.trim().endsWith('<') ? t.insert : '<' + t.insert,
-                            insertTextRules: m.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                            detail: t.detail,
-                            range: range
-                        });
-                    });
-
-                    // 2. Attributi HTML e Thymeleaf
-                    var attrs = [
-                        { label: 'class', insert: 'class="${1}"', detail: 'Classi CSS' },
-                        { label: 'id', insert: 'id="${1}"', detail: 'ID univoco' },
-                        { label: 'style', insert: 'style="${1}"', detail: 'Stile inline CSS' },
-                        { label: 'src', insert: 'src="${1}"', detail: 'Percorso sorgente' },
-                        { label: 'href', insert: 'href="${1}"', detail: 'URL destinazione' },
-                        { label: 'alt', insert: 'alt="${1}"', detail: 'Testo alternativo' },
-                        { label: 'type', insert: 'type="${1:button}"', detail: 'Attributo type' },
-                        { label: 'target', insert: 'target="_blank"', detail: 'Apertura link' },
-                        { label: 'th:text', insert: 'th:text="${${1}}"', detail: 'Thymeleaf text dinamico' },
-                        { label: 'th:href', insert: 'th:href="@{${1}}"', detail: 'Thymeleaf link URL' },
-                        { label: 'th:src', insert: 'th:src="@{${1}}"', detail: 'Thymeleaf src dinamico' },
-                        { label: 'th:if', insert: 'th:if="${${1}}"', detail: 'Thymeleaf condizione if' },
-                        { label: 'th:each', insert: 'th:each="item : ${${1}}"', detail: 'Thymeleaf ciclo each' }
-                    ];
-
-                    attrs.forEach(function (a) {
-                        suggestions.push({
-                            label: a.label,
-                            kind: m.languages.CompletionItemKind.Property,
-                            insertText: a.insert,
-                            insertTextRules: m.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                            detail: a.detail,
-                            range: range
-                        });
-                    });
-
-                    // 3. Classi Bootstrap 5 più utilizzate
-                    var bsClasses = [
-                        'container', 'container-fluid', 'row', 'col-12', 'col-md-6', 'col-md-4', 'col-md-3', 'col-lg-8', 'col-lg-4',
-                        'd-flex', 'flex-column', 'flex-wrap', 'justify-content-center', 'justify-content-between', 'align-items-center',
-                        'text-center', 'text-start', 'text-end', 'text-white', 'text-muted', 'text-primary', 'text-success', 'text-danger',
-                        'bg-dark', 'bg-light', 'bg-primary', 'bg-transparent',
-                        'p-0', 'p-2', 'p-3', 'p-4', 'p-5', 'px-3', 'py-2', 'py-3', 'py-4',
-                        'm-0', 'mb-2', 'mb-3', 'mb-4', 'mt-3', 'mt-4', 'my-3', 'mx-auto', 'gap-2', 'gap-3', 'gap-4',
-                        'btn', 'btn-primary', 'btn-secondary', 'btn-success', 'btn-danger', 'btn-outline-primary', 'btn-sm', 'btn-lg',
-                        'card', 'card-body', 'card-title', 'card-text', 'rounded', 'rounded-pill', 'shadow', 'border', 'border-0',
-                        'w-100', 'h-100', 'img-fluid', 'overflow-hidden'
-                    ];
-
-                    bsClasses.forEach(function (cls) {
-                        suggestions.push({
-                            label: cls,
-                            kind: m.languages.CompletionItemKind.Value,
-                            insertText: cls,
-                            detail: 'Classe Bootstrap 5',
-                            range: range
-                        });
-                    });
-
-                    return { suggestions: suggestions };
-                }
-            });
-        }
-
-
-        let windowMonacoEditor = null,
-            monacoTargetTextarea = null,
-            monacoFontSize = 14,
-            monacoMinimapVisible = true,
-            monacoSearchMatches = [],
-            monacoSearchIndex = 0,
-            monacoSearchDecorations = [],
-            monacoCurrentSearchDecoration = [],
-            monacoLoaderPromise = null,
-            monacoEmmetInitialized = false;
-
-
-
-
-        function loadMonaco() {
-            if (monacoLoaderPromise) {
-                return monacoLoaderPromise;
-            }
-
-            monacoLoaderPromise = new Promise((resolve, reject) => {
-                // 1. Monaco è già completamente caricato ed inizializzato
-                if (window.monaco && window.monaco.editor) {
-                    initMonacoEmmet();
-                    if (typeof registerMonacoHtmlSuggestions === 'function') {
-                        registerMonacoHtmlSuggestions(window.monaco);
-                    }
-                    resolve(window.monaco);
-                    return;
-                }
-
-                // Funzione interna per configurare ed avviare il modulo editor
-                const configureAndRequireMonaco = () => {
-                    try {
-                        window.require.config({
-                            paths: {
-                                vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs'
-                            }
-                        });
-
-                        window.require(['vs/editor/editor.main'], function (m) {
-                            const monacoInstance = window.monaco || m;
-
-                            // Inizializza Emmet (se disponibile)
-                            initMonacoEmmet();
-
-                            // Registra il provider di autocompletamento e suggerimenti HTML / Bootstrap / Thymeleaf
-                            if (typeof registerMonacoHtmlSuggestions === 'function') {
-                                registerMonacoHtmlSuggestions(monacoInstance);
-                            }
-
-                            resolve(monacoInstance);
-                        }, function (err) {
-                            reject(err);
-                        });
-                    } catch (err) {
-                        reject(err);
-                    }
-                };
-
-                // 2. Se window.require è già presente, procedi subito
-                if (window.require && window.require.config) {
-                    configureAndRequireMonaco();
-                    return;
-                }
-
-                // 3. Se window.require non è presente, carica vs/loader.min.js on-demand senza bloccare la pagina
-                let loaderScript = document.querySelector('script[src*="vs/loader"]');
-                if (!loaderScript) {
-                    loaderScript = document.createElement('script');
-                    loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js';
-                    loaderScript.async = true;
-                    document.head.appendChild(loaderScript);
-                }
-
-                loaderScript.addEventListener('load', () => {
-                    if (window.require && window.require.config) {
-                        configureAndRequireMonaco();
-                    } else {
-                        reject(new Error('Loader Monaco (vs/loader.min.js) caricato ma require non disponibile.'));
-                    }
-                });
-
-                loaderScript.addEventListener('error', () => {
-                    reject(new Error('Impossibile caricare il loader di Monaco Editor da CDN.'));
-                });
-            });
-
-            return monacoLoaderPromise;
-        }
-
-
-
-        function initMonacoEmmet() {
-
-            if (
-                monacoEmmetInitialized
-            ) {
-                return;
-            }
-
-            try {
-
-                if (
-                    window.emmetMonaco?.emmetHTML
-                ) {
-
-                    window.emmetMonaco.emmetHTML(
-                        window.monaco,
-                        ['html']
-                    );
-
-                    monacoEmmetInitialized =
-                        true;
-                }
-
-            } catch (e) {
-
-                console.error(
-                    'Emmet Monaco:',
-                    e
-                );
-            }
-        }
-
-
-        function getTinyEditor(t) {
-
-            if (
-                !t ||
-                !window.tinymce
-            ) {
-                return null;
-            }
-
-            if (t.id) {
-
-                const e =
-                    tinymce.get(t.id);
-
-                if (e) {
-                    return e;
-                }
-            }
-
-            return (
-                tinymce.editors || []
-            ).find(
-                e =>
-                    e.getElement?.() === t
-            ) || null;
-        }
-
-
-        function openMonacoFromButton(b) {
-
-            let p = b,
-                t = null;
-
-            while (
-                p &&
-                !t
-            ) {
-
-                t =
-                    p.querySelector?.(
-                        '.wysiwyg-editor'
-                    );
-
-                p =
-                    p.parentElement;
-            }
-
-            openMonacoForTextarea(
-                t ||
-                document.querySelector(
-                    '.wysiwyg-editor'
-                )
-            );
-        }
-
-
-        function openMonacoForTextarea(t) {
-
-            if (!t) {
-
-                alert(
-                    'Editor HTML non trovato.'
-                );
-
-                return;
-            }
-
-            monacoTargetTextarea =
-                t;
-
-            const te =
-                getTinyEditor(t);
-
-            const value =
-                te
-                    ? (
-                        te.getContent({
-                            format: 'html'
-                        }) || ''
-                    )
-                    : (
-                        t.value || ''
-                    );
-
-            const modal =
-                document.getElementById(
-                    'monacoEditorModal'
-                );
-
-            if (!modal) {
-
-                alert(
-                    'Finestra Monaco non disponibile.'
-                );
-
-                return;
-            }
-
-            const modalInstance =
-                bootstrap.Modal
-                    .getOrCreateInstance(
-                        modal
-                    );
-
-            modalInstance.show();
-
-            loadMonaco()
-                .then(
-                    m => {
-
-                        const c =
-                            document.getElementById(
-                                'monacoContainer'
-                            );
-
-                        if (!c) {
-                            return;
-                        }
-
-                        if (
-                            !windowMonacoEditor
-                        ) {
-
-                            windowMonacoEditor = m.editor.create(c, {
-                                value,
-                                language: 'html',
-                                theme: 'vs-dark',
-                                fontSize: monacoFontSize,
-                                automaticLayout: true,
-                                minimap: { enabled: monacoMinimapVisible },
-                                wordWrap: 'off',
-                                lineNumbers: 'on',
-                                scrollBeyondLastLine: false,
-                                autoClosingBrackets: 'always',
-                                autoClosingQuotes: 'always',
-                                autoClosingTags: true,
-                                suggestOnTriggerCharacters: true,
-                                quickSuggestions: {
-                                    other: true,
-                                    comments: false,
-                                    strings: true
-                                },
-                                suggest: {
-                                    showWords: true,
-                                    showSnippets: true,
-                                    showClasses: true,
-                                    showFunctions: true,
-                                    showVariables: true
-                                },
-                                snippetSuggestions: 'top',          // Mostra gli snippet e i tag HTML in cima
-                                acceptSuggestionOnEnter: 'on',      // Invio conferma il suggerimento
-                                tabCompletion: 'on',                // Tab applica il completamento
-                                wordBasedSuggestions: true,
-                                formatOnPaste: true,
-                                formatOnType: true,
-                                fixedOverflowWidgets: true,
-                                tabSize: 2,
-                                insertSpaces: true
-                            });
-
-                        }
-
-                        updateZoomLabel();
-                        updateMinimapButton();
-                        clearMonacoSearch();
-
-                        setTimeout(
-                            () =>
-                                windowMonacoEditor.layout(),
-                            100
-                        );
-
-                        windowMonacoEditor.focus();
-                    }
-                )
-                .catch(
-                    e => {
-
-                        console.error(e);
-
-                        alert(
-                            'Impossibile caricare Monaco Editor. Controlla la connessione internet.'
-                        );
-                    }
-                );
-        }
-
-
-        function saveMonacoContent() {
-
-            if (
-                !windowMonacoEditor ||
-                !monacoTargetTextarea
-            ) {
-                return;
-            }
-
-            const v =
-                windowMonacoEditor.getValue();
-
-            const te =
-                getTinyEditor(
-                    monacoTargetTextarea
-                );
-
-            if (te) {
-
-                te.setContent(v);
-                te.save();
-
-            } else {
-
-                monacoTargetTextarea.value =
-                    v;
-            }
-
-            bootstrap.Modal
-                .getOrCreateInstance(
-                    document.getElementById(
-                        'monacoEditorModal'
-                    )
-                )
-                .hide();
-        }
-
-
-        function changeMonacoFontSize(d) {
-
-            if (
-                !windowMonacoEditor
-            ) {
-                return;
-            }
-
-            monacoFontSize =
-                Math.max(
-                    8,
-                    Math.min(
-                        32,
-                        monacoFontSize + d
-                    )
-                );
-
-            windowMonacoEditor.updateOptions({
-                fontSize:
-                    monacoFontSize
-            });
-
-            updateZoomLabel();
-        }
-
-
-        function updateZoomLabel() {
-
-            const e =
-                document.getElementById(
-                    'monacoZoomLabel'
-                );
-
-            if (e) {
-
-                e.textContent =
-                    Math.round(
-                        monacoFontSize / 14 * 100
-                    ) + '%';
-            }
-        }
-
-
-        function toggleMonacoPreview() {
-
-            if (
-                !windowMonacoEditor
-            ) {
-                return;
-            }
-
-            monacoMinimapVisible =
-                !monacoMinimapVisible;
-
-            windowMonacoEditor.updateOptions({
-                minimap: {
-                    enabled:
-                        monacoMinimapVisible
-                }
-            });
-
-            updateMinimapButton();
-        }
-
-
-        function updateMinimapButton() {
-
-            const t =
-                document.getElementById(
-                    'previewButtonText'
-                );
-
-            const i =
-                document.getElementById(
-                    'previewIcon'
-                );
-
-            const b =
-                document.getElementById(
-                    'btnTogglePreview'
-                );
-
-            if (t) {
-
-                t.textContent =
-                    monacoMinimapVisible
-                        ? 'Nascondi minimappa'
-                        : 'Mostra minimappa';
-            }
-
-            if (i) {
-
-                i.className =
-                    monacoMinimapVisible
-                        ? 'bi bi-map me-1'
-                        : 'bi bi-map-fill me-1';
-            }
-
-            if (b) {
-
-                b.title =
-                    monacoMinimapVisible
-                        ? 'Nascondi minimappa a destra'
-                        : 'Mostra minimappa a destra';
-            }
-        }
-
-
-        function toggleMonacoFullscreen() {
-
-            const d =
-                document.getElementById(
-                    'monacoModalDialog'
-                );
-
-            const i =
-                document.getElementById(
-                    'fullscreenIcon'
-                );
-
-            const b =
-                document.getElementById(
-                    'btnToggleFullscreen'
-                );
-
-            const t =
-                document.getElementById(
-                    'btnToggleFullscreenText'
-                );
-
-            if (!d) {
-                return;
-            }
-
-            const f =
-                d.classList.toggle(
-                    'modal-fullscreen-custom'
-                );
-
-            if (i) {
-
-                i.className =
-                    f
-                        ? 'bi bi-arrows-angle-contract me-1'
-                        : 'bi bi-arrows-angle-expand me-1';
-            }
-
-            if (t) {
-
-                t.textContent =
-                    f
-                        ? 'Esci da Schermo Intero'
-                        : 'Schermo Intero';
-            }
-
-            if (b) {
-
-                b.title =
-                    f
-                        ? 'Esci da Schermo Intero'
-                        : 'Schermo Intero';
-            }
-
-            if (
-                windowMonacoEditor
-            ) {
-
-                [50, 250, 500]
-                    .forEach(
-                        x =>
-                            setTimeout(
-                                () =>
-                                    windowMonacoEditor.layout(),
-                                x
-                            )
-                    );
-            }
-        }
-
-
-        function installSuggestionPositioning() {
-
-            if (
-                window.__monacoSuggestObserver
-            ) {
-                return;
-            }
-
-            window.__monacoSuggestObserver =
-                true;
-
-            const o =
-                new MutationObserver(
-                    positionSuggestion
-                );
-
-            o.observe(
-                document.body,
-                {
-                    childList: true,
-                    subtree: true,
-                    attributes: true,
-                    attributeFilter: [
-                        'style',
-                        'class'
-                    ]
-                }
-            );
-
-            window.addEventListener(
-                'resize',
-                positionSuggestion
-            );
-        }
-
-
-        function positionSuggestion() {
-
-            if (
-                !windowMonacoEditor
-            ) {
-                return;
-            }
-
-            const w =
-                document.querySelector(
-                    '.monaco-editor .suggest-widget'
-                );
-
-            if (
-                !w ||
-                getComputedStyle(w).display === 'none'
-            ) {
-                return;
-            }
-
-            const p =
-                windowMonacoEditor.getPosition();
-
-            const c =
-                windowMonacoEditor
-                    .getScrolledVisiblePosition(p);
-
-            const n =
-                windowMonacoEditor.getDomNode();
-
-            if (
-                !p ||
-                !c ||
-                !n
-            ) {
-                return;
-            }
-
-            const r =
-                n.getBoundingClientRect();
-
-            w.style.position =
-                'fixed';
-
-            w.style.left =
-                Math.max(
-                    4,
-                    r.left + c.left
-                ) + 'px';
-
-            w.style.top =
-                Math.max(
-                    4,
-                    r.top + c.top + c.height + 2
-                ) + 'px';
-
-            w.style.zIndex =
-                '10000';
-        }
-
-
-        /* ============================================================
-           RICERCA MONACO
-           ============================================================ */
-
-        function performMonacoSearch() {
-
-            if (
-                !windowMonacoEditor
-            ) {
-                return;
-            }
-
-            const q =
-                document.getElementById(
-                    'monacoSearchInput'
-                )?.value || '';
-
-            clearMonacoSearchDecorations();
-
-            if (!q) {
-
-                monacoSearchMatches = [];
-                monacoSearchIndex = 0;
-
-                updateSearchResults();
-
-                return;
-            }
-
-            monacoSearchMatches =
-                windowMonacoEditor
-                    .getModel()
-                    .findMatches(
-                        q,
-                        true,
-                        false,
-                        false,
-                        null,
-                        true
-                    );
-
-            monacoSearchIndex =
-                monacoSearchMatches.length
-                    ? 0
-                    : -1;
-
-            monacoSearchDecorations =
-                windowMonacoEditor.deltaDecorations(
-                    [],
-                    monacoSearchMatches.map(
-                        m => ({
-                            range: m.range,
-                            options: {
-                                inlineClassName:
-                                    'monaco-search-match'
-                            }
-                        })
-                    )
-                );
-
-            updateCurrentSearchDecoration();
-
-            updateSearchResults();
-        }
-
-
-        function clearMonacoSearchDecorations() {
-
-            if (
-                windowMonacoEditor
-            ) {
-
-                if (
-                    monacoSearchDecorations.length
-                ) {
-
-                    windowMonacoEditor.deltaDecorations(
-                        monacoSearchDecorations,
-                        []
-                    );
-                }
-
-                if (
-                    monacoCurrentSearchDecoration.length
-                ) {
-
-                    windowMonacoEditor.deltaDecorations(
-                        monacoCurrentSearchDecoration,
-                        []
-                    );
-                }
-            }
-
-            monacoSearchDecorations = [];
-            monacoCurrentSearchDecoration = [];
-        }
-
-
-        function updateCurrentSearchDecoration() {
-
-            if (
-                !windowMonacoEditor ||
-                monacoSearchIndex < 0 ||
-                !monacoSearchMatches.length
-            ) {
-                return;
-            }
-
-            if (
-                monacoCurrentSearchDecoration.length
-            ) {
-
-                windowMonacoEditor.deltaDecorations(
-                    monacoCurrentSearchDecoration,
-                    []
-                );
-            }
-
-            const currentMatch =
-                monacoSearchMatches[
-                monacoSearchIndex
-                ];
-
-            if (!currentMatch) {
-                return;
-            }
-
-            monacoCurrentSearchDecoration =
-                windowMonacoEditor.deltaDecorations(
-                    [],
-                    [
-                        {
-                            range:
-                                currentMatch.range,
-
-                            options: {
-                                inlineClassName:
-                                    'monaco-search-match-current'
-                            }
-                        }
-                    ]
-                );
-        }
-
-
-        function selectMonacoSearchMatch(i) {
-
-            if (
-                !windowMonacoEditor ||
-                !monacoSearchMatches.length
-            ) {
-                return;
-            }
-
-            monacoSearchIndex =
-                (
-                    i +
-                    monacoSearchMatches.length
-                ) %
-                monacoSearchMatches.length;
-
-            const m =
-                monacoSearchMatches[
-                monacoSearchIndex
-                ];
-
-            windowMonacoEditor.setSelection(
-                m.range
-            );
-
-            windowMonacoEditor.revealRangeInCenter(
-                m.range
-            );
-
-            updateCurrentSearchDecoration();
-
-            updateSearchResults();
-        }
-
-
-        function navigateMonacoSearch(d) {
-
-            if (
-                monacoSearchMatches.length
-            ) {
-
-                selectMonacoSearchMatch(
-                    monacoSearchIndex + d
-                );
-            }
-
-            document
-                .getElementById(
-                    'monacoSearchInput'
-                )
-                ?.focus();
-        }
-
-
-        /* ============================================================
-           VISUALIZZAZIONE FRECCE RICERCA
-           ============================================================ */
-
-        function updateSearchResults() {
-
-            const w =
-                document.querySelector(
-                    '.monaco-search-wrapper'
-                );
-
-            if (!w) {
-                return;
-            }
-
-            let r =
-                document.getElementById(
-                    'monacoSearchResults'
-                );
-
-            if (!r) {
-
-                r =
-                    document.createElement(
-                        'div'
-                    );
-
-                r.id =
-                    'monacoSearchResults';
-
-                r.className =
-                    'monaco-search-results';
-
-                r.innerHTML = `
-            <button type="button"
-                    class="btn btn-sm btn-outline-light"
-                    id="monacoSearchPrev"
-                    title="Corrispondenza precedente"
-                    aria-label="Corrispondenza precedente">
-
-                <i class="bi bi-chevron-up"></i>
-
-            </button>
-
-            <span class="monaco-search-count"
-                  id="monacoSearchCount">
-                0 / 0
-            </span>
-
-            <button type="button"
-                    class="btn btn-sm btn-outline-light"
-                    id="monacoSearchNext"
-                    title="Corrispondenza successiva"
-                    aria-label="Corrispondenza successiva">
-
-                <i class="bi bi-chevron-down"></i>
-
-            </button>
-        `;
-
-                w.appendChild(r);
-
-
-                const prev =
-                    document.getElementById(
-                        'monacoSearchPrev'
-                    );
-
-                const next =
-                    document.getElementById(
-                        'monacoSearchNext'
-                    );
-
-
-                if (prev) {
-
-                    prev.onmousedown =
-                        e => {
-
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            navigateMonacoSearch(
-                                -1
-                            );
-                        };
-                }
-
-
-                if (next) {
-
-                    next.onmousedown =
-                        e => {
-
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            navigateMonacoSearch(
-                                1
-                            );
-                        };
-                }
-            }
-
-
-            const c =
-                document.getElementById(
-                    'monacoSearchCount'
-                );
-
-
-            if (
-                !monacoSearchMatches.length ||
-                monacoSearchIndex < 0
-            ) {
-
-                r.classList.remove(
-                    'visible'
-                );
-
-                if (c) {
-                    c.textContent =
-                        '0 / 0';
-                }
-
-            } else {
-
-                if (c) {
-
-                    c.textContent =
-                        (
-                            monacoSearchIndex + 1
-                        ) +
-                        ' / ' +
-                        monacoSearchMatches.length;
-                }
-
-                r.classList.add(
-                    'visible'
-                );
-            }
-        }
-
-
-        function clearMonacoSearch() {
-
-            const i =
-                document.getElementById(
-                    'monacoSearchInput'
-                );
-
-            if (i) {
-                i.value = '';
-            }
-
-            clearMonacoSearchDecorations();
-
-            monacoSearchMatches = [];
-            monacoSearchIndex = 0;
-
-            updateSearchResults();
-        }
-
-
-        /* ============================================================
-           INIZIALIZZAZIONE MONACO
-           ============================================================ */
-
-        document.addEventListener(
-            'DOMContentLoaded',
-            () => {
-
-                const mm =
-                    document.getElementById(
-                        'monacoEditorModal'
-                    );
-
-                if (mm) {
-
-                    mm.addEventListener(
-                        'shown.bs.modal',
-                        () => {
-
-                            if (
-                                monacoTargetTextarea
-                            ) {
-
-                                loadMonaco()
-                                    .catch(
-                                        e =>
-                                            console.error(
-                                                'Monaco:',
-                                                e
-                                            )
-                                    );
-                            }
-                        }
-                    );
-                }
-
-
-                const i =
-                    document.getElementById(
-                        'monacoSearchInput'
-                    );
-
-                const c =
-                    document.getElementById(
-                        'btnMonacoSearchClear'
-                    );
-
-
-                if (i) {
-
-                    i.oninput =
-                        performMonacoSearch;
-
-                    i.onkeydown =
-                        e => {
-
-                            if (
-                                e.key === 'Enter'
-                            ) {
-
-                                e.preventDefault();
-
-                                navigateMonacoSearch(
-                                    e.shiftKey
-                                        ? -1
-                                        : 1
-                                );
-
-                            } else if (
-                                e.key === 'Escape'
-                            ) {
-
-                                e.preventDefault();
-
-                                clearMonacoSearch();
-
-                                windowMonacoEditor
-                                    ?.focus();
-                            }
-                        };
-                }
-
-
-                if (c) {
-
-                    c.onmousedown =
-                        e => {
-
-                            e.preventDefault();
-
-                            clearMonacoSearch();
-
-                            windowMonacoEditor
-                                ?.focus();
-                        };
-                }
-
-
-                const m =
-                    document.getElementById(
-                        'monacoEditorModal'
-                    );
-
-                if (m) {
-
-                    m.addEventListener(
-                        'shown.bs.modal',
-                        () =>
-                            setTimeout(
-                                () =>
-                                    windowMonacoEditor
-                                        ?.layout(),
-                                100
-                            )
-                    );
-                }
-            }
-        );
-
-
-        /* ============================================================
-           F11
-           ============================================================ */
-
-        document.addEventListener(
-            'keydown',
-            e => {
-
-                if (
-                    e.key === 'F11' &&
-                    windowMonacoEditor
-                ) {
-
-                    e.preventDefault();
-
-                    toggleMonacoFullscreen();
-                }
-            }
-        );
-
-        function resetToAnimatedBg() {
-            const input = document.getElementById("backgroundColorInput");
-            if (input) {
-                input.value = "";
-                updateBgStatusBadge();
-            }
-        }
-
-        function updateBgStatusBadge() {
-            const input = document.getElementById("backgroundColorInput");
-            const badge = document.getElementById("pageBgStatusBadge");
-            if (!badge || !input) return;
-
-            if (input.value && input.value.trim() !== "") {
-                badge.className = "badge bg-success";
-                badge.textContent = "Tinta Unita: " + input.value.trim();
-            } else {
-                badge.className = "badge bg-info text-dark";
-                badge.textContent = "Sfondo Animato Attivo";
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            updateBgStatusBadge();
-        });
-
-
-    </script>
-
 </body>
 
 </html>

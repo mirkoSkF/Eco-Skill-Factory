@@ -44,7 +44,7 @@
                         </div>
 
                         <div class="mb-0">
-                            <label class="form-label fw-bold">Altezza Riga</label>
+                            <label class="form-label fw-bold">Altezza Riga (px)</label>
                             <input type="text" class="form-control" id="customHeightInput"
                                 th:field="*{customHeight}" placeholder="auto, 400px, 50vh" />
                         </div>
@@ -127,50 +127,6 @@
                                     <option value="390" selected>Standard (390px)</option>
                                     <option value="480">Grandi (480px)</option>
                                 </select>
-                            </div>
-                        </div>
-
-                        <!-- DIMENSIONI LIBERE -->
-                        <div id="customDimensionsWrapper" class="mb-3 p-2 rounded"
-                            style="background-color: #1e293b; display: none;">
-                            <div class="custom-card-dim mb-2" id="customCardHeightOption">
-                                <label class="form-label fw-bold text-light small">Altezza Immagine Card (px)</label>
-                                <input type="number" class="form-control form-control-sm"
-                                    id="customCardImageHeightInput" placeholder="es. 280"
-                                    th:value="${block.cardImageHeight != null and block.cardImageHeight.matches('[0-9]+px') ? #strings.replace(block.cardImageHeight, 'px', '') : ''}"
-                                    oninput="syncCustomDimension('cardImageHeight', this.value); renderRowPreviewIfOpen();">
-                            </div>
-                            <div class="custom-card-dim mb-2" id="customCardWidthOption">
-                                <label class="form-label fw-bold text-light small">Larghezza Max Card (px)</label>
-                                <input type="number" class="form-control form-control-sm"
-                                    id="customCardMaxWidthInput" placeholder="es. 380"
-                                    th:field="*{cardMaxWidth}" oninput="renderRowPreviewIfOpen();">
-                            </div>
-                            <div class="custom-standard-carousel mb-2" id="customCarouselHeightOption">
-                                <label class="form-label fw-bold text-light small">Altezza Slide Hero (px)</label>
-                                <input type="number" class="form-control form-control-sm"
-                                    id="customCarouselHeightInput" placeholder="es. 500"
-                                    th:value="${block.carouselSlideHeight != null and block.carouselSlideHeight.matches('[0-9]+px') ? #strings.replace(block.carouselSlideHeight, 'px', '') : ''}"
-                                    oninput="syncCustomDimension('carouselSlideHeight', this.value); renderRowPreviewIfOpen();">
-                            </div>
-                            <div class="custom-standard-carousel mb-2" id="customCarouselWidthOption">
-                                <label class="form-label fw-bold text-light small">Larghezza Max Carosello</label>
-                                <input type="text" class="form-control form-control-sm"
-                                    id="customCarouselWidthInput" placeholder="es. 1200px"
-                                    th:field="*{carouselMaxWidth}" oninput="renderRowPreviewIfOpen();">
-                            </div>
-                            <div class="custom-multi-carousel mb-2" id="customMultiWidthOption">
-                                <label class="form-label fw-bold text-light small">Larghezza Nastro (px)</label>
-                                <input type="number" class="form-control form-control-sm"
-                                    id="customMultiWidthInput" placeholder="es. 390"
-                                    th:value="${block.multiItemWidth != null ? block.multiItemWidth : ''}"
-                                    oninput="syncCustomDimension('multiItemWidth', this.value); renderRowPreviewIfOpen();">
-                            </div>
-                            <div class="custom-multi-carousel mb-2" id="customMultiHeightOption">
-                                <label class="form-label fw-bold text-light small">Altezza Nastro (px)</label>
-                                <input type="number" class="form-control form-control-sm"
-                                    id="customMultiHeightInput" placeholder="es. 260"
-                                    th:field="*{multiItemHeight}" oninput="renderRowPreviewIfOpen();">
                             </div>
                         </div>
 
@@ -298,7 +254,7 @@
 
                         <hr class="border-secondary my-3">
 
-                                               <!-- IMMAGINE SFONDO -->
+                        <!-- IMMAGINE SFONDO -->
                         <div id="backgroundImageUpload" class="mb-3">
                             <label class="form-label fw-bold text-info small">Immagine Sfondo Riga</label>
                             <input type="file" name="backgroundImageFile" id="backgroundImageFile"
@@ -339,7 +295,6 @@
                                 </div>
                             </div>
                         </div>
-
 
                         <!-- FILTRI REGOLAZIONE SFONDO -->
                         <div id="backgroundImageControls" class="background-image-controls"
@@ -733,13 +688,6 @@
 
     <!-- SCRIPT UTILITY SPECIFICI PER L'EDITOR -->
     <script th:fragment="bloccoEditorScripts">
-        function syncCustomDimension(fieldName, val) {
-            const targetSelect = document.getElementById(fieldName + 'Select');
-            if (targetSelect) {
-                targetSelect.value = val ? (val + 'px') : '';
-            }
-        }
-
         function syncBorderColor(val) {
             const input = document.getElementById('borderColorInput');
             if (input) input.value = val;

@@ -36,7 +36,8 @@
             pointer-events: none;
         }
 
-        .card,
+        /* FIX CSS: Limitiamo lo stile dark alle card dell'editor senza sovrascrivere l'anteprima */
+        .editor-workspace-layout .card,
         .bg-light,
         .bg-white {
             background-color: #0f172a !important;
@@ -135,13 +136,18 @@
             transition: all 0.3s ease;
         }
 
+        /* FIX FULLSCREEN 100% LARGHEZZA SENZA MARGINI */
         .inline-live-preview-box.fullscreen-preview {
             position: fixed;
             inset: 0;
             z-index: 9999;
             border-radius: 0;
             border: none;
-            padding: 40px;
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            height: 100vh !important;
             overflow-y: auto;
             background-color: #080c14;
         }
@@ -255,12 +261,10 @@
         #rowPreviewModal .modal-body {
             background-color: #080c14 !important;
             padding: 0 !important;
-            /* Rimuove margini per testare l'altezza e larghezza reali */
             overflow-y: auto;
             overflow-x: hidden;
         }
 
-        /* Simula il contenitore del blocco esattamente come nell'index */
         .preview-block-container {
             display: flex !important;
             flex-direction: column !important;
@@ -292,7 +296,6 @@
             z-index: 1;
         }
 
-        /* Quando l'altezza personalizzata è attiva, i figli occupano il 100% dell'altezza */
         .preview-block-container.has-fixed-height {
             padding-top: 0 !important;
             padding-bottom: 0 !important;
@@ -302,7 +305,6 @@
             height: 100% !important;
         }
 
-        /* Animazione fedele del nastro Multi-Immagine nella preview */
         .preview-marquee-container {
             overflow: hidden;
             width: 100%;
@@ -333,16 +335,21 @@
         /* ========================================================
    FULLSCREEN ANTEPRIMA: 100% LARGHEZZA SENZA MARGINI AI LATI
    ======================================================== */
+        #rowPreviewModal .modal-dialog {
+            max-width: 100vw !important;
+            margin: 0 !important;
+        }
+
         #rowPreviewModal .modal-content {
             background-color: #080c14 !important;
             border: none !important;
             border-radius: 0 !important;
+            min-height: 100vh;
         }
 
         #rowPreviewModal .modal-body {
             background-color: #080c14 !important;
             padding: 0 !important;
-            /* Elimina il p-4 di Bootstrap */
             margin: 0 !important;
             width: 100vw !important;
             max-width: 100vw !important;
@@ -351,11 +358,11 @@
         }
 
         #rowPreviewModal .preview-container,
-        #rowPreviewModal #rowPreviewRenderArea {
+        #rowPreviewModal #rowPreviewRenderArea,
+        #inlineLivePreviewBox .preview-block-container {
             width: 100% !important;
             max-width: 100% !important;
             margin: 0 !important;
-            padding: 0 !important;
         }
 
         /* ========================================================
@@ -519,19 +526,9 @@
     <!-- JS DI RENDER ANTEPRIMA ED INTERFACCIA WEB -->
     <script>
 
-        // Tiene in memoria il Blob URL temporaneo dell'immagine di sfondo appena caricata dal PC
         let tempBgImageBlobUrl = null;
 
-        function toggleInlinePreviewFullscreen() {
-            const previewBox = document.getElementById('inlineLivePreviewBox');
-            const icon = document.getElementById('inlineFullscreenIcon');
-            const text = document.getElementById('btnToggleInlineFullscreenText');
-            if (!previewBox) return;
-
-            const isFullscreen = previewBox.classList.toggle('fullscreen-preview');
-            if (icon) icon.className = isFullscreen ? 'bi bi-arrows-angle-contract me-1' : 'bi bi-arrows-angle-expand me-1';
-            if (text) text.textContent = isFullscreen ? 'Esci da 100%' : 'Anteprima 100% (Schermo Intero)';
-        }
+   
 
         function openRowPreview() {
             renderRowPreview('rowPreviewRenderArea');
@@ -546,9 +543,14 @@
             // 1. Parametri Blocco
             const blockType = document.getElementById('blockTypeSelect')?.value || '';
             const containerType = document.getElementById('containerTypeSelect')?.value || 'CONTAINER';
-            const widthPercent = parseInt(document.getElementById('widthPercentInput')?.value || '100', 10);
+            
+            // Se in Fullscreen inline, forziamo al 100% la larghezza
+            const isFullscreenBox = document.getElementById('inlineLivePreviewBox')?.classList.contains('fullscreen-preview');
+            const widthPercent = (targetAreaId === 'rowPreviewRenderArea' || isFullscreenBox) 
+                ? 100 
+                : parseInt(document.getElementById('widthPercentInput')?.value || '100', 10);
 
-            // Normalizzazione altezza (aggiunge 'px' se l'utente inserisce solo un numero)
+            // Normalizzazione altezza
             let rawHeight = (document.getElementById('customHeightInput')?.value || '').trim();
             let customHeight = 'auto';
             let isFixedHeight = false;
@@ -620,7 +622,11 @@
                 CONTAINER_XL: 'container-xl',
                 CONTAINER_XXL: 'container-xxl'
             };
-            const chosenContainerClass = containerClasses[containerType] || 'container';
+            
+            // In fullscreen forziamo il container fluid per occupare tutto lo schermo
+            const chosenContainerClass = (targetAreaId === 'rowPreviewRenderArea' || isFullscreenBox) 
+                ? 'container-fluid' 
+                : (containerClasses[containerType] || 'container');
 
             // 5. Dimensioni Card & Carosello
             const cardsPerRow = document.querySelector('[name="cardsPerRow"]')?.value || '3';
@@ -640,7 +646,7 @@
             const multiItemWidth = document.getElementById('customMultiWidthInput')?.value || (document.querySelector('[name="multiItemWidth"]')?.value || '390');
             const multiItemHeight = document.getElementById('customMultiHeightInput')?.value || Math.round(multiItemWidth * 0.66);
 
-            // Costruzione stili del container esterno (identico a index.html)
+            // Costruzione stili del container esterno
             const blockContainerStyles = [
                 `height: ${customHeight}`,
                 `background-color: ${bgColor}`,
@@ -678,10 +684,16 @@
                         const img = card.querySelector('.item-img-target')?.getAttribute('src') || '';
                         const btn = card.querySelector('.item-btn-target');
 
+                        // FIX COLORE CARD: Estragga lo sfondo specifico della singola card
+                        let cardBgColor = card.getAttribute('data-card-bg') 
+                            || card.style.backgroundColor 
+                            || card.querySelector('[data-card-bg]')?.getAttribute('data-card-bg')
+                            || '#0f172a';
+
                         htmlOutput += `
                     <div class="${colClass} d-flex">
                         <div class="card card-custom w-100 d-flex flex-column overflow-hidden shadow border-0 text-white" 
-                             style="background-color: #0f172a; border-radius:${cardRadiusMap[cardRadiusStyle] || '1.25rem'}; max-width: ${cardMaxWidth};">
+                             style="background-color: ${cardBgColor} !important; border-radius:${cardRadiusMap[cardRadiusStyle] || '1.25rem'}; max-width: ${cardMaxWidth};">
                             ${img ? `
                             <div class="card-img-wrapper" style="overflow:hidden; border-radius:${cardRadiusStyle === 'SQUARED' ? '0' : '1.25rem 1.25rem 0 0'};">
                                 <img src="${img}" class="card-img-top card-img-responsive" style="height:${cardImgHeight}; object-fit:cover; width:100%;">
@@ -711,7 +723,6 @@
                 const slides = document.querySelectorAll('.existing-item-card');
 
                 if (isMulti) {
-                    // Nastro animato come in index.html
                     htmlOutput += `<div class="preview-marquee-container py-3 mx-auto" style="${innerWidthStyle}">`;
                     if (slides.length === 0) {
                         htmlOutput += `<div class="text-center text-muted w-100 py-4"><i class="bi bi-images fs-1 d-block mb-2 text-info"></i>Nessuna immagine nel nastro.</div>`;
@@ -725,7 +736,6 @@
                         </div>`;
                         });
 
-                        // Gruppo duplicato per garantire il loop continuo identico all'index
                         htmlOutput += `
                     <div class="preview-marquee-track">
                         <div class="preview-marquee-group">${itemsMarkup}</div>
@@ -734,7 +744,6 @@
                     }
                     htmlOutput += `</div>`;
                 } else {
-                    // Carosello Hero Standard
                     htmlOutput += `<div class="carousel slide rounded overflow-hidden mx-auto shadow position-relative" style="max-width: ${carouselMaxWidth}; border-radius: ${carouselRadius}; ${innerWidthStyle}">`;
                     if (slides.length === 0) {
                         htmlOutput += `<div class="text-center text-muted py-5" style="height:${carouselHeight}; background:rgba(0,0,0,0.3); display:flex; flex-direction:column; justify-content:center; align-items:center;"><i class="bi bi-aspect-ratio fs-1 mb-2 text-success"></i>Nessuna slide inserita nel carosello Hero.</div>`;
@@ -759,7 +768,7 @@
                 }
 
                 // -------------------------------------------------------------
-                // JUMBOTRON / CONTENUTO TESTUALE (Identico a index.html)
+                // JUMBOTRON / CONTENUTO TESTUALE
                 // -------------------------------------------------------------
             } else {
                 let contentHtml = (window.tinymce && tinymce.get('mainContentHtml'))
@@ -775,11 +784,9 @@
             </div>`;
             }
 
-
             htmlOutput += `</div>`;
             renderArea.innerHTML = htmlOutput;
         }
-
 
         function renderRowPreviewIfOpen() {
             renderRowPreview('inlineRowPreviewRenderArea');
@@ -972,7 +979,6 @@
                 }
                 if (preview) preview.style.display = "";
 
-                // Se l'utente seleziona una nuova immagine, deseleziona l'eventuale checkbox "Rimuovi immagine"
                 const removeBackgroundImage = document.getElementById("removeBackgroundImage");
                 if (removeBackgroundImage) {
                     removeBackgroundImage.checked = false;
@@ -996,7 +1002,6 @@
             renderRowPreviewIfOpen();
         }
 
-        // Rimuove il file appena selezionato dall'input file (prima di salvare)
         function clearSelectedBackgroundImage() {
             const fileInput = document.getElementById("backgroundImageFile");
             if (fileInput) fileInput.value = "";
@@ -1022,7 +1027,6 @@
             const currentPreview = document.getElementById("currentBackgroundImagePreview");
 
             if (removeBackgroundImage && removeBackgroundImage.checked) {
-                // Se spuntato "Rimuovi", azzera anche eventuale nuovo file caricato
                 if (backgroundImageFile) backgroundImageFile.value = "";
                 if (tempBgImageBlobUrl) {
                     URL.revokeObjectURL(tempBgImageBlobUrl);
@@ -1031,7 +1035,6 @@
                 const preview = document.getElementById("newBackgroundImagePreview");
                 if (preview) preview.style.display = "none";
 
-                // Feedback visivo sulla vecchia immagine
                 if (currentPreview) {
                     currentPreview.style.opacity = "0.3";
                     currentPreview.style.filter = "grayscale(100%)";
@@ -1047,7 +1050,6 @@
             updateBackgroundImageControls();
             renderRowPreviewIfOpen();
         }
-
 
         function updateBackgroundImageControls() {
             const fileInput = document.getElementById("backgroundImageFile");

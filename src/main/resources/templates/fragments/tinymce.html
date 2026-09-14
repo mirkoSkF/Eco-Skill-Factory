@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <!-- FRAGMENT SCRIPTS TINYMCE -->
+    <th:block th:fragment="tinymce-scripts">
+        <script src="https://cdn.jsdelivr.net/npm/tinymce@8.5.0/tinymce.min.js" referrerpolicy="origin"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                tinymce.init({
+                    selector: '.wysiwyg-editor',
+                    language: 'it',
+                    language_url: '/tinymce/langs/it.js',
+                    content_language: 'it',
+                    min_height: 300,
+                    menubar: true,
+                    branding: false,
+                    promotion: false,
+                    license_key: 'gpl',
+                    statusbar: true,
+                    elementpath: true,
+                    skin: 'oxide-dark',
+                    image_advtab: true,
+                    image_title: true,
+                    image_caption: true,
+                    automatic_uploads: true,
+                    object_resizing: 'img',
+                    resize_img_proportional: true,
+
+                    relative_urls: false,
+                    remove_script_host: false,
+                    convert_urls: false,
+                    document_base_url: window.location.origin + '/',
+
+                    font_size_formats:
+                        '12px 13px 14px 15px 16px 17px 18px 19px 20px 21px 22px 23px 24px 28px 32px 34px 36px 38px 40px 42px 44px 46px 48px',
+                    font_size_input_default_unit: 'px',
+
+                    font_family_formats:
+                        'Andale Mono=andale mono,times;' +
+                        'Arial=arial,helvetica,sans-serif;' +
+                        'Arial Black=arial black,avant garde;' +
+                        'Book Antiqua=book antiqua,palatino;' +
+                        'Comic Sans MS=comic sans ms,sans-serif;' +
+                        'Courier New=courier new,courier;' +
+                        'Georgia=georgia,palatino;' +
+                        'Helvetica=helvetica;' +
+                        'Impact=impact,chicago;' +
+                        'Neue Haas Grotesk=Neue Haas Grotesk Display Pro, Helvetica Neue, Arial, sans-serif;' +
+                        'Plus Jakarta Sans=Plus Jakarta Sans,sans-serif;' +
+                        'Roboto=Roboto,sans-serif;' +
+                        'Symbol=symbol;' +
+                        'Tahoma=tahoma,arial,helvetica,sans-serif;' +
+                        'Terminal=terminal,monaco;' +
+                        'Times New Roman=times new roman,times;' +
+                        'Trebuchet MS=trebuchet ms,geneva;' +
+                        'Verdana=verdana,geneva;' +
+                        'Webdings=webdings;' +
+                        'Wingdings=wingdings,zapf dingbats',
+
+                    plugins: [
+                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                        'media', 'table', 'wordcount', 'help', 'emoticons'
+                    ],
+
+                    toolbar:
+                        'undo redo | blocks fontfamily fontsize | ' +
+                        'bold italic underline | ' +
+                        'forecolor backcolor | ' +
+                        'alignleft aligncenter alignright alignjustify | ' +
+                        'bullist numlist | ' +
+                        'link image media table emoticons | ' +
+                        'code fullscreen | help',
+
+                    content_style: `
+                        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;500;700&display=swap');
+
+                        body {
+                            font-family: Arial, sans-serif;
+                            font-size: 18px;
+                            line-height: 1.6;
+                            background-color: #0d1b2a !important;
+                            color: #ffffff !important;
+                            padding: 15px;
+                        }
+                        p { font-size: 18px; color: #ffffff !important; }
+                        h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
+                        a { color: #36e4da !important; }
+                        img { max-width: 100%; height: auto; }
+                        figure.image.align-left { float: left; margin: 0 15px 10px 0; }
+                        figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
+                        figure.image.align-right { float: right; margin: 0 0 10px 15px; }
+                        figure.image { display: inline-block; margin: 0 2px 0 1px; }
+                        figure.image img { max-width: 100%; height: auto; }
+                    `,
+
+                    style_formats: [
+                        { title: 'Immagine a sinistra', selector: 'img', styles: { 'float': 'left', 'margin': '0 15px 10px 0' } },
+                        { title: 'Immagine centrata', selector: 'img', styles: { 'display': 'block', 'float': 'none', 'margin-left': 'auto', 'margin-right': 'auto' } },
+                        { title: 'Immagine a destra', selector: 'img', styles: { 'float': 'right', 'margin': '0 0 10px 15px' } },
+                        { title: 'Immagine normale', selector: 'img', styles: { 'float': 'none', 'display': 'inline', 'margin': '0' } }
+                    ],
+
+                    setup: function (editor) {
+                        editor.on('init change KeyUp ExecCommand', function () {
+                            if (typeof renderRowPreviewIfOpen === 'function') {
+                                renderRowPreviewIfOpen();
+                            }
+                        });
+                    },
+
+                    images_upload_handler: (blobInfo) => new Promise((resolve, reject) => {
+                        const formData = new FormData();
+                        formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                        fetch('/api/uploads/immagine', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Errore durante il caricamento dell\'immagine nel server.');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                const imageUrl = data.location || data.url;
+                                if (!imageUrl) {
+                                    throw new Error('Il server non ha restituito l\'URL dell\'immagine.');
+                                }
+                                resolve(imageUrl);
+                            })
+                            .catch(error => {
+                                console.error('Upload fallito:', error);
+                                reject({
+                                    message: 'Caricamento immagine non riuscito',
+                                    remove: true
+                                });
+                            });
+                    })
+                });
+            });
+        </script>
+    </th:block>
+
+</head>
+<body>
+</body>
+</html>

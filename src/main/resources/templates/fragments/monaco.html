@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <!-- STILI PER MONACO EDITOR -->
+    <th:block th:fragment="monaco-css">
+        <style>
+            .monaco-open-button {
+                border-color: #36e4da !important;
+                color: #36e4da !important;
+                font-weight: 600;
+            }
+
+            .monaco-open-button:hover {
+                background: rgba(54, 228, 218, .12) !important;
+                color: #fff !important;
+            }
+
+            .monaco-editor-workspace {
+                width: 100%;
+                overflow: hidden;
+                background: #1e1e1e;
+            }
+
+            .monaco-extra-toolbar {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px;
+                background: #111827;
+                border-bottom: 1px solid #334155;
+                flex-wrap: wrap;
+                position: relative;
+                z-index: 20;
+            }
+
+            .monaco-search-wrapper {
+                flex: 1 1 320px;
+                min-width: 260px;
+                max-width: 700px;
+                position: relative;
+            }
+
+            .monaco-search-input {
+                font-family: 'Fira Code', monospace;
+            }
+
+            .monaco-search-results {
+                position: absolute;
+                top: calc(100% + 4px);
+                right: 0;
+                display: none;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 6px;
+                border: 1px solid #475569;
+                border-radius: 6px;
+                background: #0f172a;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, .45);
+                z-index: 1000;
+                white-space: nowrap;
+            }
+
+            .monaco-search-results.visible {
+                display: flex;
+            }
+
+            .monaco-search-count {
+                min-width: 58px;
+                text-align: center;
+                color: #cbd5e1;
+                font: 12px 'Fira Code', monospace;
+            }
+
+            .monaco-zoom-label {
+                min-width: 58px;
+                text-align: center;
+                cursor: default;
+            }
+
+            .monaco-modal-editor-button {
+                margin-bottom: 8px;
+            }
+
+            .monaco-editor .suggest-widget {
+                z-index: 10000 !important;
+            }
+        </style>
+    </th:block>
+
+</head>
+<body>
+
+    <!-- MODALE HTML ED EDITOR MONACO -->
+    <div class="modal fade" id="monacoEditorModal" tabindex="-1" aria-hidden="true" th:fragment="monaco-modal">
+        <div class="modal-dialog modal-fullscreen" id="monacoModalDialog">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold text-white mb-0">
+                        <i class="bi bi-code-square text-info me-2"></i>Monaco Code Editor
+                        <small class="text-muted fs-6 ms-2">(Emmet abilitato - Premi TAB)</small>
+                    </h5>
+                    <div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="monaco-extra-toolbar">
+                        <div class="input-group input-group-sm monaco-search-wrapper">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" id="monacoSearchInput" class="form-control monaco-search-input"
+                                placeholder="Cerca nel codice..." autocomplete="off">
+                            <button type="button" class="btn btn-outline-secondary" id="btnMonacoSearchClear"
+                                title="Cancella"><i class="bi bi-x-lg"></i></button>
+                        </div>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(-1)"><i
+                                    class="bi bi-zoom-out"></i></button>
+                            <span class="btn btn-outline-secondary monaco-zoom-label" id="monacoZoomLabel">100%</span>
+                            <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(1)"><i
+                                    class="bi bi-zoom-in"></i></button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-warning" id="btnTogglePreview"
+                            onclick="toggleMonacoPreview()">
+                            <i class="bi bi-map me-1" id="previewIcon"></i><span id="previewButtonText">Nascondi minimappa</span>
+                        </button>
+                    </div>
+                    <div id="monacoWorkspace" class="monaco-editor-workspace">
+                        <div id="monacoContainer" style="width:100%; height:550px;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
+                    <div class="text-muted small"><span class="badge bg-secondary me-1">Emmet</span>Usa scorciatoie come
+                        <code>div.card>h2</code> + TAB
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                        <button type="button" class="btn btn-info" onclick="saveMonacoContent()">Applica Modifiche</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

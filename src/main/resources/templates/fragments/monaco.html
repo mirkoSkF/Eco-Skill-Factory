@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 
-    <!-- STILI PER MONACO EDITOR -->
+    <!-- ============================================================
+         CSS ESCLUSIVO MONACO
+         ============================================================ -->
     <th:block th:fragment="monaco-css">
+
         <style>
+
             .monaco-open-button {
                 border-color: #36e4da !important;
                 color: #36e4da !important;
@@ -85,62 +90,1448 @@
             .monaco-editor .suggest-widget {
                 z-index: 10000 !important;
             }
+
+            /* Stato di caricamento */
+            .monaco-loading-overlay {
+                position: absolute;
+                inset: 0;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 12px;
+                background: rgba(15, 23, 42, 0.94);
+                z-index: 100;
+            }
+
+            .monaco-loading-overlay.visible {
+                display: flex;
+            }
+
+            .monaco-loading-spinner {
+                width: 38px;
+                height: 38px;
+                border: 3px solid rgba(255, 255, 255, 0.2);
+                border-top-color: #36e4da;
+                border-radius: 50%;
+                animation: monacoLoadingSpin .8s linear infinite;
+            }
+
+            @keyframes monacoLoadingSpin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
         </style>
+
     </th:block>
 
 </head>
+
 <body>
 
-    <!-- MODALE HTML ED EDITOR MONACO -->
-    <div class="modal fade" id="monacoEditorModal" tabindex="-1" aria-hidden="true" th:fragment="monaco-modal">
-        <div class="modal-dialog modal-fullscreen" id="monacoModalDialog">
+    <!-- ============================================================
+         MODALE MONACO
+         La struttura viene caricata insieme alla pagina,
+         ma la libreria Monaco NON viene caricata qui.
+         ============================================================ -->
+    <div class="modal fade"
+         id="monacoEditorModal"
+         tabindex="-1"
+         aria-hidden="true"
+         th:fragment="monaco-modal">
+
+        <div class="modal-dialog modal-fullscreen"
+             id="monacoModalDialog">
+
             <div class="modal-content modal-content-dark">
+
                 <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
+
                     <h5 class="modal-title fw-bold text-white mb-0">
-                        <i class="bi bi-code-square text-info me-2"></i>Monaco Code Editor
-                        <small class="text-muted fs-6 ms-2">(Emmet abilitato - Premi TAB)</small>
+
+                        <i class="bi bi-code-square text-info me-2"></i>
+
+                        Monaco Code Editor
+
+                        <small class="text-muted fs-6 ms-2">
+                            (Emmet abilitato - Premi TAB)
+                        </small>
+
                     </h5>
+
                     <div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="monaco-extra-toolbar">
-                        <div class="input-group input-group-sm monaco-search-wrapper">
-                            <span class="input-group-text"><i class="bi bi-search"></i></span>
-                            <input type="text" id="monacoSearchInput" class="form-control monaco-search-input"
-                                placeholder="Cerca nel codice..." autocomplete="off">
-                            <button type="button" class="btn btn-outline-secondary" id="btnMonacoSearchClear"
-                                title="Cancella"><i class="bi bi-x-lg"></i></button>
-                        </div>
-                        <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(-1)"><i
-                                    class="bi bi-zoom-out"></i></button>
-                            <span class="btn btn-outline-secondary monaco-zoom-label" id="monacoZoomLabel">100%</span>
-                            <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(1)"><i
-                                    class="bi bi-zoom-in"></i></button>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-warning" id="btnTogglePreview"
-                            onclick="toggleMonacoPreview()">
-                            <i class="bi bi-map me-1" id="previewIcon"></i><span id="previewButtonText">Nascondi minimappa</span>
+
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close">
                         </button>
+
                     </div>
-                    <div id="monacoWorkspace" class="monaco-editor-workspace">
-                        <div id="monacoContainer" style="width:100%; height:550px;"></div>
-                    </div>
+
                 </div>
+
+                <div class="modal-body p-0">
+
+                    <div class="monaco-extra-toolbar">
+
+                        <!-- RICERCA -->
+                        <div class="input-group input-group-sm monaco-search-wrapper">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-search"></i>
+                            </span>
+
+                            <input type="text"
+                                   id="monacoSearchInput"
+                                   class="form-control monaco-search-input"
+                                   placeholder="Cerca nel codice..."
+                                   autocomplete="off">
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    id="btnMonacoSearchClear"
+                                    title="Cancella">
+
+                                <i class="bi bi-x-lg"></i>
+
+                            </button>
+
+                            <div id="monacoSearchResults"
+                                 class="monaco-search-results">
+
+                                <span id="monacoSearchCount"
+                                      class="monaco-search-count">
+                                    0 / 0
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ZOOM -->
+                        <div class="btn-group btn-group-sm"
+                             role="group">
+
+                            <button type="button"
+                                    class="btn btn-outline-light"
+                                    onclick="changeMonacoFontSize(-1)"
+                                    title="Riduci carattere">
+
+                                <i class="bi bi-zoom-out"></i>
+
+                            </button>
+
+                            <span class="btn btn-outline-secondary monaco-zoom-label"
+                                  id="monacoZoomLabel">
+                                100%
+                            </span>
+
+                            <button type="button"
+                                    class="btn btn-outline-light"
+                                    onclick="changeMonacoFontSize(1)"
+                                    title="Aumenta carattere">
+
+                                <i class="bi bi-zoom-in"></i>
+
+                            </button>
+
+                        </div>
+
+                        <!-- MINIMAP -->
+                        <button type="button"
+                                class="btn btn-sm btn-outline-warning"
+                                id="btnTogglePreview"
+                                onclick="toggleMonacoPreview()">
+
+                            <i class="bi bi-map me-1"
+                               id="previewIcon"></i>
+
+                            <span id="previewButtonText">
+                                Nascondi minimappa
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                    <!-- WORKSPACE MONACO -->
+                    <div id="monacoWorkspace"
+                         class="monaco-editor-workspace position-relative">
+
+                        <!-- OVERLAY CARICAMENTO -->
+                        <div id="monacoLoadingOverlay"
+                             class="monaco-loading-overlay">
+
+                            <div class="monaco-loading-spinner"></div>
+
+                            <div class="text-white">
+                                Caricamento editor HTML...
+                            </div>
+
+                        </div>
+
+                        <div id="monacoContainer"
+                             style="width:100%; height:550px;">
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
-                    <div class="text-muted small"><span class="badge bg-secondary me-1">Emmet</span>Usa scorciatoie come
-                        <code>div.card>h2</code> + TAB
+
+                    <div class="text-muted small">
+
+                        <span class="badge bg-secondary me-1">
+                            Emmet
+                        </span>
+
+                        Usa scorciatoie come
+                        <code>div.card>h2</code>
+                        + TAB
+
                     </div>
+
                     <div>
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                        <button type="button" class="btn btn-info" onclick="saveMonacoContent()">Applica Modifiche</button>
+
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">
+                            Annulla
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-info"
+                                onclick="saveMonacoContent()">
+                            Applica Modifiche
+                        </button>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
+
+    <!-- ============================================================
+         SCRIPT ESCLUSIVO MONACO
+         ============================================================ -->
+    <th:block th:fragment="monaco-scripts">
+
+        <script>
+
+            /*
+             * ==========================================================
+             * CONFIGURAZIONE MONACO
+             * ==========================================================
+             *
+             * Monaco NON viene caricato durante il caricamento della
+             * pagina.
+             *
+             * Viene caricato esclusivamente quando viene chiamata:
+             *
+             *     openMonacoFromButton(...)
+             *
+             * Questo evita di rallentare block-form.
+             */
+
+            const MONACO_VERSION = '0.50.0';
+
+            const MONACO_LOADER_URL =
+                'https://cdn.jsdelivr.net/npm/monaco-editor@'
+                + MONACO_VERSION
+                + '/min/vs/loader.js';
+
+            const EMMET_URL =
+                'https://unpkg.com/emmet-monaco-es@5.7.0/dist/emmet-monaco.min.js';
+
+
+            /*
+             * Istanza Monaco.
+             *
+             * Viene creata una sola volta.
+             */
+            let monacoEditor = null;
+
+
+            /*
+             * Promise di caricamento.
+             *
+             * Se l'utente clicca due volte mentre Monaco sta ancora
+             * caricando, non vengono effettuati due caricamenti.
+             */
+            let monacoLoadingPromise = null;
+
+
+            /*
+             * Elemento textarea/TinyMCE che Monaco sta modificando.
+             */
+            let monacoTargetId = null;
+
+
+            /*
+             * Dimensione iniziale del font.
+             */
+            let monacoFontSize = 14;
+
+
+            /*
+             * Stato minimappa.
+             */
+            let monacoMinimapEnabled = true;
+
+
+            /*
+             * Stato ricerca.
+             */
+            let monacoSearchDecorations = [];
+
+
+            /*
+             * ==========================================================
+             * APERTURA MONACO
+             * ==========================================================
+             */
+            async function openMonacoFromButton(button) {
+
+                const targetId =
+                    button?.dataset?.targetId
+                    || 'mainContentHtml';
+
+                monacoTargetId = targetId;
+
+                const modalElement =
+                    document.getElementById(
+                        'monacoEditorModal'
+                    );
+
+                if (!modalElement) {
+
+                    console.error(
+                        'Modale Monaco non trovata.'
+                    );
+
+                    return;
+                }
+
+
+                /*
+                 * Apertura immediata della modale.
+                 *
+                 * In questo modo l'utente vede subito che il
+                 * pulsante ha funzionato anche mentre Monaco si carica.
+                 */
+                const modal =
+                    bootstrap.Modal.getOrCreateInstance(
+                        modalElement
+                    );
+
+                modal.show();
+
+
+                /*
+                 * Caricamento lazy.
+                 */
+                try {
+
+                    await loadMonaco();
+
+                    await initializeMonacoEditor();
+
+                    if (monacoEditor) {
+
+                        monacoEditor.layout();
+
+                        monacoEditor.focus();
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        'Errore durante il caricamento di Monaco:',
+                        error
+                    );
+
+                    alert(
+                        'Non è stato possibile caricare l\'editor HTML avanzato.'
+                    );
+                }
+            }
+
+
+            /*
+             * ==========================================================
+             * CARICAMENTO LAZY DI MONACO
+             * ==========================================================
+             */
+            function loadMonaco() {
+
+                /*
+                 * Monaco è già disponibile.
+                 */
+                if (
+                    window.monaco
+                    && window.monaco.editor
+                ) {
+                    return Promise.resolve();
+                }
+
+
+                /*
+                 * Monaco è già in fase di caricamento.
+                 */
+                if (monacoLoadingPromise) {
+                    return monacoLoadingPromise;
+                }
+
+
+                monacoLoadingPromise =
+                    new Promise((resolve, reject) => {
+
+                        showMonacoLoading(true);
+
+
+                        /*
+                         * Se loader.js è già stato inserito nella pagina,
+                         * non lo inseriamo una seconda volta.
+                         */
+                        const existingLoader =
+                            document.querySelector(
+                                'script[data-monaco-loader="true"]'
+                            );
+
+
+                        const initializeLoader =
+                            () => {
+
+                                if (!window.require) {
+
+                                    reject(
+                                        new Error(
+                                            'AMD loader di Monaco non disponibile.'
+                                        )
+                                    );
+
+                                    return;
+                                }
+
+
+                                /*
+                                 * Configurazione AMD Monaco.
+                                 */
+                                window.require.config({
+                                    paths: {
+                                        vs:
+                                            'https://cdn.jsdelivr.net/npm/monaco-editor@'
+                                            + MONACO_VERSION
+                                            + '/min/vs'
+                                    }
+                                });
+
+
+                                window.require(
+                                    ['vs/editor/editor.main'],
+                                    () => {
+
+                                        loadEmmet()
+                                            .then(() => {
+
+                                                showMonacoLoading(false);
+
+                                                resolve();
+
+                                            })
+                                            .catch(error => {
+
+                                                showMonacoLoading(false);
+
+                                                reject(error);
+                                            });
+                                    }
+                                );
+                            };
+
+
+                        if (existingLoader) {
+
+                            initializeLoader();
+
+                            return;
+                        }
+
+
+                        /*
+                         * Worker Monaco.
+                         *
+                         * Questa configurazione evita che Monaco tenti
+                         * di cercare worker relativi alla pagina Spring.
+                         */
+                        window.MonacoEnvironment = {
+
+                            getWorkerUrl: function () {
+
+                                const workerSource = `
+                                    self.MonacoEnvironment = {
+                                        baseUrl:
+                                            'https://cdn.jsdelivr.net/npm/monaco-editor@${MONACO_VERSION}/min/'
+                                    };
+
+                                    importScripts(
+                                        'https://cdn.jsdelivr.net/npm/monaco-editor@${MONACO_VERSION}/min/vs/base/worker/workerMain.js'
+                                    );
+                                `;
+
+                                return 'data:text/javascript;charset=utf-8,'
+                                    + encodeURIComponent(workerSource);
+                            }
+                        };
+
+
+                        const script =
+                            document.createElement('script');
+
+                        script.src =
+                            MONACO_LOADER_URL;
+
+                        script.async = true;
+
+                        script.dataset.monacoLoader = 'true';
+
+
+                        script.onload = () => {
+
+                            initializeLoader();
+                        };
+
+
+                        script.onerror = () => {
+
+                            showMonacoLoading(false);
+
+                            reject(
+                                new Error(
+                                    'Impossibile caricare loader.js di Monaco.'
+                                )
+                            );
+                        };
+
+
+                        document.head.appendChild(script);
+                    });
+
+
+                return monacoLoadingPromise;
+            }
+
+
+            /*
+             * ==========================================================
+             * CARICAMENTO EMMET
+             * ==========================================================
+             */
+            function loadEmmet() {
+
+                /*
+                 * Emmet già disponibile.
+                 */
+                if (
+                    window.emmetMonaco
+                    || window.emmetHTML
+                ) {
+                    return Promise.resolve();
+                }
+
+
+                return new Promise((resolve, reject) => {
+
+                    const existingScript =
+                        document.querySelector(
+                            'script[data-emmet-monaco="true"]'
+                        );
+
+
+                    if (existingScript) {
+
+                        if (window.emmetMonaco) {
+                            resolve();
+                            return;
+                        }
+
+                        existingScript.addEventListener(
+                            'load',
+                            () => resolve(),
+                            { once: true }
+                        );
+
+                        existingScript.addEventListener(
+                            'error',
+                            () => reject(
+                                new Error(
+                                    'Impossibile caricare Emmet.'
+                                )
+                            ),
+                            { once: true }
+                        );
+
+                        return;
+                    }
+
+
+                    const script =
+                        document.createElement('script');
+
+                    script.src = EMMET_URL;
+
+                    script.async = true;
+
+                    script.dataset.emmetMonaco = 'true';
+
+
+                    script.onload = () => {
+
+                        resolve();
+                    };
+
+
+                    script.onerror = () => {
+
+                        reject(
+                            new Error(
+                                'Impossibile caricare emmet-monaco-es.'
+                            )
+                        );
+                    };
+
+
+                    document.head.appendChild(script);
+                });
+            }
+
+
+            /*
+             * ==========================================================
+             * INIZIALIZZAZIONE EDITOR
+             * ==========================================================
+             */
+            async function initializeMonacoEditor() {
+
+                if (!window.monaco) {
+
+                    throw new Error(
+                        'Monaco non è disponibile.'
+                    );
+                }
+
+
+                const container =
+                    document.getElementById(
+                        'monacoContainer'
+                    );
+
+                if (!container) {
+
+                    throw new Error(
+                        'Contenitore Monaco non trovato.'
+                    );
+                }
+
+
+                /*
+                 * Contenuto iniziale.
+                 */
+                const initialContent =
+                    getMonacoTargetContent();
+
+
+                /*
+                 * PRIMA APERTURA:
+                 * creiamo l'editor.
+                 */
+                if (!monacoEditor) {
+
+                    monacoEditor =
+                        monaco.editor.create(
+                            container,
+                            {
+
+                                value:
+                                    initialContent,
+
+                                language:
+                                    'html',
+
+                                theme:
+                                    'vs-dark',
+
+                                automaticLayout:
+                                    true,
+
+                                fontSize:
+                                    monacoFontSize,
+
+                                minimap: {
+                                    enabled:
+                                        monacoMinimapEnabled
+                                },
+
+                                wordWrap:
+                                    'on',
+
+                                tabSize:
+                                    4,
+
+                                insertSpaces:
+                                    true,
+
+                                formatOnPaste:
+                                    true,
+
+                                formatOnType:
+                                    false,
+
+                                suggestOnTriggerCharacters:
+                                    true,
+
+                                quickSuggestions:
+                                    true,
+
+                                acceptSuggestionOnEnter:
+                                    'on',
+
+                                folding:
+                                    true,
+
+                                lineNumbers:
+                                    'on',
+
+                                renderWhitespace:
+                                    'selection',
+
+                                scrollBeyondLastLine:
+                                    false,
+
+                                padding: {
+                                    top: 12,
+                                    bottom: 12
+                                }
+                            }
+                        );
+
+
+                    /*
+                     * Integrazione Emmet.
+                     *
+                     * Deve avvenire dopo il caricamento di Monaco
+                     * e prima dell'utilizzo dell'editor.
+                     */
+                    if (
+                        window.emmetMonaco
+                        && typeof window.emmetMonaco.emmetHTML === 'function'
+                    ) {
+
+                        try {
+
+                            window.emmetMonaco.emmetHTML(
+                                monaco,
+                                ['html']
+                            );
+
+                        } catch (error) {
+
+                            console.warn(
+                                'Emmet non è stato inizializzato:',
+                                error
+                            );
+                        }
+                    }
+
+
+                    /*
+                     * Quando il contenuto cambia, aggiorniamo
+                     * il textarea/TinyMCE senza salvare ancora
+                     * definitivamente il contenuto.
+                     */
+                    monacoEditor.onDidChangeModelContent(
+                        function () {
+
+                            syncMonacoToTarget();
+                        }
+                    );
+
+
+                    /*
+                     * Inizializzazione ricerca.
+                     */
+                    initializeMonacoSearch();
+
+
+                    /*
+                     * Aggiornamento etichetta zoom.
+                     */
+                    updateMonacoZoomLabel();
+                }
+
+
+                /*
+                 * Aperture successive:
+                 *
+                 * recuperiamo il contenuto attuale dal campo,
+                 * così Monaco non rimane con una versione vecchia.
+                 */
+                else {
+
+                    const currentContent =
+                        getMonacoTargetContent();
+
+                    const model =
+                        monacoEditor.getModel();
+
+                    if (
+                        model
+                        && model.getValue() !== currentContent
+                    ) {
+
+                        model.setValue(
+                            currentContent
+                        );
+                    }
+                }
+
+
+                /*
+                 * Layout dopo l'apertura della modale.
+                 */
+                requestAnimationFrame(() => {
+
+                    if (monacoEditor) {
+
+                        monacoEditor.layout();
+
+                        monacoEditor.focus();
+                    }
+                });
+            }
+
+
+            /*
+             * ==========================================================
+             * RECUPERO CONTENUTO DA TINYMCE / TEXTAREA
+             * ==========================================================
+             */
+            function getMonacoTargetContent() {
+
+                const targetId =
+                    monacoTargetId
+                    || 'mainContentHtml';
+
+
+                /*
+                 * Prima controlliamo TinyMCE.
+                 */
+                if (
+                    window.tinymce
+                    && typeof window.tinymce.get === 'function'
+                ) {
+
+                    const editor =
+                        window.tinymce.get(targetId);
+
+                    if (editor) {
+
+                        return editor.getContent();
+                    }
+                }
+
+
+                /*
+                 * Fallback textarea/input.
+                 */
+                const target =
+                    document.getElementById(targetId);
+
+                return target
+                    ? target.value || ''
+                    : '';
+            }
+
+
+            /*
+             * ==========================================================
+             * SINCRONIZZAZIONE MONACO -> TINYMCE
+             * ==========================================================
+             */
+            function syncMonacoToTarget() {
+
+                if (!monacoEditor)
+                    return;
+
+
+                const content =
+                    monacoEditor.getValue();
+
+                const targetId =
+                    monacoTargetId
+                    || 'mainContentHtml';
+
+
+                /*
+                 * TinyMCE.
+                 */
+                if (
+                    window.tinymce
+                    && typeof window.tinymce.get === 'function'
+                ) {
+
+                    const editor =
+                        window.tinymce.get(targetId);
+
+                    if (editor) {
+
+                        editor.setContent(content);
+
+                        /*
+                         * Forziamo l'evento change per mantenere
+                         * sincronizzati eventuali listener esistenti.
+                         */
+                        editor.fire('change');
+
+                        return;
+                    }
+                }
+
+
+                /*
+                 * Fallback textarea.
+                 */
+                const target =
+                    document.getElementById(targetId);
+
+                if (target) {
+
+                    target.value =
+                        content;
+
+                    target.dispatchEvent(
+                        new Event(
+                            'input',
+                            {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+                    target.dispatchEvent(
+                        new Event(
+                            'change',
+                            {
+                                bubbles: true
+                            }
+                        )
+                    );
+                }
+            }
+
+
+            /*
+             * ==========================================================
+             * SALVA / APPLICA
+             * ==========================================================
+             */
+            function saveMonacoContent() {
+
+                if (!monacoEditor)
+                    return;
+
+
+                syncMonacoToTarget();
+
+
+                /*
+                 * Aggiorniamo immediatamente l'anteprima
+                 * presente nel block-form.
+                 */
+                if (
+                    typeof renderRowPreviewIfOpen
+                    === 'function'
+                ) {
+
+                    renderRowPreviewIfOpen();
+                }
+
+
+                const modalElement =
+                    document.getElementById(
+                        'monacoEditorModal'
+                    );
+
+                if (modalElement) {
+
+                    const modal =
+                        bootstrap.Modal.getInstance(
+                            modalElement
+                        );
+
+                    if (modal) {
+                        modal.hide();
+                    }
+                }
+            }
+
+
+            /*
+             * ==========================================================
+             * ZOOM
+             * ==========================================================
+             */
+            function changeMonacoFontSize(direction) {
+
+                if (!monacoEditor)
+                    return;
+
+
+                monacoFontSize +=
+                    direction * 1;
+
+
+                /*
+                 * Limiti ragionevoli.
+                 */
+                monacoFontSize =
+                    Math.max(
+                        10,
+                        Math.min(
+                            30,
+                            monacoFontSize
+                        )
+                    );
+
+
+                monacoEditor.updateOptions({
+                    fontSize:
+                        monacoFontSize
+                });
+
+
+                updateMonacoZoomLabel();
+            }
+
+
+            function updateMonacoZoomLabel() {
+
+                const label =
+                    document.getElementById(
+                        'monacoZoomLabel'
+                    );
+
+                if (!label)
+                    return;
+
+
+                /*
+                 * 14px = 100%.
+                 */
+                const percentage =
+                    Math.round(
+                        (monacoFontSize / 14) * 100
+                    );
+
+
+                label.textContent =
+                    percentage + '%';
+            }
+
+
+            /*
+             * ==========================================================
+             * MINIMAP
+             * ==========================================================
+             */
+            function toggleMonacoPreview() {
+
+                if (!monacoEditor)
+                    return;
+
+
+                monacoMinimapEnabled =
+                    !monacoMinimapEnabled;
+
+
+                monacoEditor.updateOptions({
+
+                    minimap: {
+                        enabled:
+                            monacoMinimapEnabled
+                    }
+                });
+
+
+                const text =
+                    document.getElementById(
+                        'previewButtonText'
+                    );
+
+                const icon =
+                    document.getElementById(
+                        'previewIcon'
+                    );
+
+
+                if (text) {
+
+                    text.textContent =
+                        monacoMinimapEnabled
+                            ? 'Nascondi minimappa'
+                            : 'Mostra minimappa';
+                }
+
+
+                if (icon) {
+
+                    icon.className =
+                        monacoMinimapEnabled
+                            ? 'bi bi-map me-1'
+                            : 'bi bi-map-fill me-1';
+                }
+            }
+
+
+            /*
+             * ==========================================================
+             * RICERCA
+             *
+             * Usiamo la ricerca nativa di Monaco.
+             * Non viene ricreato un secondo motore di ricerca.
+             * ==========================================================
+             */
+            function initializeMonacoSearch() {
+
+                const input =
+                    document.getElementById(
+                        'monacoSearchInput'
+                    );
+
+                const clearButton =
+                    document.getElementById(
+                        'btnMonacoSearchClear'
+                    );
+
+
+                if (!input)
+                    return;
+
+
+                /*
+                 * Evitiamo di aggiungere gli stessi listener
+                 * se initializeMonacoSearch viene richiamata.
+                 */
+                if (
+                    input.dataset.monacoInitialized === 'true'
+                ) {
+                    return;
+                }
+
+
+                input.dataset.monacoInitialized =
+                    'true';
+
+
+                input.addEventListener(
+                    'input',
+                    function () {
+
+                        performMonacoSearch(
+                            input.value
+                        );
+                    }
+                );
+
+
+                input.addEventListener(
+                    'keydown',
+                    function (event) {
+
+                        if (event.key === 'Enter') {
+
+                            event.preventDefault();
+
+                            performMonacoSearch(
+                                input.value
+                            );
+                        }
+
+                        if (
+                            event.key === 'Escape'
+                        ) {
+
+                            clearMonacoSearch();
+                        }
+                    }
+                );
+
+
+                if (clearButton) {
+
+                    clearButton.addEventListener(
+                        'click',
+                        clearMonacoSearch
+                    );
+                }
+            }
+
+
+            function performMonacoSearch(query) {
+
+                if (
+                    !monacoEditor
+                    || !query
+                ) {
+
+                    clearMonacoSearchDecorations();
+
+                    updateMonacoSearchCount(
+                        0,
+                        0
+                    );
+
+                    return;
+                }
+
+
+                const model =
+                    monacoEditor.getModel();
+
+                if (!model)
+                    return;
+
+
+                const matches =
+                    model.findMatches(
+                        query,
+                        false,
+                        false,
+                        false,
+                        null,
+                        true
+                    );
+
+
+                clearMonacoSearchDecorations();
+
+
+                if (!matches.length) {
+
+                    updateMonacoSearchCount(
+                        0,
+                        0
+                    );
+
+                    return;
+                }
+
+
+                monacoSearchDecorations =
+                    monacoEditor.deltaDecorations(
+                        [],
+                        matches.map(match => ({
+                            range:
+                                match.range,
+
+                            options: {
+                                inlineClassName:
+                                    'monaco-search-match'
+                            }
+                        }))
+                    );
+
+
+                updateMonacoSearchCount(
+                    1,
+                    matches.length
+                );
+
+
+                monacoEditor.setSelection(
+                    matches[0].range
+                );
+
+
+                monacoEditor.revealRangeInCenter(
+                    matches[0].range
+                );
+            }
+
+
+            function clearMonacoSearch() {
+
+                const input =
+                    document.getElementById(
+                        'monacoSearchInput'
+                    );
+
+                if (input)
+                    input.value = '';
+
+
+                clearMonacoSearchDecorations();
+
+
+                updateMonacoSearchCount(
+                    0,
+                    0
+                );
+
+
+                if (monacoEditor) {
+
+                    monacoEditor.focus();
+                }
+            }
+
+
+            function clearMonacoSearchDecorations() {
+
+                if (!monacoEditor)
+                    return;
+
+
+                if (
+                    monacoSearchDecorations.length > 0
+                ) {
+
+                    monacoSearchDecorations =
+                        monacoEditor.deltaDecorations(
+                            monacoSearchDecorations,
+                            []
+                        );
+                }
+            }
+
+
+            function updateMonacoSearchCount(
+                current,
+                total
+            ) {
+
+                const count =
+                    document.getElementById(
+                        'monacoSearchCount'
+                    );
+
+                if (!count)
+                    return;
+
+
+                count.textContent =
+                    total > 0
+                        ? current + ' / ' + total
+                        : '0 / 0';
+            }
+
+
+            /*
+             * ==========================================================
+             * OVERLAY CARICAMENTO
+             * ==========================================================
+             */
+            function showMonacoLoading(show) {
+
+                const overlay =
+                    document.getElementById(
+                        'monacoLoadingOverlay'
+                    );
+
+                if (!overlay)
+                    return;
+
+
+                overlay.classList.toggle(
+                    'visible',
+                    Boolean(show)
+                );
+            }
+
+
+            /*
+             * ==========================================================
+             * RESIZE QUANDO LA MODALE DIVENTA VISIBILE
+             * ==========================================================
+             */
+            document.addEventListener(
+                'shown.bs.modal',
+                function (event) {
+
+                    if (
+                        event.target.id
+                        !== 'monacoEditorModal'
+                    ) {
+                        return;
+                    }
+
+
+                    if (monacoEditor) {
+
+                        requestAnimationFrame(() => {
+
+                            monacoEditor.layout();
+
+                            monacoEditor.focus();
+                        });
+                    }
+                }
+            );
+
+
+            /*
+             * ==========================================================
+             * PULIZIA QUANDO SI CHIUDE LA MODALE
+             *
+             * IMPORTANTE:
+             * NON distruggiamo Monaco.
+             *
+             * Così alla riapertura viene riutilizzata la stessa
+             * istanza e non viene scaricato/ricreato nulla.
+             * ==========================================================
+             */
+            document.addEventListener(
+                'hidden.bs.modal',
+                function (event) {
+
+                    if (
+                        event.target.id
+                        !== 'monacoEditorModal'
+                    ) {
+                        return;
+                    }
+
+
+                    if (monacoEditor) {
+
+                        syncMonacoToTarget();
+                    }
+                }
+            );
+
+        </script>
+
+        <!-- Stile usato dalle evidenziazioni della ricerca Monaco -->
+        <style>
+
+            .monaco-search-match {
+                background: rgba(255, 200, 0, 0.28);
+                border-bottom: 2px solid #ffd54f;
+            }
+
+        </style>
+
+    </th:block>
+
 </body>
+
 </html>

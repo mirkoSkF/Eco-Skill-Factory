@@ -172,47 +172,6 @@
             color: #f1f5f9;
         }
 
-        .monaco-open-button {
-            border-color: #36e4da !important;
-            color: #36e4da !important;
-            font-weight: 600
-        }
-
-        .monaco-editor-workspace {
-            width: 100%;
-            overflow: hidden;
-            background: #1e1e1e
-        }
-
-        .monaco-extra-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px;
-            background: #111827;
-            border-bottom: 1px solid #334155;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 20
-        }
-
-        .monaco-search-wrapper {
-            flex: 1 1 320px;
-            min-width: 260px;
-            max-width: 700px;
-            position: relative
-        }
-
-        .monaco-search-input {
-            font-family: 'Fira Code', monospace
-        }
-
-        .monaco-zoom-label {
-            min-width: 58px;
-            text-align: center;
-            cursor: default
-        }
-
         .background-image-controls {
             margin-top: 18px;
             padding: 16px;
@@ -256,8 +215,8 @@
         }
 
         /* ========================================================
-   RESA FEDELE ANTEPRIMA (Stile identico a index.html)
-   ======================================================== */
+           RESA FEDELE ANTEPRIMA (Stile identico a index.html)
+           ======================================================== */
         #rowPreviewModal .modal-body {
             background-color: #080c14 !important;
             padding: 0 !important;
@@ -333,8 +292,8 @@
         }
 
         /* ========================================================
-   FULLSCREEN ANTEPRIMA: 100% LARGHEZZA SENZA MARGINI AI LATI
-   ======================================================== */
+           FULLSCREEN ANTEPRIMA: 100% LARGHEZZA SENZA MARGINI AI LATI
+           ======================================================== */
         #rowPreviewModal .modal-dialog {
             max-width: 100vw !important;
             margin: 0 !important;
@@ -366,8 +325,8 @@
         }
 
         /* ========================================================
-   RESA TESTO FEDELE AD INDEX.HTML (.tinymce-content)
-   ======================================================== */
+           RESA TESTO FEDELE AD INDEX.HTML (.tinymce-content)
+           ======================================================== */
         .preview-block-container .tinymce-content {
             font-family: 'Neue Haas Grotesk Display Pro', Arial, Helvetica, sans-serif !important;
             font-size: 18px !important;
@@ -423,8 +382,13 @@
         }
     </style>
 
-    <!-- INCLUSIONE DYNAMIC DEL FRAGMENT TINYMCE -->
+    <!-- INCLUSIONE DINAMICA DEL FRAGMENT TINYMCE -->
     <th:block th:replace="~{fragments/tinymce :: tinymce-scripts}"></th:block>
+
+    <!-- FRAGMENT MONACO:
+         contiene esclusivamente CSS, modale e script Monaco.
+         Il caricamento effettivo di Monaco è lazy. -->
+    <th:block th:replace="~{fragments/monaco :: monaco-css}"></th:block>
 
     <!-- PRELOAD E FONT UFFICIALI (Come in index.html) -->
     <link rel="preload" href="/fonts/NeueHaasDisplayRoman.woff2" as="font" type="font/woff2" crossorigin>
@@ -476,32 +440,45 @@
         <!-- FORM PRINCIPALE -->
         <form id="blockForm" th:action="@{/admin/block/save}" th:object="${block}" method="post"
             enctype="multipart/form-data">
+
             <input type="hidden" th:field="*{id}" />
 
             <div class="editor-workspace-layout">
 
                 <!-- COLONNA PRINCIPALE (80% LARGHEZZA): ANTEPRIMA LIVE & EDITING FRAGMENT -->
                 <div class="live-preview-container-column">
+
                     <div class="card p-3 shadow-sm mb-4">
+
                         <div class="d-flex justify-content-between align-items-center mb-3">
+
                             <span class="fw-bold text-info fs-5">
                                 <i class="bi bi-eye me-2"></i>Anteprima Live Blocco (Pubblica)
                             </span>
+
                             <div class="d-flex gap-2">
-                                <button type="button" class="btn btn-sm btn-outline-light" onclick="openRowPreview()">
-                                    <i class="bi bi-window me-1"></i> Anteprima in Finestra
+
+                                <button type="button"
+                                    class="btn btn-sm btn-outline-light"
+                                    onclick="openRowPreview()">
+                                    <i class="bi bi-window me-1"></i>
+                                    Anteprima in Finestra
                                 </button>
+
                             </div>
+
                         </div>
 
                         <!-- CONTENITORE ANTEPRIMA IN REAL TIME DEL BLOCCO -->
                         <div id="inlineLivePreviewBox" class="inline-live-preview-box">
                             <div id="inlineRowPreviewRenderArea"></div>
                         </div>
+
                     </div>
 
                     <!-- CHIAMATA AL FRAGMENT PER IL CONTENUTO PRINCIPALE -->
                     <div th:replace="~{fragments/blocco-editor :: bloccoEditorMain}"></div>
+
                 </div>
 
                 <!-- SIDEBAR DESTRA (20% LARGHEZZA): CHIAMATA AL FRAGMENT SIDEBAR -->
@@ -518,17 +495,23 @@
     <!-- CHIAMATA AL FRAGMENT MODALI -->
     <div th:replace="~{fragments/blocco-editor :: bloccoEditorModals}"></div>
 
+    <!-- MODALE MONACO -->
+    <div th:replace="~{fragments/monaco :: monaco-modal}"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- CHIAMATA AL FRAGMENT SCRIPT UTILITY -->
     <th:block th:replace="~{fragments/blocco-editor :: bloccoEditorScripts}"></th:block>
 
+    <!-- SCRIPT MONACO:
+         contiene solo il codice specifico Monaco.
+         Monaco viene caricato dinamicamente al click. -->
+    <th:block th:replace="~{fragments/monaco :: monaco-scripts}"></th:block>
+
     <!-- JS DI RENDER ANTEPRIMA ED INTERFACCIA WEB -->
     <script>
 
         let tempBgImageBlobUrl = null;
-
-   
 
         function openRowPreview() {
             renderRowPreview('rowPreviewRenderArea');
@@ -543,11 +526,11 @@
             // 1. Parametri Blocco
             const blockType = document.getElementById('blockTypeSelect')?.value || '';
             const containerType = document.getElementById('containerTypeSelect')?.value || 'CONTAINER';
-            
+
             // Se in Fullscreen inline, forziamo al 100% la larghezza
             const isFullscreenBox = document.getElementById('inlineLivePreviewBox')?.classList.contains('fullscreen-preview');
-            const widthPercent = (targetAreaId === 'rowPreviewRenderArea' || isFullscreenBox) 
-                ? 100 
+            const widthPercent = (targetAreaId === 'rowPreviewRenderArea' || isFullscreenBox)
+                ? 100
                 : parseInt(document.getElementById('widthPercentInput')?.value || '100', 10);
 
             // Normalizzazione altezza
@@ -572,29 +555,72 @@
             const isRemovingBg = removeBgCheckbox && removeBgCheckbox.checked;
 
             let effectiveBgImageUrl = '';
+
             if (!isRemovingBg) {
+
                 if (typeof tempBgImageBlobUrl !== 'undefined' && tempBgImageBlobUrl) {
                     effectiveBgImageUrl = tempBgImageBlobUrl;
+
                 } else {
+
                     const existingUrlInput = document.getElementById('backgroundImageUrl');
-                    effectiveBgImageUrl = existingUrlInput ? existingUrlInput.value.trim() : '';
+
+                    effectiveBgImageUrl = existingUrlInput
+                        ? existingUrlInput.value.trim()
+                        : '';
                 }
             }
-            const hasBgImage = Boolean(effectiveBgImageUrl && effectiveBgImageUrl.length > 0);
 
-            const bgImageOpacity = parseInt(document.getElementById('bgImageOpacityRange')?.value || '100', 10);
-            const bgImageSaturation = parseInt(document.getElementById('bgImageSaturationRange')?.value || '100', 10);
-            const bgImageGrayscale = parseInt(document.getElementById('bgImageGrayscaleRange')?.value || '0', 10);
-            const bgImageBrightness = parseInt(document.getElementById('bgImageBrightnessRange')?.value || '100', 10);
+            const hasBgImage = Boolean(
+                effectiveBgImageUrl &&
+                effectiveBgImageUrl.length > 0
+            );
+
+            const bgImageOpacity =
+                parseInt(
+                    document.getElementById('bgImageOpacityRange')?.value || '100',
+                    10
+                );
+
+            const bgImageSaturation =
+                parseInt(
+                    document.getElementById('bgImageSaturationRange')?.value || '100',
+                    10
+                );
+
+            const bgImageGrayscale =
+                parseInt(
+                    document.getElementById('bgImageGrayscaleRange')?.value || '0',
+                    10
+                );
+
+            const bgImageBrightness =
+                parseInt(
+                    document.getElementById('bgImageBrightnessRange')?.value || '100',
+                    10
+                );
 
             // 3. Stili bordi e pulsanti
-            const borderStyle = document.querySelector('[name="borderStyle"]')?.value || 'NONE';
-            const borderColor = document.getElementById('borderColorInput')?.value || '#334155';
-            const buttonBackgroundColor = document.getElementById('buttonBackgroundColorInput')?.value || '#00dc82';
-            const buttonTextColor = document.getElementById('buttonTextColorInput')?.value || '#0f172a';
-            const buttonRadiusStyle = document.querySelector('[name="buttonRadiusStyle"]')?.value || 'ROUNDED';
-            const cardRadiusStyle = document.querySelector('[name="cardRadiusStyle"]')?.value || 'ROUNDED';
-            const carouselRadiusStyle = document.querySelector('[name="carouselRadiusStyle"]')?.value || 'ROUNDED';
+            const borderStyle =
+                document.querySelector('[name="borderStyle"]')?.value || 'NONE';
+
+            const borderColor =
+                document.getElementById('borderColorInput')?.value || '#334155';
+
+            const buttonBackgroundColor =
+                document.getElementById('buttonBackgroundColorInput')?.value || '#00dc82';
+
+            const buttonTextColor =
+                document.getElementById('buttonTextColorInput')?.value || '#0f172a';
+
+            const buttonRadiusStyle =
+                document.querySelector('[name="buttonRadiusStyle"]')?.value || 'ROUNDED';
+
+            const cardRadiusStyle =
+                document.querySelector('[name="cardRadiusStyle"]')?.value || 'ROUNDED';
+
+            const carouselRadiusStyle =
+                document.querySelector('[name="carouselRadiusStyle"]')?.value || 'ROUNDED';
 
             const borderMap = {
                 NONE: 'none',
@@ -604,13 +630,22 @@
                 DASHED: `2px dashed ${borderColor}`,
                 DOTTED: `2px dotted ${borderColor}`
             };
+
             const cardRadiusMap = {
                 ROUNDED: '1.25rem',
                 SQUARED: '0',
                 TOP_ROUNDED: '1.25rem 1.25rem 0 0'
             };
-            const carouselRadius = carouselRadiusStyle === 'SQUARED' ? '0' : '1.5rem';
-            const buttonRadius = buttonRadiusStyle === 'SQUARED' ? '0' : '999px';
+
+            const carouselRadius =
+                carouselRadiusStyle === 'SQUARED'
+                    ? '0'
+                    : '1.5rem';
+
+            const buttonRadius =
+                buttonRadiusStyle === 'SQUARED'
+                    ? '0'
+                    : '999px';
 
             // 4. Mappatura Container Bootstrap fedele all'index
             const containerClasses = {
@@ -622,41 +657,70 @@
                 CONTAINER_XL: 'container-xl',
                 CONTAINER_XXL: 'container-xxl'
             };
-            
-            // In fullscreen forziamo il container fluid per occupare tutto lo schermo
-            const chosenContainerClass = (targetAreaId === 'rowPreviewRenderArea' || isFullscreenBox) 
-                ? 'container-fluid' 
-                : (containerClasses[containerType] || 'container');
+
+            // In fullscreen forziamo il container fluid
+            const chosenContainerClass =
+                (targetAreaId === 'rowPreviewRenderArea' || isFullscreenBox)
+                    ? 'container-fluid'
+                    : (containerClasses[containerType] || 'container');
 
             // 5. Dimensioni Card & Carosello
-            const cardsPerRow = document.querySelector('[name="cardsPerRow"]')?.value || '3';
-            const cardImgHeight = document.getElementById('customCardImageHeightInput')?.value
-                ? document.getElementById('customCardImageHeightInput').value + 'px'
-                : (document.querySelector('[name="cardImageHeight"]')?.value || '280px');
-            const cardMaxWidth = document.getElementById('customCardMaxWidthInput')?.value
-                ? document.getElementById('customCardMaxWidthInput').value + 'px'
-                : 'none';
-            const cardSpacing = document.getElementById('cardSpacingInput')?.value || '4';
+            const cardsPerRow =
+                document.querySelector('[name="cardsPerRow"]')?.value || '3';
 
-            const carouselHeight = document.getElementById('customCarouselHeightInput')?.value
-                ? document.getElementById('customCarouselHeightInput').value + 'px'
-                : (document.querySelector('[name="carouselSlideHeight"]')?.value || '500px');
-            const carouselMaxWidth = document.getElementById('customCarouselWidthInput')?.value || '100%';
+            const cardImgHeight =
+                document.getElementById('customCardImageHeightInput')?.value
+                    ? document.getElementById('customCardImageHeightInput').value + 'px'
+                    : (
+                        document.querySelector('[name="cardImageHeight"]')?.value
+                        || '280px'
+                    );
 
-            const multiItemWidth = document.getElementById('customMultiWidthInput')?.value || (document.querySelector('[name="multiItemWidth"]')?.value || '390');
-            const multiItemHeight = document.getElementById('customMultiHeightInput')?.value || Math.round(multiItemWidth * 0.66);
+            const cardMaxWidth =
+                document.getElementById('customCardMaxWidthInput')?.value
+                    ? document.getElementById('customCardMaxWidthInput').value + 'px'
+                    : 'none';
+
+            const cardSpacing =
+                document.getElementById('cardSpacingInput')?.value || '4';
+
+            const carouselHeight =
+                document.getElementById('customCarouselHeightInput')?.value
+                    ? document.getElementById('customCarouselHeightInput').value + 'px'
+                    : (
+                        document.querySelector('[name="carouselSlideHeight"]')?.value
+                        || '500px'
+                    );
+
+            const carouselMaxWidth =
+                document.getElementById('customCarouselWidthInput')?.value || '100%';
+
+            const multiItemWidth =
+                document.getElementById('customMultiWidthInput')?.value
+                    || (
+                        document.querySelector('[name="multiItemWidth"]')?.value
+                        || '390'
+                    );
+
+            const multiItemHeight =
+                document.getElementById('customMultiHeightInput')?.value
+                    || Math.round(multiItemWidth * 0.66);
 
             // Costruzione stili del container esterno
             const blockContainerStyles = [
                 `height: ${customHeight}`,
                 `background-color: ${bgColor}`,
                 `border: ${borderMap[borderStyle] || 'none'}`,
-                hasBgImage ? `--block-background-image: url('${effectiveBgImageUrl}')` : '',
+                hasBgImage
+                    ? `--block-background-image: url('${effectiveBgImageUrl}')`
+                    : '',
                 `--block-background-opacity: ${hasBgImage ? (bgImageOpacity / 100) : 0}`,
                 `--block-background-saturation: ${bgImageSaturation / 100}`,
                 `--block-background-grayscale: ${bgImageGrayscale / 100}`,
                 `--block-background-brightness: ${bgImageBrightness / 100}`
-            ].filter(Boolean).join('; ');
+            ]
+                .filter(Boolean)
+                .join('; ');
 
             const innerWidthStyle = `width: ${widthPercent}%;`;
 
@@ -668,25 +732,59 @@
             // CARDS
             // -------------------------------------------------------------
             if (blockType === 'CARDS') {
-                const colClass = cardsPerRow == '2' ? 'col-12 col-md-6 col-lg-6' : (cardsPerRow == '4' ? 'col-12 col-md-6 col-lg-3' : 'col-12 col-md-6 col-lg-4');
-                const cards = document.querySelectorAll('.existing-item-card');
 
-                htmlOutput += `<div class="mx-auto w-100" style="${innerWidthStyle}">`;
-                htmlOutput += `<div class="row g-${cardSpacing} justify-content-between align-items-stretch">`;
+                const colClass =
+                    cardsPerRow == '2'
+                        ? 'col-12 col-md-6 col-lg-6'
+                        : (
+                            cardsPerRow == '4'
+                                ? 'col-12 col-md-6 col-lg-3'
+                                : 'col-12 col-md-6 col-lg-4'
+                        );
+
+                const cards =
+                    document.querySelectorAll('.existing-item-card');
+
+                htmlOutput +=
+                    `<div class="mx-auto w-100" style="${innerWidthStyle}">`;
+
+                htmlOutput +=
+                    `<div class="row g-${cardSpacing} justify-content-between align-items-stretch">`;
 
                 if (cards.length === 0) {
-                    htmlOutput += `<div class="col-12 text-center text-muted py-5"><i class="bi bi-grid-3x3-gap fs-1 d-block mb-2 text-success"></i>Nessuna Card inserita finora.</div>`;
-                } else {
-                    cards.forEach(card => {
-                        const title = card.querySelector('.item-title-target')?.innerHTML || 'Titolo Card';
-                        const subtitle = card.querySelector('.item-subtitle-target')?.innerHTML || '';
-                        const content = card.querySelector('.item-content-target')?.innerHTML || '';
-                        const img = card.querySelector('.item-img-target')?.getAttribute('src') || '';
-                        const btn = card.querySelector('.item-btn-target');
 
-                        // FIX COLORE CARD: Estragga lo sfondo specifico della singola card
-                        let cardBgColor = card.getAttribute('data-card-bg') 
-                            || card.style.backgroundColor 
+                    htmlOutput += `
+                    <div class="col-12 text-center text-muted py-5">
+                        <i class="bi bi-grid-3x3-gap fs-1 d-block mb-2 text-success"></i>
+                        Nessuna Card inserita finora.
+                    </div>`;
+
+                } else {
+
+                    cards.forEach(card => {
+
+                        const title =
+                            card.querySelector('.item-title-target')?.innerHTML
+                            || 'Titolo Card';
+
+                        const subtitle =
+                            card.querySelector('.item-subtitle-target')?.innerHTML
+                            || '';
+
+                        const content =
+                            card.querySelector('.item-content-target')?.innerHTML
+                            || '';
+
+                        const img =
+                            card.querySelector('.item-img-target')?.getAttribute('src')
+                            || '';
+
+                        const btn =
+                            card.querySelector('.item-btn-target');
+
+                        let cardBgColor =
+                            card.getAttribute('data-card-bg')
+                            || card.style.backgroundColor
                             || card.querySelector('[data-card-bg]')?.getAttribute('data-card-bg')
                             || '#0f172a';
 
@@ -694,307 +792,815 @@
                     <div class="${colClass} d-flex">
                         <div class="card card-custom w-100 d-flex flex-column overflow-hidden shadow border-0 text-white" 
                              style="background-color: ${cardBgColor} !important; border-radius:${cardRadiusMap[cardRadiusStyle] || '1.25rem'}; max-width: ${cardMaxWidth};">
+
                             ${img ? `
                             <div class="card-img-wrapper" style="overflow:hidden; border-radius:${cardRadiusStyle === 'SQUARED' ? '0' : '1.25rem 1.25rem 0 0'};">
-                                <img src="${img}" class="card-img-top card-img-responsive" style="height:${cardImgHeight}; object-fit:cover; width:100%;">
+                                <img src="${img}"
+                                     class="card-img-top card-img-responsive"
+                                     style="height:${cardImgHeight}; object-fit:cover; width:100%;">
                             </div>` : ''}
+
                             <div class="card-body p-4 d-flex flex-column">
-                                <h4 class="card-title fw-bold mb-2 text-white">${title}</h4>
-                                ${subtitle ? `<h6 class="card-subtitle mb-3 text-success opacity-75 fw-semibold">${subtitle}</h6>` : ''}
-                                <div class="card-text flex-grow-1 text-light opacity-75 small">${content}</div>
+
+                                <h4 class="card-title fw-bold mb-2 text-white">
+                                    ${title}
+                                </h4>
+
+                                ${subtitle ? `
+                                <h6 class="card-subtitle mb-3 text-success opacity-75 fw-semibold">
+                                    ${subtitle}
+                                </h6>` : ''}
+
+                                <div class="card-text flex-grow-1 text-light opacity-75 small">
+                                    ${content}
+                                </div>
+
                                 ${btn ? `
                                 <div class="mt-4 pt-2">
-                                    <span class="btn btn-sm px-4 py-2 fw-semibold" style="background:${buttonBackgroundColor}; border-color:${buttonBackgroundColor}; color:${buttonTextColor}; border-radius:${buttonRadius};">
-                                        ${btn.innerText} <i class="bi bi-arrow-right ms-1"></i>
+                                    <span class="btn btn-sm px-4 py-2 fw-semibold"
+                                          style="background:${buttonBackgroundColor};
+                                                 border-color:${buttonBackgroundColor};
+                                                 color:${buttonTextColor};
+                                                 border-radius:${buttonRadius};">
+                                        ${btn.innerText}
+                                        <i class="bi bi-arrow-right ms-1"></i>
                                     </span>
                                 </div>` : ''}
+
                             </div>
                         </div>
                     </div>`;
                     });
                 }
+
                 htmlOutput += `</div></div>`;
 
-                // -------------------------------------------------------------
-                // CAROUSEL
-                // -------------------------------------------------------------
+            // -------------------------------------------------------------
+            // CAROUSEL
+            // -------------------------------------------------------------
             } else if (blockType === 'CAROUSEL') {
-                const isMulti = document.getElementById("carouselTypeMulti")?.checked;
-                const slides = document.querySelectorAll('.existing-item-card');
+
+                const isMulti =
+                    document.getElementById("carouselTypeMulti")?.checked;
+
+                const slides =
+                    document.querySelectorAll('.existing-item-card');
 
                 if (isMulti) {
-                    htmlOutput += `<div class="preview-marquee-container py-3 mx-auto" style="${innerWidthStyle}">`;
+
+                    htmlOutput += `
+                    <div class="preview-marquee-container py-3 mx-auto"
+                         style="${innerWidthStyle}">`;
+
                     if (slides.length === 0) {
-                        htmlOutput += `<div class="text-center text-muted w-100 py-4"><i class="bi bi-images fs-1 d-block mb-2 text-info"></i>Nessuna immagine nel nastro.</div>`;
+
+                        htmlOutput += `
+                        <div class="text-center text-muted w-100 py-4">
+                            <i class="bi bi-images fs-1 d-block mb-2 text-info"></i>
+                            Nessuna immagine nel nastro.
+                        </div>`;
+
                     } else {
+
                         let itemsMarkup = '';
+
                         slides.forEach(slide => {
-                            const img = slide.querySelector('.item-img-target')?.getAttribute('src') || '';
+
+                            const img =
+                                slide.querySelector('.item-img-target')
+                                    ?.getAttribute('src') || '';
+
                             itemsMarkup += `
-                        <div class="flex-shrink-0 rounded-4 overflow-hidden shadow" style="width: ${multiItemWidth}px; height: ${multiItemHeight}px;">
-                            ${img ? `<img src="${img}" style="width:100%; height:100%; object-fit:cover;">` : '<div class="h-100 bg-secondary d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image fs-1"></i></div>'}
+                        <div class="flex-shrink-0 rounded-4 overflow-hidden shadow"
+                             style="width: ${multiItemWidth}px; height: ${multiItemHeight}px;">
+
+                            ${img
+                                    ? `<img src="${img}"
+                                            style="width:100%; height:100%; object-fit:cover;">`
+                                    : `<div class="h-100 bg-secondary d-flex align-items-center justify-content-center text-muted">
+                                            <i class="bi bi-image fs-1"></i>
+                                       </div>`
+                                }
+
                         </div>`;
                         });
 
                         htmlOutput += `
                     <div class="preview-marquee-track">
-                        <div class="preview-marquee-group">${itemsMarkup}</div>
-                        <div class="preview-marquee-group" aria-hidden="true">${itemsMarkup}</div>
-                    </div>`;
-                    }
-                    htmlOutput += `</div>`;
-                } else {
-                    htmlOutput += `<div class="carousel slide rounded overflow-hidden mx-auto shadow position-relative" style="max-width: ${carouselMaxWidth}; border-radius: ${carouselRadius}; ${innerWidthStyle}">`;
-                    if (slides.length === 0) {
-                        htmlOutput += `<div class="text-center text-muted py-5" style="height:${carouselHeight}; background:rgba(0,0,0,0.3); display:flex; flex-direction:column; justify-content:center; align-items:center;"><i class="bi bi-aspect-ratio fs-1 mb-2 text-success"></i>Nessuna slide inserita nel carosello Hero.</div>`;
-                    } else {
-                        const firstSlide = slides[0];
-                        const title = firstSlide.querySelector('.item-title-target')?.innerHTML || 'Titolo Slide';
-                        const content = firstSlide.querySelector('.item-content-target')?.innerHTML || '';
-                        const img = firstSlide.querySelector('.item-img-target')?.getAttribute('src') || 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80';
-                        const btn = firstSlide.querySelector('.item-btn-target');
+                        <div class="preview-marquee-group">
+                            ${itemsMarkup}
+                        </div>
 
-                        htmlOutput += `
-                    <div class="position-relative" style="height:${carouselHeight};">
-                        <img src="${img}" style="width:100%; height:100%; object-fit:cover;">
-                        <div class="position-absolute bottom-0 start-0 p-4 w-100" style="background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);">
-                            <h2 class="fw-bold text-white mb-2">${title}</h2>
-                            <div class="text-light opacity-90 small mb-3">${content}</div>
-                            ${btn ? `<span class="btn px-4 py-2 fw-semibold" style="background:${buttonBackgroundColor}; border-color:${buttonBackgroundColor}; color:${buttonTextColor}; border-radius:${buttonRadius};">${btn.innerText} <i class="bi bi-arrow-right ms-1"></i></span>` : ''}
+                        <div class="preview-marquee-group" aria-hidden="true">
+                            ${itemsMarkup}
                         </div>
                     </div>`;
                     }
+
+                    htmlOutput += `</div>`;
+
+                } else {
+
+                    htmlOutput += `
+                    <div class="carousel slide rounded overflow-hidden mx-auto shadow position-relative"
+                         style="max-width: ${carouselMaxWidth};
+                                border-radius: ${carouselRadius};
+                                ${innerWidthStyle}">`;
+
+                    if (slides.length === 0) {
+
+                        htmlOutput += `
+                        <div class="text-center text-muted py-5"
+                             style="height:${carouselHeight};
+                                    background:rgba(0,0,0,0.3);
+                                    display:flex;
+                                    flex-direction:column;
+                                    justify-content:center;
+                                    align-items:center;">
+
+                            <i class="bi bi-aspect-ratio fs-1 mb-2 text-success"></i>
+                            Nessuna slide inserita nel carosello Hero.
+
+                        </div>`;
+
+                    } else {
+
+                        const firstSlide = slides[0];
+
+                        const title =
+                            firstSlide.querySelector('.item-title-target')?.innerHTML
+                            || 'Titolo Slide';
+
+                        const content =
+                            firstSlide.querySelector('.item-content-target')?.innerHTML
+                            || '';
+
+                        const img =
+                            firstSlide.querySelector('.item-img-target')?.getAttribute('src')
+                            || 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80';
+
+                        const btn =
+                            firstSlide.querySelector('.item-btn-target');
+
+                        htmlOutput += `
+                    <div class="position-relative"
+                         style="height:${carouselHeight};">
+
+                        <img src="${img}"
+                             style="width:100%; height:100%; object-fit:cover;">
+
+                        <div class="position-absolute bottom-0 start-0 p-4 w-100"
+                             style="background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);">
+
+                            <h2 class="fw-bold text-white mb-2">
+                                ${title}
+                            </h2>
+
+                            <div class="text-light opacity-90 small mb-3">
+                                ${content}
+                            </div>
+
+                            ${btn ? `
+                            <span class="btn px-4 py-2 fw-semibold"
+                                  style="background:${buttonBackgroundColor};
+                                         border-color:${buttonBackgroundColor};
+                                         color:${buttonTextColor};
+                                         border-radius:${buttonRadius};">
+                                ${btn.innerText}
+                                <i class="bi bi-arrow-right ms-1"></i>
+                            </span>` : ''}
+
+                        </div>
+                    </div>`;
+                    }
+
                     htmlOutput += `</div>`;
                 }
 
-                // -------------------------------------------------------------
-                // JUMBOTRON / CONTENUTO TESTUALE
-                // -------------------------------------------------------------
+            // -------------------------------------------------------------
+            // JUMBOTRON / CONTENUTO TESTUALE
+            // -------------------------------------------------------------
             } else {
-                let contentHtml = (window.tinymce && tinymce.get('mainContentHtml'))
-                    ? tinymce.get('mainContentHtml').getContent()
-                    : (document.getElementById('mainContentHtml')?.value || '');
+
+                let contentHtml =
+                    (window.tinymce && tinymce.get('mainContentHtml'))
+                        ? tinymce.get('mainContentHtml').getContent()
+                        : (document.getElementById('mainContentHtml')?.value || '');
 
                 htmlOutput += `
-            <div class="p-4 p-md-5 custom-jumbotron mx-auto" style="${innerWidthStyle}">
-                ${imageUrl ? `<div class="text-center mb-4"><img src="${imageUrl}" class="img-fluid rounded" style="max-height: 350px;"></div>` : ''}
+            <div class="p-4 p-md-5 custom-jumbotron mx-auto"
+                 style="${innerWidthStyle}">
+
+                ${imageUrl ? `
+                <div class="text-center mb-4">
+                    <img src="${imageUrl}"
+                         class="img-fluid rounded"
+                         style="max-height: 350px;">
+                </div>` : ''}
+
                 <div class="container-fluid py-2 tinymce-content">
-                    ${contentHtml || '<span class="text-muted fst-italic">Nessun contenuto inserito nell\'editor.</span>'}
+                    ${contentHtml
+                        || '<span class="text-muted fst-italic">Nessun contenuto inserito nell\'editor.</span>'
+                    }
                 </div>
+
             </div>`;
             }
 
             htmlOutput += `</div>`;
+
             renderArea.innerHTML = htmlOutput;
         }
 
         function renderRowPreviewIfOpen() {
+
             renderRowPreview('inlineRowPreviewRenderArea');
-            const modalEl = document.getElementById('rowPreviewModal');
+
+            const modalEl =
+                document.getElementById('rowPreviewModal');
+
             if (modalEl && modalEl.classList.contains('show')) {
                 renderRowPreview('rowPreviewRenderArea');
             }
         }
 
         function showSaveBlockModal() {
-            const modal = new bootstrap.Modal(document.getElementById('saveBlockModal'));
+
+            const modal =
+                new bootstrap.Modal(
+                    document.getElementById('saveBlockModal')
+                );
+
             modal.show();
         }
 
         function showSaveItemModal() {
-            const modal = new bootstrap.Modal(document.getElementById('saveItemModal'));
+
+            const modal =
+                new bootstrap.Modal(
+                    document.getElementById('saveItemModal')
+                );
+
             modal.show();
         }
 
         function confirmDeleteItem(deleteUrl) {
-            document.getElementById('btnConfirmDeleteItem').href = deleteUrl;
-            const modal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
+
+            document.getElementById('btnConfirmDeleteItem').href =
+                deleteUrl;
+
+            const modal =
+                new bootstrap.Modal(
+                    document.getElementById('deleteItemModal')
+                );
+
             modal.show();
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            const blockTypeSelect = document.getElementById("blockTypeSelect");
-            const mainImageUpload = document.getElementById("mainImageUpload");
-            const mainEditorSection = document.getElementById("mainEditorSection");
-            const itemsSection = document.getElementById("itemsSection");
-            const itemFormContainerSection = document.getElementById("itemFormContainerSection");
-            const itemsSectionTitle = document.getElementById("itemsSectionTitle");
-            const itemsSectionDescription = document.getElementById("itemsSectionDescription");
-            const addItemTitle = document.getElementById("addItemTitle");
-            const itemTitleLabel = document.getElementById("itemTitleLabel");
-            const itemImageLabel = document.getElementById("itemImageLabel");
-            const addItemButtonText = document.getElementById("addItemButtonText");
-            const existingItemsTitle = document.getElementById("existingItemsTitle");
-            const carouselTypeWrapper = document.getElementById("carouselTypeWrapper");
 
-            const cardsDimensionsWrapper = document.getElementById("cardsDimensionsWrapper");
-            const carouselDimensionsWrapper = document.getElementById("carouselDimensionsWrapper");
-            const standardHeightOption = document.getElementById("standardHeightOption");
-            const multiWidthOption = document.getElementById("multiWidthOption");
+            const blockTypeSelect =
+                document.getElementById("blockTypeSelect");
 
-            if (typeof initBgColor === 'function') initBgColor();
-            if (typeof initItemBgColor === 'function') initItemBgColor();
+            const mainImageUpload =
+                document.getElementById("mainImageUpload");
+
+            const mainEditorSection =
+                document.getElementById("mainEditorSection");
+
+            const itemsSection =
+                document.getElementById("itemsSection");
+
+            const itemFormContainerSection =
+                document.getElementById("itemFormContainerSection");
+
+            const itemsSectionTitle =
+                document.getElementById("itemsSectionTitle");
+
+            const itemsSectionDescription =
+                document.getElementById("itemsSectionDescription");
+
+            const addItemTitle =
+                document.getElementById("addItemTitle");
+
+            const itemTitleLabel =
+                document.getElementById("itemTitleLabel");
+
+            const itemImageLabel =
+                document.getElementById("itemImageLabel");
+
+            const addItemButtonText =
+                document.getElementById("addItemButtonText");
+
+            const existingItemsTitle =
+                document.getElementById("existingItemsTitle");
+
+            const carouselTypeWrapper =
+                document.getElementById("carouselTypeWrapper");
+
+            const cardsDimensionsWrapper =
+                document.getElementById("cardsDimensionsWrapper");
+
+            const carouselDimensionsWrapper =
+                document.getElementById("carouselDimensionsWrapper");
+
+            const standardHeightOption =
+                document.getElementById("standardHeightOption");
+
+            const multiWidthOption =
+                document.getElementById("multiWidthOption");
+
+            if (typeof initBgColor === 'function')
+                initBgColor();
+
+            if (typeof initItemBgColor === 'function')
+                initItemBgColor();
+
             updateBackgroundColorControls();
             updateBackgroundImageControls();
 
-            const carouselRadios = document.querySelectorAll('input[name="carouselType"]');
-            carouselRadios.forEach(radio => radio.addEventListener("change", aggiornaInterfaccia));
+            const carouselRadios =
+                document.querySelectorAll(
+                    'input[name="carouselType"]'
+                );
+
+            carouselRadios.forEach(radio =>
+                radio.addEventListener(
+                    "change",
+                    aggiornaInterfaccia
+                )
+            );
 
             if (blockTypeSelect) {
-                blockTypeSelect.addEventListener("change", aggiornaInterfaccia);
+
+                blockTypeSelect.addEventListener(
+                    "change",
+                    aggiornaInterfaccia
+                );
+
                 aggiornaInterfaccia();
             }
 
             function aggiornaInterfaccia() {
-                const tipo = blockTypeSelect ? blockTypeSelect.value : "";
-                const isCards = tipo === "CARDS";
-                const isCarousel = tipo === "CAROUSEL";
-                const isMultiCarousel = isCarousel && (document.getElementById("carouselTypeMulti")?.checked || false);
 
-                const cardCarouselAppearanceWrapper = document.getElementById("cardCarouselAppearanceWrapper");
-                const cardRadiusOption = document.getElementById("cardRadiusOption");
-                const carouselRadiusOption = document.getElementById("carouselRadiusOption");
+                const tipo =
+                    blockTypeSelect
+                        ? blockTypeSelect.value
+                        : "";
 
-                if (cardCarouselAppearanceWrapper) cardCarouselAppearanceWrapper.style.display = (isCards || isCarousel) ? "" : "none";
-                if (cardRadiusOption) cardRadiusOption.style.display = isCards ? "" : "none";
-                if (carouselRadiusOption) carouselRadiusOption.style.display = isCarousel ? "" : "none";
+                const isCards =
+                    tipo === "CARDS";
 
-                if (carouselTypeWrapper) carouselTypeWrapper.style.display = isCarousel ? "" : "none";
-                if (cardsDimensionsWrapper) cardsDimensionsWrapper.style.display = isCards ? "" : "none";
-                if (carouselDimensionsWrapper) carouselDimensionsWrapper.style.display = isCarousel ? "" : "none";
+                const isCarousel =
+                    tipo === "CAROUSEL";
 
-                if (standardHeightOption) standardHeightOption.style.display = (isCarousel && !isMultiCarousel) ? "" : "none";
-                if (multiWidthOption) multiWidthOption.style.display = isMultiCarousel ? "" : "none";
+                const isMultiCarousel =
+                    isCarousel &&
+                    (
+                        document.getElementById("carouselTypeMulti")?.checked
+                        || false
+                    );
 
-                const customDimensionsWrapper = document.getElementById("customDimensionsWrapper");
-                if (customDimensionsWrapper) customDimensionsWrapper.style.display = (isCards || isCarousel) ? "" : "none";
+                const cardCarouselAppearanceWrapper =
+                    document.getElementById(
+                        "cardCarouselAppearanceWrapper"
+                    );
 
-                document.querySelectorAll(".custom-card-dim").forEach(el => el.style.display = isCards ? "" : "none");
-                document.querySelectorAll(".custom-standard-carousel").forEach(el => el.style.display = (isCarousel && !isMultiCarousel) ? "" : "none");
-                document.querySelectorAll(".custom-multi-carousel").forEach(el => el.style.display = isMultiCarousel ? "" : "none");
+                const cardRadiusOption =
+                    document.getElementById(
+                        "cardRadiusOption"
+                    );
 
-                const mostraImmaginePrincipale = tipo === "JUMBO_DEMO_1" || tipo === "JUMBO_DEMO_2";
-                if (mainImageUpload) mainImageUpload.style.display = mostraImmaginePrincipale ? "" : "none";
+                const carouselRadiusOption =
+                    document.getElementById(
+                        "carouselRadiusOption"
+                    );
 
-                const isItemsBlock = isCards || isCarousel;
-                if (mainEditorSection) mainEditorSection.style.display = isItemsBlock ? "none" : "";
-                if (itemsSection) itemsSection.style.display = isItemsBlock ? "" : "none";
-                if (itemFormContainerSection) itemFormContainerSection.style.display = isItemsBlock ? "" : "none";
+                if (cardCarouselAppearanceWrapper)
+                    cardCarouselAppearanceWrapper.style.display =
+                        (isCards || isCarousel)
+                            ? ""
+                            : "none";
+
+                if (cardRadiusOption)
+                    cardRadiusOption.style.display =
+                        isCards
+                            ? ""
+                            : "none";
+
+                if (carouselRadiusOption)
+                    carouselRadiusOption.style.display =
+                        isCarousel
+                            ? ""
+                            : "none";
+
+                if (carouselTypeWrapper)
+                    carouselTypeWrapper.style.display =
+                        isCarousel
+                            ? ""
+                            : "none";
+
+                if (cardsDimensionsWrapper)
+                    cardsDimensionsWrapper.style.display =
+                        isCards
+                            ? ""
+                            : "none";
+
+                if (carouselDimensionsWrapper)
+                    carouselDimensionsWrapper.style.display =
+                        isCarousel
+                            ? ""
+                            : "none";
+
+                if (standardHeightOption)
+                    standardHeightOption.style.display =
+                        (isCarousel && !isMultiCarousel)
+                            ? ""
+                            : "none";
+
+                if (multiWidthOption)
+                    multiWidthOption.style.display =
+                        isMultiCarousel
+                            ? ""
+                            : "none";
+
+                const customDimensionsWrapper =
+                    document.getElementById(
+                        "customDimensionsWrapper"
+                    );
+
+                if (customDimensionsWrapper)
+                    customDimensionsWrapper.style.display =
+                        (isCards || isCarousel)
+                            ? ""
+                            : "none";
+
+                document
+                    .querySelectorAll(".custom-card-dim")
+                    .forEach(el =>
+                        el.style.display =
+                            isCards
+                                ? ""
+                                : "none"
+                    );
+
+                document
+                    .querySelectorAll(".custom-standard-carousel")
+                    .forEach(el =>
+                        el.style.display =
+                            (isCarousel && !isMultiCarousel)
+                                ? ""
+                                : "none"
+                    );
+
+                document
+                    .querySelectorAll(".custom-multi-carousel")
+                    .forEach(el =>
+                        el.style.display =
+                            isMultiCarousel
+                                ? ""
+                                : "none"
+                    );
+
+                const mostraImmaginePrincipale =
+                    tipo === "JUMBO_DEMO_1"
+                    || tipo === "JUMBO_DEMO_2";
+
+                if (mainImageUpload)
+                    mainImageUpload.style.display =
+                        mostraImmaginePrincipale
+                            ? ""
+                            : "none";
+
+                const isItemsBlock =
+                    isCards || isCarousel;
+
+                if (mainEditorSection)
+                    mainEditorSection.style.display =
+                        isItemsBlock
+                            ? "none"
+                            : "";
+
+                if (itemsSection)
+                    itemsSection.style.display =
+                        isItemsBlock
+                            ? ""
+                            : "none";
+
+                if (itemFormContainerSection)
+                    itemFormContainerSection.style.display =
+                        isItemsBlock
+                            ? ""
+                            : "none";
 
                 if (isCards) {
-                    if (itemsSectionTitle) itemsSectionTitle.textContent = "Gestione Griglia Cards";
-                    if (itemsSectionDescription) itemsSectionDescription.textContent = "Gestisci le Card che compongono questa riga.";
-                    if (addItemTitle && (!editingMode() || addItemTitle.textContent.trim() !== "Modifica Elemento")) addItemTitle.textContent = "Aggiungi Card";
-                    if (itemTitleLabel) itemTitleLabel.textContent = "Titolo Card";
-                    if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Card";
-                    if (addItemButtonText && !editingMode()) addItemButtonText.textContent = "Salva Card";
-                    if (existingItemsTitle) existingItemsTitle.textContent = "Card Esistenti";
+
+                    if (itemsSectionTitle)
+                        itemsSectionTitle.textContent =
+                            "Gestione Griglia Cards";
+
+                    if (itemsSectionDescription)
+                        itemsSectionDescription.textContent =
+                            "Gestisci le Card che compongono questa riga.";
+
+                    if (
+                        addItemTitle
+                        && (
+                            !editingMode()
+                            || addItemTitle.textContent.trim()
+                                !== "Modifica Elemento"
+                        )
+                    )
+                        addItemTitle.textContent =
+                            "Aggiungi Card";
+
+                    if (itemTitleLabel)
+                        itemTitleLabel.textContent =
+                            "Titolo Card";
+
+                    if (itemImageLabel)
+                        itemImageLabel.textContent =
+                            "Carica Immagine Card";
+
+                    if (
+                        addItemButtonText
+                        && !editingMode()
+                    )
+                        addItemButtonText.textContent =
+                            "Salva Card";
+
+                    if (existingItemsTitle)
+                        existingItemsTitle.textContent =
+                            "Card Esistenti";
                 }
 
                 if (isCarousel) {
-                    if (itemsSectionTitle) itemsSectionTitle.textContent = "Gestione Slide Carosello";
-                    if (itemsSectionDescription) itemsSectionDescription.textContent = "Gestisci le immagini e i testi che scorreranno.";
-                    if (addItemTitle && (!editingMode() || addItemTitle.textContent.trim() !== "Modifica Elemento")) addItemTitle.textContent = "Aggiungi Slide";
-                    if (itemTitleLabel) itemTitleLabel.textContent = "Titolo Slide";
-                    if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Slide";
-                    if (addItemButtonText && !editingMode()) addItemButtonText.textContent = "Salva Slide";
-                    if (existingItemsTitle) existingItemsTitle.textContent = "Slide Esistenti";
+
+                    if (itemsSectionTitle)
+                        itemsSectionTitle.textContent =
+                            "Gestione Slide Carosello";
+
+                    if (itemsSectionDescription)
+                        itemsSectionDescription.textContent =
+                            "Gestisci le immagini e i testi che scorreranno.";
+
+                    if (
+                        addItemTitle
+                        && (
+                            !editingMode()
+                            || addItemTitle.textContent.trim()
+                                !== "Modifica Elemento"
+                        )
+                    )
+                        addItemTitle.textContent =
+                            "Aggiungi Slide";
+
+                    if (itemTitleLabel)
+                        itemTitleLabel.textContent =
+                            "Titolo Slide";
+
+                    if (itemImageLabel)
+                        itemImageLabel.textContent =
+                            "Carica Immagine Slide";
+
+                    if (
+                        addItemButtonText
+                        && !editingMode()
+                    )
+                        addItemButtonText.textContent =
+                            "Salva Slide";
+
+                    if (existingItemsTitle)
+                        existingItemsTitle.textContent =
+                            "Slide Esistenti";
                 }
 
-                const itemTitleCol = document.getElementById("itemTitleCol");
-                const itemTitleInput = document.getElementById("itemTitleInput");
-                const itemImageCol = document.getElementById("itemImageCol");
-                const itemExtraFields = document.getElementById("itemExtraFields");
+                const itemTitleCol =
+                    document.getElementById("itemTitleCol");
+
+                const itemTitleInput =
+                    document.getElementById("itemTitleInput");
+
+                const itemImageCol =
+                    document.getElementById("itemImageCol");
+
+                const itemExtraFields =
+                    document.getElementById("itemExtraFields");
 
                 if (isMultiCarousel) {
-                    if (itemTitleCol) itemTitleCol.style.display = "none";
-                    if (itemExtraFields) itemExtraFields.style.display = "none";
-                    if (itemImageCol) itemImageCol.className = "col-12";
-                    if (itemImageLabel) itemImageLabel.textContent = "Carica Immagine Nastro";
-                    if (itemTitleInput) itemTitleInput.required = false;
+
+                    if (itemTitleCol)
+                        itemTitleCol.style.display = "none";
+
+                    if (itemExtraFields)
+                        itemExtraFields.style.display = "none";
+
+                    if (itemImageCol)
+                        itemImageCol.className = "col-12";
+
+                    if (itemImageLabel)
+                        itemImageLabel.textContent =
+                            "Carica Immagine Nastro";
+
+                    if (itemTitleInput)
+                        itemTitleInput.required = false;
+
                 } else {
-                    if (itemTitleCol) itemTitleCol.style.display = "";
-                    if (itemExtraFields) itemExtraFields.style.display = "";
-                    if (itemImageCol) itemImageCol.className = "col-md-6";
-                    if (itemTitleInput) itemTitleInput.required = true;
+
+                    if (itemTitleCol)
+                        itemTitleCol.style.display = "";
+
+                    if (itemExtraFields)
+                        itemExtraFields.style.display = "";
+
+                    if (itemImageCol)
+                        itemImageCol.className = "col-md-6";
+
+                    if (itemTitleInput)
+                        itemTitleInput.required = true;
                 }
 
                 renderRowPreviewIfOpen();
             }
 
-            document.querySelectorAll('input, select, textarea').forEach(el => {
-                el.addEventListener('input', renderRowPreviewIfOpen);
-                el.addEventListener('change', renderRowPreviewIfOpen);
-            });
+            document
+                .querySelectorAll('input, select, textarea')
+                .forEach(el => {
+
+                    el.addEventListener(
+                        'input',
+                        renderRowPreviewIfOpen
+                    );
+
+                    el.addEventListener(
+                        'change',
+                        renderRowPreviewIfOpen
+                    );
+                });
 
             function editingMode() {
-                const button = document.getElementById("addItemButtonText");
-                return button ? button.textContent.trim() === "Salva Modifiche Elemento" : false;
+
+                const button =
+                    document.getElementById(
+                        "addItemButtonText"
+                    );
+
+                return button
+                    ? button.textContent.trim()
+                        === "Salva Modifiche Elemento"
+                    : false;
             }
 
             renderRowPreviewIfOpen();
         });
 
         function updateBackgroundColorControls() {
-            const bgInput = document.getElementById("bgColorInput");
-            const bgPicker = document.getElementById("bgPicker");
-            const transparentSwitch = document.getElementById("isTransparentSwitch");
-            const opacityRange = document.getElementById("bgOpacityRange");
-            const backgroundImageUrl = document.getElementById("backgroundImageUrl");
-            const removeBackgroundImage = document.getElementById("removeBackgroundImage");
-            const backgroundImageFile = document.getElementById("backgroundImageFile");
 
-            const hasExistingBackgroundImage = backgroundImageUrl && backgroundImageUrl.value.trim() !== "";
-            const hasNewBackgroundImage = backgroundImageFile && backgroundImageFile.files && backgroundImageFile.files.length > 0;
-            const removingBackgroundImage = removeBackgroundImage && removeBackgroundImage.checked;
-            const backgroundImageActive = !removingBackgroundImage && (hasExistingBackgroundImage || hasNewBackgroundImage);
+            const bgInput =
+                document.getElementById("bgColorInput");
+
+            const bgPicker =
+                document.getElementById("bgPicker");
+
+            const transparentSwitch =
+                document.getElementById("isTransparentSwitch");
+
+            const opacityRange =
+                document.getElementById("bgOpacityRange");
+
+            const backgroundImageUrl =
+                document.getElementById("backgroundImageUrl");
+
+            const removeBackgroundImage =
+                document.getElementById("removeBackgroundImage");
+
+            const backgroundImageFile =
+                document.getElementById("backgroundImageFile");
+
+            const hasExistingBackgroundImage =
+                backgroundImageUrl
+                && backgroundImageUrl.value.trim() !== "";
+
+            const hasNewBackgroundImage =
+                backgroundImageFile
+                && backgroundImageFile.files
+                && backgroundImageFile.files.length > 0;
+
+            const removingBackgroundImage =
+                removeBackgroundImage
+                && removeBackgroundImage.checked;
+
+            const backgroundImageActive =
+                !removingBackgroundImage
+                && (
+                    hasExistingBackgroundImage
+                    || hasNewBackgroundImage
+                );
 
             if (backgroundImageActive) {
-                if (bgInput) bgInput.readOnly = true;
-                if (bgPicker) bgPicker.disabled = true;
-                if (transparentSwitch) transparentSwitch.disabled = true;
-                if (opacityRange) opacityRange.disabled = true;
+
+                if (bgInput)
+                    bgInput.readOnly = true;
+
+                if (bgPicker)
+                    bgPicker.disabled = true;
+
+                if (transparentSwitch)
+                    transparentSwitch.disabled = true;
+
+                if (opacityRange)
+                    opacityRange.disabled = true;
+
                 return;
             }
 
-            if (bgInput) { bgInput.disabled = false; bgInput.readOnly = false; }
-            if (bgPicker) bgPicker.disabled = false;
-            if (transparentSwitch) transparentSwitch.disabled = false;
-            if (opacityRange) opacityRange.disabled = false;
+            if (bgInput) {
+                bgInput.disabled = false;
+                bgInput.readOnly = false;
+            }
+
+            if (bgPicker)
+                bgPicker.disabled = false;
+
+            if (transparentSwitch)
+                transparentSwitch.disabled = false;
+
+            if (opacityRange)
+                opacityRange.disabled = false;
         }
 
         function handleBackgroundImageSelection(input) {
-            const preview = document.getElementById("newBackgroundImagePreview");
-            const previewImg = document.getElementById("newBackgroundImagePreviewImg");
 
-            if (input && input.files && input.files.length > 0) {
-                const file = input.files[0];
+            const preview =
+                document.getElementById(
+                    "newBackgroundImagePreview"
+                );
+
+            const previewImg =
+                document.getElementById(
+                    "newBackgroundImagePreviewImg"
+                );
+
+            if (
+                input
+                && input.files
+                && input.files.length > 0
+            ) {
+
+                const file =
+                    input.files[0];
+
                 if (tempBgImageBlobUrl) {
-                    URL.revokeObjectURL(tempBgImageBlobUrl);
+                    URL.revokeObjectURL(
+                        tempBgImageBlobUrl
+                    );
                 }
-                tempBgImageBlobUrl = URL.createObjectURL(file);
 
-                if (previewImg) {
-                    previewImg.src = tempBgImageBlobUrl;
-                }
-                if (preview) preview.style.display = "";
+                tempBgImageBlobUrl =
+                    URL.createObjectURL(file);
 
-                const removeBackgroundImage = document.getElementById("removeBackgroundImage");
-                if (removeBackgroundImage) {
-                    removeBackgroundImage.checked = false;
-                }
-                const currentPreview = document.getElementById("currentBackgroundImagePreview");
+                if (previewImg)
+                    previewImg.src =
+                        tempBgImageBlobUrl;
+
+                if (preview)
+                    preview.style.display = "";
+
+                const removeBackgroundImage =
+                    document.getElementById(
+                        "removeBackgroundImage"
+                    );
+
+                if (removeBackgroundImage)
+                    removeBackgroundImage.checked =
+                        false;
+
+                const currentPreview =
+                    document.getElementById(
+                        "currentBackgroundImagePreview"
+                    );
+
                 if (currentPreview) {
                     currentPreview.style.opacity = "1";
                     currentPreview.style.filter = "none";
                 }
+
             } else {
+
                 if (tempBgImageBlobUrl) {
-                    URL.revokeObjectURL(tempBgImageBlobUrl);
+
+                    URL.revokeObjectURL(
+                        tempBgImageBlobUrl
+                    );
+
                     tempBgImageBlobUrl = null;
                 }
-                if (preview) preview.style.display = "none";
-                if (previewImg) previewImg.src = "";
+
+                if (preview)
+                    preview.style.display = "none";
+
+                if (previewImg)
+                    previewImg.src = "";
             }
 
             updateBackgroundColorControls();
@@ -1003,18 +1609,39 @@
         }
 
         function clearSelectedBackgroundImage() {
-            const fileInput = document.getElementById("backgroundImageFile");
-            if (fileInput) fileInput.value = "";
+
+            const fileInput =
+                document.getElementById(
+                    "backgroundImageFile"
+                );
+
+            if (fileInput)
+                fileInput.value = "";
 
             if (tempBgImageBlobUrl) {
-                URL.revokeObjectURL(tempBgImageBlobUrl);
+
+                URL.revokeObjectURL(
+                    tempBgImageBlobUrl
+                );
+
                 tempBgImageBlobUrl = null;
             }
 
-            const preview = document.getElementById("newBackgroundImagePreview");
-            if (preview) preview.style.display = "none";
-            const previewImg = document.getElementById("newBackgroundImagePreviewImg");
-            if (previewImg) previewImg.src = "";
+            const preview =
+                document.getElementById(
+                    "newBackgroundImagePreview"
+                );
+
+            if (preview)
+                preview.style.display = "none";
+
+            const previewImg =
+                document.getElementById(
+                    "newBackgroundImagePreviewImg"
+                );
+
+            if (previewImg)
+                previewImg.src = "";
 
             updateBackgroundColorControls();
             updateBackgroundImageControls();
@@ -1022,24 +1649,55 @@
         }
 
         function toggleBackgroundImageRemoval() {
-            const removeBackgroundImage = document.getElementById("removeBackgroundImage");
-            const backgroundImageFile = document.getElementById("backgroundImageFile");
-            const currentPreview = document.getElementById("currentBackgroundImagePreview");
 
-            if (removeBackgroundImage && removeBackgroundImage.checked) {
-                if (backgroundImageFile) backgroundImageFile.value = "";
+            const removeBackgroundImage =
+                document.getElementById(
+                    "removeBackgroundImage"
+                );
+
+            const backgroundImageFile =
+                document.getElementById(
+                    "backgroundImageFile"
+                );
+
+            const currentPreview =
+                document.getElementById(
+                    "currentBackgroundImagePreview"
+                );
+
+            if (
+                removeBackgroundImage
+                && removeBackgroundImage.checked
+            ) {
+
+                if (backgroundImageFile)
+                    backgroundImageFile.value = "";
+
                 if (tempBgImageBlobUrl) {
-                    URL.revokeObjectURL(tempBgImageBlobUrl);
+
+                    URL.revokeObjectURL(
+                        tempBgImageBlobUrl
+                    );
+
                     tempBgImageBlobUrl = null;
                 }
-                const preview = document.getElementById("newBackgroundImagePreview");
-                if (preview) preview.style.display = "none";
+
+                const preview =
+                    document.getElementById(
+                        "newBackgroundImagePreview"
+                    );
+
+                if (preview)
+                    preview.style.display = "none";
 
                 if (currentPreview) {
                     currentPreview.style.opacity = "0.3";
-                    currentPreview.style.filter = "grayscale(100%)";
+                    currentPreview.style.filter =
+                        "grayscale(100%)";
                 }
+
             } else {
+
                 if (currentPreview) {
                     currentPreview.style.opacity = "1";
                     currentPreview.style.filter = "none";
@@ -1052,80 +1710,250 @@
         }
 
         function updateBackgroundImageControls() {
-            const fileInput = document.getElementById("backgroundImageFile");
-            const existingUrlInput = document.getElementById("backgroundImageUrl");
-            const controls = document.getElementById("backgroundImageControls");
-            const opacityRange = document.getElementById("bgImageOpacityRange");
-            const saturationRange = document.getElementById("bgImageSaturationRange");
-            const grayscaleRange = document.getElementById("bgImageGrayscaleRange");
-            const brightnessRange = document.getElementById("bgImageBrightnessRange");
 
-            const opacityValue = document.getElementById("bgImageOpacityValue");
-            const saturationValue = document.getElementById("bgImageSaturationValue");
-            const grayscaleValue = document.getElementById("bgImageGrayscaleValue");
-            const brightnessValue = document.getElementById("bgImageBrightnessValue");
+            const fileInput =
+                document.getElementById(
+                    "backgroundImageFile"
+                );
 
-            const hasNewFile = fileInput && fileInput.files && fileInput.files.length > 0;
-            const existingUrl = existingUrlInput ? existingUrlInput.value.trim() : "";
-            const removeImageInput = document.getElementById("removeBackgroundImage");
-            const removingImage = removeImageInput && removeImageInput.checked;
-            const hasImage = !removingImage && (hasNewFile || existingUrl !== "");
+            const existingUrlInput =
+                document.getElementById(
+                    "backgroundImageUrl"
+                );
 
-            if (controls) controls.style.display = hasImage ? "" : "none";
+            const controls =
+                document.getElementById(
+                    "backgroundImageControls"
+                );
 
-            const opacity = opacityRange ? parseInt(opacityRange.value || "100", 10) : 100;
-            const saturation = saturationRange ? parseInt(saturationRange.value || "100", 10) : 100;
-            const grayscale = grayscaleRange ? parseInt(grayscaleRange.value || "0", 10) : 0;
-            const brightness = brightnessRange ? parseInt(brightnessRange.value || "100", 10) : 100;
+            const opacityRange =
+                document.getElementById(
+                    "bgImageOpacityRange"
+                );
 
-            if (opacityValue) opacityValue.textContent = opacity + "%";
-            if (saturationValue) saturationValue.textContent = saturation + "%";
-            if (grayscaleValue) grayscaleValue.textContent = grayscale + "%";
-            if (brightnessValue) brightnessValue.textContent = brightness + "%";
+            const saturationRange =
+                document.getElementById(
+                    "bgImageSaturationRange"
+                );
+
+            const grayscaleRange =
+                document.getElementById(
+                    "bgImageGrayscaleRange"
+                );
+
+            const brightnessRange =
+                document.getElementById(
+                    "bgImageBrightnessRange"
+                );
+
+            const opacityValue =
+                document.getElementById(
+                    "bgImageOpacityValue"
+                );
+
+            const saturationValue =
+                document.getElementById(
+                    "bgImageSaturationValue"
+                );
+
+            const grayscaleValue =
+                document.getElementById(
+                    "bgImageGrayscaleValue"
+                );
+
+            const brightnessValue =
+                document.getElementById(
+                    "bgImageBrightnessValue"
+                );
+
+            const hasNewFile =
+                fileInput
+                && fileInput.files
+                && fileInput.files.length > 0;
+
+            const existingUrl =
+                existingUrlInput
+                    ? existingUrlInput.value.trim()
+                    : "";
+
+            const removeImageInput =
+                document.getElementById(
+                    "removeBackgroundImage"
+                );
+
+            const removingImage =
+                removeImageInput
+                && removeImageInput.checked;
+
+            const hasImage =
+                !removingImage
+                && (
+                    hasNewFile
+                    || existingUrl !== ""
+                );
+
+            if (controls)
+                controls.style.display =
+                    hasImage
+                        ? ""
+                        : "none";
+
+            const opacity =
+                opacityRange
+                    ? parseInt(
+                        opacityRange.value || "100",
+                        10
+                    )
+                    : 100;
+
+            const saturation =
+                saturationRange
+                    ? parseInt(
+                        saturationRange.value || "100",
+                        10
+                    )
+                    : 100;
+
+            const grayscale =
+                grayscaleRange
+                    ? parseInt(
+                        grayscaleRange.value || "0",
+                        10
+                    )
+                    : 0;
+
+            const brightness =
+                brightnessRange
+                    ? parseInt(
+                        brightnessRange.value || "100",
+                        10
+                    )
+                    : 100;
+
+            if (opacityValue)
+                opacityValue.textContent =
+                    opacity + "%";
+
+            if (saturationValue)
+                saturationValue.textContent =
+                    saturation + "%";
+
+            if (grayscaleValue)
+                grayscaleValue.textContent =
+                    grayscale + "%";
+
+            if (brightnessValue)
+                brightnessValue.textContent =
+                    brightness + "%";
 
             renderRowPreviewIfOpen();
         }
 
         function resetBackgroundImageControls() {
-            const opacityRange = document.getElementById("bgImageOpacityRange");
-            const saturationRange = document.getElementById("bgImageSaturationRange");
-            const grayscaleRange = document.getElementById("bgImageGrayscaleRange");
-            const brightnessRange = document.getElementById("bgImageBrightnessRange");
 
-            if (opacityRange) opacityRange.value = 100;
-            if (saturationRange) saturationRange.value = 100;
-            if (grayscaleRange) grayscaleRange.value = 0;
-            if (brightnessRange) brightnessRange.value = 100;
+            const opacityRange =
+                document.getElementById(
+                    "bgImageOpacityRange"
+                );
+
+            const saturationRange =
+                document.getElementById(
+                    "bgImageSaturationRange"
+                );
+
+            const grayscaleRange =
+                document.getElementById(
+                    "bgImageGrayscaleRange"
+                );
+
+            const brightnessRange =
+                document.getElementById(
+                    "bgImageBrightnessRange"
+                );
+
+            if (opacityRange)
+                opacityRange.value = 100;
+
+            if (saturationRange)
+                saturationRange.value = 100;
+
+            if (grayscaleRange)
+                grayscaleRange.value = 0;
+
+            if (brightnessRange)
+                brightnessRange.value = 100;
 
             updateBackgroundImageControls();
         }
 
         function initBgColor() {
-            const bgInput = document.getElementById("bgColorInput");
-            const bgPicker = document.getElementById("bgPicker");
-            const transparentSwitch = document.getElementById("isTransparentSwitch");
-            const opacityRange = document.getElementById("bgOpacityRange");
-            const opacityValue = document.getElementById("bgOpacityValue");
 
-            if (!bgInput) return;
-            let value = bgInput.value.trim();
+            const bgInput =
+                document.getElementById(
+                    "bgColorInput"
+                );
+
+            const bgPicker =
+                document.getElementById(
+                    "bgPicker"
+                );
+
+            const transparentSwitch =
+                document.getElementById(
+                    "isTransparentSwitch"
+                );
+
+            const opacityRange =
+                document.getElementById(
+                    "bgOpacityRange"
+                );
+
+            const opacityValue =
+                document.getElementById(
+                    "bgOpacityValue"
+                );
+
+            if (!bgInput)
+                return;
+
+            let value =
+                bgInput.value.trim();
 
             if (value === "transparent") {
-                if (transparentSwitch) transparentSwitch.checked = true;
-                if (bgPicker) bgPicker.disabled = true;
-                if (bgInput) bgInput.readOnly = true;
-                if (opacityRange) opacityRange.value = 0;
-                if (opacityValue) opacityValue.textContent = "0%";
+
+                if (transparentSwitch)
+                    transparentSwitch.checked = true;
+
+                if (bgPicker)
+                    bgPicker.disabled = true;
+
+                if (bgInput)
+                    bgInput.readOnly = true;
+
+                if (opacityRange)
+                    opacityRange.value = 0;
+
+                if (opacityValue)
+                    opacityValue.textContent = "0%";
+
                 return;
             }
 
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                if (bgPicker) bgPicker.value = value;
-                if (opacityRange) opacityRange.value = 100;
-                if (opacityValue) opacityValue.textContent = "100%";
+
+                if (bgPicker)
+                    bgPicker.value = value;
+
+                if (opacityRange)
+                    opacityRange.value = 100;
+
+                if (opacityValue)
+                    opacityValue.textContent = "100%";
             }
         }
+
     </script>
+
 </body>
 
 </html>

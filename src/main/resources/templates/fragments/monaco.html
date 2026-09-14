@@ -91,6 +91,46 @@
                 z-index: 10000 !important;
             }
 
+            /* ============================================================
+               NAVIGAZIONE RISULTATI MONACO
+               ============================================================ */
+
+            .monaco-search-results.visible {
+                display: flex !important;
+            }
+
+            .monaco-search-results button {
+                min-width: 34px;
+                height: 30px;
+                padding: 2px 8px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 1;
+                cursor: pointer !important;
+                pointer-events: auto !important;
+            }
+
+            .monaco-search-results button:hover {
+                background: #334155 !important;
+                border-color: #36e4da !important;
+                color: #ffffff !important;
+            }
+
+            .monaco-search-match {
+                background: rgba(255, 215, 0, .28);
+                border: 1px solid rgba(255, 215, 0, .55);
+                border-radius: 2px;
+            }
+
+            .monaco-search-match-current {
+                background: rgba(0, 220, 130, .42);
+                border: 1px solid rgba(0, 220, 130, .9);
+                border-radius: 2px;
+            }
+
             /* Stato di caricamento */
             .monaco-loading-overlay {
                 position: absolute;
@@ -202,10 +242,26 @@
                             <div id="monacoSearchResults"
                                  class="monaco-search-results">
 
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-light"
+                                        id="monacoSearchPrev"
+                                        title="Corrispondenza precedente"
+                                        aria-label="Corrispondenza precedente">
+                                    <i class="bi bi-chevron-up"></i>
+                                </button>
+
                                 <span id="monacoSearchCount"
                                       class="monaco-search-count">
                                     0 / 0
                                 </span>
+
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-light"
+                                        id="monacoSearchNext"
+                                        title="Corrispondenza successiva"
+                                        aria-label="Corrispondenza successiva">
+                                    <i class="bi bi-chevron-down"></i>
+                                </button>
 
                             </div>
 
@@ -391,7 +447,10 @@
             /*
              * Stato ricerca.
              */
+            let monacoSearchMatches = [];
+            let monacoSearchIndex = -1;
             let monacoSearchDecorations = [];
+            let monacoCurrentSearchDecoration = [];
 
 
             /*
@@ -794,13 +853,35 @@
                                     true,
 
                                 formatOnType:
-                                    false,
+                                    true,
+
+                                autoClosingBrackets:
+                                    'always',
+
+                                autoClosingQuotes:
+                                    'always',
+
+                                autoClosingTags:
+                                    true,
+
+                                fixedOverflowWidgets:
+                                    true,
 
                                 suggestOnTriggerCharacters:
                                     true,
 
-                                quickSuggestions:
-                                    true,
+                                quickSuggestions: {
+                                    other: true,
+                                    comments: true,
+                                    strings: true
+                                },
+
+                                suggest: {
+                                    showWords:
+                                        true,
+                                    showSnippets:
+                                        true
+                                },
 
                                 acceptSuggestionOnEnter:
                                     'on',
@@ -823,6 +904,21 @@
                                 }
                             }
                         );
+
+
+                    /*
+                     * Posizionamento widget suggerimenti
+                     * sotto la riga del cursore.
+                     */
+                    installSuggestionPositioning();
+
+                    monacoEditor.onDidChangeCursorPosition(() => {
+                        positionSuggestion();
+                    });
+
+                    monacoEditor.onDidScrollChange(() => {
+                        positionSuggestion();
+                    });
 
 
                     /*
@@ -1204,234 +1300,357 @@
 
             /*
              * ==========================================================
-             * RICERCA
-             *
-             * Usiamo la ricerca nativa di Monaco.
-             * Non viene ricreato un secondo motore di ricerca.
+             * POSIZIONAMENTO SUGGERIMENTI SOTTO LA RIGA
+             * ==========================================================
+             */
+            function installSuggestionPositioning() {
+
+                if (window.__monacoSuggestObserver) {
+                    return;
+                }
+
+                window.__monacoSuggestObserver = true;
+
+                const observer = new MutationObserver(positionSuggestion);
+
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    attributeFilter: ['style', 'class']
+                });
+
+                window.addEventListener('resize', positionSuggestion);
+            }
+
+
+            function positionSuggestion() {
+
+                if (!monacoEditor) {
+                    return;
+                }
+
+                const widget = document.querySelector('.monaco-editor .suggest-widget');
+
+                if (!widget || getComputedStyle(widget).display === 'none') {
+                    return;
+                }
+
+                const position = monacoEditor.getPosition();
+                const coords = monacoEditor.getScrolledVisiblePosition(position);
+                const domNode = monacoEditor.getDomNode();
+
+                if (!position || !coords || !domNode) {
+                    return;
+                }
+
+                const rect = domNode.getBoundingClientRect();
+
+                widget.style.position = 'fixed';
+                widget.style.left = Math.max(4, rect.left + coords.left) + 'px';
+                widget.style.top = Math.max(4, rect.top + coords.top + coords.height + 2) + 'px';
+                widget.style.zIndex = '10000';
+            }
+
+
+            /*
+             * ==========================================================
+             * RICERCA MONACO CON NAVIGAZIONE CORRISPONDENZE
              * ==========================================================
              */
             function initializeMonacoSearch() {
 
                 const input =
-                    document.getElementById(
-                        'monacoSearchInput'
-                    );
+                    document.getElementById('monacoSearchInput');
 
                 const clearButton =
-                    document.getElementById(
-                        'btnMonacoSearchClear'
-                    );
+                    document.getElementById('btnMonacoSearchClear');
+
+                const prevButton =
+                    document.getElementById('monacoSearchPrev');
+
+                const nextButton =
+                    document.getElementById('monacoSearchNext');
 
 
                 if (!input)
                     return;
 
 
-                /*
-                 * Evitiamo di aggiungere gli stessi listener
-                 * se initializeMonacoSearch viene richiamata.
-                 */
-                if (
-                    input.dataset.monacoInitialized === 'true'
-                ) {
+                if (input.dataset.monacoInitialized === 'true') {
                     return;
                 }
 
-
-                input.dataset.monacoInitialized =
-                    'true';
+                input.dataset.monacoInitialized = 'true';
 
 
-                input.addEventListener(
-                    'input',
-                    function () {
+                input.addEventListener('input', function () {
+                    performMonacoSearch();
+                });
 
-                        performMonacoSearch(
-                            input.value
+
+                input.addEventListener('keydown', function (event) {
+
+                    if (event.key === 'Enter') {
+
+                        event.preventDefault();
+
+                        navigateMonacoSearch(
+                            event.shiftKey ? -1 : 1
                         );
-                    }
-                );
 
+                    } else if (event.key === 'Escape') {
 
-                input.addEventListener(
-                    'keydown',
-                    function (event) {
+                        event.preventDefault();
 
-                        if (event.key === 'Enter') {
+                        clearMonacoSearch();
 
-                            event.preventDefault();
-
-                            performMonacoSearch(
-                                input.value
-                            );
-                        }
-
-                        if (
-                            event.key === 'Escape'
-                        ) {
-
-                            clearMonacoSearch();
+                        if (monacoEditor) {
+                            monacoEditor.focus();
                         }
                     }
-                );
+                });
 
 
                 if (clearButton) {
 
-                    clearButton.addEventListener(
-                        'click',
-                        clearMonacoSearch
-                    );
+                    clearButton.addEventListener('mousedown', function (event) {
+                        event.preventDefault();
+                        clearMonacoSearch();
+                        if (monacoEditor) {
+                            monacoEditor.focus();
+                        }
+                    });
+                }
+
+
+                if (prevButton) {
+
+                    prevButton.addEventListener('mousedown', function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        navigateMonacoSearch(-1);
+                    });
+                }
+
+
+                if (nextButton) {
+
+                    nextButton.addEventListener('mousedown', function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        navigateMonacoSearch(1);
+                    });
                 }
             }
 
 
-            function performMonacoSearch(query) {
+            function performMonacoSearch() {
 
-                if (
-                    !monacoEditor
-                    || !query
-                ) {
+                if (!monacoEditor) {
+                    return;
+                }
 
-                    clearMonacoSearchDecorations();
+                const query =
+                    document.getElementById('monacoSearchInput')?.value || '';
 
-                    updateMonacoSearchCount(
-                        0,
-                        0
-                    );
+                clearMonacoSearchDecorations();
+
+                if (!query) {
+
+                    monacoSearchMatches = [];
+                    monacoSearchIndex = -1;
+
+                    updateSearchResults();
 
                     return;
                 }
 
+                const model = monacoEditor.getModel();
 
-                const model =
-                    monacoEditor.getModel();
-
-                if (!model)
-                    return;
-
-
-                const matches =
-                    model.findMatches(
-                        query,
-                        false,
-                        false,
-                        false,
-                        null,
-                        true
-                    );
-
-
-                clearMonacoSearchDecorations();
-
-
-                if (!matches.length) {
-
-                    updateMonacoSearchCount(
-                        0,
-                        0
-                    );
-
+                if (!model) {
                     return;
                 }
 
+                monacoSearchMatches = model.findMatches(
+                    query,
+                    true,
+                    false,
+                    false,
+                    null,
+                    true
+                );
 
-                monacoSearchDecorations =
-                    monacoEditor.deltaDecorations(
-                        [],
-                        matches.map(match => ({
-                            range:
-                                match.range,
+                monacoSearchIndex = monacoSearchMatches.length ? 0 : -1;
 
-                            options: {
-                                inlineClassName:
-                                    'monaco-search-match'
-                            }
-                        }))
+                monacoSearchDecorations = monacoEditor.deltaDecorations(
+                    [],
+                    monacoSearchMatches.map(m => ({
+                        range: m.range,
+                        options: {
+                            inlineClassName: 'monaco-search-match'
+                        }
+                    }))
+                );
+
+                updateCurrentSearchDecoration();
+
+                updateSearchResults();
+
+                if (monacoSearchMatches.length > 0) {
+
+                    monacoEditor.setSelection(
+                        monacoSearchMatches[0].range
                     );
 
-
-                updateMonacoSearchCount(
-                    1,
-                    matches.length
-                );
-
-
-                monacoEditor.setSelection(
-                    matches[0].range
-                );
-
-
-                monacoEditor.revealRangeInCenter(
-                    matches[0].range
-                );
-            }
-
-
-            function clearMonacoSearch() {
-
-                const input =
-                    document.getElementById(
-                        'monacoSearchInput'
+                    monacoEditor.revealRangeInCenter(
+                        monacoSearchMatches[0].range
                     );
-
-                if (input)
-                    input.value = '';
-
-
-                clearMonacoSearchDecorations();
-
-
-                updateMonacoSearchCount(
-                    0,
-                    0
-                );
-
-
-                if (monacoEditor) {
-
-                    monacoEditor.focus();
                 }
             }
 
 
             function clearMonacoSearchDecorations() {
 
-                if (!monacoEditor)
+                if (!monacoEditor) {
                     return;
+                }
+
+                if (monacoSearchDecorations.length > 0) {
+
+                    monacoSearchDecorations = monacoEditor.deltaDecorations(
+                        monacoSearchDecorations,
+                        []
+                    );
+                }
+
+                if (monacoCurrentSearchDecoration.length > 0) {
+
+                    monacoCurrentSearchDecoration = monacoEditor.deltaDecorations(
+                        monacoCurrentSearchDecoration,
+                        []
+                    );
+                }
+
+                monacoSearchDecorations = [];
+                monacoCurrentSearchDecoration = [];
+            }
 
 
-                if (
-                    monacoSearchDecorations.length > 0
-                ) {
+            function updateCurrentSearchDecoration() {
 
-                    monacoSearchDecorations =
-                        monacoEditor.deltaDecorations(
-                            monacoSearchDecorations,
-                            []
-                        );
+                if (!monacoEditor || monacoSearchIndex < 0 || !monacoSearchMatches.length) {
+                    return;
+                }
+
+                if (monacoCurrentSearchDecoration.length > 0) {
+
+                    monacoCurrentSearchDecoration = monacoEditor.deltaDecorations(
+                        monacoCurrentSearchDecoration,
+                        []
+                    );
+                }
+
+                const currentMatch = monacoSearchMatches[monacoSearchIndex];
+
+                if (!currentMatch) {
+                    return;
+                }
+
+                monacoCurrentSearchDecoration = monacoEditor.deltaDecorations(
+                    [],
+                    [
+                        {
+                            range: currentMatch.range,
+                            options: {
+                                inlineClassName: 'monaco-search-match-current'
+                            }
+                        }
+                    ]
+                );
+            }
+
+
+            function selectMonacoSearchMatch(index) {
+
+                if (!monacoEditor || !monacoSearchMatches.length) {
+                    return;
+                }
+
+                monacoSearchIndex =
+                    (index + monacoSearchMatches.length) % monacoSearchMatches.length;
+
+                const match = monacoSearchMatches[monacoSearchIndex];
+
+                monacoEditor.setSelection(match.range);
+
+                monacoEditor.revealRangeInCenter(match.range);
+
+                updateCurrentSearchDecoration();
+
+                updateSearchResults();
+            }
+
+
+            function navigateMonacoSearch(direction) {
+
+                if (monacoSearchMatches.length > 0) {
+
+                    selectMonacoSearchMatch(monacoSearchIndex + direction);
+                }
+
+                document.getElementById('monacoSearchInput')?.focus();
+            }
+
+
+            function updateSearchResults() {
+
+                const container =
+                    document.getElementById('monacoSearchResults');
+
+                const countElement =
+                    document.getElementById('monacoSearchCount');
+
+
+                if (!monacoSearchMatches.length || monacoSearchIndex < 0) {
+
+                    if (container) {
+                        container.classList.remove('visible');
+                    }
+
+                    if (countElement) {
+                        countElement.textContent = '0 / 0';
+                    }
+
+                } else {
+
+                    if (countElement) {
+                        countElement.textContent =
+                            (monacoSearchIndex + 1) + ' / ' + monacoSearchMatches.length;
+                    }
+
+                    if (container) {
+                        container.classList.add('visible');
+                    }
                 }
             }
 
 
-            function updateMonacoSearchCount(
-                current,
-                total
-            ) {
+            function clearMonacoSearch() {
 
-                const count =
-                    document.getElementById(
-                        'monacoSearchCount'
-                    );
+                const input =
+                    document.getElementById('monacoSearchInput');
 
-                if (!count)
-                    return;
+                if (input) {
+                    input.value = '';
+                }
 
+                clearMonacoSearchDecorations();
 
-                count.textContent =
-                    total > 0
-                        ? current + ' / ' + total
-                        : '0 / 0';
+                monacoSearchMatches = [];
+                monacoSearchIndex = -1;
+
+                updateSearchResults();
             }
 
 
@@ -1520,12 +1739,19 @@
 
         </script>
 
-        <!-- Stile usato dalle evidenziazioni della ricerca Monaco -->
+        <!-- Stile evidenziazioni ricerca Monaco -->
         <style>
 
             .monaco-search-match {
-                background: rgba(255, 200, 0, 0.28);
-                border-bottom: 2px solid #ffd54f;
+                background: rgba(255, 215, 0, .28) !important;
+                border: 1px solid rgba(255, 215, 0, .55) !important;
+                border-radius: 2px;
+            }
+
+            .monaco-search-match-current {
+                background: rgba(0, 220, 130, .42) !important;
+                border: 1px solid rgba(0, 220, 130, .9) !important;
+                border-radius: 2px;
             }
 
         </style>

@@ -19,8 +19,11 @@
             '--nav-opacity: ' + ((navbarSettings.opacity != null ? navbarSettings.opacity : 90) / 100.0) + '; ' +
             'color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#f1f5f9') + '; ' +
             '--btn-color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#ffffff') + '; ' +
-            '--btn-bg-hover: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + ';'
-            : '--nav-bg-hex: #0f172a; --nav-opacity: 0.9; --btn-color: #ffffff; --btn-bg-hover: #0f172a;'}">
+            '--btn-bg-hover: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + '; ' +
+            '--dropdown-bg: ' + (navbarSettings.dropdownBgColor != null ? navbarSettings.dropdownBgColor : '#1e293b') + '; ' +
+            '--dropdown-color: ' + (navbarSettings.dropdownTextColor != null ? navbarSettings.dropdownTextColor : '#f1f5f9') + '; ' +
+            '--dropdown-hover-bg: ' + (navbarSettings.dropdownHoverBgColor != null ? navbarSettings.dropdownHoverBgColor : '#00dc82') + ';'
+            : '--nav-bg-hex: #0f172a; --nav-opacity: 0.9; --btn-color: #ffffff; --btn-bg-hover: #0f172a; --dropdown-bg: #1e293b; --dropdown-color: #f1f5f9; --dropdown-hover-bg: #00dc82;'}">
 
     <style>
         header.navbar {
@@ -40,7 +43,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-                /* ANIMAZIONE E COLORE LINEA UNDERLINE HOVER (solo per i link normali) */
+        /* ANIMAZIONE E COLORE LINEA UNDERLINE HOVER (solo per i link normali) */
         .navbar-nav .nav-link {
             position: relative;
         }
@@ -82,9 +85,27 @@
             transition: transform 0.25s ease-in-out !important;
         }
 
-        /* Piccola chicca: la freccetta ruota elegantemente di 180° quando il menu si apre */
+        /* Piccola chicca: la freccetta ruota dynamicamente di 180° quando il menu si apre */
         .navbar-nav .nav-link.dropdown-toggle.show::after {
             transform: rotate(180deg);
+        }
+
+        /* STILI DINAMICI DROPDOWN NAVBAR */
+        .navbar-nav .dropdown-menu {
+            background-color: var(--dropdown-bg) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .navbar-nav .dropdown-menu .dropdown-item {
+            color: var(--dropdown-color) !important;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .navbar-nav .dropdown-menu .dropdown-item:hover,
+        .navbar-nav .dropdown-menu .dropdown-item:focus,
+        .navbar-nav .dropdown-menu .dropdown-item.active {
+            background-color: var(--dropdown-hover-bg) !important;
+            color: #0f172a !important;
         }
 
     </style>
@@ -168,10 +189,10 @@
                     </a>
 
                     <ul th:if="${item.children != null and !item.children.isEmpty()}"
-                        class="dropdown-menu dropdown-menu-dark bg-dark border-secondary p-2">
+                        class="dropdown-menu border-secondary p-2 shadow">
                         <li th:each="child : ${item.children}">
                             <a th:if="${child.page != null}"
-                               class="dropdown-item"
+                               class="dropdown-item rounded"
                                th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
                                th:href="@{'/p/' + ${child.page.slug}}"
                                th:target="${child.openInNewTab ? '_blank' : '_self'}"
@@ -180,7 +201,7 @@
                                 Sub Item
                             </a>
                             <a th:if="${child.page == null and child.url != null and !#strings.isEmpty(child.url)}"
-                               class="dropdown-item"
+                               class="dropdown-item rounded"
                                th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
                                th:href="${child.url}"
                                th:target="${child.openInNewTab ? '_blank' : '_self'}"
@@ -189,7 +210,7 @@
                                 Sub Item
                             </a>
                             <a th:if="${child.page == null and (child.url == null or #strings.isEmpty(child.url))}"
-                               class="dropdown-item"
+                               class="dropdown-item rounded"
                                th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
                                href="javascript:void(0);"
                                th:text="${child.label}">

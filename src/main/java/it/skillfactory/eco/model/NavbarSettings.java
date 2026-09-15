@@ -25,6 +25,15 @@ public class NavbarSettings {
     @Column(name = "text_color")
     private String textColor = "#f1f5f9";
 
+    @Column(name = "dropdown_bg_color")
+    private String dropdownBgColor = "#1e293b";
+
+    @Column(name = "dropdown_text_color")
+    private String dropdownTextColor = "#f1f5f9";
+
+    @Column(name = "dropdown_hover_bg_color")
+    private String dropdownHoverBgColor = "#00dc82";
+
     public NavbarSettings() {
     }
 
@@ -74,5 +83,29 @@ public class NavbarSettings {
 
     public void setTextColor(String textColor) {
         this.textColor = textColor;
+    }
+
+    public String getDropdownBgColor() {
+        return dropdownBgColor;
+    }
+
+    public void setDropdownBgColor(String dropdownBgColor) {
+        this.dropdownBgColor = dropdownBgColor;
+    }
+
+    public String getDropdownTextColor() {
+        return dropdownTextColor;
+    }
+
+    public void setDropdownTextColor(String dropdownTextColor) {
+        this.dropdownTextColor = dropdownTextColor;
+    }
+
+    public String getDropdownHoverBgColor() {
+        return dropdownHoverBgColor;
+    }
+
+    public void setDropdownHoverBgColor(String dropdownHoverBgColor) {
+        this.dropdownHoverBgColor = dropdownHoverBgColor;
     }
 }

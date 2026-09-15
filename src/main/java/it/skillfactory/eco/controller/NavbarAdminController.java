@@ -60,6 +60,9 @@ public class NavbarAdminController {
                     s.setOpacity(90);
                     s.setBgColor("#0f172a");
                     s.setTextColor("#f1f5f9");
+                    s.setDropdownBgColor("#1e293b");
+                    s.setDropdownTextColor("#f1f5f9");
+                    s.setDropdownHoverBgColor("#00dc82");
                     return navbarSettingsRepository.save(s);
                 });
         model.addAttribute("settings", settings);
@@ -102,6 +105,9 @@ public class NavbarAdminController {
                     s.setOpacity(90);
                     s.setBgColor("#0f172a");
                     s.setTextColor("#f1f5f9");
+                    s.setDropdownBgColor("#1e293b");
+                    s.setDropdownTextColor("#f1f5f9");
+                    s.setDropdownHoverBgColor("#00dc82");
                     return navbarSettingsRepository.save(s);
                 });
         model.addAttribute("settings", settings);
@@ -138,6 +144,9 @@ public class NavbarAdminController {
             @RequestParam(value = "opacity", defaultValue = "90") Integer opacity,
             @RequestParam(value = "bgColor", defaultValue = "#0f172a") String bgColor,
             @RequestParam(value = "textColor", defaultValue = "#f1f5f9") String textColor,
+            @RequestParam(value = "dropdownBgColor", defaultValue = "#1e293b") String dropdownBgColor,
+            @RequestParam(value = "dropdownTextColor", defaultValue = "#f1f5f9") String dropdownTextColor,
+            @RequestParam(value = "dropdownHoverBgColor", defaultValue = "#00dc82") String dropdownHoverBgColor,
             @RequestParam(value = "logoFile", required = false) MultipartFile logoFile,
             @RequestParam(value = "faviconFile", required = false) MultipartFile faviconFile,
             @RequestParam(value = "removeLogo", required = false, defaultValue = "false") boolean removeLogo,
@@ -151,6 +160,9 @@ public class NavbarAdminController {
         settings.setOpacity(opacity);
         settings.setBgColor(bgColor);
         settings.setTextColor(textColor);
+        settings.setDropdownBgColor(dropdownBgColor);
+        settings.setDropdownTextColor(dropdownTextColor);
+        settings.setDropdownHoverBgColor(dropdownHoverBgColor);
 
         if (removeLogo) {
             deleteUploadedFile(settings.getLogoUrl());

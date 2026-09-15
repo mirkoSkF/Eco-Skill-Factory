@@ -414,7 +414,7 @@
                             </div>
 
                             <!-- COLORE TESTO VOCI (DEFAULT) -->
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <label class="form-label fw-bold text-light" for="textColorPicker">Colore Voci Menu (Predefinito)</label>
                                 <div class="d-flex align-items-center gap-2">
                                     <input type="color" class="form-control form-control-color" id="textColorPicker" name="textColor"
@@ -423,6 +423,45 @@
                                     <input type="text" class="form-control text-uppercase" id="textColorHex"
                                            th:value="${settings != null and settings.textColor != null ? settings.textColor : '#f1f5f9'}"
                                            onchange="document.getElementById('textColorPicker').value = this.value">
+                                </div>
+                            </div>
+
+                            <!-- COLORE OPZIONE DROPDOWN -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-light" for="dropdownBgColorPicker">Colore opzione dropdown</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="color" class="form-control form-control-color" id="dropdownBgColorPicker" name="dropdownBgColor"
+                                           th:value="${settings != null and settings.dropdownBgColor != null ? settings.dropdownBgColor : '#1e293b'}"
+                                           onchange="document.getElementById('dropdownBgColorHex').value = this.value">
+                                    <input type="text" class="form-control text-uppercase" id="dropdownBgColorHex"
+                                           th:value="${settings != null and settings.dropdownBgColor != null ? settings.dropdownBgColor : '#1e293b'}"
+                                           onchange="document.getElementById('dropdownBgColorPicker').value = this.value">
+                                </div>
+                            </div>
+
+                            <!-- COLORE VOCI DROPDOWN -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-light" for="dropdownTextColorPicker">Colore voci dropdown</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="color" class="form-control form-control-color" id="dropdownTextColorPicker" name="dropdownTextColor"
+                                           th:value="${settings != null and settings.dropdownTextColor != null ? settings.dropdownTextColor : '#f1f5f9'}"
+                                           onchange="document.getElementById('dropdownTextColorHex').value = this.value">
+                                    <input type="text" class="form-control text-uppercase" id="dropdownTextColorHex"
+                                           th:value="${settings != null and settings.dropdownTextColor != null ? settings.dropdownTextColor : '#f1f5f9'}"
+                                           onchange="document.getElementById('dropdownTextColorPicker').value = this.value">
+                                </div>
+                            </div>
+
+                            <!-- COLORE SELEZIONE DROPDOWN -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-light" for="dropdownHoverBgColorPicker">Colore selezione dropdown</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="color" class="form-control form-control-color" id="dropdownHoverBgColorPicker" name="dropdownHoverBgColor"
+                                           th:value="${settings != null and settings.dropdownHoverBgColor != null ? settings.dropdownHoverBgColor : '#00dc82'}"
+                                           onchange="document.getElementById('dropdownHoverBgColorHex').value = this.value">
+                                    <input type="text" class="form-control text-uppercase" id="dropdownHoverBgColorHex"
+                                           th:value="${settings != null and settings.dropdownHoverBgColor != null ? settings.dropdownHoverBgColor : '#00dc82'}"
+                                           onchange="document.getElementById('dropdownHoverBgColorPicker').value = this.value">
                                 </div>
                             </div>
 
@@ -737,15 +776,30 @@ function resetBrandFormToDefault() {
     // Valori Predefiniti
     const defaultBg = '#0F172A';
     const defaultText = '#F1F5F9';
+    const defaultDropdownBg = '#1E293B';
+    const defaultDropdownText = '#F1F5F9';
+    const defaultDropdownHoverBg = '#00DC82';
     const defaultOpacity = '90';
 
-    // Aggiornamento Campi Sfondo
+    // Aggiornamento Campi Sfondo Navbar
     document.getElementById('bgColorPicker').value = defaultBg;
     document.getElementById('bgColorHex').value = defaultBg;
 
     // Aggiornamento Campi Testo
     document.getElementById('textColorPicker').value = defaultText;
     document.getElementById('textColorHex').value = defaultText;
+
+    // Aggiornamento Campi Dropdown Sfondo
+    document.getElementById('dropdownBgColorPicker').value = defaultDropdownBg;
+    document.getElementById('dropdownBgColorHex').value = defaultDropdownBg;
+
+    // Aggiornamento Campi Dropdown Testo
+    document.getElementById('dropdownTextColorPicker').value = defaultDropdownText;
+    document.getElementById('dropdownTextColorHex').value = defaultDropdownText;
+
+    // Aggiornamento Campi Dropdown Hover / Selezione
+    document.getElementById('dropdownHoverBgColorPicker').value = defaultDropdownHoverBg;
+    document.getElementById('dropdownHoverBgColorHex').value = defaultDropdownHoverBg;
 
     // Aggiornamento Opacità
     document.getElementById('opacityRange').value = defaultOpacity;

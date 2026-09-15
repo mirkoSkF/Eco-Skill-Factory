@@ -25,6 +25,9 @@ public class NavbarSettings {
     @Column(name = "text_color")
     private String textColor = "#f1f5f9";
 
+    @Column(name = "selected_text_color")
+    private String selectedTextColor = "#00dc82";
+
     @Column(name = "dropdown_bg_color")
     private String dropdownBgColor = "#1e293b";
 
@@ -33,6 +36,12 @@ public class NavbarSettings {
 
     @Column(name = "dropdown_hover_bg_color")
     private String dropdownHoverBgColor = "#00dc82";
+
+    @Column(name = "dropdown_selected_text_color")
+    private String dropdownSelectedTextColor = "#0f172a";
+
+    @Column(name = "hide_on_scroll_behavior")
+    private String hideOnScrollBehavior = "NONE";
 
     public NavbarSettings() {
     }
@@ -85,6 +94,14 @@ public class NavbarSettings {
         this.textColor = textColor;
     }
 
+    public String getSelectedTextColor() {
+        return selectedTextColor;
+    }
+
+    public void setSelectedTextColor(String selectedTextColor) {
+        this.selectedTextColor = selectedTextColor;
+    }
+
     public String getDropdownBgColor() {
         return dropdownBgColor;
     }
@@ -107,5 +124,21 @@ public class NavbarSettings {
 
     public void setDropdownHoverBgColor(String dropdownHoverBgColor) {
         this.dropdownHoverBgColor = dropdownHoverBgColor;
+    }
+
+    public String getDropdownSelectedTextColor() {
+        return dropdownSelectedTextColor;
+    }
+
+    public void setDropdownSelectedTextColor(String dropdownSelectedTextColor) {
+        this.dropdownSelectedTextColor = dropdownSelectedTextColor;
+    }
+
+    public String getHideOnScrollBehavior() {
+        return hideOnScrollBehavior;
+    }
+
+    public void setHideOnScrollBehavior(String hideOnScrollBehavior) {
+        this.hideOnScrollBehavior = hideOnScrollBehavior;
     }
 }

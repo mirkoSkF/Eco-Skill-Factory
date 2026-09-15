@@ -12,22 +12,30 @@
      NAVBAR FRAGMENT
      ======================================================== -->
 
-<header th:fragment="navbar"
+<header id="mainNavbar" th:fragment="navbar"
         class="navbar navbar-expand-lg navbar-dark sticky-top py-3"
+        th:data-scroll-behavior="${navbarSettings != null and navbarSettings.hideOnScrollBehavior != null ? navbarSettings.hideOnScrollBehavior : 'NONE'}"
         th:style="${navbarSettings != null ? 
             '--nav-bg-hex: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + '; ' +
             '--nav-opacity: ' + ((navbarSettings.opacity != null ? navbarSettings.opacity : 90) / 100.0) + '; ' +
             'color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#f1f5f9') + '; ' +
+            '--selected-text-color: ' + (navbarSettings.selectedTextColor != null ? navbarSettings.selectedTextColor : '#00dc82') + '; ' +
             '--btn-color: ' + (navbarSettings.textColor != null ? navbarSettings.textColor : '#ffffff') + '; ' +
             '--btn-bg-hover: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + '; ' +
             '--dropdown-bg: ' + (navbarSettings.dropdownBgColor != null ? navbarSettings.dropdownBgColor : '#1e293b') + '; ' +
             '--dropdown-color: ' + (navbarSettings.dropdownTextColor != null ? navbarSettings.dropdownTextColor : '#f1f5f9') + '; ' +
-            '--dropdown-hover-bg: ' + (navbarSettings.dropdownHoverBgColor != null ? navbarSettings.dropdownHoverBgColor : '#00dc82') + ';'
-            : '--nav-bg-hex: #0f172a; --nav-opacity: 0.9; --btn-color: #ffffff; --btn-bg-hover: #0f172a; --dropdown-bg: #1e293b; --dropdown-color: #f1f5f9; --dropdown-hover-bg: #00dc82;'}">
+            '--dropdown-hover-bg: ' + (navbarSettings.dropdownHoverBgColor != null ? navbarSettings.dropdownHoverBgColor : '#00dc82') + '; ' +
+            '--dropdown-selected-color: ' + (navbarSettings.dropdownSelectedTextColor != null ? navbarSettings.dropdownSelectedTextColor : '#0f172a') + ';'
+            : '--nav-bg-hex: #0f172a; --nav-opacity: 0.9; --selected-text-color: #00dc82; --btn-color: #ffffff; --btn-bg-hover: #0f172a; --dropdown-bg: #1e293b; --dropdown-color: #f1f5f9; --dropdown-hover-bg: #00dc82; --dropdown-selected-color: #0f172a;'}">
 
     <style>
         header.navbar {
             background-color: rgb(from var(--nav-bg-hex) r g b / var(--nav-opacity)) !important;
+            transition: transform 0.35s ease-in-out, top 0.35s ease-in-out;
+        }
+
+        header.navbar.navbar-hidden {
+            transform: translateY(-100%);
         }
 
         .btn-dynamic-auth {
@@ -43,32 +51,58 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        /* ANIMAZIONE E COLORE LINEA UNDERLINE HOVER (solo per i link normali) */
-        .navbar-nav .nav-link {
+        /* 1. STATO NORMALE LINK NAVBAR */
+        #mainNavbar .navbar-nav .nav-link,
+        #mainNavbar.navbar-dark .navbar-nav .nav-link {
             position: relative;
+            color: var(--item-custom-color, var(--btn-color, #f1f5f9)) !important;
+            transition: color 0.25s ease-in-out;
         }
 
-        /* Escludiamo il dropdown-toggle così non cancella la freccia di Bootstrap */
-        .navbar-nav .nav-link:not(.dropdown-toggle)::after {
+        /* 2. HOVER E FOCUS LINK NAVBAR (Stesso colore del testo selezionato o custom) */
+        #mainNavbar .navbar-nav .nav-link:hover,
+        #mainNavbar .navbar-nav .nav-link:focus,
+        #mainNavbar.navbar-dark .navbar-nav .nav-link:hover,
+        #mainNavbar.navbar-dark .navbar-nav .nav-link:focus {
+            color: var(--item-custom-color, var(--selected-text-color)) !important;
+        }
+
+        /* 3. STATO ATTIVO / SELEZIONATO LINK NAVBAR */
+        #mainNavbar .navbar-nav .nav-link.active,
+        #mainNavbar .navbar-nav .nav-link.selected,
+        #mainNavbar .navbar-nav .nav-link.active:hover,
+        #mainNavbar .navbar-nav .nav-link.active:focus,
+        #mainNavbar.navbar-dark .navbar-nav .nav-link.active,
+        #mainNavbar.navbar-dark .navbar-nav .nav-link.selected,
+        #mainNavbar.navbar-dark .navbar-nav .nav-link.active:hover,
+        #mainNavbar.navbar-dark .navbar-nav .nav-link.active:focus {
+            color: var(--item-custom-color, var(--selected-text-color)) !important;
+        }
+
+        /* 4. UNDERLINE UNDER LINK - Sempre sincronizzata al colore del testo attivo */
+        #mainNavbar .navbar-nav .nav-link:not(.dropdown-toggle)::after {
             content: '' !important;
             position: absolute !important;
             bottom: 0 !important;
             left: 50% !important;
             width: 0 !important;
             height: 2px !important;
-            background-color: var(--line-color, #00dc82) !important;
-            background: var(--line-color, #00dc82) !important;
-            transition: width 0.3s ease-in-out, left 0.3s ease-in-out !important;
+            background-color: var(--item-custom-color, var(--selected-text-color)) !important;
+            transition: width 0.3s ease-in-out, left 0.3s ease-in-out, background-color 0.25s ease-in-out !important;
         }
 
-        .navbar-nav .nav-link:not(.dropdown-toggle):hover::after,
-        .navbar-nav .nav-link:not(.dropdown-toggle):focus::after {
+        /* Espansione underline in hover / focus / active */
+        #mainNavbar .navbar-nav .nav-link:not(.dropdown-toggle):hover::after,
+        #mainNavbar .navbar-nav .nav-link:not(.dropdown-toggle):focus::after,
+        #mainNavbar .navbar-nav .nav-link:not(.dropdown-toggle).active::after,
+        #mainNavbar .navbar-nav .nav-link:not(.dropdown-toggle).selected::after {
             width: 80% !important;
             left: 10% !important;
+            background-color: var(--item-custom-color, var(--selected-text-color)) !important;
         }
 
-        /* Assicura che la freccetta del dropdown sia visibile e allineata */
-        .navbar-nav .nav-link.dropdown-toggle::after {
+        /* FRECCETTA DROPDOWN */
+        #mainNavbar .navbar-nav .nav-link.dropdown-toggle::after {
             display: inline-block !important;
             margin-left: 0.35em !important;
             vertical-align: 0.2em !important;
@@ -85,29 +119,34 @@
             transition: transform 0.25s ease-in-out !important;
         }
 
-        /* Piccola chicca: la freccetta ruota dynamicamente di 180° quando il menu si apre */
-        .navbar-nav .nav-link.dropdown-toggle.show::after {
+        #mainNavbar .navbar-nav .nav-link.dropdown-toggle.show::after {
             transform: rotate(180deg);
         }
 
-        /* STILI DINAMICI DROPDOWN NAVBAR */
-        .navbar-nav .dropdown-menu {
+        /* STILI DROPDOWN MENU */
+        #mainNavbar .navbar-nav .dropdown-menu {
             background-color: var(--dropdown-bg) !important;
             border-color: rgba(255, 255, 255, 0.1) !important;
         }
 
-        .navbar-nav .dropdown-menu .dropdown-item {
-            color: var(--dropdown-color) !important;
+        #mainNavbar .navbar-nav .dropdown-menu .dropdown-item {
+            color: var(--item-custom-color, var(--dropdown-color)) !important;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
 
-        .navbar-nav .dropdown-menu .dropdown-item:hover,
-        .navbar-nav .dropdown-menu .dropdown-item:focus,
-        .navbar-nav .dropdown-menu .dropdown-item.active {
+        #mainNavbar .navbar-nav .dropdown-menu .dropdown-item:hover,
+        #mainNavbar .navbar-nav .dropdown-menu .dropdown-item:focus {
             background-color: var(--dropdown-hover-bg) !important;
-            color: #0f172a !important;
+            color: var(--dropdown-selected-color) !important;
         }
 
+        /* SELEZIONE / STATO ATTIVO DROPDOWN ITEM */
+        #mainNavbar .navbar-nav .dropdown-menu .dropdown-item.active,
+        #mainNavbar .navbar-nav .dropdown-menu .dropdown-item.selected {
+            background-color: var(--dropdown-hover-bg) !important;
+            color: var(--item-custom-color, var(--dropdown-selected-color)) !important;
+            font-weight: 600;
+        }
     </style>
 
     <div class="container">
@@ -148,7 +187,8 @@
                     <!-- ITEM CON PAGINA -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page != null}"
                        class="nav-link px-3"
-                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? 'color: ' + item.color + ' !important; --line-color: ' + item.color + ';' : ((navbarSettings != null and navbarSettings.textColor != null) ? 'color: ' + navbarSettings.textColor + ' !important; --line-color: ' + navbarSettings.textColor + ';' : '--line-color: #00dc82;')}"
+                       th:classappend="${(#ctx.containsVariable('currentPage') and currentPage != null and currentPage.id == item.page.id) or (#ctx.containsVariable('currentUri') and currentUri == '/p/' + item.page.slug)} ? 'active' : ''"
+                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? '--item-custom-color: ' + item.color + ';' : ''}"
                        th:href="@{'/p/' + ${item.page.slug}}"
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
                        th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
@@ -159,7 +199,8 @@
                     <!-- ITEM CON URL ESTERNO -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and item.url != null and !#strings.isEmpty(item.url)}"
                        class="nav-link px-3"
-                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? 'color: ' + item.color + ' !important; --line-color: ' + item.color + ';' : ((navbarSettings != null and navbarSettings.textColor != null) ? 'color: ' + navbarSettings.textColor + ' !important; --line-color: ' + navbarSettings.textColor + ';' : '--line-color: #00dc82;')}"
+                       th:classappend="${#ctx.containsVariable('currentUri') and currentUri == item.url} ? 'active' : ''"
+                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? '--item-custom-color: ' + item.color + ';' : ''}"
                        th:href="${item.url}"
                        th:target="${item.openInNewTab ? '_blank' : '_self'}"
                        th:rel="${item.openInNewTab ? 'noopener noreferrer' : null}"
@@ -170,7 +211,7 @@
                     <!-- ITEM PLACEHOLDER -->
                     <a th:if="${(item.children == null or item.children.isEmpty()) and item.page == null and (item.url == null or #strings.isEmpty(item.url))}"
                        class="nav-link px-3"
-                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? 'color: ' + item.color + ' !important; --line-color: ' + item.color + ';' : ((navbarSettings != null and navbarSettings.textColor != null) ? 'color: ' + navbarSettings.textColor + ' !important; --line-color: ' + navbarSettings.textColor + ';' : '--line-color: #00dc82;')}"
+                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? '--item-custom-color: ' + item.color + ';' : ''}"
                        href="javascript:void(0);"
                        th:text="${item.label}">
                         Menu Item
@@ -179,7 +220,9 @@
                     <!-- DROPDOWN PARENT -->
                     <a th:if="${item.children != null and !item.children.isEmpty()}"
                        class="nav-link dropdown-toggle px-3"
-                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? 'color: ' + item.color + ' !important; --line-color: ' + item.color + ';' : ((navbarSettings != null and navbarSettings.textColor != null) ? 'color: ' + navbarSettings.textColor + ' !important; --line-color: ' + navbarSettings.textColor + ';' : '--line-color: #00dc82;')}"
+                       th:with="isChildActive=${#ctx.containsVariable('currentPage') and currentPage != null and #lists.contains(item.children.![page != null ? page.id : null], currentPage.id)}"
+                       th:classappend="${isChildActive} ? 'active' : ''"
+                       th:style="${(item.color != null and !#strings.isEmpty(item.color)) ? '--item-custom-color: ' + item.color + ';' : ''}"
                        href="#"
                        role="button"
                        data-bs-toggle="dropdown"
@@ -191,27 +234,34 @@
                     <ul th:if="${item.children != null and !item.children.isEmpty()}"
                         class="dropdown-menu border-secondary p-2 shadow">
                         <li th:each="child : ${item.children}">
+                            <!-- CHILD CON PAGINA -->
                             <a th:if="${child.page != null}"
                                class="dropdown-item rounded"
-                               th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
+                               th:classappend="${(#ctx.containsVariable('currentPage') and currentPage != null and currentPage.id == child.page.id) or (#ctx.containsVariable('currentUri') and currentUri == '/p/' + child.page.slug)} ? 'active' : ''"
+                               th:style="${(child.color != null and !#strings.isEmpty(child.color)) ? '--item-custom-color: ' + child.color + ';' : ''}"
                                th:href="@{'/p/' + ${child.page.slug}}"
                                th:target="${child.openInNewTab ? '_blank' : '_self'}"
                                th:rel="${child.openInNewTab ? 'noopener noreferrer' : null}"
                                th:text="${child.label}">
                                 Sub Item
                             </a>
+
+                            <!-- CHILD CON URL ESTERNO -->
                             <a th:if="${child.page == null and child.url != null and !#strings.isEmpty(child.url)}"
                                class="dropdown-item rounded"
-                               th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
+                               th:classappend="${#ctx.containsVariable('currentUri') and currentUri == child.url} ? 'active' : ''"
+                               th:style="${(child.color != null and !#strings.isEmpty(child.color)) ? '--item-custom-color: ' + child.color + ';' : ''}"
                                th:href="${child.url}"
                                th:target="${child.openInNewTab ? '_blank' : '_self'}"
                                th:rel="${child.openInNewTab ? 'noopener noreferrer' : null}"
                                th:text="${child.label}">
                                 Sub Item
                             </a>
+
+                            <!-- CHILD PLACEHOLDER -->
                             <a th:if="${child.page == null and (child.url == null or #strings.isEmpty(child.url))}"
                                class="dropdown-item rounded"
-                               th:style="${child.color != null and !#strings.isEmpty(child.color)} ? 'color: ' + ${child.color} + ' !important;' : ''"
+                               th:style="${(child.color != null and !#strings.isEmpty(child.color)) ? '--item-custom-color: ' + child.color + ';' : ''}"
                                href="javascript:void(0);"
                                th:text="${child.label}">
                                 Sub Item
@@ -242,6 +292,42 @@
         </div>
 
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navbar = document.getElementById('mainNavbar');
+            if (!navbar) return;
+
+            const scrollBehavior = navbar.getAttribute('data-scroll-behavior');
+            if (!scrollBehavior || scrollBehavior === 'NONE') return;
+
+            let lastScrollY = window.scrollY;
+            const threshold = 10;
+
+            window.addEventListener('scroll', function () {
+                const currentScrollY = window.scrollY;
+                const diff = currentScrollY - lastScrollY;
+
+                if (Math.abs(diff) < threshold) return;
+
+                if (scrollBehavior === 'DOWN') {
+                    if (diff > 0 && currentScrollY > 80) {
+                        navbar.classList.add('navbar-hidden');
+                    } else {
+                        navbar.classList.remove('navbar-hidden');
+                    }
+                } else if (scrollBehavior === 'UP') {
+                    if (diff < 0 && currentScrollY > 80) {
+                        navbar.classList.add('navbar-hidden');
+                    } else {
+                        navbar.classList.remove('navbar-hidden');
+                    }
+                }
+
+                lastScrollY = currentScrollY;
+            });
+        });
+    </script>
 
 </header>
 

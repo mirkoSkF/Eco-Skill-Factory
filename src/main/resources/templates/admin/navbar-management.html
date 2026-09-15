@@ -426,6 +426,19 @@
                                 </div>
                             </div>
 
+                            <!-- COLORE VOCE SELEZIONATA -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-light" for="selectedTextColorPicker">Colore voce selezionata</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="color" class="form-control form-control-color" id="selectedTextColorPicker" name="selectedTextColor"
+                                           th:value="${settings != null and settings.selectedTextColor != null ? settings.selectedTextColor : '#00dc82'}"
+                                           onchange="document.getElementById('selectedTextColorHex').value = this.value">
+                                    <input type="text" class="form-control text-uppercase" id="selectedTextColorHex"
+                                           th:value="${settings != null and settings.selectedTextColor != null ? settings.selectedTextColor : '#00dc82'}"
+                                           onchange="document.getElementById('selectedTextColorPicker').value = this.value">
+                                </div>
+                            </div>
+
                             <!-- COLORE OPZIONE DROPDOWN -->
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-light" for="dropdownBgColorPicker">Colore opzione dropdown</label>
@@ -453,7 +466,7 @@
                             </div>
 
                             <!-- COLORE SELEZIONE DROPDOWN -->
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <label class="form-label fw-bold text-light" for="dropdownHoverBgColorPicker">Colore selezione dropdown</label>
                                 <div class="d-flex align-items-center gap-2">
                                     <input type="color" class="form-control form-control-color" id="dropdownHoverBgColorPicker" name="dropdownHoverBgColor"
@@ -463,6 +476,35 @@
                                            th:value="${settings != null and settings.dropdownHoverBgColor != null ? settings.dropdownHoverBgColor : '#00dc82'}"
                                            onchange="document.getElementById('dropdownHoverBgColorPicker').value = this.value">
                                 </div>
+                            </div>
+
+                            <!-- COLORE VOCE DROPDOWN SELEZIONATA -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-light" for="dropdownSelectedTextColorPicker">Colore voce dropdown selezionata</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="color" class="form-control form-control-color" id="dropdownSelectedTextColorPicker" name="dropdownSelectedTextColor"
+                                           th:value="${settings != null and settings.dropdownSelectedTextColor != null ? settings.dropdownSelectedTextColor : '#0f172a'}"
+                                           onchange="document.getElementById('dropdownSelectedTextColorHex').value = this.value">
+                                    <input type="text" class="form-control text-uppercase" id="dropdownSelectedTextColorHex"
+                                           th:value="${settings != null and settings.dropdownSelectedTextColor != null ? settings.dropdownSelectedTextColor : '#0f172a'}"
+                                           onchange="document.getElementById('dropdownSelectedTextColorPicker').value = this.value">
+                                </div>
+                            </div>
+
+                            <!-- COMPORTAMENTO SCOMPARSA NAVBAR ALLO SCROLL -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-light" for="hideOnScrollBehavior">Comportamento Scomparsa Navbar</label>
+                                <select class="form-select" id="hideOnScrollBehavior" name="hideOnScrollBehavior">
+                                    <option value="NONE" th:selected="${settings == null or settings.hideOnScrollBehavior == null or settings.hideOnScrollBehavior == 'NONE'}">
+                                        Nessuna scomparsa
+                                    </option>
+                                    <option value="DOWN" th:selected="${settings != null and settings.hideOnScrollBehavior == 'DOWN'}">
+                                        Scomparsa verso il basso
+                                    </option>
+                                    <option value="UP" th:selected="${settings != null and settings.hideOnScrollBehavior == 'UP'}">
+                                        Scomparsa verso l'alto
+                                    </option>
+                                </select>
                             </div>
 
                             <!-- PULSANTI SALVA E RESET -->
@@ -776,9 +818,12 @@ function resetBrandFormToDefault() {
     // Valori Predefiniti
     const defaultBg = '#0F172A';
     const defaultText = '#F1F5F9';
+    const defaultSelectedText = '#00DC82';
     const defaultDropdownBg = '#1E293B';
     const defaultDropdownText = '#F1F5F9';
     const defaultDropdownHoverBg = '#00DC82';
+    const defaultDropdownSelectedText = '#0F172A';
+    const defaultBehavior = 'NONE';
     const defaultOpacity = '90';
 
     // Aggiornamento Campi Sfondo Navbar
@@ -788,6 +833,10 @@ function resetBrandFormToDefault() {
     // Aggiornamento Campi Testo
     document.getElementById('textColorPicker').value = defaultText;
     document.getElementById('textColorHex').value = defaultText;
+
+    // Aggiornamento Campi Voce Selezionata
+    document.getElementById('selectedTextColorPicker').value = defaultSelectedText;
+    document.getElementById('selectedTextColorHex').value = defaultSelectedText;
 
     // Aggiornamento Campi Dropdown Sfondo
     document.getElementById('dropdownBgColorPicker').value = defaultDropdownBg;
@@ -800,6 +849,13 @@ function resetBrandFormToDefault() {
     // Aggiornamento Campi Dropdown Hover / Selezione
     document.getElementById('dropdownHoverBgColorPicker').value = defaultDropdownHoverBg;
     document.getElementById('dropdownHoverBgColorHex').value = defaultDropdownHoverBg;
+
+    // Aggiornamento Campi Dropdown Voce Selezionata
+    document.getElementById('dropdownSelectedTextColorPicker').value = defaultDropdownSelectedText;
+    document.getElementById('dropdownSelectedTextColorHex').value = defaultDropdownSelectedText;
+
+    // Aggiornamento Scomparsa Navbar
+    document.getElementById('hideOnScrollBehavior').value = defaultBehavior;
 
     // Aggiornamento Opacità
     document.getElementById('opacityRange').value = defaultOpacity;

@@ -60,9 +60,12 @@ public class NavbarAdminController {
                     s.setOpacity(90);
                     s.setBgColor("#0f172a");
                     s.setTextColor("#f1f5f9");
+                    s.setSelectedTextColor("#00dc82");
                     s.setDropdownBgColor("#1e293b");
                     s.setDropdownTextColor("#f1f5f9");
                     s.setDropdownHoverBgColor("#00dc82");
+                    s.setDropdownSelectedTextColor("#0f172a");
+                    s.setHideOnScrollBehavior("NONE");
                     return navbarSettingsRepository.save(s);
                 });
         model.addAttribute("settings", settings);
@@ -105,9 +108,12 @@ public class NavbarAdminController {
                     s.setOpacity(90);
                     s.setBgColor("#0f172a");
                     s.setTextColor("#f1f5f9");
+                    s.setSelectedTextColor("#00dc82");
                     s.setDropdownBgColor("#1e293b");
                     s.setDropdownTextColor("#f1f5f9");
                     s.setDropdownHoverBgColor("#00dc82");
+                    s.setDropdownSelectedTextColor("#0f172a");
+                    s.setHideOnScrollBehavior("NONE");
                     return navbarSettingsRepository.save(s);
                 });
         model.addAttribute("settings", settings);
@@ -144,9 +150,12 @@ public class NavbarAdminController {
             @RequestParam(value = "opacity", defaultValue = "90") Integer opacity,
             @RequestParam(value = "bgColor", defaultValue = "#0f172a") String bgColor,
             @RequestParam(value = "textColor", defaultValue = "#f1f5f9") String textColor,
+            @RequestParam(value = "selectedTextColor", defaultValue = "#00dc82") String selectedTextColor,
             @RequestParam(value = "dropdownBgColor", defaultValue = "#1e293b") String dropdownBgColor,
             @RequestParam(value = "dropdownTextColor", defaultValue = "#f1f5f9") String dropdownTextColor,
             @RequestParam(value = "dropdownHoverBgColor", defaultValue = "#00dc82") String dropdownHoverBgColor,
+            @RequestParam(value = "dropdownSelectedTextColor", defaultValue = "#0f172a") String dropdownSelectedTextColor,
+            @RequestParam(value = "hideOnScrollBehavior", defaultValue = "NONE") String hideOnScrollBehavior,
             @RequestParam(value = "logoFile", required = false) MultipartFile logoFile,
             @RequestParam(value = "faviconFile", required = false) MultipartFile faviconFile,
             @RequestParam(value = "removeLogo", required = false, defaultValue = "false") boolean removeLogo,
@@ -160,9 +169,12 @@ public class NavbarAdminController {
         settings.setOpacity(opacity);
         settings.setBgColor(bgColor);
         settings.setTextColor(textColor);
+        settings.setSelectedTextColor(selectedTextColor);
         settings.setDropdownBgColor(dropdownBgColor);
         settings.setDropdownTextColor(dropdownTextColor);
         settings.setDropdownHoverBgColor(dropdownHoverBgColor);
+        settings.setDropdownSelectedTextColor(dropdownSelectedTextColor);
+        settings.setHideOnScrollBehavior(hideOnScrollBehavior);
 
         if (removeLogo) {
             deleteUploadedFile(settings.getLogoUrl());

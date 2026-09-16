@@ -36,14 +36,32 @@
             pointer-events: none;
         }
 
-        /* FIX CSS: Limitiamo lo stile dark alle card dell'editor senza sovrascrivere l'anteprima */
-        .editor-workspace-layout .card,
-        .bg-light,
-        .bg-white {
+        /* FIX CSS: Limitiamo lo stile dark alle card dell'editor senza sovrascrivere l'anteprima né i form/card degli item */
+        .editor-workspace-layout .card:not(#itemsSection):not(#itemFormContainerSection):not(.existing-item-card),
+        .bg-light:not(#itemsSection *):not(#itemFormContainerSection *),
+        .bg-white:not(#itemsSection *):not(#itemFormContainerSection *) {
             background-color: #0f172a !important;
             border: 1px solid #1e293b !important;
             color: #f1f5f9 !important;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        /* Preserviamo i colori originali per l'area di gestione ed editing di cards e slides */
+        #itemsSection,
+        #itemFormContainerSection,
+        #itemFormModal .modal-content {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: #f1f5f9;
+        }
+
+        #itemsSection .card,
+        #itemFormContainerSection .card,
+        .existing-item-card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #f1f5f9;
         }
 
         label,
@@ -87,6 +105,19 @@
             height: 38px;
             padding: 4px;
             cursor: pointer;
+        }
+
+        /* Placeholder chiari per input su tema scuro */
+        .form-control::placeholder {
+            color: #94a3b8 !important;
+            /* Grigio chiaro leggibile ma non invasivo */
+            opacity: 1 !important;
+            /* Previene la riduzione di opacità predefinita di Firefox */
+        }
+
+        /* Stile opzionale quando l'input va in focus */
+        .form-control:focus::placeholder {
+            color: #cbd5e1 !important;
         }
 
         /* LAYOUT WORKSPACE */
@@ -458,9 +489,7 @@
 
                             <div class="d-flex gap-2">
 
-                                <button type="button"
-                                    class="btn btn-sm btn-outline-light"
-                                    onclick="openRowPreview()">
+                                <button type="button" class="btn btn-sm btn-outline-light" onclick="openRowPreview()">
                                     <i class="bi bi-window me-1"></i>
                                     Anteprima in Finestra
                                 </button>
@@ -697,14 +726,14 @@
 
             const multiItemWidth =
                 document.getElementById('customMultiWidthInput')?.value
-                    || (
-                        document.querySelector('[name="multiItemWidth"]')?.value
-                        || '390'
-                    );
+                || (
+                    document.querySelector('[name="multiItemWidth"]')?.value
+                    || '390'
+                );
 
             const multiItemHeight =
                 document.getElementById('customMultiHeightInput')?.value
-                    || Math.round(multiItemWidth * 0.66);
+                || Math.round(multiItemWidth * 0.66);
 
             // Costruzione stili del container esterno
             const blockContainerStyles = [
@@ -835,9 +864,9 @@
 
                 htmlOutput += `</div></div>`;
 
-            // -------------------------------------------------------------
-            // CAROUSEL
-            // -------------------------------------------------------------
+                // -------------------------------------------------------------
+                // CAROUSEL
+                // -------------------------------------------------------------
             } else if (blockType === 'CAROUSEL') {
 
                 const isMulti =
@@ -977,9 +1006,9 @@
                     htmlOutput += `</div>`;
                 }
 
-            // -------------------------------------------------------------
-            // JUMBOTRON / CONTENUTO TESTUALE
-            // -------------------------------------------------------------
+                // -------------------------------------------------------------
+                // JUMBOTRON / CONTENUTO TESTUALE
+                // -------------------------------------------------------------
             } else {
 
                 let contentHtml =
@@ -1000,7 +1029,7 @@
 
                 <div class="container-fluid py-2 tinymce-content">
                     ${contentHtml
-                        || '<span class="text-muted fst-italic">Nessun contenuto inserito nell\'editor.</span>'
+                    || '<span class="text-muted fst-italic">Nessun contenuto inserito nell\'editor.</span>'
                     }
                 </div>
 
@@ -1239,27 +1268,27 @@
                     .querySelectorAll(".custom-card-dim")
                     .forEach(el =>
                         el.style.display =
-                            isCards
-                                ? ""
-                                : "none"
+                        isCards
+                            ? ""
+                            : "none"
                     );
 
                 document
                     .querySelectorAll(".custom-standard-carousel")
                     .forEach(el =>
                         el.style.display =
-                            (isCarousel && !isMultiCarousel)
-                                ? ""
-                                : "none"
+                        (isCarousel && !isMultiCarousel)
+                            ? ""
+                            : "none"
                     );
 
                 document
                     .querySelectorAll(".custom-multi-carousel")
                     .forEach(el =>
                         el.style.display =
-                            isMultiCarousel
-                                ? ""
-                                : "none"
+                        isMultiCarousel
+                            ? ""
+                            : "none"
                     );
 
                 const mostraImmaginePrincipale =
@@ -1308,7 +1337,7 @@
                         && (
                             !editingMode()
                             || addItemTitle.textContent.trim()
-                                !== "Modifica Elemento"
+                            !== "Modifica Elemento"
                         )
                     )
                         addItemTitle.textContent =
@@ -1349,7 +1378,7 @@
                         && (
                             !editingMode()
                             || addItemTitle.textContent.trim()
-                                !== "Modifica Elemento"
+                            !== "Modifica Elemento"
                         )
                     )
                         addItemTitle.textContent =
@@ -1447,7 +1476,7 @@
 
                 return button
                     ? button.textContent.trim()
-                        === "Salva Modifiche Elemento"
+                    === "Salva Modifiche Elemento"
                     : false;
             }
 

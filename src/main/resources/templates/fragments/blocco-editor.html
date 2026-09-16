@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <body>
 
     <!-- FRAGMENT 1: SIDEBAR CONTROLLI -->
@@ -10,13 +11,11 @@
             <div class="accordion-item card mb-3">
                 <h2 class="accordion-header" id="headingGeneral">
                     <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseGeneral" aria-expanded="true"
-                        aria-controls="collapseGeneral">
+                        data-bs-target="#collapseGeneral" aria-expanded="true" aria-controls="collapseGeneral">
                         <i class="bi bi-gear-fill me-2 text-info"></i> Parametri Generali
                     </button>
                 </h2>
-                <div id="collapseGeneral" class="accordion-collapse collapse show"
-                    aria-labelledby="headingGeneral">
+                <div id="collapseGeneral" class="accordion-collapse collapse show" aria-labelledby="headingGeneral">
                     <div class="accordion-body p-3">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Titolo Riga (Uso Interno)</label>
@@ -32,21 +31,21 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Modello Blocco</label>
                             <select id="blockTypeSelect" class="form-select" th:field="*{blockType}">
-                                <option th:each="type : ${blockTypes}" th:value="${type}"
-                                    th:text="${type.label}"></option>
+                                <option th:each="type : ${blockTypes}" th:value="${type}" th:text="${type.label}">
+                                </option>
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Larghezza Blocco (%)</label>
-                            <input type="number" class="form-control" id="widthPercentInput"
-                                th:field="*{widthPercent}" min="10" max="100" placeholder="100" />
+                            <input type="number" class="form-control" id="widthPercentInput" th:field="*{widthPercent}"
+                                min="10" max="100" placeholder="100" />
                         </div>
 
                         <div class="mb-0">
                             <label class="form-label fw-bold">Altezza Riga (px)</label>
-                            <input type="text" class="form-control" id="customHeightInput"
-                                th:field="*{customHeight}" placeholder="auto, 400px, 50vh" />
+                            <input type="text" class="form-control" id="customHeightInput" th:field="*{customHeight}"
+                                placeholder="auto, 400px, 50vh" />
                         </div>
                     </div>
                 </div>
@@ -55,14 +54,12 @@
             <!-- SEZIONE 2: STILE & DIMENSIONI -->
             <div class="accordion-item card mb-3">
                 <h2 class="accordion-header" id="headingLayout">
-                    <button class="accordion-button collapsed fw-bold" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#collapseLayout" aria-expanded="false"
-                        aria-controls="collapseLayout">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseLayout" aria-expanded="false" aria-controls="collapseLayout">
                         <i class="bi bi-sliders me-2 text-warning"></i> Stile & Dimensioni
                     </button>
                 </h2>
-                <div id="collapseLayout" class="accordion-collapse collapse"
-                    aria-labelledby="headingLayout">
+                <div id="collapseLayout" class="accordion-collapse collapse" aria-labelledby="headingLayout">
                     <div class="accordion-body p-3">
 
                         <!-- STILE CAROSELLO -->
@@ -71,17 +68,16 @@
                             <label class="form-label fw-bold text-white small mb-2">Stile Carosello</label>
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="radio" name="carouselType"
-                                    id="carouselTypeStandard" value="STANDARD" th:field="*{carouselType}"
-                                    checked onchange="renderRowPreviewIfOpen()">
-                                <label class="form-check-label text-white small"
-                                    for="carouselTypeStandard">Standard (Hero Slide)</label>
+                                    id="carouselTypeStandard" value="STANDARD" th:field="*{carouselType}" checked
+                                    onchange="renderRowPreviewIfOpen()">
+                                <label class="form-check-label text-white small" for="carouselTypeStandard">Standard
+                                    (Hero Slide)</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="carouselType"
-                                    id="carouselTypeMulti" value="MULTI_IMAGE" th:field="*{carouselType}"
-                                    onchange="renderRowPreviewIfOpen()">
-                                <label class="form-check-label text-white small"
-                                    for="carouselTypeMulti">Multi-Immagine (Nastro)</label>
+                                <input class="form-check-input" type="radio" name="carouselType" id="carouselTypeMulti"
+                                    value="MULTI_IMAGE" th:field="*{carouselType}" onchange="renderRowPreviewIfOpen()">
+                                <label class="form-check-label text-white small" for="carouselTypeMulti">Multi-Immagine
+                                    (Nastro)</label>
                             </div>
                         </div>
 
@@ -147,13 +143,12 @@
                             <div class="mb-2">
                                 <label class="form-label fw-bold text-light small">Colore Bordo</label>
                                 <div class="color-picker-wrapper">
-                                    <input type="color" class="form-control form-control-color"
-                                        id="borderColorPicker"
+                                    <input type="color" class="form-control form-control-color" id="borderColorPicker"
                                         th:value="${block.borderColor != null and !block.borderColor.empty ? block.borderColor : '#334155'}"
                                         oninput="syncBorderColor(this.value)">
-                                    <input type="text" class="form-control form-control-sm"
-                                        id="borderColorInput" th:field="*{borderColor}"
-                                        placeholder="#334155" oninput="syncBorderColorPicker(this.value)">
+                                    <input type="text" class="form-control form-control-sm" id="borderColorInput"
+                                        th:field="*{borderColor}" placeholder="#334155"
+                                        oninput="syncBorderColorPicker(this.value)">
                                 </div>
                             </div>
                         </div>
@@ -171,8 +166,7 @@
                             </div>
                             <div class="mb-2" id="carouselRadiusOption">
                                 <label class="form-label fw-bold text-light small">Spigoli Carosello</label>
-                                <select class="form-select form-select-sm"
-                                    th:field="*{carouselRadiusStyle}">
+                                <select class="form-select form-select-sm" th:field="*{carouselRadiusStyle}">
                                     <option value="ROUNDED">Arrotondati</option>
                                     <option value="SQUARED">Squadrati</option>
                                 </select>
@@ -196,9 +190,8 @@
                                         id="buttonTextColorPicker"
                                         th:value="${block.buttonTextColor != null and !block.buttonTextColor.empty ? block.buttonTextColor : '#0f172a'}"
                                         oninput="syncButtonTextColor(this.value)">
-                                    <input type="text" class="form-control form-control-sm"
-                                        id="buttonTextColorInput" th:field="*{buttonTextColor}"
-                                        placeholder="#0f172a">
+                                    <input type="text" class="form-control form-control-sm" id="buttonTextColorInput"
+                                        th:field="*{buttonTextColor}" placeholder="#0f172a">
                                 </div>
                             </div>
                             <div class="mb-2">
@@ -217,14 +210,12 @@
             <!-- SEZIONE 3: COLORE & SFONDO -->
             <div class="accordion-item card mb-3">
                 <h2 class="accordion-header" id="headingBackground">
-                    <button class="accordion-button collapsed fw-bold" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#collapseBackground" aria-expanded="false"
-                        aria-controls="collapseBackground">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseBackground" aria-expanded="false" aria-controls="collapseBackground">
                         <i class="bi bi-palette-fill me-2 text-success"></i> Colore & Sfondo
                     </button>
                 </h2>
-                <div id="collapseBackground" class="accordion-collapse collapse"
-                    aria-labelledby="headingBackground">
+                <div id="collapseBackground" class="accordion-collapse collapse" aria-labelledby="headingBackground">
                     <div class="accordion-body p-3">
                         <!-- COLORE SFONDO -->
                         <div class="mb-3">
@@ -232,8 +223,8 @@
                             <div class="form-check form-switch mb-2">
                                 <input class="form-check-input" type="checkbox" id="isTransparentSwitch"
                                     onchange="toggleBackgroundType()">
-                                <label class="form-check-label text-warning small"
-                                    for="isTransparentSwitch">Sfondo Trasparente</label>
+                                <label class="form-check-label text-warning small" for="isTransparentSwitch">Sfondo
+                                    Trasparente</label>
                             </div>
                             <div id="colorPickerContainer" class="color-picker-wrapper mb-2">
                                 <input type="color" class="form-control form-control-color" id="bgPicker"
@@ -244,11 +235,10 @@
                             <div class="opacity-control-wrapper">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <label class="form-label fw-bold mb-0 small">Opacità Sfondo</label>
-                                    <span id="bgOpacityValue"
-                                        class="badge bg-success opacity-value">100%</span>
+                                    <span id="bgOpacityValue" class="badge bg-success opacity-value">100%</span>
                                 </div>
-                                <input type="range" class="form-range" id="bgOpacityRange" min="0" max="100"
-                                    step="1" value="100" oninput="syncOpacity(this.value)">
+                                <input type="range" class="form-range" id="bgOpacityRange" min="0" max="100" step="1"
+                                    value="100" oninput="syncOpacity(this.value)">
                             </div>
                         </div>
 
@@ -271,8 +261,8 @@
                                     id="currentBackgroundImagePreview" class="img-thumbnail"
                                     style="max-height: 80px; transition: all 0.2s ease;" />
                                 <div class="form-check mt-2">
-                                    <input class="form-check-input" type="checkbox"
-                                        id="removeBackgroundImage" name="removeBackgroundImage" value="true"
+                                    <input class="form-check-input" type="checkbox" id="removeBackgroundImage"
+                                        name="removeBackgroundImage" value="true"
                                         onchange="toggleBackgroundImageRemoval()">
                                     <label class="form-check-label text-warning small fw-bold"
                                         for="removeBackgroundImage">
@@ -299,8 +289,8 @@
                         <!-- FILTRI REGOLAZIONE SFONDO -->
                         <div id="backgroundImageControls" class="background-image-controls"
                             th:style="${block.backgroundImageUrl != null and !block.backgroundImageUrl.empty} ? '' : 'display:none;'">
-                            <div class="fw-bold text-info small mb-2"><i
-                                    class="bi bi-sliders me-1"></i>Filtri Immagine Sfondo</div>
+                            <div class="fw-bold text-info small mb-2"><i class="bi bi-sliders me-1"></i>Filtri Immagine
+                                Sfondo</div>
 
                             <div class="background-image-control-row mb-2">
                                 <div class="background-image-control-label small">
@@ -354,12 +344,10 @@
                 th:style="${block.blockType != null and (block.blockType.name() == 'JUMBO_DEMO_1' or block.blockType.name() == 'JUMBO_DEMO_2')} ? '' : 'display:none;'">
                 <label class="form-label fw-bold text-success small"><i class="bi bi-upload me-1"></i>
                     Immagine Principale Riga</label>
-                <input type="file" name="imageFile" class="form-control form-control-sm mb-2"
-                    accept="image/*" />
+                <input type="file" name="imageFile" class="form-control form-control-sm mb-2" accept="image/*" />
                 <input type="hidden" id="blockImageUrl" th:field="*{imageUrl}" />
                 <div th:if="${block.imageUrl != null and !block.imageUrl.empty}" class="mt-2">
-                    <img th:src="${block.imageUrl}" alt="Anteprima" class="img-thumbnail"
-                        style="max-height: 80px;" />
+                    <img th:src="${block.imageUrl}" alt="Anteprima" class="img-thumbnail" style="max-height: 80px;" />
                 </div>
             </div>
 
@@ -374,9 +362,8 @@
                 <i class="bi bi-file-text me-1 text-info"></i> Testo / Contenuto Principale (Editor TinyMCE)
             </label>
             <div class="monaco-modal-editor-button">
-                <button type="button" class="btn btn-sm btn-outline-info monaco-open-button mb-2"
-                    data-bs-toggle="modal" data-bs-target="#monacoEditorModal"
-                    onclick="openMonacoFromButton(this)">
+                <button type="button" class="btn btn-sm btn-outline-info monaco-open-button mb-2" data-bs-toggle="modal"
+                    data-bs-target="#monacoEditorModal" onclick="openMonacoFromButton(this)">
                     <i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)
                 </button>
             </div>
@@ -394,12 +381,14 @@
                 </div>
                 <div>
                     <h5 id="itemsSectionTitle" class="mb-0 fw-bold">Gestione Griglia Cards</h5>
-                    <div id="itemsSectionDescription" class="small text-muted">Gestisci gli elementi interni della riga.</div>
+                    <div id="itemsSectionDescription" class="small text-muted">Gestisci gli elementi interni della riga.
+                    </div>
                 </div>
             </div>
 
             <div th:if="${block.id == null}" id="newBlockItemsMessage" class="alert alert-info border-0">
-                <i class="bi bi-info-circle-fill me-2"></i>Salva prima la configurazione iniziale per aggiungere elementi.
+                <i class="bi bi-info-circle-fill me-2"></i>Salva prima la configurazione iniziale per aggiungere
+                elementi.
             </div>
 
             <div th:if="${block.id != null}">
@@ -423,14 +412,13 @@
                                     <i class="bi bi-image fs-3 text-muted"></i>
                                 </div>
                                 <div class="card-body p-2">
-                                    <h6 class="card-title item-title-target fw-bold mb-1"
-                                        th:text="${item.title}">Titolo</h6>
+                                    <h6 class="card-title item-title-target fw-bold mb-1" th:text="${item.title}">Titolo
+                                    </h6>
                                     <div th:if="${item.contentHtml != null and !item.contentHtml.empty}"
                                         class="card-text small text-muted item-content-target text-truncate"
                                         th:utext="${item.contentHtml}"></div>
                                 </div>
-                                <div
-                                    class="card-footer p-2 bg-transparent d-flex justify-content-end gap-1">
+                                <div class="card-footer p-2 bg-transparent d-flex justify-content-end gap-1">
                                     <a th:href="@{/admin/block/{bId}/item/edit/{iId}(bId=${block.id}, iId=${item.id})}"
                                         class="btn btn-xs btn-outline-warning py-0 px-2">
                                         <i class="bi bi-pencil"></i>
@@ -520,13 +508,15 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Testo Pulsante</label>
-                        <input type="text" name="buttonText" class="form-control" placeholder="es. Scopri di più"
+                        <input type="text" name="buttonText" class="form-control"
+                            placeholder="Es. Scopri di più"
                             th:value="${editingItem != null ? editingItem.buttonText : ''}" />
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Link Pulsante</label>
-                        <input type="text" name="buttonUrl" class="form-control" placeholder="https://..."
+                        <input type="text" name="buttonUrl" class="form-control"
+                            placeholder="Es. https://esempio.it o /p/slug"
                             th:value="${editingItem != null ? editingItem.buttonUrl : ''}" />
                     </div>
                 </div>
@@ -552,7 +542,8 @@
         <div class="modal fade" id="monacoEditorModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen" id="monacoModalDialog">
                 <div class="modal-content modal-content-dark">
-                    <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
+                    <div
+                        class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
                         <h5 class="modal-title fw-bold text-white mb-0">
                             <i class="bi bi-code-square text-info me-2"></i>Monaco Code Editor
                             <small class="text-muted fs-6 ms-2">(Emmet abilitato - Premi TAB)</small>
@@ -572,9 +563,10 @@
                                     title="Cancella"><i class="bi bi-x-lg"></i></button>
                             </div>
                             <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(-1)"><i
-                                        class="bi bi-zoom-out"></i></button>
-                                <span class="btn btn-outline-secondary monaco-zoom-label" id="monacoZoomLabel">100%</span>
+                                <button type="button" class="btn btn-outline-light"
+                                    onclick="changeMonacoFontSize(-1)"><i class="bi bi-zoom-out"></i></button>
+                                <span class="btn btn-outline-secondary monaco-zoom-label"
+                                    id="monacoZoomLabel">100%</span>
                                 <button type="button" class="btn btn-outline-light" onclick="changeMonacoFontSize(1)"><i
                                         class="bi bi-zoom-in"></i></button>
                             </div>
@@ -588,12 +580,15 @@
                             <div id="monacoContainer" style="width:100%; height:550px;"></div>
                         </div>
                     </div>
-                    <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
-                        <div class="text-muted small"><span class="badge bg-secondary me-1">Emmet</span>Usa scorciatoie come
+                    <div
+                        class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
+                        <div class="text-muted small"><span class="badge bg-secondary me-1">Emmet</span>Usa scorciatoie
+                            come
                             <code>div.card>h2</code> + TAB
                         </div>
                         <div>
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+                            <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Annulla</button>
                             <button type="button" class="btn btn-info" onclick="saveMonacoContent()">Applica
                                 Modifiche</button>
                         </div>
@@ -606,8 +601,10 @@
         <div class="modal fade" id="rowPreviewModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen" id="rowPreviewModalDialog">
                 <div class="modal-content modal-content-dark">
-                    <div class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
-                        <h5 class="modal-title fw-bold text-white mb-0"><i class="bi bi-eye text-info me-2"></i>Anteprima
+                    <div
+                        class="modal-header border-bottom border-info d-flex justify-content-between align-items-center">
+                        <h5 class="modal-title fw-bold text-white mb-0"><i
+                                class="bi bi-eye text-info me-2"></i>Anteprima
                             Blocco nell'Index</h5>
                         <div>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
@@ -637,7 +634,8 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
-                    <div class="modal-body text-light">Sei sicuro di voler salvare la configurazione di questa riga?</div>
+                    <div class="modal-body text-light">Sei sicuro di voler salvare la configurazione di questa riga?
+                    </div>
                     <div class="modal-footer border-top border-secondary border-opacity-25">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
                         <button type="button" class="btn btn-success"
@@ -816,4 +814,5 @@
         }
     </script>
 </body>
+
 </html>

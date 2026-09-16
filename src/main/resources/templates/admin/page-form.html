@@ -159,6 +159,11 @@
             }
         }
     }
+
+    function resetToAnimatedBg() {
+        document.getElementById('backgroundColorInput').value = '';
+        document.getElementById('pageBgPicker').value = '#080c14';
+    }
 </script>
 </head>
 
@@ -251,6 +256,35 @@
                                    th:value="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? page.formBgColor : '#0f172a'}"
                                    oninput="document.getElementById('formBgColorInput').value = this.value">
                             <input type="text" id="formBgColorInput" th:field="*{formBgColor}" class="form-control" placeholder="es. #1e293b">
+                        </div>
+                    </div>
+                    
+                    <!-- NUOVI INPUT PERSONALIZZAZIONE STILE FORM -->
+                    <div class="col-md-4">
+                        <label class="form-label text-light fw-semibold">Sfondo Input Form</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" class="form-control form-control-color" id="formInputBgPicker"
+                                   th:value="${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? page.formInputBgColor : '#1e293b'}"
+                                   oninput="document.getElementById('formInputBgColorInput').value = this.value">
+                            <input type="text" id="formInputBgColorInput" th:field="*{formInputBgColor}" class="form-control" placeholder="es. #1e293b">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-light fw-semibold">Colore Testo e Label Form</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" class="form-control form-control-color" id="formTextColorPicker"
+                                   th:value="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? page.formTextColor : '#ffffff'}"
+                                   oninput="document.getElementById('formTextColorInput').value = this.value">
+                            <input type="text" id="formTextColorInput" th:field="*{formTextColor}" class="form-control" placeholder="es. #ffffff">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-light fw-semibold">Colore Placeholder Input</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" class="form-control form-control-color" id="formPlaceholderColorPicker"
+                                   th:value="${page.formPlaceholderColor != null and !#strings.isEmpty(page.formPlaceholderColor) ? page.formPlaceholderColor : '#94a3b8'}"
+                                   oninput="document.getElementById('formPlaceholderColorInput').value = this.value">
+                            <input type="text" id="formPlaceholderColorInput" th:field="*{formPlaceholderColor}" class="form-control" placeholder="es. #94a3b8">
                         </div>
                     </div>
                 </div>
@@ -559,6 +593,69 @@
 
             </div>
         `;
+    }
+
+    function applyDynamicStylesToPreviewContainer() {
+
+        const formBgColor = document.getElementById('formBgColorInput')?.value.trim();
+        const formInputBgColor = document.getElementById('formInputBgColorInput')?.value.trim();
+        const formTextColor = document.getElementById('formTextColorInput')?.value.trim();
+        const formPlaceholderColor = document.getElementById('formPlaceholderColorInput')?.value.trim();
+
+        let customStyles = '';
+
+        if (formBgColor) {
+            customStyles += `.form-preview-card { background-color: ${formBgColor} !important; }`;
+        }
+        if (formTextColor) {
+            customStyles += `
+                .form-preview-card,
+                .form-preview-card .form-label,
+                .form-preview-card .form-check-label,
+                .form-preview-card h3,
+                .form-preview-card h4,
+                .form-preview-card h5,
+                .form-preview-card p,
+                .form-preview-card .text-white,
+                .form-preview-card .text-secondary {
+                    color: ${formTextColor} !important;
+                }
+            `;
+        }
+        if (formInputBgColor) {
+            customStyles += `
+                .form-preview-card .form-control,
+                .form-preview-card .form-select,
+                .form-preview-card .form-check-input {
+                    background-color: ${formInputBgColor} !important;
+                }
+            `;
+        }
+        if (formTextColor) {
+            customStyles += `
+                .form-preview-card .form-control,
+                .form-preview-card .form-select {
+                    color: ${formTextColor} !important;
+                }
+            `;
+        }
+        if (formPlaceholderColor) {
+            customStyles += `
+                .form-preview-card .form-control::placeholder,
+                .form-preview-card .form-select::placeholder {
+                    color: ${formPlaceholderColor} !important;
+                    opacity: 1 !important;
+                }
+            `;
+        }
+
+        let styleTag = document.getElementById('preview-dynamic-styles');
+        if (!styleTag) {
+            styleTag = document.createElement('style');
+            styleTag.id = 'preview-dynamic-styles';
+            document.head.appendChild(styleTag);
+        }
+        styleTag.innerHTML = customStyles;
     }
 
     function buildBookingPreview() {
@@ -1000,6 +1097,8 @@
 
         container.innerHTML =
             content;
+
+        applyDynamicStylesToPreviewContainer();
 
         const modalElement =
             document.getElementById(

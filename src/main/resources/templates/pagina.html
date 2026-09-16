@@ -16,12 +16,9 @@
         href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
         rel="stylesheet">
 
-    <!-- PRELOAD FONT NEUE HAAS (solo i pesi principali) -->
+    <!-- PRELOAD FONT NEUE HAAS -->
     <link rel="preload" href="/fonts/NeueHaasDisplayRoman.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-
-    <!-- Se usi spesso anche il grassetto nei testi TinyMCE: -->
     <link rel="preload" href="/fonts/NeueHaasDisplayBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-
 
     <!-- BOOTSTRAP & ICONS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
@@ -136,9 +133,8 @@
         }
 
         /* ============================================================
-   CONTENUTO PROVENIENTE DA TINYMCE
-   Stili sincronizzati con content_style dell'editor.
-   ============================================================ */
+           CONTENUTO PROVENIENTE DA TINYMCE
+           ============================================================ */
 
         @font-face {
             font-family: 'Neue Haas Grotesk Display Pro';
@@ -150,121 +146,9 @@
 
         @font-face {
             font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayRomanItalic.woff2') format('woff2');
-            font-weight: 400;
-            font-style: italic;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayMedium.woff2') format('woff2');
-            font-weight: 500;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayMediumItalic.woff2') format('woff2');
-            font-weight: 500;
-            font-style: italic;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
             src: url('/fonts/NeueHaasDisplayBold.woff2') format('woff2');
             font-weight: 700;
             font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayBoldItalic.woff2') format('woff2');
-            font-weight: 700;
-            font-style: italic;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayBlack.woff2') format('woff2');
-            font-weight: 900;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayBlackItalic.woff2') format('woff2');
-            font-weight: 900;
-            font-style: italic;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayLight.woff2') format('woff2');
-            font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayLightItalic.woff2') format('woff2');
-            font-weight: 300;
-            font-style: italic;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayThin.woff2') format('woff2');
-            font-weight: 200;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayThinItalic.woff2') format('woff2');
-            font-weight: 200;
-            font-style: italic;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayXThin.woff2') format('woff2');
-            font-weight: 100;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayXThinItalic.woff2') format('woff2');
-            font-weight: 100;
-            font-style: italic;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayXXThin.woff2') format('woff2');
-            font-weight: 100;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Neue Haas Grotesk Display Pro';
-            src: url('/fonts/NeueHaasDisplayXXThinItalic.woff2') format('woff2');
-            font-weight: 100;
-            font-style: italic;
             font-display: swap;
         }
 
@@ -325,13 +209,11 @@
             height: auto;
         }
 
-        /* Impedisce alle immagini allineate con float di uscire dal contenitore. */
         .content-body::after {
             content: '';
             display: block;
             clear: both;
         }
-
 
         .empty-content {
             background: rgba(71, 85, 105, 0.25);
@@ -340,7 +222,9 @@
             border-radius: 12px;
         }
 
-        /* STILI FORM */
+        /* ============================================================
+           STILI FORM DINAMICO
+           ============================================================ */
         .booking-card {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(0, 220, 130, 0.3);
@@ -351,99 +235,44 @@
         }
 
         .booking-card label {
-            color: #cbd5e1;
             font-weight: 600;
         }
 
-        .booking-card .form-control {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            color: #ffffff;
-        }
-
-        .booking-card .form-control:focus {
-            background-color: #1e293b;
-            color: #ffffff;
+        /* Gestione generica del focus sugli input */
+        .booking-card .form-control:focus,
+        .booking-card .form-select:focus {
             border-color: #00dc82;
             box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.25);
         }
 
-                /* Quando c'è un colore personalizzato (es. rosso, blu), l'input si adatta allo sfondo invece di restare petrolio */
-        .booking-card.custom-form-bg:not(.theme-light) .form-control,
-        .booking-card.custom-form-bg:not(.theme-light) .form-select {
-            background-color: rgba(0, 0, 0, 0.35) !important;
-            border: 1px solid rgba(255, 255, 255, 0.25) !important;
-            color: #ffffff !important;
+        /* Applicazione dinamica dei colori del placeholder via CSS Variable */
+        .booking-card .form-control::placeholder {
+            color: var(--custom-placeholder-color, #94a3b8);
+            opacity: 1;
         }
-
-        .booking-card.custom-form-bg:not(.theme-light) .form-control:focus,
-        .booking-card.custom-form-bg:not(.theme-light) .form-select:focus {
-            background-color: rgba(0, 0, 0, 0.5) !important;
-            border-color: rgba(255, 255, 255, 0.5) !important;
-            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.15) !important;
-        }
-
 
         /* ============================================================
-   ADATTAMENTO AUTOMATICO SFONDO FORM CHIARO / SCURO
-   ============================================================ */
-/* Quando lo sfondo scelto è CHIARO */
-.booking-card.theme-light {
-    border-color: rgba(0, 0, 0, 0.15) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
-}
+           ADATTAMENTO AUTOMATICO SFONDO FORM CHIARO (FALLBACK)
+           ============================================================ */
+        .booking-card.theme-light {
+            border-color: rgba(0, 0, 0, 0.15) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+        }
 
-.booking-card.theme-light h3,
-.booking-card.theme-light .text-white {
-    color: #0f172a !important;
-}
+        .booking-card.theme-light .border-secondary {
+            border-color: #e2e8f0 !important;
+        }
 
-.booking-card.theme-light p,
-.booking-card.theme-light .text-secondary {
-    color: #475569 !important;
-}
+        .booking-card.theme-light .btn-booking {
+            background: #00dc82 !important;
+            color: #0f172a !important;
+            box-shadow: 0 4px 14px rgba(0, 220, 130, 0.35);
+        }
 
-.booking-card.theme-light label,
-.booking-card.theme-light .form-check-label {
-    color: #1e293b !important;
-    font-weight: 600;
-}
-
-.booking-card.theme-light .border-secondary {
-    border-color: #e2e8f0 !important;
-}
-
-.booking-card.theme-light .form-control,
-.booking-card.theme-light .form-select {
-    background-color: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    color: #0f172a !important;
-}
-
-.booking-card.theme-light .form-control:focus,
-.booking-card.theme-light .form-select:focus {
-    background-color: #ffffff !important;
-    border-color: #00dc82 !important;
-    box-shadow: 0 0 0 0.25rem rgba(0, 220, 130, 0.2) !important;
-    color: #0f172a !important;
-}
-
-.booking-card.theme-light .form-control::placeholder {
-    color: #94a3b8 !important;
-}
-
-/* Pulsante Submit ad alto contrasto per tema chiaro */
-.booking-card.theme-light .btn-booking {
-    background: #00dc82 !important;
-    color: #0f172a !important;
-    box-shadow: 0 4px 14px rgba(0, 220, 130, 0.35);
-}
-
-.booking-card.theme-light .btn-booking:hover {
-    background: #00b368 !important;
-    color: #ffffff !important;
-}
-
+        .booking-card.theme-light .btn-booking:hover {
+            background: #00b368 !important;
+            color: #ffffff !important;
+        }
 
         .btn-booking {
             background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
@@ -484,18 +313,14 @@
                 font-size: 18px;
                 line-height: 1.6;
             }
-
         }
     </style>
 </head>
 
-<body <body th:style="${page.backgroundColor != null and !#strings.isEmpty(page.backgroundColor) ? 'background-color: ' + page.backgroundColor + ' !important; background-image: none !important;' : ''}">
-
+<body th:style="${page.backgroundColor != null and !#strings.isEmpty(page.backgroundColor) ? 'background-color: ' + page.backgroundColor + ' !important; background-image: none !important;' : ''}">
 
     <!-- SFONDO ANIMATO -->
-        <!-- CANVAS SFONDO ANIMATO: renderizzato SOLO se NON è stato scelto un colore personalizzato -->
     <canvas th:if="${page.backgroundColor == null or #strings.isEmpty(page.backgroundColor)}" id="tech-bg-canvas"></canvas>
-
 
     <!-- NAVBAR CONDIVISA -->
     <div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -509,11 +334,10 @@
 
                 <!-- TITOLO -->
                 <h1 class="page-title"
-    th:text="${page.title}"
-    th:style="${page.titleColor != null and !#strings.isEmpty(page.titleColor) ? 'color: ' + page.titleColor + ' !important;' : ''}">
-    Titolo pagina
-</h1>
-
+                    th:text="${page.title}"
+                    th:style="${page.titleColor != null and !#strings.isEmpty(page.titleColor) ? 'color: ' + page.titleColor + ' !important;' : ''}">
+                    Titolo pagina
+                </h1>
 
                 <!-- CONTENUTO DALL'EDITOR TINYMCE -->
                 <div class="content-body" th:if="${page.contentHtml != null and !#strings.isEmpty(page.contentHtml)}"
@@ -528,42 +352,44 @@
                 <!-- BLOCCO FORM DINAMICO -->
                 <div th:if="${page.getFormType() != 'NONE'}" class="mt-5">
                     <div class="booking-card p-4 p-md-5"
-     th:classappend="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor)} ? 'custom-form-bg' : ''"
-     th:style="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? 'background-color: ' + page.formBgColor + ' !important;' : ''}">
-
-
+                         th:classappend="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? 'custom-form-bg' : ''}"
+                         th:style="(${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? 'background-color: ' + page.formBgColor + ' !important; ' : ''}) + 
+                                  (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''}) +
+                                  (${page.formPlaceholderColor != null and !#strings.isEmpty(page.formPlaceholderColor) ? '--custom-placeholder-color: ' + page.formPlaceholderColor + ';' : ''})">
 
                         <div class="border-bottom border-secondary pb-3 mb-4">
                             <!-- INTESTAZIONE PER PRENOTAZIONE CORSO -->
                             <th:block th:if="${page.getFormType() == 'BOOKING'}">
-                                <h3 class="text-white fw-bold mb-2">
+                                <h3 class="fw-bold mb-2" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : ''}">
                                     <i class="bi bi-pencil-square text-success me-2"></i>Modulo di Prenotazione Corso
                                 </h3>
-                                <p class="text-secondary mb-0">Compila la tua anagrafica per richiedere l'iscrizione al
-                                    corso.</p>
+                                <p class="mb-0" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; opacity: 0.8;' : 'color: #cbd5e1;'}">
+                                    Compila la tua anagrafica per richiedere l'iscrizione al corso.
+                                </p>
                             </th:block>
 
                             <!-- INTESTAZIONE PER RICHIESTA INFORMAZIONI -->
                             <th:block th:if="${page.getFormType() == 'INFO'}">
-                                <h3 class="text-white fw-bold mb-2">
+                                <h3 class="fw-bold mb-2" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : ''}">
                                     <i class="bi bi-envelope-paper text-success me-2"></i>Richiesta Informazioni
                                 </h3>
-                                <p class="text-secondary mb-0">Compila il modulo sottostante per richiedere maggiori
-                                    dettagli.</p>
+                                <p class="mb-0" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; opacity: 0.8;' : 'color: #cbd5e1;'}">
+                                    Compila il modulo sottostante per richiedere maggiori dettagli.
+                                </p>
                             </th:block>
 
                             <!-- INTESTAZIONE PER RICHIESTA INFORMAZIONI ORGANIZZAZIONI -->
                             <th:block th:if="${page.getFormType() == 'ORG_INFO'}">
-                                <h3 class="text-white fw-bold mb-2">
-                                    <i class="bi bi-building text-success me-2"></i>Richiesta Informazioni per
-                                    Organizzazioni
+                                <h3 class="fw-bold mb-2" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : ''}">
+                                    <i class="bi bi-building text-success me-2"></i>Richiesta Informazioni per Organizzazioni
                                 </h3>
-                                <p class="text-secondary mb-0">Compila il modulo con i dati aziendali per richiedere
-                                    informazioni dedicate.</p>
+                                <p class="mb-0" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; opacity: 0.8;' : 'color: #cbd5e1;'}">
+                                    Compila il modulo con i dati aziendali per richiedere informazioni dedicate.
+                                </p>
                             </th:block>
                         </div>
 
-                        <!-- NOTIFICA ESITO INLINE (Opzionale) -->
+                        <!-- NOTIFICA ESITO INLINE -->
                         <div th:if="${successMessage}" class="alert alert-success border-0 shadow mb-4">
                             <i class="bi bi-check-circle-fill me-2"></i>
                             <span th:text="${successMessage}"></span>
@@ -595,77 +421,84 @@
                                 <div class="col-md-4">
                                     <span class="text-secondary d-block small">Nome Corso:</span>
                                     <strong class="text-white fs-6"
-                                        th:text="${page.courseName != null ? page.courseName : page.title}">Nome
-                                        Corso</strong>
+                                        th:text="${page.courseName != null ? page.courseName : page.title}">Nome Corso</strong>
                                 </div>
                             </div>
 
                             <!-- ANAGRAFICA UTENTE -->
-                            <h5 class="text-white mb-3">
+                            <h5 class="mb-3" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #ffffff;'}">
                                 <i class="bi bi-person-vcard me-2 text-success"></i>
-                                <span
-                                    th:text="${page.getFormType() == 'ORG_INFO' ? 'I tuoi Dati e Rif. Aziendali' : 'I tuoi Dati Personali'}">I
-                                    tuoi Dati Personali</span>
+                                <span th:text="${page.getFormType() == 'ORG_INFO' ? 'I tuoi Dati e Rif. Aziendali' : 'I tuoi Dati Personali'}">I tuoi Dati Personali</span>
                             </h5>
 
                             <div class="row g-3">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Nome *</label>
-                                    <input type="text" name="nome" class="form-control"
-                                        placeholder="Inserisci il tuo nome" required>
+                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Nome *</label>
+                                    <input type="text" name="nome" class="form-control" placeholder="Inserisci il tuo nome" required
+                                           th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                     (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cognome *</label>
-                                    <input type="text" name="cognome" class="form-control"
-                                        placeholder="Inserisci il tuo cognome" required>
+                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Cognome *</label>
+                                    <input type="text" name="cognome" class="form-control" placeholder="Inserisci il tuo cognome" required
+                                           th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                     (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Email *</label>
-                                    <input type="email" name="email" class="form-control" placeholder="nome@esempio.it"
-                                        required>
+                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Email *</label>
+                                    <input type="email" name="email" class="form-control" placeholder="nome@esempio.it" required
+                                           th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                     (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Telefono / Cellulare *</label>
-                                    <input type="tel" name="telefono" class="form-control" placeholder="+39 333 1234567"
-                                        required>
+                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Telefono / Cellulare *</label>
+                                    <input type="tel" name="telefono" class="form-control" placeholder="+39 333 1234567" required
+                                           th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                     (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                 </div>
 
                                 <!-- CAMPI SOLO PER PRENOTAZIONE CORSO -->
                                 <th:block th:if="${page.getFormType() == 'BOOKING'}">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Codice Fiscale *</label>
-                                        <input type="text" name="codiceFiscale" class="form-control"
-                                            placeholder="AAAAAA00A00A000A" required>
+                                        <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Codice Fiscale *</label>
+                                        <input type="text" name="codiceFiscale" class="form-control" placeholder="AAAAAA00A00A000A" required
+                                               th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                         (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Città di Residenza</label>
-                                        <input type="text" name="citta" class="form-control" placeholder="es. Napoli">
+                                        <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Città di Residenza</label>
+                                        <input type="text" name="citta" class="form-control" placeholder="es. Napoli"
+                                               th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                         (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                     </div>
                                 </th:block>
 
                                 <!-- CAMPI SOLO PER RICHIESTA INFORMAZIONI ORGANIZZAZIONI -->
                                 <th:block th:if="${page.getFormType() == 'ORG_INFO'}">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Organizzazione / Azienda *</label>
-                                        <input type="text" name="organizzazione" class="form-control"
-                                            placeholder="es. Nome Azienda / Ente" required>
+                                        <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Organizzazione / Azienda *</label>
+                                        <input type="text" name="organizzazione" class="form-control" placeholder="es. Nome Azienda / Ente" required
+                                               th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                         (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Ruolo Aziendale *</label>
-                                        <input type="text" name="ruolo" class="form-control"
-                                            placeholder="es. HR Manager, Responsabile Formazione" required>
+                                        <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Ruolo Aziendale *</label>
+                                        <input type="text" name="ruolo" class="form-control" placeholder="es. HR Manager, Responsabile Formazione" required
+                                               th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                         (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                     </div>
                                 </th:block>
 
                                 <div class="col-12 mb-4">
-                                    <label class="form-label">Note / Richieste Particolari</label>
-                                    <textarea name="note" class="form-control" rows="3"
-                                        placeholder="Scrivi qui eventuali domande o note..."></textarea>
+                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Note / Richieste Particolari</label>
+                                    <textarea name="note" class="form-control" rows="3" placeholder="Scrivi qui eventuali domande o note..."
+                                              th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
+                                                        (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})"></textarea>
                                 </div>
                             </div>
 
@@ -673,31 +506,28 @@
                             <div class="border-top border-secondary pt-3 mb-4">
                                 <!-- 1. Privacy (Obbligatorio) -->
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" name="privacyCheck"
-                                        id="privacyCheck" required>
-                                    <label class="form-check-label text-secondary small" for="privacyCheck">
-                                        Dichiaro di aver letto e accettato l'<strong>Informativa sulla Privacy</strong>
-                                        *
+                                    <input class="form-check-input" type="checkbox" name="privacyCheck" id="privacyCheck" required>
+                                    <label class="form-check-label small" for="privacyCheck"
+                                           th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">
+                                        Dichiaro di aver letto e accettato l'<strong>Informativa sulla Privacy</strong> *
                                     </label>
                                 </div>
 
                                 <!-- 2. Marketing (Opzionale) -->
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" name="marketingCheck"
-                                        id="marketingCheck">
-                                    <label class="form-check-label text-secondary small" for="marketingCheck">
-                                        Acconsento al trattamento dei dati per comunicazioni promozionali e newsletter
-                                        (Opzionale)
+                                    <input class="form-check-input" type="checkbox" name="marketingCheck" id="marketingCheck">
+                                    <label class="form-check-label small" for="marketingCheck"
+                                           th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">
+                                        Acconsento al trattamento dei dati per comunicazioni promozionali e newsletter (Opzionale)
                                     </label>
                                 </div>
 
                                 <!-- 3. Profilazione / Terze Parti (Opzionale) -->
                                 <div class="form-check mb-4">
-                                    <input class="form-check-input" type="checkbox" name="thirdPartyCheck"
-                                        id="thirdPartyCheck">
-                                    <label class="form-check-label text-secondary small" for="thirdPartyCheck">
-                                        Acconsento alla comunicazione dei dati a partner per attività di profilazione e
-                                        marketing (Opzionale)
+                                    <input class="form-check-input" type="checkbox" name="thirdPartyCheck" id="thirdPartyCheck">
+                                    <label class="form-check-label small" for="thirdPartyCheck"
+                                           th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">
+                                        Acconsento alla comunicazione dei dati a partner per attività di profilazione e marketing (Opzionale)
                                     </label>
                                 </div>
 
@@ -727,15 +557,13 @@
                     <h5 class="modal-title fw-bold" id="confirmModalLabel">
                         <i class="bi bi-question-circle text-success me-2"></i>Conferma Invio
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Chiudi"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
                 </div>
                 <div class="modal-body text-secondary fs-6">
                     Sei sicuro di voler procedere con l'invio della richiesta?
                 </div>
                 <div class="modal-footer border-secondary border-opacity-50">
-                    <button type="button" class="btn btn-outline-secondary text-white"
-                        data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-outline-secondary text-white" data-bs-dismiss="modal">Annulla</button>
                     <button type="button" id="confirmSubmitBtn" class="btn btn-booking">
                         <i class="bi bi-check-lg me-1"></i>Conferma e Invia
                     </button>
@@ -745,16 +573,14 @@
     </div>
 
     <!-- MODALE ESITO AVVENUTO INVIO -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true"
-        th:if="${successMessage}">
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true" th:if="${successMessage}">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-glass text-white shadow-lg border-success border-opacity-50">
                 <div class="modal-header border-secondary border-opacity-50">
                     <h5 class="modal-title fw-bold text-success" id="successModalLabel">
                         <i class="bi bi-check-circle-fill me-2"></i>Richiesta Inviata!
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Chiudi"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
                 </div>
                 <div class="modal-body text-light fs-6 py-4 text-center">
                     <i class="bi bi-envelope-check text-success display-3 d-block mb-3"></i>
@@ -781,13 +607,11 @@
             const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
             const successModalEl = document.getElementById('successModal');
 
-            // Apertura automatica del modale di esito positivo (se presente successMessage)
             if (successModalEl) {
                 const successModal = new bootstrap.Modal(successModalEl);
                 successModal.show();
             }
 
-            // Funzioni helper per la gestione dei cookie
             function getCookie(name) {
                 const value = `; ${document.cookie}`;
                 const parts = value.split(`; ${name}=`);
@@ -799,7 +623,6 @@
                 document.cookie = `${name}=${value}; max-age=${seconds}; path=/; SameSite=Lax`;
             }
 
-            // Controllo presenza cookie Antispam all'avvio
             const bookingCard = document.querySelector('.booking-card');
             if (getCookie('booking_cooldown')) {
                 if (bookingCard) {
@@ -821,22 +644,20 @@
 
                 bookingForm.addEventListener('submit', function (e) {
                     if (!bookingForm.checkValidity()) {
-                        return; // Lascia gestire la validazione nativa dei campi obbligatori
+                        return;
                     }
 
                     if (!bookingForm.dataset.confirmed) {
-                        e.preventDefault(); // Blocca l'invio diretto
-                        confirmModal.show(); // Mostra il popup
+                        e.preventDefault();
+                        confirmModal.show();
                     }
                 });
 
                 confirmSubmitBtn.addEventListener('click', function () {
-                    // Imposta il cookie con durata 600 secondi (10 minuti)
                     setCookie('booking_cooldown', 'active', 600);
-
                     bookingForm.dataset.confirmed = "true";
                     confirmModal.hide();
-                    bookingForm.submit(); // Esegue l'invio effettivo del form
+                    bookingForm.submit();
                 });
             }
         });
@@ -844,92 +665,86 @@
 
     <!-- SCRIPT SFONDO CANVAS ANIMATO -->
     <script>
-document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
 
-    // ========================================================
-    // 1. GESTIONE SFONDO ANIMATO TECH CANVAS
-    // ========================================================
-    /** @type {HTMLCanvasElement|null} */
-    const canvas = document.getElementById('tech-bg-canvas');
+            // 1. GESTIONE SFONDO ANIMATO TECH CANVAS
+            const canvas = document.getElementById('tech-bg-canvas');
 
-    if (canvas && typeof canvas.getContext === 'function') {
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-            let width, height, particles;
+            if (canvas && typeof canvas.getContext === 'function') {
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                    let width, height, particles;
 
-            function init() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-                particles = Array.from({ length: 45 }, () => ({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    radius: Math.random() * 1.8 + 1
-                }));
-            }
-
-            function animate() {
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = 'rgba(0, 220, 130, 0.4)';
-                ctx.strokeStyle = 'rgba(0, 220, 130, 0.08)';
-
-                particles.forEach((p, i) => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    if (p.x < 0 || p.x > width) p.vx *= -1;
-                    if (p.y < 0 || p.y > height) p.vy *= -1;
-
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const p2 = particles[j];
-                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                        if (dist < 130) {
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.stroke();
-                        }
+                    function init() {
+                        width = canvas.width = window.innerWidth;
+                        height = canvas.height = window.innerHeight;
+                        particles = Array.from({ length: 45 }, () => ({
+                            x: Math.random() * width,
+                            y: Math.random() * height,
+                            vx: (Math.random() - 0.5) * 0.5,
+                            vy: (Math.random() - 0.5) * 0.5,
+                            radius: Math.random() * 1.8 + 1
+                        }));
                     }
-                });
-                requestAnimationFrame(animate);
+
+                    function animate() {
+                        ctx.clearRect(0, 0, width, height);
+                        ctx.fillStyle = 'rgba(0, 220, 130, 0.4)';
+                        ctx.strokeStyle = 'rgba(0, 220, 130, 0.08)';
+
+                        particles.forEach((p, i) => {
+                            p.x += p.vx;
+                            p.y += p.vy;
+
+                            if (p.x < 0 || p.x > width) p.vx *= -1;
+                            if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            for (let j = i + 1; j < particles.length; j++) {
+                                const p2 = particles[j];
+                                const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                                if (dist < 130) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(p.x, p.y);
+                                    ctx.lineTo(p2.x, p2.y);
+                                    ctx.stroke();
+                                }
+                            }
+                        });
+                        requestAnimationFrame(animate);
+                    }
+
+                    window.addEventListener('resize', init);
+                    init();
+                    animate();
+                }
             }
 
-            window.addEventListener('resize', init);
-            init();
-            animate();
-        }
-    }
+            // 2. ADATTAMENTO CONTRASTO AUTOMATICO CARD FORM (FALLBACK)
+            const card = document.querySelector(".booking-card");
+            if (card) {
+                const bg = window.getComputedStyle(card).backgroundColor;
+                const match = bg.match(/\d+/g);
 
-    // ========================================================
-    // 2. ADATTAMENTO CONTRASTO AUTOMATICO CARD FORM
-    // ========================================================
-    const card = document.querySelector(".booking-card");
-    if (card) {
-        const bg = window.getComputedStyle(card).backgroundColor;
-        const match = bg.match(/\d+/g);
+                if (match && match.length >= 3) {
+                    const r = parseInt(match[0], 10);
+                    const g = parseInt(match[1], 10);
+                    const b = parseInt(match[2], 10);
 
-        if (match && match.length >= 3) {
-            const r = parseInt(match[0], 10);
-            const g = parseInt(match[1], 10);
-            const b = parseInt(match[2], 10);
+                    const luminance = (r * 299 + g * 587 + b * 114) / 1000;
 
-            // Luminosità ITU-R BT.601
-            const luminance = (r * 299 + g * 587 + b * 114) / 1000;
-
-            if (luminance > 145) {
-                card.classList.add("theme-light");
-            } else {
-                card.classList.remove("theme-light");
+                    if (luminance > 145) {
+                        card.classList.add("theme-light");
+                    } else {
+                        card.classList.remove("theme-light");
+                    }
+                }
             }
-        }
-    }
-});
-</script>
+        });
+    </script>
 
 </body>
 

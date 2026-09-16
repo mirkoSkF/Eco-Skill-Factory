@@ -116,6 +116,39 @@ public class Page {
         this.formType = "NONE";
     }
 
+    // Colore Sfondo Input Form
+    private String formInputBgColor;
+
+    // Colore Testo & Label Form
+    private String formTextColor;
+
+    // Colore Placeholder Input Form
+    private String formPlaceholderColor;
+
+    public String getFormInputBgColor() {
+        return formInputBgColor;
+    }
+
+    public void setFormInputBgColor(String formInputBgColor) {
+        this.formInputBgColor = formInputBgColor;
+    }
+
+    public String getFormTextColor() {
+        return formTextColor;
+    }
+
+    public void setFormTextColor(String formTextColor) {
+        this.formTextColor = formTextColor;
+    }
+
+    public String getFormPlaceholderColor() {
+        return formPlaceholderColor;
+    }
+
+    public void setFormPlaceholderColor(String formPlaceholderColor) {
+        this.formPlaceholderColor = formPlaceholderColor;
+    }
+
 
     // ============================================================
     // GETTERS E SETTERS BASE

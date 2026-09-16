@@ -232,10 +232,36 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            color: var(--custom-form-color, #ffffff);
+        }
+
+        /* Forzatura del colore per tutti i figli testuali ed icone */
+        .booking-card[style*="color:"] *,
+        .booking-card[style*="--custom-form-color"] * {
+            color: inherit;
         }
 
         .booking-card label {
             font-weight: 600;
+        }
+
+        /* Personalizzazione Checkbox Privacy */
+        .booking-card .form-check-input {
+            border: 1px solid var(--custom-form-color, #ffffff) !important;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .booking-card .form-check-input:checked {
+            background-color: var(--custom-form-color, #ffffff) !important;
+            border-color: var(--custom-form-color, #ffffff) !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23000000' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
+        }
+
+        .booking-card.theme-light .form-check-input:checked {
+            background-color: var(--custom-form-bg-color, #0f172a) !important;
+            border-color: var(--custom-form-bg-color, #0f172a) !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
         }
 
         /* Gestione generica del focus sugli input */
@@ -247,8 +273,31 @@
 
         /* Applicazione dinamica dei colori del placeholder via CSS Variable */
         .booking-card .form-control::placeholder {
-            color: var(--custom-placeholder-color, #94a3b8);
+            color: var(--custom-placeholder-color, #94a3b8) !important;
             opacity: 1;
+        }
+
+        /* Personalizzazione Bottone Invia Richiesta */
+        .btn-booking {
+            background-color: var(--custom-form-bg-color, #0f172a) !important;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15)) !important;
+            color: var(--custom-form-color, #ffffff) !important;
+            border: 1px solid var(--custom-form-color, #ffffff) !important;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            padding: 0.8rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-booking i {
+            color: var(--custom-form-color, #ffffff) !important;
+        }
+
+        .btn-booking:hover {
+            transform: translateY(-2px);
+            background-image: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            color: var(--custom-form-color, #ffffff) !important;
         }
 
         /* ============================================================
@@ -257,37 +306,6 @@
         .booking-card.theme-light {
             border-color: rgba(0, 0, 0, 0.15) !important;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
-        }
-
-        .booking-card.theme-light .border-secondary {
-            border-color: #e2e8f0 !important;
-        }
-
-        .booking-card.theme-light .btn-booking {
-            background: #00dc82 !important;
-            color: #0f172a !important;
-            box-shadow: 0 4px 14px rgba(0, 220, 130, 0.35);
-        }
-
-        .booking-card.theme-light .btn-booking:hover {
-            background: #00b368 !important;
-            color: #ffffff !important;
-        }
-
-        .btn-booking {
-            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
-            color: #0f172a;
-            font-weight: 700;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.8rem 2rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-booking:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
-            color: #0f172a;
         }
 
         /* STILI POPUP MODALE */
@@ -353,37 +371,39 @@
                 <div th:if="${page.getFormType() != 'NONE'}" class="mt-5">
                     <div class="booking-card p-4 p-md-5"
                          th:classappend="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? 'custom-form-bg' : ''}"
-                         th:style="(${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? 'background-color: ' + page.formBgColor + ' !important; ' : ''}) + 
-                                  (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''}) +
+                         th:style="(${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? 'background-color: ' + page.formBgColor + ' !important; --custom-form-bg-color: ' + page.formBgColor + ';' : '--custom-form-bg-color: #0f172a;'}) + 
+                                  (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; --custom-form-color: ' + page.formTextColor + ';' : '--custom-form-color: #ffffff;'}) +
                                   (${page.formPlaceholderColor != null and !#strings.isEmpty(page.formPlaceholderColor) ? '--custom-placeholder-color: ' + page.formPlaceholderColor + ';' : ''})">
 
-                        <div class="border-bottom border-secondary pb-3 mb-4">
+                        <div class="border-bottom pb-3 mb-4"
+                             th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'border-color: ' + page.formTextColor + ' !important;' : 'border-color: rgba(255,255,255,0.2) !important;'}">
+                            
                             <!-- INTESTAZIONE PER PRENOTAZIONE CORSO -->
                             <th:block th:if="${page.getFormType() == 'BOOKING'}">
-                                <h3 class="fw-bold mb-2" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : ''}">
-                                    <i class="bi bi-pencil-square text-success me-2"></i>Modulo di Prenotazione Corso
+                                <h3 class="fw-bold mb-2">
+                                    <i class="bi bi-pencil-square me-2"></i>Modulo di Prenotazione Corso
                                 </h3>
-                                <p class="mb-0" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; opacity: 0.8;' : 'color: #cbd5e1;'}">
+                                <p class="mb-0" style="opacity: 0.85;">
                                     Compila la tua anagrafica per richiedere l'iscrizione al corso.
                                 </p>
                             </th:block>
 
                             <!-- INTESTAZIONE PER RICHIESTA INFORMAZIONI -->
                             <th:block th:if="${page.getFormType() == 'INFO'}">
-                                <h3 class="fw-bold mb-2" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : ''}">
-                                    <i class="bi bi-envelope-paper text-success me-2"></i>Richiesta Informazioni
+                                <h3 class="fw-bold mb-2">
+                                    <i class="bi bi-envelope-paper me-2"></i>Richiesta Informazioni
                                 </h3>
-                                <p class="mb-0" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; opacity: 0.8;' : 'color: #cbd5e1;'}">
+                                <p class="mb-0" style="opacity: 0.85;">
                                     Compila il modulo sottostante per richiedere maggiori dettagli.
                                 </p>
                             </th:block>
 
                             <!-- INTESTAZIONE PER RICHIESTA INFORMAZIONI ORGANIZZAZIONI -->
                             <th:block th:if="${page.getFormType() == 'ORG_INFO'}">
-                                <h3 class="fw-bold mb-2" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : ''}">
-                                    <i class="bi bi-building text-success me-2"></i>Richiesta Informazioni per Organizzazioni
+                                <h3 class="fw-bold mb-2">
+                                    <i class="bi bi-building me-2"></i>Richiesta Informazioni per Organizzazioni
                                 </h3>
-                                <p class="mb-0" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; opacity: 0.8;' : 'color: #cbd5e1;'}">
+                                <p class="mb-0" style="opacity: 0.85;">
                                     Compila il modulo con i dati aziendali per richiedere informazioni dedicate.
                                 </p>
                             </th:block>
@@ -407,54 +427,73 @@
 
                             <!-- RIEPILOGO CORSO SELEZIONATO (SOLO PER PRENOTAZIONE CORSO) -->
                             <div th:if="${page.getFormType() == 'BOOKING'}"
-                                class="row g-3 mb-4 p-3 rounded bg-dark border border-secondary border-opacity-50">
+                                class="row g-3 mb-4 p-3"
+                                th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'border-color: ' + page.formTextColor + ' !important;' : 'border-color: rgba(255,255,255,0.2) !important;'}">
+                                
+                                <!-- TIPOLOGIA -->
                                 <div class="col-md-4">
-                                    <span class="text-secondary d-block small">Tipologia:</span>
-                                    <strong class="text-info fs-6"
-                                        th:text="${page.courseType != null ? page.courseType : 'Corso'}">Tipologia</strong>
+                                    <div class="p-3 border rounded-2"
+                                         th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'border-color: ' + page.formTextColor + ' !important;' : 'border-color: rgba(255,255,255,0.2) !important;'}">
+                                        <span class="d-block small mb-1" style="opacity: 0.85;">
+                                            <i class="bi bi-tag me-1"></i>Tipologia:
+                                        </span>
+                                        <strong class="fs-6 d-block" th:text="${page.courseType != null ? page.courseType : 'Corso'}">Tipologia</strong>
+                                    </div>
                                 </div>
+                                
+                                <!-- CODICE CORSO -->
                                 <div class="col-md-4">
-                                    <span class="text-secondary d-block small">Codice Corso:</span>
-                                    <strong class="text-success fs-6"
-                                        th:text="${page.courseCode != null ? page.courseCode : 'N/D'}">Codice</strong>
+                                    <div class="p-3 border rounded-2"
+                                         th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'border-color: ' + page.formTextColor + ' !important;' : 'border-color: rgba(255,255,255,0.2) !important;'}">
+                                        <span class="d-block small mb-1" style="opacity: 0.85;">
+                                            <i class="bi bi-code-slash me-1"></i>Codice Corso:
+                                        </span>
+                                        <strong class="fs-6 d-block" th:text="${page.courseCode != null ? page.courseCode : 'N/D'}">Codice</strong>
+                                    </div>
                                 </div>
+                                
+                                <!-- NOME CORSO -->
                                 <div class="col-md-4">
-                                    <span class="text-secondary d-block small">Nome Corso:</span>
-                                    <strong class="text-white fs-6"
-                                        th:text="${page.courseName != null ? page.courseName : page.title}">Nome Corso</strong>
+                                    <div class="p-3 border rounded-2"
+                                         th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'border-color: ' + page.formTextColor + ' !important;' : 'border-color: rgba(255,255,255,0.2) !important;'}">
+                                        <span class="d-block small mb-1" style="opacity: 0.85;">
+                                            <i class="bi bi-journal-bookmark me-1"></i>Nome Corso:
+                                        </span>
+                                        <strong class="fs-6 d-block" th:text="${page.courseName != null ? page.courseName : page.title}">Nome Corso</strong>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- ANAGRAFICA UTENTE -->
-                            <h5 class="mb-3" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #ffffff;'}">
-                                <i class="bi bi-person-vcard me-2 text-success"></i>
+                            <h5 class="mb-3">
+                                <i class="bi bi-person-vcard me-2"></i>
                                 <span th:text="${page.getFormType() == 'ORG_INFO' ? 'I tuoi Dati e Rif. Aziendali' : 'I tuoi Dati Personali'}">I tuoi Dati Personali</span>
                             </h5>
 
                             <div class="row g-3">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Nome *</label>
+                                    <label class="form-label">Nome *</label>
                                     <input type="text" name="nome" class="form-control" placeholder="Inserisci il tuo nome" required
                                            th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                      (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Cognome *</label>
+                                    <label class="form-label">Cognome *</label>
                                     <input type="text" name="cognome" class="form-control" placeholder="Inserisci il tuo cognome" required
                                            th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                      (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Email *</label>
+                                    <label class="form-label">Email *</label>
                                     <input type="email" name="email" class="form-control" placeholder="nome@esempio.it" required
                                            th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                      (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Telefono / Cellulare *</label>
+                                    <label class="form-label">Telefono / Cellulare *</label>
                                     <input type="tel" name="telefono" class="form-control" placeholder="+39 333 1234567" required
                                            th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                      (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
@@ -463,14 +502,14 @@
                                 <!-- CAMPI SOLO PER PRENOTAZIONE CORSO -->
                                 <th:block th:if="${page.getFormType() == 'BOOKING'}">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Codice Fiscale *</label>
+                                        <label class="form-label">Codice Fiscale *</label>
                                         <input type="text" name="codiceFiscale" class="form-control" placeholder="AAAAAA00A00A000A" required
                                                th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                          (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Città di Residenza</label>
+                                        <label class="form-label">Città di Residenza</label>
                                         <input type="text" name="citta" class="form-control" placeholder="es. Napoli"
                                                th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                          (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
@@ -480,14 +519,14 @@
                                 <!-- CAMPI SOLO PER RICHIESTA INFORMAZIONI ORGANIZZAZIONI -->
                                 <th:block th:if="${page.getFormType() == 'ORG_INFO'}">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Organizzazione / Azienda *</label>
+                                        <label class="form-label">Organizzazione / Azienda *</label>
                                         <input type="text" name="organizzazione" class="form-control" placeholder="es. Nome Azienda / Ente" required
                                                th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                          (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Ruolo Aziendale *</label>
+                                        <label class="form-label">Ruolo Aziendale *</label>
                                         <input type="text" name="ruolo" class="form-control" placeholder="es. HR Manager, Responsabile Formazione" required
                                                th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                          (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})">
@@ -495,7 +534,7 @@
                                 </th:block>
 
                                 <div class="col-12 mb-4">
-                                    <label class="form-label" th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">Note / Richieste Particolari</label>
+                                    <label class="form-label">Note / Richieste Particolari</label>
                                     <textarea name="note" class="form-control" rows="3" placeholder="Scrivi qui eventuali domande o note..."
                                               th:style="(${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? 'background-color: ' + page.formInputBgColor + ' !important; ' : ''}) + 
                                                         (${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important; ' : ''})"></textarea>
@@ -503,12 +542,13 @@
                             </div>
 
                             <!-- PRIVACY & CONSENSI -->
-                            <div class="border-top border-secondary pt-3 mb-4">
+                            <div class="border-top pt-3 mb-4"
+                                 th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'border-color: ' + page.formTextColor + ' !important;' : 'border-color: rgba(255,255,255,0.2) !important;'}">
+                                
                                 <!-- 1. Privacy (Obbligatorio) -->
                                 <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox" name="privacyCheck" id="privacyCheck" required>
-                                    <label class="form-check-label small" for="privacyCheck"
-                                           th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">
+                                    <label class="form-check-label small" for="privacyCheck">
                                         Dichiaro di aver letto e accettato l'<strong>Informativa sulla Privacy</strong> *
                                     </label>
                                 </div>
@@ -516,8 +556,7 @@
                                 <!-- 2. Marketing (Opzionale) -->
                                 <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox" name="marketingCheck" id="marketingCheck">
-                                    <label class="form-check-label small" for="marketingCheck"
-                                           th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">
+                                    <label class="form-check-label small" for="marketingCheck">
                                         Acconsento al trattamento dei dati per comunicazioni promozionali e newsletter (Opzionale)
                                     </label>
                                 </div>
@@ -525,8 +564,7 @@
                                 <!-- 3. Profilazione / Terze Parti (Opzionale) -->
                                 <div class="form-check mb-4">
                                     <input class="form-check-input" type="checkbox" name="thirdPartyCheck" id="thirdPartyCheck">
-                                    <label class="form-check-label small" for="thirdPartyCheck"
-                                           th:style="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? 'color: ' + page.formTextColor + ' !important;' : 'color: #cbd5e1;'}">
+                                    <label class="form-check-label small" for="thirdPartyCheck">
                                         Acconsento alla comunicazione dei dati a partner per attività di profilazione e marketing (Opzionale)
                                     </label>
                                 </div>
@@ -663,7 +701,7 @@
         });
     </script>
 
-    <!-- SCRIPT SFONDO CANVAS ANIMATO -->
+    <!-- SCRIPT SFONDO CANVAS ANIMATO E LUMINANZA INPUT -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
@@ -743,6 +781,34 @@
                     }
                 }
             }
+
+            // 3. CALCOLO LUMINANZA SFONDO INPUT PER COLORE DEL TESTO (FORM_INPUT_BG_COLOR)
+            const inputs = document.querySelectorAll(".booking-card .form-control");
+            inputs.forEach(input => {
+                const bg = window.getComputedStyle(input).backgroundColor;
+                const match = bg.match(/\d+/g);
+
+                if (match && match.length >= 3) {
+                    const r = parseInt(match[0], 10);
+                    const g = parseInt(match[1], 10);
+                    const b = parseInt(match[2], 10);
+                    const alpha = match.length >= 4 ? parseFloat(match[3]) : 1;
+
+                    // Se lo sfondo è totalmente trasparente o scuro, usa il testo bianco
+                    if (alpha === 0) {
+                        input.style.setProperty("color", "#ffffff", "important");
+                    } else {
+                        const luminance = (r * 299 + g * 587 + b * 114) / 1000;
+                        if (luminance > 128) {
+                            input.style.setProperty("color", "#000000", "important");
+                        } else {
+                            input.style.setProperty("color", "#ffffff", "important");
+                        }
+                    }
+                } else {
+                    input.style.setProperty("color", "#ffffff", "important");
+                }
+            });
         });
     </script>
 

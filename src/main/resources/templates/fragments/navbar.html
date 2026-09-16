@@ -155,7 +155,7 @@
         <a th:if="${navbarSettings != null and navbarSettings.logoUrl != null and !#strings.isEmpty(navbarSettings.logoUrl)}"
            class="navbar-brand d-flex align-items-center"
            th:href="@{/}">
-            <img th:src="${navbarSettings.logoUrl}" alt="Logo" class="img-fluid" style="max-height: 45px;" />
+            <img th:src="${navbarSettings.logoUrl}" alt="Logo" />
         </a>
 
         <a th:unless="${navbarSettings != null and navbarSettings.logoUrl != null and !#strings.isEmpty(navbarSettings.logoUrl)}"

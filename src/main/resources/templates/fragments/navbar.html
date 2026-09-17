@@ -13,7 +13,7 @@
      ======================================================== -->
 
 <header id="mainNavbar" th:fragment="navbar"
-        class="navbar navbar-expand-lg navbar-dark sticky-top py-3"
+        class="navbar navbar-expand-lg navbar-dark sticky-top py-1"
         th:data-scroll-behavior="${navbarSettings != null and navbarSettings.hideOnScrollBehavior != null ? navbarSettings.hideOnScrollBehavior : 'NONE'}"
         th:style="${navbarSettings != null ? 
             '--nav-bg-hex: ' + (navbarSettings.bgColor != null ? navbarSettings.bgColor : '#0f172a') + '; ' +
@@ -32,10 +32,55 @@
         header.navbar {
             background-color: rgb(from var(--nav-bg-hex) r g b / var(--nav-opacity)) !important;
             transition: transform 0.35s ease-in-out, top 0.35s ease-in-out;
+            max-height: 120px !important;
+            box-sizing: border-box;
+        }
+
+        /* Riduzione del padding attorno al logo */
+        #mainNavbar .navbar-brand {
+            padding-top: 0.2rem !important;
+            padding-bottom: 0.2rem !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Limite altezza per logo per non sforare l'altezza massima */
+        #mainNavbar .navbar-brand img {
+            max-height: 100px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Gestione dello scorrimento mobile se il menu espanso supera l'altezza */
+        @media (max-width: 991.98px) {
+            #mainNavbar .navbar-collapse.show,
+            #mainNavbar .navbar-collapse.collapsing {
+                max-height: calc(100vh - 100px);
+                overflow-y: auto;
+                background-color: rgb(from var(--nav-bg-hex) r g b / var(--nav-opacity));
+                padding: 1rem;
+                margin-top: 0.5rem;
+                border-radius: 0.5rem;
+            }
         }
 
         header.navbar.navbar-hidden {
             transform: translateY(-100%);
+        }
+
+        /* PERSONALIZZAZIONE TOGGLER BUTTON PER SMARTPHONE/TABLET */
+        #mainNavbar .navbar-toggler {
+            border: 1px solid var(--btn-color) !important;
+            color: var(--btn-color) !important;
+            padding: 0.25rem 0.5rem;
+            box-shadow: none !important;
+        }
+
+        #mainNavbar .navbar-toggler-icon {
+            background-image: none !important;
+            background-color: var(--btn-color) !important;
+            -webkit-mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") no-repeat center / contain;
+            mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") no-repeat center / contain;
         }
 
         .btn-dynamic-auth {
@@ -167,7 +212,7 @@
         </a>
 
         <!-- MOBILE BUTTON -->
-        <button class="navbar-toggler border-0"
+        <button class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarContent"

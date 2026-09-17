@@ -72,6 +72,7 @@
                         'alignleft aligncenter alignright alignjustify | ' +
                         'bullist numlist | ' +
                         'link image media table emoticons | ' +
+                        'themeMenu | ' +
                         'code fullscreen | help',
 
                     content_style: `
@@ -81,7 +82,7 @@
                             font-family: Arial, sans-serif;
                             font-size: 18px;
                             line-height: 1.6;
-                            background-color: #0d1b2a !important;
+                            background-color: #0062ff !important;
                             color: #ffffff !important;
                             padding: 15px;
                         }
@@ -104,6 +105,63 @@
                     ],
 
                     setup: function (editor) {
+
+                        /*
+                         * CAMBIO TEMA CORPO EDITOR
+                         */
+                        editor.ui.registry.addMenuButton('themeMenu', {
+                            text: 'Tema',
+                            fetch: function (callback) {
+                                callback([
+                                    {
+                                        type: 'menuitem',
+                                        text: 'Blu attuale',
+                                        onAction: function () {
+                                            setEditorTheme(
+                                                editor,
+                                                '#0062ff',
+                                                '#ffffff',
+                                                '#36e4da'
+                                            );
+                                        }
+                                    },
+                                    {
+                                        type: 'menuitem',
+                                        text: 'Bianco',
+                                        onAction: function () {
+                                            setEditorTheme(
+                                                editor,
+                                                '#ffffff',
+                                                '#1e293b',
+                                                '#0062ff'
+                                            );
+                                        }
+                                    },
+                                    {
+                                        type: 'menuitem',
+                                        text: 'Blu scuro',
+                                        onAction: function () {
+                                            setEditorTheme(
+                                                editor,
+                                                '#0f172a',
+                                                '#ffffff',
+                                                '#36e4da'
+                                            );
+                                        }
+                                    }
+                                ]);
+                            }
+                        });
+
+                        editor.on('init', function () {
+                            setEditorTheme(
+                                editor,
+                                '#0062ff',
+                                '#ffffff',
+                                '#36e4da'
+                            );
+                        });
+
                         editor.on('init change KeyUp ExecCommand', function () {
                             if (typeof renderRowPreviewIfOpen === 'function') {
                                 renderRowPreviewIfOpen();
@@ -141,6 +199,46 @@
                             });
                     })
                 });
+
+                /*
+                 * CAMBIA SOLO L'ASPETTO DEL CORPO DELL'EDITOR
+                 * senza modificare l'HTML dell'articolo.
+                 */
+                function setEditorTheme(editor, background, color, linkColor) {
+                    if (!editor || !editor.getDoc()) {
+                        return;
+                    }
+
+                    const doc = editor.getDoc();
+                    const head = doc.head;
+
+                    let themeStyle = doc.getElementById('tinymce-editor-theme');
+
+                    if (!themeStyle) {
+                        themeStyle = doc.createElement('style');
+                        themeStyle.id = 'tinymce-editor-theme';
+                        head.appendChild(themeStyle);
+                    }
+
+                    themeStyle.textContent = `
+                        body {
+                            background-color: ${background} !important;
+                            color: ${color} !important;
+                        }
+
+                        p {
+                            color: ${color} !important;
+                        }
+
+                        h1, h2, h3, h4, h5, h6 {
+                            color: ${color} !important;
+                        }
+
+                        a {
+                            color: ${linkColor} !important;
+                        }
+                    `;
+                }
             });
         </script>
     </th:block>

@@ -9,11 +9,14 @@
     <link
         th:if="${navbarSettings != null and navbarSettings.faviconUrl != null and !#strings.isEmpty(navbarSettings.faviconUrl)}"
         rel="icon" th:href="${navbarSettings.faviconUrl}">
-    <title>Eco Skill Factory</title>
+    <title>Skill Factory</title>
 
     <!-- ========================================================
          PRELOAD FONTS
          ======================================================== -->
+    <link rel="preload" href="/fonts/SpaceGrotesk-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/SpaceGrotesk-Bold.woff2" as="font" type="font/woff2" crossorigin>
+
     <link rel="preload" href="/fonts/NeueHaasDisplayRoman.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/NeueHaasDisplayBold.woff2" as="font" type="font/woff2" crossorigin>
 
@@ -23,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Geist:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;500;700&display=swap"
         rel="stylesheet">
 
     <!-- ========================================================
@@ -45,6 +48,22 @@
         /* ========================================================
            CONTENUTI TINYMCE
            ======================================================== */
+        @font-face {
+            font-family: 'Space Grotesk';
+            src: url('/fonts/SpaceGrotesk-Light.woff2') format('woff2');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Space Grotesk';
+            src: url('/fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         @font-face {
             font-family: 'Neue Haas Grotesk Display Pro';
             src: url('/fonts/NeueHaasDisplayRoman.woff2') format('woff2');
@@ -78,10 +97,15 @@
         }
 
         .tinymce-content {
-            font-family: 'Neue Haas Grotesk Display Pro', Arial, sans-serif;
+
+            font-family: 'Space Grotesk', 'Geist', 'Neue Haas Grotesk Display Pro', Arial, sans-serif;
+
             font-size: 18px;
+
             line-height: 1.6;
+
             color: #ffffff !important;
+
         }
 
         .tinymce-content p {
@@ -143,12 +167,19 @@
            BODY
            ======================================================== */
         body {
+
             font-family: Arial, Helvetica, sans-serif;
+
             color: #334155;
+
             background-color: #080c14;
+
             min-height: 100vh;
+
             overflow-x: hidden;
+
             position: relative;
+
         }
 
         /* ========================================================
@@ -686,30 +717,82 @@
         /* ========================================================
            RESPONSIVE TABLET & MOBILE
            ======================================================== */
-        @media (max-width: 991.98px) {
+                @media (max-width: 991.98px) {
+
             .block-container {
+
                 height: auto !important;
+
                 min-height: auto !important;
+
                 padding-top: 1.5rem !important;
+
                 padding-bottom: 1.5rem !important;
+
             }
 
             .block-container>div,
+
             .custom-jumbotron,
+
             .carousel-custom,
+
             .hero-fallback,
-            .block-container [style*="width"] {
+
+            .block-container [style\*="width"] {
+
                 width: 100% !important;
+
                 max-width: 100% !important;
+
             }
 
             .custom-jumbotron {
+
                 padding: 1.5rem 1rem !important;
+
             }
 
             .card-img-wrapper img {
+
                 height: 280px !important;
+
             }
+
+            /* CAROSELLO STANDARD - TABLET */
+
+            .carousel-item img {
+
+                object-fit: contain !important;
+
+                background-color: #0f172a;
+
+            }
+
+            /* CAROSELLO MULTI-IMMAGINE - TABLET */
+
+            .multi-image-item {
+
+                width: min(390px, 82vw) !important;
+
+            }
+
+            .multi-image-item .slide-img-wrapper {
+
+                height: auto !important;
+
+                aspect-ratio: 390 / 260;
+
+            }
+
+            .multi-image-item .slide-img-wrapper img {
+
+                object-fit: contain !important;
+
+                background-color: #0f172a;
+
+            }
+
         }
 
         /* ========================================================
@@ -730,10 +813,50 @@
                 border-radius: 1rem;
             }
 
-            .carousel-item img {
-                height: 280px;
+                        .carousel-item img {
+
+                height: 280px !important;
+
                 min-height: 220px;
+
+                max-height: 280px;
+
+                object-fit: contain !important;
+
+                background-color: #0f172a;
+
                 border-radius: 1rem 1rem 0 0;
+
+            }
+
+            .multi-image-item {
+
+                width: 82vw !important;
+
+                max-width: 82vw !important;
+
+            }
+
+            .multi-image-item .slide-img-wrapper {
+
+                width: 100%;
+
+                height: auto !important;
+
+                aspect-ratio: 390 / 260;
+
+            }
+
+            .multi-image-item .slide-img-wrapper img {
+
+                width: 100%;
+
+                height: 100%;
+
+                object-fit: contain !important;
+
+                background-color: #0f172a;
+
             }
 
             .carousel-caption-custom {
@@ -877,7 +1000,7 @@
 
                 <div class="row g-4 justify-content-between align-items-stretch">
                     <div th:each="item : ${block.items}"
-                         th:class="${(block.cardsPerRow == 2 ? 'col-12 col-md-6 col-lg-6' : (block.cardsPerRow == 4 ? 'col-12 col-md-6 col-lg-3' : 'col-12 col-md-6 col-lg-4')) + ' d-flex'}">
+                        th:class="${(block.cardsPerRow == 2 ? 'col-12 col-md-6 col-lg-6' : (block.cardsPerRow == 4 ? 'col-12 col-md-6 col-lg-3' : 'col-12 col-md-6 col-lg-4')) + ' d-flex'}">
                         <div class="card card-custom w-100 d-flex flex-column overflow-hidden"
                             th:style="${item.backgroundColor != null and !#strings.isEmpty(item.backgroundColor)} ? 'background-color: ' + ${item.backgroundColor} + ' !important;' : 'background-color: transparent !important;'">
                             <div th:if="${item.imageUrl != null and !item.imageUrl.empty}" class="card-img-wrapper">
@@ -965,16 +1088,21 @@
                         <!-- Primo gruppo di immagini -->
                         <div class="multi-image-marquee-group">
                             <div th:each="item : ${block.items}" class="multi-image-item"
-                                 th:style="'width: ' + (${block.multiItemWidth != null and block.multiItemWidth > 0} ? ${block.multiItemWidth} + 'px;' : '390px;')">
-                                <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3" style="background-color: #0f172a;">
+                                th:style="'width: ' + (${block.multiItemWidth != null and block.multiItemWidth > 0} ? ${block.multiItemWidth} + 'px;' : '390px;')">
+                                <div class="card h-100 border-0 shadow-sm overflow-hidden rounded-3"
+                                    style="background-color: #0f172a;">
                                     <div class="position-relative overflow-hidden slide-img-wrapper"
-                                         th:style="'height: ' + (${block.multiItemWidth != null and block.multiItemWidth > 0} ? ${block.multiItemWidth * 260 / 390} + 'px;' : '260px;')">
+                                        th:style="'height: ' + (${block.multiItemWidth != null and block.multiItemWidth > 0} ? ${block.multiItemWidth * 260 / 390} + 'px;' : '260px;')">
                                         <img th:src="${item.imageUrl != null and !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'}"
                                             class="w-100 h-100 object-fit-cover" th:alt="${item.title}">
                                     </div>
-                                    <div th:if="${(item.title != null and !item.title.isEmpty()) or (item.contentHtml != null and !item.contentHtml.isEmpty())}" class="p-3">
-                                        <h6 th:if="${item.title != null and !item.title.isEmpty()}" class="fw-bold text-white mb-1" th:text="${item.title}"></h6>
-                                        <div th:if="${item.contentHtml != null and !item.contentHtml.isEmpty()}" class="small text-muted tinymce-content" th:utext="${item.contentHtml}"></div>
+                                    <div th:if="${(item.title != null and !item.title.isEmpty()) or (item.contentHtml != null and !item.contentHtml.isEmpty())}"
+                                        class="p-3">
+                                        <h6 th:if="${item.title != null and !item.title.isEmpty()}"
+                                            class="fw-bold text-white mb-1" th:text="${item.title}"></h6>
+                                        <div th:if="${item.contentHtml != null and !item.contentHtml.isEmpty()}"
+                                            class="small text-muted tinymce-content" th:utext="${item.contentHtml}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1023,7 +1151,8 @@
                         <div th:unless="${block.imageUrl != null and !block.imageUrl.empty}"
                             class="p-4 p-md-5 rounded-4 text-center text-muted">
                             <i class="bi bi-image fs-1 opacity-50"></i>
-                            <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per visualizzarla qui</p>
+                            <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per
+                                visualizzarla qui</p>
                         </div>
                     </div>
                 </div>
@@ -1042,7 +1171,8 @@
                         <div th:unless="${block.imageUrl != null and !block.imageUrl.empty}"
                             class="p-4 p-md-5 rounded-4 text-center text-muted">
                             <i class="bi bi-image fs-1 opacity-50"></i>
-                            <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per visualizzarla qui</p>
+                            <p class="mb-0 mt-2 small">Carica un'immagine nel form principale del blocco per
+                                visualizzarla qui</p>
                         </div>
                     </div>
                     <div class="col-lg-7 text-light order-1 order-lg-2 tinymce-content" th:utext="${block.contentHtml}">

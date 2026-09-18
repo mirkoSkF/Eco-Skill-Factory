@@ -38,6 +38,7 @@
                     font_size_input_default_unit: 'px',
 
                     font_family_formats:
+                        'Space Grotesk=Space Grotesk,sans-serif;' +
                         'Andale Mono=andale mono,times;' +
                         'Arial=arial,helvetica,sans-serif;' +
                         'Arial Black=arial black,avant garde;' +
@@ -78,23 +79,76 @@
                     content_style: `
                         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Roboto:wght@300;400;500;700&display=swap');
 
+                        @font-face {
+                            font-family: 'Space Grotesk';
+                            src: url('/fonts/SpaceGrotesk-Light.woff2') format('woff2');
+                            font-weight: 300;
+                            font-style: normal;
+                            font-display: swap;
+                        }
+
+                        @font-face {
+                            font-family: 'Space Grotesk';
+                            src: url('/fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+                            font-weight: 700;
+                            font-style: normal;
+                            font-display: swap;
+                        }
+
                         body {
-                            font-family: Arial, sans-serif;
+                            font-family: 'Space Grotesk', sans-serif;
                             font-size: 18px;
                             line-height: 1.6;
                             background-color: #0062ff !important;
                             color: #ffffff !important;
                             padding: 15px;
                         }
-                        p { font-size: 18px; color: #ffffff !important; }
-                        h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
-                        a { color: #36e4da !important; }
-                        img { max-width: 100%; height: auto; }
-                        figure.image.align-left { float: left; margin: 0 15px 10px 0; }
-                        figure.image.align-center { display: block; text-align: center; margin: 10px auto; }
-                        figure.image.align-right { float: right; margin: 0 0 10px 15px; }
-                        figure.image { display: inline-block; margin: 0 2px 0 1px; }
-                        figure.image img { max-width: 100%; height: auto; }
+
+                        p {
+                            font-family: 'Space Grotesk', sans-serif;
+                            font-size: 18px;
+                            color: #ffffff !important;
+                        }
+
+                        h1, h2, h3, h4, h5, h6 {
+                            font-family: 'Space Grotesk', sans-serif;
+                            color: #ffffff !important;
+                        }
+
+                        a {
+                            color: #36e4da !important;
+                        }
+
+                        img {
+                            max-width: 100%;
+                            height: auto;
+                        }
+
+                        figure.image.align-left {
+                            float: left;
+                            margin: 0 15px 10px 0;
+                        }
+
+                        figure.image.align-center {
+                            display: block;
+                            text-align: center;
+                            margin: 10px auto;
+                        }
+
+                        figure.image.align-right {
+                            float: right;
+                            margin: 0 0 10px 15px;
+                        }
+
+                        figure.image {
+                            display: inline-block;
+                            margin: 0 2px 0 1px;
+                        }
+
+                        figure.image img {
+                            max-width: 100%;
+                            height: auto;
+                        }
                     `,
 
                     style_formats: [
@@ -106,9 +160,7 @@
 
                     setup: function (editor) {
 
-                        /*
-                         * CAMBIO TEMA CORPO EDITOR
-                         */
+                        // MENU CAMBIO TEMA CORPO EDITOR
                         editor.ui.registry.addMenuButton('themeMenu', {
                             text: 'Tema',
                             fetch: function (callback) {
@@ -117,49 +169,31 @@
                                         type: 'menuitem',
                                         text: 'Blu attuale',
                                         onAction: function () {
-                                            setEditorTheme(
-                                                editor,
-                                                '#0062ff',
-                                                '#ffffff',
-                                                '#36e4da'
-                                            );
+                                            setEditorTheme(editor, '#0062ff', '#ffffff', '#36e4da');
                                         }
                                     },
                                     {
                                         type: 'menuitem',
                                         text: 'Bianco',
                                         onAction: function () {
-                                            setEditorTheme(
-                                                editor,
-                                                '#ffffff',
-                                                '#1e293b',
-                                                '#0062ff'
-                                            );
+                                            setEditorTheme(editor, '#ffffff', '#1e293b', '#0062ff');
                                         }
                                     },
                                     {
                                         type: 'menuitem',
                                         text: 'Blu scuro',
                                         onAction: function () {
-                                            setEditorTheme(
-                                                editor,
-                                                '#0f172a',
-                                                '#ffffff',
-                                                '#36e4da'
-                                            );
+                                            setEditorTheme(editor, '#0f172a', '#ffffff', '#36e4da');
                                         }
                                     }
                                 ]);
                             }
                         });
 
+                        // SPACE GROTESK COME FONT PREDEFINITO
                         editor.on('init', function () {
-                            setEditorTheme(
-                                editor,
-                                '#0062ff',
-                                '#ffffff',
-                                '#36e4da'
-                            );
+                            editor.getBody().style.fontFamily = "'Space Grotesk', sans-serif";
+                            setEditorTheme(editor, '#0062ff', '#ffffff', '#36e4da');
                         });
 
                         editor.on('init change KeyUp ExecCommand', function () {
@@ -200,10 +234,6 @@
                     })
                 });
 
-                /*
-                 * CAMBIA SOLO L'ASPETTO DEL CORPO DELL'EDITOR
-                 * senza modificare l'HTML dell'articolo.
-                 */
                 function setEditorTheme(editor, background, color, linkColor) {
                     if (!editor || !editor.getDoc()) {
                         return;

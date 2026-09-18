@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap"
         rel="stylesheet">
 
     <!-- ============================================================
@@ -395,6 +395,37 @@
                                 </button>
 
                             </div>
+                        </div>
+
+                        <!-- FONT TITOLO -->
+                        <div class="col-md-6">
+                            <label for="titleFontSelect" class="form-label text-light fw-semibold">
+                                Font Titolo (H1)
+                            </label>
+                            <select id="titleFontSelect" th:field="*{titleFont}" class="form-select">
+                                <option value="">Predefinito di sistema</option>
+                                <option value="Space Grotesk, sans-serif">Space Grotesk</option>
+                                <option value="andale mono, times">Andale Mono</option>
+                                <option value="arial, helvetica, sans-serif">Arial</option>
+                                <option value="arial black, avant garde">Arial Black</option>
+                                <option value="book antiqua, palatino">Book Antiqua</option>
+                                <option value="comic sans ms, sans-serif">Comic Sans MS</option>
+                                <option value="courier new, courier">Courier New</option>
+                                <option value="georgia, palatino">Georgia</option>
+                                <option value="helvetica">Helvetica</option>
+                                <option value="impact, chicago">Impact</option>
+                                <option value="Neue Haas Grotesk Display Pro, Helvetica Neue, Arial, sans-serif">Neue Haas Grotesk</option>
+                                <option value="Plus Jakarta Sans, sans-serif">Plus Jakarta Sans</option>
+                                <option value="Roboto, sans-serif">Roboto</option>
+                                <option value="symbol">Symbol</option>
+                                <option value="tahoma, arial, helvetica, sans-serif">Tahoma</option>
+                                <option value="terminal, monaco">Terminal</option>
+                                <option value="times new roman, times">Times New Roman</option>
+                                <option value="trebuchet ms, geneva">Trebuchet MS</option>
+                                <option value="verdana, geneva">Verdana</option>
+                                <option value="webdings">Webdings</option>
+                                <option value="wingdings, zapf dingbats">Wingdings</option>
+                            </select>
                         </div>
 
                         <!-- COLORE TITOLO -->

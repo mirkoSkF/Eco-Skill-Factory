@@ -125,6 +125,17 @@ public class Page {
     // Colore Placeholder Input Form
     private String formPlaceholderColor;
 
+    // All'interno della classe Page (o PageDTO):
+private String titleFont;
+
+public String getTitleFont() {
+    return titleFont;
+}
+
+public void setTitleFont(String titleFont) {
+    this.titleFont = titleFont;
+}
+
     public String getFormInputBgColor() {
         return formInputBgColor;
     }

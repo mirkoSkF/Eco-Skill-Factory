@@ -4,20 +4,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            AuthenticationSuccessHandler authenticationSuccessHandler)
+            throws Exception {
 
         http
             .authorizeHttpRequests(auth -> auth
@@ -30,7 +30,8 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/",
                     "/login",
-                    "/error", // <--- FONDAMENTALE: evita il loop ERR_TOO_MANY_REDIRECTS se si verifica un eccezione
+                    "/register",
+                    "/error",
                     "/css/**",
                     "/js/**",
                     "/images/**",
@@ -42,7 +43,6 @@ public class SecurityConfig {
                     "/p/**"
                 ).permitAll()
 
-
                 /*
                  * =====================================================
                  * AREA AMMINISTRATIVA
@@ -51,6 +51,13 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**")
                 .hasRole("ADMIN")
 
+                /*
+                 * =====================================================
+                 * AREA UTENTE
+                 * =====================================================
+                 */
+                .requestMatchers("/user/**")
+                .authenticated()
 
                 /*
                  * =====================================================
@@ -61,7 +68,6 @@ public class SecurityConfig {
                 .authenticated()
             )
 
-
             /*
              * =========================================================
              * LOGIN
@@ -69,10 +75,9 @@ public class SecurityConfig {
              */
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/admin/dashboard", true)
+                .successHandler(authenticationSuccessHandler)
                 .permitAll()
             )
-
 
             /*
              * =========================================================
@@ -85,40 +90,24 @@ public class SecurityConfig {
                 .permitAll()
             )
 
-
             /*
              * =========================================================
-             * CSRF & HEADERS
+             * CSRF
              * =========================================================
              */
             .csrf(csrf -> csrf.disable())
 
+            /*
+             * =========================================================
+             * HEADERS
+             * =========================================================
+             */
             .headers(headers -> headers
                 .frameOptions(frame -> frame.sameOrigin())
             );
 
-
         return http.build();
     }
-
-
-    /*
-     * =============================================================
-     * UTENTE ADMIN IN-MEMORY
-     * =============================================================
-     */
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(encoder.encode("admin"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin);
-    }
-
 
     /*
      * =============================================================
@@ -127,6 +116,40 @@ public class SecurityConfig {
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
+    }
+
+    /*
+     * =============================================================
+     * AUTHENTICATION SUCCESS HANDLER
+     * =============================================================
+     */
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+
+        return (request, response, authentication) -> {
+
+            boolean isAdmin = authentication.getAuthorities()
+                    .stream()
+                    .anyMatch(authority ->
+                            "ROLE_ADMIN".equals(
+                                    authority.getAuthority()
+                            )
+                    );
+
+            if (isAdmin) {
+
+                response.sendRedirect(
+                        "/admin/dashboard"
+                );
+
+                return;
+            }
+
+            response.sendRedirect(
+                    "/user/profile"
+            );
+        };
     }
 }

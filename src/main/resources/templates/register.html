@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registrazione</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f6f8;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #222;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 520px;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            margin-top: 0;
+            margin-bottom: 28px;
+            text-align: center;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #ccd1d7;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+        }
+
+        .field-error {
+            margin-top: 5px;
+            color: #c62828;
+            font-size: 13px;
+        }
+
+        .global-error {
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            background: #fdecea;
+            color: #b71c1c;
+        }
+
+        .register-button {
+            width: 100%;
+            padding: 12px;
+            border: 0;
+            border-radius: 6px;
+            background: #1976d2;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .register-button:hover {
+            background: #1565c0;
+        }
+
+        .login-link {
+            margin-top: 22px;
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="register-container">
+
+    <div class="register-card">
+
+        <h1>Registrazione</h1>
+
+        <p class="subtitle">
+            Crea il tuo account
+        </p>
+
+        <div
+            class="global-error"
+            th:if="${#fields.hasGlobalErrors()}"
+        >
+            <p
+                th:each="error : ${#fields.globalErrors()}"
+                th:text="${error}"
+            >
+                Errore di registrazione
+            </p>
+        </div>
+
+        <form
+            th:action="@{/register}"
+            th:object="${registrationRequest}"
+            method="post"
+        >
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    th:field="*{username}"
+                    autocomplete="username"
+                    required
+                />
+
+                <div
+                    class="field-error"
+                    th:if="${#fields.hasErrors('username')}"
+                    th:errors="*{username}"
+                ></div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    th:field="*{email}"
+                    autocomplete="email"
+                    required
+                />
+
+                <div
+                    class="field-error"
+                    th:if="${#fields.hasErrors('email')}"
+                    th:errors="*{email}"
+                ></div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="firstName">
+                    Nome
+                </label>
+
+                <input
+                    type="text"
+                    id="firstName"
+                    th:field="*{firstName}"
+                    autocomplete="given-name"
+                    required
+                />
+
+                <div
+                    class="field-error"
+                    th:if="${#fields.hasErrors('firstName')}"
+                    th:errors="*{firstName}"
+                ></div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="lastName">
+                    Cognome
+                </label>
+
+                <input
+                    type="text"
+                    id="lastName"
+                    th:field="*{lastName}"
+                    autocomplete="family-name"
+                    required
+                />
+
+                <div
+                    class="field-error"
+                    th:if="${#fields.hasErrors('lastName')}"
+                    th:errors="*{lastName}"
+                ></div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    th:field="*{password}"
+                    autocomplete="new-password"
+                    required
+                />
+
+                <div
+                    class="field-error"
+                    th:if="${#fields.hasErrors('password')}"
+                    th:errors="*{password}"
+                ></div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="confirmPassword">
+                    Conferma password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    th:field="*{confirmPassword}"
+                    autocomplete="new-password"
+                    required
+                />
+
+                <div
+                    class="field-error"
+                    th:if="${#fields.hasErrors('confirmPassword')}"
+                    th:errors="*{confirmPassword}"
+                ></div>
+
+            </div>
+
+            <button
+                type="submit"
+                class="register-button"
+            >
+                Registrati
+            </button>
+
+        </form>
+
+        <div class="login-link">
+            Hai già un account?
+            <a th:href="@{/login}">
+                Accedi
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

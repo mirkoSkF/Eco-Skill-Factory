@@ -1,14 +1,12 @@
 package it.skillfactory.eco.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,41 +14,70 @@ import java.util.UUID;
 @RequestMapping("/api/uploads")
 public class ImageUploadController {
 
-    // Percorso assoluto o relativo dove salvare le immagini
-    private static final String UPLOAD_DIR = "uploads/";
+    @Value("${app.upload.dir}")
+    private String uploadDir;
 
     @PostMapping("/immagine")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "File vuoto"));
+    public ResponseEntity<?> uploadImage(
+            @RequestParam("file") MultipartFile file) {
+
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "File vuoto"));
         }
 
         try {
-            // 1. Crea la cartella se non esiste
-            Path uploadPath = Paths.get(UPLOAD_DIR);
+
+            Path uploadPath = Paths.get(uploadDir)
+                    .toAbsolutePath()
+                    .normalize();
+
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
-            // 2. Genera un nome unico per il file per evitare sovrascritture
             String originalFilename = file.getOriginalFilename();
+
             String extension = "";
+
             if (originalFilename != null && originalFilename.contains(".")) {
-                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                extension = originalFilename
+                        .substring(originalFilename.lastIndexOf("."))
+                        .toLowerCase();
             }
-            String newFilename = UUID.randomUUID().toString() + extension;
 
-            // 3. Salva il file nel percorso di destinazione
-            Path targetLocation = uploadPath.resolve(newFilename);
-            Files.copy(file.getInputStream(), targetLocation, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            String newFilename = UUID.randomUUID() + extension;
 
-            // 4. Ritorna l'URL accessibile lato client (ad es. /uploads/nomefile.png)
+            Path targetLocation = uploadPath
+                    .resolve(newFilename)
+                    .normalize();
+
+            if (!targetLocation.startsWith(uploadPath)) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("message", "Percorso file non valido"));
+            }
+
+            Files.copy(
+                    file.getInputStream(),
+                    targetLocation,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
             String fileUrl = "/uploads/" + newFilename;
-            return ResponseEntity.ok(Map.of("location", fileUrl));
+
+            return ResponseEntity.ok(
+                    Map.of("location", fileUrl)
+            );
 
         } catch (IOException e) {
+
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body(Map.of("message", "Errore durante il salvataggio: " + e.getMessage()));
+
+            return ResponseEntity.internalServerError()
+                    .body(Map.of(
+                            "message",
+                            "Errore durante il salvataggio: " + e.getMessage()
+                    ));
         }
     }
 }

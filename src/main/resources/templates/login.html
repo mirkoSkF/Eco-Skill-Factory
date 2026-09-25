@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Login Admin - Eco Skill Factory</title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+          rel="stylesheet">
 
     <!-- Bootstrap CSS & Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #080c14;
@@ -84,239 +94,455 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 220, 130, 0.3);
         }
+
     </style>
+
 </head>
+
 <body class="d-flex align-items-center justify-content-center py-5">
 
-<!-- Sfondo Animato -->
-<canvas id="tech-bg-canvas"></canvas>
+    <!-- Sfondo Animato -->
+    <canvas id="tech-bg-canvas"></canvas>
 
-<div class="container" style="max-width: 420px;">
-    
-    <!-- Card Principale -->
-    <div class="card card-login p-4 p-sm-5">
-        
-        <!-- Header / Branding -->
-        <div class="text-center mb-4">
-            <div class="mb-3 text-success">
-                <i class="bi bi-shield-lock-fill display-4"></i>
-            </div>
-            <h3 class="fw-bold text-white mb-1">Eco Skill Factory</h3>
-            <p class="text-light opacity-75 small">Area riservata di Amministrazione</p>
-        </div>
+    <div class="container" style="max-width: 420px;">
 
-        <!-- Alert Errore Credenziali -->
-        <div th:if="${param.error}" class="alert alert-danger d-flex align-items-center py-2 small" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            <div>Credenziali non valide. Riprova.</div>
-        </div>
+        <!-- Card Principale -->
+        <div class="card card-login p-4 p-sm-5">
 
-        <!-- Alert Logout Effettuato -->
-        <div th:if="${param.logout}" class="alert alert-success d-flex align-items-center py-2 small" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i>
-            <div>Logout effettuato con successo.</div>
-        </div>
+            <!-- Header / Branding -->
+            <div class="text-center mb-4">
 
-        <!-- Form di Login -->
-        <form th:action="@{/login}" method="post">
-            
-            <!-- Campo Username -->
-            <div class="mb-3">
-                <label for="username" class="form-label text-light opacity-75 fw-semibold small">Username</label>
-                <div class="input-group">
-                    <span class="input-group-text border-end-0">
-                        <i class="bi bi-person"></i>
-                    </span>
-                    <input type="text" 
-                           id="username" 
-                           name="username" 
-                           class="form-control border-start-0" 
-                           required 
-                           autofocus 
-                           placeholder="admin">
+                <div class="mb-3 text-success">
+                    <i class="bi bi-shield-lock-fill display-4"></i>
                 </div>
+
+                <h3 class="fw-bold text-white mb-1">
+                    Eco Skill Factory
+                </h3>
+
+                <p class="text-light opacity-75 small">
+                    Area riservata di Amministrazione
+                </p>
+
             </div>
 
-            <!-- Campo Password -->
-            <div class="mb-4">
-                <label for="password" class="form-label text-light opacity-75 fw-semibold small">Password</label>
-                <div class="input-group">
-                    <span class="input-group-text border-end-0">
-                        <i class="bi bi-key"></i>
-                    </span>
-                    <input type="password" 
-                           id="password" 
-                           name="password" 
-                           class="form-control border-start-0" 
-                           required 
-                           placeholder="••••••••">
+
+            <!-- Alert Errore Credenziali -->
+            <div th:if="${param.error}"
+                 class="alert alert-danger d-flex align-items-center py-2 small"
+                 role="alert">
+
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                <div>
+                    Credenziali amministratore non valide. Riprova.
                 </div>
+
             </div>
 
-            <!-- Botone di Invio -->
-            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
-                <i class="bi bi-box-arrow-in-right me-1"></i> Accedi alla Dashboard
-            </button>
-        </form>
-        
-        <!-- Link Torna alla Home -->
-        <div class="text-center mt-4 pt-2 border-top border-secondary border-opacity-25">
-            <a th:href="@{/}" class="text-decoration-none text-light opacity-75 small">
-                <i class="bi bi-arrow-left me-1"></i> Torna al sito principale
-            </a>
+
+            <!-- Alert Logout Effettuato -->
+            <div th:if="${param.logout}"
+                 class="alert alert-success d-flex align-items-center py-2 small"
+                 role="alert">
+
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                <div>
+                    Logout effettuato con successo.
+                </div>
+
+            </div>
+
+
+            <!-- Form di Login Admin -->
+            <form th:action="@{/admin-login}" method="post">
+
+                <!-- Campo Username -->
+                <div class="mb-3">
+
+                    <label for="username"
+                           class="form-label text-light opacity-75 fw-semibold small">
+                        Username amministratore
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text border-end-0">
+                            <i class="bi bi-person"></i>
+                        </span>
+
+                        <input type="text"
+                               id="username"
+                               name="username"
+                               class="form-control border-start-0"
+                               required
+                               autofocus
+                               autocomplete="username"
+                               placeholder="admin"
+                               value=""
+                               pattern="admin"
+                               title="Per l'accesso amministratore lo username deve essere admin">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Campo Password -->
+                <div class="mb-4">
+
+                    <label for="password"
+                           class="form-label text-light opacity-75 fw-semibold small">
+                        Password
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text border-end-0">
+                            <i class="bi bi-key"></i>
+                        </span>
+
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               class="form-control border-start-0"
+                               required
+                               autocomplete="current-password"
+                               placeholder="••••••••">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bottone di Invio -->
+                <button type="submit"
+                        class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+
+                    <i class="bi bi-box-arrow-in-right me-1"></i>
+                    Accedi alla Dashboard
+
+                </button>
+
+            </form>
+
+
+            <!-- Link Torna alla Home -->
+            <div class="text-center mt-4 pt-2 border-top border-secondary border-opacity-25">
+
+                <a th:href="@{/}"
+                   class="text-decoration-none text-light opacity-75 small">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Torna al sito principale
+
+                </a>
+
+            </div>
+
         </div>
 
     </div>
-</div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Script Sfondo Animato Tecnologico -->
-<script>
-    const canvas = document.getElementById('tech-bg-canvas');
-    const ctx = canvas.getContext('2d');
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+    </script>
 
-    let width;
-    let height;
 
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
+    <!-- Script Sfondo Animato Tecnologico -->
+    <script>
 
-    window.addEventListener('resize', resize);
-    resize();
+        const canvas = document.getElementById('tech-bg-canvas');
+        const ctx = canvas.getContext('2d');
 
-    class Circuit {
-        constructor() {
-            this.reset();
+        let width;
+        let height;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
 
-        reset() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.length = Math.floor(Math.random() * 8) + 4;
-            this.currentStep = 0;
-            this.dir = Math.floor(Math.random() * 4);
-            this.path = [{ x: this.x, y: this.y }];
-            this.speed = Math.random() * 1.5 + 0.5;
-            this.alpha = Math.random() * 0.4 + 0.1;
-            this.size = 20;
-        }
+        window.addEventListener('resize', resize);
 
-        update() {
-            if (this.currentStep < this.length) {
-                let last = this.path[this.path.length - 1];
-                let nx = last.x;
-                let ny = last.y;
+        resize();
 
-                if (Math.random() < 0.3) {
-                    this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+
+        class Circuit {
+
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+
+                this.length = Math.floor(Math.random() * 8) + 4;
+
+                this.currentStep = 0;
+
+                this.dir = Math.floor(Math.random() * 4);
+
+                this.path = [
+                    {
+                        x: this.x,
+                        y: this.y
+                    }
+                ];
+
+                this.speed = Math.random() * 1.5 + 0.5;
+
+                this.alpha = Math.random() * 0.4 + 0.1;
+
+                this.size = 20;
+            }
+
+            update() {
+
+                if (this.currentStep < this.length) {
+
+                    let last = this.path[this.path.length - 1];
+
+                    let nx = last.x;
+                    let ny = last.y;
+
+                    if (Math.random() < 0.3) {
+
+                        this.dir =
+                            (this.dir +
+                            (Math.random() < 0.5 ? 1 : 3)) % 4;
+                    }
+
+                    switch (this.dir) {
+
+                        case 0:
+                            ny -= this.size;
+                            break;
+
+                        case 1:
+                            nx += this.size;
+                            break;
+
+                        case 2:
+                            ny += this.size;
+                            break;
+
+                        case 3:
+                            nx -= this.size;
+                            break;
+                    }
+
+                    this.path.push({
+                        x: nx,
+                        y: ny
+                    });
+
+                    this.currentStep++;
+
+                } else {
+
+                    this.alpha -= 0.005;
+
+                    if (this.alpha <= 0) {
+                        this.reset();
+                    }
+                }
+            }
+
+            draw() {
+
+                if (this.path.length < 2) {
+                    return;
                 }
 
-                switch (this.dir) {
-                    case 0: ny -= this.size; break;
-                    case 1: nx += this.size; break;
-                    case 2: ny += this.size; break;
-                    case 3: nx -= this.size; break;
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    this.path[0].x,
+                    this.path[0].y
+                );
+
+                for (let i = 1; i < this.path.length; i++) {
+
+                    ctx.lineTo(
+                        this.path[i].x,
+                        this.path[i].y
+                    );
                 }
 
-                this.path.push({ x: nx, y: ny });
-                this.currentStep++;
-            } else {
-                this.alpha -= 0.005;
-                if (this.alpha <= 0) {
-                    this.reset();
-                }
+                ctx.strokeStyle =
+                    `rgba(0, 220, 130, ${this.alpha})`;
+
+                ctx.lineWidth = 1.5;
+
+                ctx.stroke();
+
+
+                let last =
+                    this.path[this.path.length - 1];
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    last.x,
+                    last.y,
+                    3,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fillStyle =
+                    `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+
+                ctx.fill();
             }
         }
 
-        draw() {
-            if (this.path.length < 2) return;
 
-            ctx.beginPath();
-            ctx.moveTo(this.path[0].x, this.path[0].y);
+        const codeSnippets = [
 
-            for (let i = 1; i < this.path.length; i++) {
-                ctx.lineTo(this.path[i].x, this.path[i].y);
+            "class BlockManager {}",
+
+            "import spring.boot.*;",
+
+            "<div class='eco'>",
+
+            "SELECT * FROM blocks;",
+
+            "const init = () => {};",
+
+            "return new PageBlock();",
+
+            "01000101 01000011 01001111",
+
+            "public static void main()",
+
+            "async fetch('/api')",
+
+            "npm run build",
+
+            "docker-compose up -d",
+
+            "mvn clean install"
+        ];
+
+
+        class CodeText {
+
+            constructor() {
+                this.reset();
             }
 
-            ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
+            reset() {
 
-            let last = this.path[this.path.length - 1];
-            ctx.beginPath();
-            ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-            ctx.fill();
-        }
-    }
+                this.x =
+                    Math.random() * (width - 200);
 
-    const codeSnippets = [
-        "class BlockManager {}",
-        "import spring.boot.*;",
-        "<div class='eco'>",
-        "SELECT * FROM blocks;",
-        "const init = () => {};",
-        "return new PageBlock();",
-        "01000101 01000011 01001111",
-        "public static void main()",
-        "async fetch('/api')",
-        "npm run build",
-        "docker-compose up -d",
-        "mvn clean install"
-    ];
+                this.y =
+                    Math.random() * height;
 
-    class CodeText {
-        constructor() {
-            this.reset();
-        }
+                this.text =
+                    codeSnippets[
+                        Math.floor(
+                            Math.random() *
+                            codeSnippets.length
+                        )
+                    ];
 
-        reset() {
-            this.x = Math.random() * (width - 200);
-            this.y = Math.random() * height;
-            this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-            this.alpha = 0;
-            this.maxAlpha = Math.random() * 0.3 + 0.1;
-            this.fadeIn = true;
-            this.speed = Math.random() * 0.3 + 0.1;
-        }
+                this.alpha = 0;
 
-        update() {
-            this.y -= this.speed;
-            if (this.fadeIn) {
-                this.alpha += 0.008;
-                if (this.alpha >= this.maxAlpha) {
-                    this.fadeIn = false;
+                this.maxAlpha =
+                    Math.random() * 0.3 + 0.1;
+
+                this.fadeIn = true;
+
+                this.speed =
+                    Math.random() * 0.3 + 0.1;
+            }
+
+            update() {
+
+                this.y -= this.speed;
+
+                if (this.fadeIn) {
+
+                    this.alpha += 0.008;
+
+                    if (this.alpha >= this.maxAlpha) {
+                        this.fadeIn = false;
+                    }
+
+                } else {
+
+                    this.alpha -= 0.005;
+
+                    if (this.alpha <= 0) {
+                        this.reset();
+                    }
                 }
-            } else {
-                this.alpha -= 0.005;
-                if (this.alpha <= 0) {
-                    this.reset();
-                }
+            }
+
+            draw() {
+
+                ctx.font =
+                    '12px "Fira Code", monospace';
+
+                ctx.fillStyle =
+                    `rgba(0, 220, 130, ${this.alpha})`;
+
+                ctx.fillText(
+                    this.text,
+                    this.x,
+                    this.y
+                );
             }
         }
 
-        draw() {
-            ctx.font = '12px "Fira Code", monospace';
-            ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
-            ctx.fillText(this.text, this.x, this.y);
+
+        const circuits =
+            Array.from(
+                { length: 18 },
+                () => new Circuit()
+            );
+
+        const codeTexts =
+            Array.from(
+                { length: 12 },
+                () => new CodeText()
+            );
+
+
+        function animate() {
+
+            ctx.clearRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+            circuits.forEach(c => {
+                c.update();
+                c.draw();
+            });
+
+            codeTexts.forEach(ct => {
+                ct.update();
+                ct.draw();
+            });
+
+            requestAnimationFrame(animate);
         }
-    }
 
-    const circuits = Array.from({ length: 18 }, () => new Circuit());
-    const codeTexts = Array.from({ length: 12 }, () => new CodeText());
+        animate();
 
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-        circuits.forEach(c => { c.update(); c.draw(); });
-        codeTexts.forEach(ct => { ct.update(); ct.draw(); });
-        requestAnimationFrame(animate);
-    }
+    </script>
 
-    animate();
-</script>
 </body>
+
 </html>
+

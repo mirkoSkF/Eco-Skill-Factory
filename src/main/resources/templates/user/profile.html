@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Profilo Utente - Eco Skill Factory</title>
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap"
+          rel="stylesheet">
+
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <style>
+
+        body {
+
+            font-family: 'Plus Jakarta Sans', sans-serif;
+
+            background-color:
+                var(--profile-page-bg, #080c14);
+
+            color: #f1f5f9;
+
+            min-height: 100vh;
+        }
+
+
+        .card-custom {
+
+            background-color:
+                var(--profile-form-bg, #0f172a);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 1rem;
+        }
+
+
+        .avatar-img {
+
+            width: 120px;
+
+            height: 120px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            border: 3px solid #00dc82;
+        }
+
+
+        .btn-brand {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00dc82 0%,
+                    #00b368 100%
+                );
+
+            color: #0f172a;
+
+            font-weight: 700;
+
+            border: none;
+        }
+
+
+        .btn-brand:hover {
+
+            color: #0f172a;
+
+            opacity: 0.9;
+        }
+
+
+        .form-control {
+
+            background-color:
+                var(--profile-input-bg, #0f172a);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.15);
+
+            color: #fff;
+        }
+
+
+        .form-control:focus {
+
+            background-color:
+                var(--profile-input-bg, #0f172a);
+
+            color: #fff;
+
+            border-color: #00dc82;
+
+            box-shadow:
+                0 0 0 0.2rem
+                rgba(0, 220, 130, 0.15);
+        }
+
+
+        .form-control::placeholder {
+
+            color:
+                var(
+                    --profile-placeholder-color,
+                    #94a3b8
+                );
+
+            opacity: 1;
+        }
+
+
+        .form-label {
+
+            color:
+                var(
+                    --profile-label-color,
+                    #cbd5e1
+                ) !important;
+        }
+
+
+        .form-control:disabled {
+
+            background-color:
+                var(--profile-input-bg, #0f172a);
+
+            color: #fff;
+
+            opacity: 0.75;
+        }
+
+
+        .form-control::file-selector-button {
+
+            background-color: #1e293b;
+
+            color: #fff;
+
+            border: none;
+        }
+
+
+        .modal-content {
+
+            background-color: #0f172a;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.12);
+
+            border-radius: 1rem;
+
+            color: #f1f5f9;
+        }
+
+
+        .modal-header {
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.1);
+        }
+
+
+        .modal-footer {
+
+            border-top:
+                1px solid rgba(255, 255, 255, 0.1);
+        }
+
+
+        .btn-close {
+
+            filter: invert(1);
+        }
+
+
+        .avatar-preview-label {
+
+            color: #94a3b8;
+        }
+
+    </style>
+
+</head>
+
+
+<body class="py-5"
+      th:style="'--profile-page-bg:' + ${authStyle.profileBackgroundColor} + ';' +
+                '--profile-form-bg:' + ${authStyle.profileFormBackgroundColor} + ';' +
+                '--profile-input-bg:' + ${authStyle.profileInputBackgroundColor} + ';' +
+                '--profile-label-color:' + ${authStyle.profileLabelColor} + ';' +
+                '--profile-placeholder-color:' + ${authStyle.profilePlaceholderColor} + ';'">
+
+
+<div class="container"
+     style="max-width: 650px;">
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h3 class="fw-bold text-white mb-0">
+
+            <i class="bi bi-person-circle text-success me-2"></i>
+
+            Il tuo Profilo
+
+        </h3>
+
+
+        <a th:href="@{/logout}"
+           class="btn btn-outline-danger btn-sm">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            Logout
+
+        </a>
+
+    </div>
+
+
+    <div th:if="${successMessage}"
+         class="alert alert-success py-2"
+         th:text="${successMessage}">
+    </div>
+
+
+    <div class="card card-custom p-4">
+
+
+        <form id="profileForm"
+              th:action="@{/user/profile/update}"
+              method="post"
+              enctype="multipart/form-data">
+
+
+            <!-- AVATAR -->
+
+            <div class="text-center mb-4">
+
+
+                <img id="avatarPreview"
+
+                     th:src="${user != null and user.avatarUrl != null
+                         ? user.avatarUrl
+                         : '/images/default-avatar.png'}"
+
+                     class="avatar-img mb-3"
+
+                     alt="Avatar">
+
+
+                <div>
+
+
+                    <label class="form-label small fw-bold d-block">
+
+                        Carica nuovo Avatar
+
+                    </label>
+
+
+                    <input type="file"
+
+                           id="foto"
+
+                           name="foto"
+
+                           class="form-control form-control-sm mx-auto"
+
+                           style="max-width: 300px;"
+
+                           accept="image/*">
+
+
+                    <div class="small avatar-preview-label mt-2">
+
+                        L'anteprima viene aggiornata immediatamente.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="mb-3">
+
+
+                <label class="form-label small fw-semibold">
+
+                    Email (non modificabile)
+
+                </label>
+
+
+                <input type="email"
+
+                       class="form-control"
+
+                       th:value="${user != null ? user.email : ''}"
+
+                       disabled>
+
+            </div>
+
+
+            <!-- NOME / COGNOME -->
+
+            <div class="row g-3 mb-4">
+
+
+                <div class="col-md-6">
+
+
+                    <label class="form-label small fw-semibold">
+
+                        Nome
+
+                    </label>
+
+
+                    <input type="text"
+
+                           name="nome"
+
+                           class="form-control"
+
+                           th:value="${user != null ? user.nome : ''}"
+
+                           required>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+
+                    <label class="form-label small fw-semibold">
+
+                        Cognome
+
+                    </label>
+
+
+                    <input type="text"
+
+                           name="cognome"
+
+                           class="form-control"
+
+                           th:value="${user != null ? user.cognome : ''}"
+
+                           required>
+
+                </div>
+
+            </div>
+
+
+            <!-- PULSANTI -->
+
+            <div class="d-flex gap-2">
+
+
+                <button type="submit"
+                        class="btn btn-brand flex-grow-1">
+
+                    <i class="bi bi-save me-1"></i>
+
+                    Salva Modifiche
+
+                </button>
+
+
+                <a th:href="@{/}"
+                   class="btn btn-outline-secondary">
+
+                    Torna alla Home
+
+                </a>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================================= -->
+<!-- MODALE CONFERMA SALVATAGGIO -->
+<!-- ========================================================= -->
+
+
+<div class="modal fade"
+
+     id="confirmSaveModal"
+
+     tabindex="-1"
+
+     aria-labelledby="confirmSaveModalLabel"
+
+     aria-hidden="true">
+
+
+    <div class="modal-dialog modal-dialog-centered">
+
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+
+                <h5 class="modal-title"
+                    id="confirmSaveModalLabel">
+
+
+                    <i class="bi bi-question-circle text-success me-2"></i>
+
+                    Conferma modifiche
+
+
+                </h5>
+
+
+                <button type="button"
+
+                        class="btn-close"
+
+                        data-bs-dismiss="modal"
+
+                        aria-label="Chiudi">
+
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <p class="mb-2">
+
+                    Sei sicuro di voler salvare le modifiche al tuo profilo?
+
+                </p>
+
+
+                <p class="text-secondary small mb-0">
+
+                    Se hai selezionato una nuova immagine,
+
+                    anche il nuovo avatar verrà salvato.
+
+                </p>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+
+                <button type="button"
+
+                        class="btn btn-outline-secondary"
+
+                        data-bs-dismiss="modal">
+
+                    Annulla
+
+                </button>
+
+
+                <button type="button"
+
+                        id="confirmSaveButton"
+
+                        class="btn btn-brand">
+
+
+                    <i class="bi bi-check-lg me-1"></i>
+
+                    Conferma e salva
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Bootstrap JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<script>
+
+
+    /*
+     * =========================================================
+     * ANTEPRIMA IMMEDIATA DELL'AVATAR
+     * =========================================================
+     */
+
+    const fotoInput =
+        document.getElementById('foto');
+
+    const avatarPreview =
+        document.getElementById('avatarPreview');
+
+
+    let temporaryAvatarUrl = null;
+
+
+    fotoInput.addEventListener('change', function () {
+
+
+        const file =
+            this.files && this.files.length > 0
+                ? this.files[0]
+                : null;
+
+
+        if (!file) {
+            return;
+        }
+
+
+        /*
+         * Controlliamo che sia effettivamente un'immagine.
+         */
+
+        if (!file.type.startsWith('image/')) {
+
+
+            alert(
+                'Seleziona un file immagine valido.'
+            );
+
+
+            this.value = '';
+
+
+            return;
+        }
+
+
+        /*
+         * Se esiste una precedente anteprima temporanea,
+         * la liberiamo dalla memoria.
+         */
+
+        if (temporaryAvatarUrl) {
+
+            URL.revokeObjectURL(
+                temporaryAvatarUrl
+            );
+        }
+
+
+        /*
+         * Creiamo un URL temporaneo
+         * per il file selezionato.
+         */
+
+        temporaryAvatarUrl =
+            URL.createObjectURL(file);
+
+
+        /*
+         * Aggiorniamo immediatamente
+         * il cerchietto.
+         */
+
+        avatarPreview.src =
+            temporaryAvatarUrl;
+
+    });
+
+
+
+    /*
+     * =========================================================
+     * MODALE DI CONFERMA
+     * =========================================================
+     */
+
+
+    const profileForm =
+        document.getElementById('profileForm');
+
+
+    const confirmSaveModalElement =
+        document.getElementById(
+            'confirmSaveModal'
+        );
+
+
+    const confirmSaveModal =
+        new bootstrap.Modal(
+            confirmSaveModalElement
+        );
+
+
+    const confirmSaveButton =
+        document.getElementById(
+            'confirmSaveButton'
+        );
+
+
+    /*
+     * Intercettiamo il normale submit del form.
+     */
+
+    profileForm.addEventListener(
+        'submit',
+        function (event) {
+
+            event.preventDefault();
+
+            confirmSaveModal.show();
+        }
+    );
+
+
+    /*
+     * Conferma e salva.
+     */
+
+    confirmSaveButton.addEventListener(
+        'click',
+        function () {
+
+
+            confirmSaveButton.disabled = true;
+
+
+            confirmSaveButton.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>' +
+                'Salvataggio...';
+
+
+            profileForm.submit();
+
+        }
+    );
+
+</script>
+
+
+</body>
+</html>

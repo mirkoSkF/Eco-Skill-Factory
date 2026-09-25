@@ -1,0 +1,2451 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Personalizzazione Login - Eco Skill Factory</title>
+
+    <!-- =========================================================
+         GOOGLE FONTS
+         ========================================================= -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <!-- =========================================================
+         BOOTSTRAP
+         ========================================================= -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <style>
+
+        /* =====================================================
+           VARIABILI PRINCIPALI
+           ===================================================== */
+
+        :root {
+
+            --brand-primary: #00dc82;
+            --brand-primary-hover: #00b368;
+            --brand-accent: #36e4da;
+
+            --brand-dark: #0f172a;
+
+            --body-bg: #080c14;
+
+            --sidebar-width: 224px;
+        }
+
+
+        /* =====================================================
+           BASE
+           ===================================================== */
+
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            min-height: 100vh;
+        }
+
+
+        body {
+
+            font-family: 'Plus Jakarta Sans', sans-serif;
+
+            color: #f1f5f9;
+
+            background-color: var(--body-bg);
+
+            overflow-x: hidden;
+
+            position: relative;
+        }
+
+
+        /* =====================================================
+           SFONDO TECNICO
+           ===================================================== */
+
+        #tech-bg-canvas {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100vw;
+            height: 100vh;
+
+            z-index: 0;
+
+            pointer-events: none;
+        }
+
+
+        /* =====================================================
+           LAYOUT ADMIN
+           ===================================================== */
+
+        .admin-layout {
+
+            position: relative;
+
+            z-index: 1;
+
+            display: flex;
+
+            min-height: 100vh;
+
+            width: 100%;
+        }
+
+
+        .admin-sidebar {
+
+            width: var(--sidebar-width);
+
+            min-width: var(--sidebar-width);
+
+            flex-shrink: 0;
+        }
+
+
+        .main-wrapper {
+
+            flex: 1 1 auto;
+
+            width: auto;
+
+            min-width: 0;
+
+            padding: 2.5rem;
+
+            position: relative;
+
+            z-index: 2;
+
+            margin-left: 0;
+        }
+
+
+        /* =====================================================
+           TESTI BRAND
+           ===================================================== */
+
+        .brand-text {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff 0%,
+                    #cbd5e1 100%
+                );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .brand-accent {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00dc82 0%,
+                    #36e4da 100%
+                );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .accent-text {
+
+            color: var(--brand-accent) !important;
+        }
+
+
+        /* =====================================================
+           CARD
+           ===================================================== */
+
+        .card-custom {
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 1.25rem;
+
+            background: rgba(15, 23, 42, 0.88);
+
+            backdrop-filter: blur(16px);
+
+            -webkit-backdrop-filter: blur(16px);
+
+            color: #f1f5f9;
+
+            box-shadow:
+                0 10px 25px -5px rgba(0, 0, 0, 0.3);
+
+            position: relative;
+
+            z-index: 3;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
+        .sidebar-nav {
+
+            width: var(--sidebar-width);
+
+            min-width: var(--sidebar-width);
+
+            background: rgba(15, 23, 42, 0.92);
+
+            backdrop-filter: blur(16px);
+
+            -webkit-backdrop-filter: blur(16px);
+
+            border-right:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            display: flex;
+
+            flex-direction: column;
+
+            position: fixed;
+
+            top: 0;
+            bottom: 0;
+            left: 0;
+
+            z-index: 1000;
+        }
+
+
+        /* =====================================================
+           FORM CONTROLS
+           ===================================================== */
+
+        .form-control,
+        .form-select {
+
+            background-color: rgba(15, 23, 42, 0.9);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.15);
+
+            color: #f8fafc;
+
+            border-radius: 0.5rem;
+        }
+
+
+        .form-control:focus,
+        .form-select:focus {
+
+            background-color: rgba(15, 23, 42, 0.98);
+
+            border-color: var(--brand-primary);
+
+            color: #ffffff;
+
+            box-shadow:
+                0 0 0 0.25rem
+                rgba(0, 220, 130, 0.25);
+        }
+
+
+        .form-control::placeholder {
+
+            color: #64748b;
+        }
+
+
+        label,
+        .form-label {
+
+            color: #cbd5e1 !important;
+        }
+
+
+        /* =====================================================
+           COLOR PICKER
+           ===================================================== */
+
+        .color-picker {
+
+            width: 58px;
+
+            height: 42px;
+
+            padding: 3px;
+
+            cursor: pointer;
+
+            background: #1e293b;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.15);
+
+            border-radius: 0.5rem;
+        }
+
+
+        .color-picker::-webkit-color-swatch-wrapper {
+
+            padding: 0;
+        }
+
+
+        .color-picker::-webkit-color-swatch {
+
+            border: none;
+
+            border-radius: 0.35rem;
+        }
+
+
+        .color-picker::-moz-color-swatch {
+
+            border: none;
+
+            border-radius: 0.35rem;
+        }
+
+
+        .hex-input {
+
+            font-family: 'Fira Code', monospace;
+
+            letter-spacing: 0.03em;
+
+            text-transform: uppercase;
+        }
+
+
+        /* =====================================================
+           GRUPPO COLORE
+           ===================================================== */
+
+        .color-setting {
+
+            background: rgba(15, 23, 42, 0.55);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.07);
+
+            border-radius: 0.85rem;
+
+            padding: 1rem;
+
+            transition:
+                border-color 0.25s ease,
+                background 0.25s ease;
+        }
+
+
+        .color-setting:hover {
+
+            border-color:
+                rgba(0, 220, 130, 0.25);
+
+            background:
+                rgba(15, 23, 42, 0.75);
+        }
+
+
+        .color-description {
+
+            color: #94a3b8;
+
+            font-size: 0.78rem;
+        }
+
+
+        /* =====================================================
+           PREVIEW
+           ===================================================== */
+
+        .preview-wrapper {
+
+            background:
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(255,255,255,0.025),
+                    rgba(255,255,255,0.025) 10px,
+                    transparent 10px,
+                    transparent 20px
+                );
+
+            border:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 1rem;
+
+            padding: 1.5rem;
+
+            min-height: 330px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            overflow: hidden;
+        }
+
+
+        .preview-page {
+
+            width: 100%;
+
+            min-height: 280px;
+
+            border-radius: 0.75rem;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 1.25rem;
+
+            transition:
+                background-color 0.25s ease;
+        }
+
+
+        .preview-card {
+
+            width: 100%;
+
+            max-width: 340px;
+
+            padding: 1.5rem;
+
+            border-radius: 1rem;
+
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.35);
+
+            transition:
+                background-color 0.25s ease;
+        }
+
+
+        .preview-title {
+
+            font-size: 1.05rem;
+
+            font-weight: 700;
+
+            margin-bottom: 1rem;
+        }
+
+
+        .preview-label {
+
+            display: block;
+
+            font-size: 0.72rem;
+
+            font-weight: 600;
+
+            margin-bottom: 0.35rem;
+        }
+
+
+        .preview-input {
+
+            width: 100%;
+
+            height: 34px;
+
+            border-radius: 0.4rem;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.15);
+
+            padding: 0 0.7rem;
+
+            margin-bottom: 0.75rem;
+
+            font-family:
+                'Fira Code',
+                monospace;
+
+            font-size: 0.68rem;
+
+            outline: none;
+
+            box-sizing: border-box;
+        }
+
+
+        .preview-button {
+
+            width: 100%;
+
+            border: none;
+
+            border-radius: 0.4rem;
+
+            height: 34px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00dc82 0%,
+                    #00b368 100%
+                );
+
+            color: #0f172a;
+
+            font-size: 0.7rem;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           SEZIONE
+           ===================================================== */
+
+        .section-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 0.65rem;
+
+            margin-bottom: 1.25rem;
+        }
+
+
+        .section-title-icon {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 0.65rem;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                rgba(0, 220, 130, 0.1);
+
+            color:
+                var(--brand-primary);
+
+            border:
+                1px solid rgba(0, 220, 130, 0.18);
+        }
+
+
+        .section-title h4 {
+
+            margin: 0;
+
+            font-size: 1rem;
+
+            font-weight: 700;
+        }
+
+
+        .section-title small {
+
+            color: #64748b;
+
+            font-size: 0.72rem;
+        }
+
+
+        /* =====================================================
+           ALERT SALVATAGGIO
+           ===================================================== */
+
+        .save-alert {
+
+            border-radius: 0.75rem;
+
+            background:
+                rgba(0, 220, 130, 0.08);
+
+            border:
+                1px solid rgba(0, 220, 130, 0.2);
+
+            color: #86efac;
+        }
+
+
+        /* =====================================================
+           BUTTON
+           ===================================================== */
+
+        .btn-brand {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00dc82 0%,
+                    #00b368 100%
+                );
+
+            border: none;
+
+            color: #0f172a;
+
+            font-weight: 700;
+
+            transition:
+                all 0.25s ease;
+        }
+
+
+        .btn-brand:hover {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00b368 0%,
+                    #00dc82 100%
+                );
+
+            color: #0f172a;
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 6px 20px
+                rgba(0, 220, 130, 0.25);
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 991.98px) {
+
+            .admin-sidebar {
+
+                width: 100%;
+
+                min-width: 100%;
+            }
+
+
+            .sidebar-nav {
+
+                position: relative;
+
+                width: 100%;
+
+                min-width: 100%;
+
+                height: auto;
+
+                border-right: none;
+
+                border-bottom:
+                    1px solid
+                    rgba(255, 255, 255, 0.08);
+            }
+
+
+            .admin-layout {
+
+                flex-direction: column;
+            }
+
+
+            .main-wrapper {
+
+                margin-left: 0;
+
+                width: 100%;
+
+                padding: 1.5rem;
+            }
+        }
+
+
+        @media (max-width: 575.98px) {
+
+            .main-wrapper {
+
+                padding: 1rem;
+            }
+
+
+            .main-wrapper h2 {
+
+                font-size: 1.35rem;
+            }
+
+
+            .preview-wrapper {
+
+                padding: 0.75rem;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     CANVAS SFONDO TECNICO
+     ========================================================= -->
+
+<canvas id="tech-bg-canvas"></canvas>
+
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <div class="admin-sidebar">
+
+        <div th:replace="~{fragments/sidebar :: sidebar('auth-style')}"></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CONTENUTO PRINCIPALE
+         ===================================================== -->
+
+    <main class="main-wrapper">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <div class="d-flex
+                    justify-content-between
+                    align-items-start
+                    gap-3
+                    mb-4">
+
+            <div>
+
+                <div class="small
+                            text-uppercase
+                            fw-semibold
+                            mb-1"
+                     style="
+                         color:#36e4da;
+                         letter-spacing:.08em;
+                     ">
+
+                    PERSONALIZZAZIONE
+
+                </div>
+
+                <h2 class="fw-bold mb-1">
+
+                    Login & Profilo
+
+                </h2>
+
+                <p class="text-secondary mb-0">
+
+                    Personalizza separatamente i colori
+                    dell'area di accesso e del profilo utente.
+
+                </p>
+
+            </div>
+
+
+            <a th:href="@{/admin/dashboard}"
+               class="btn btn-outline-light rounded-3">
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             MESSAGGIO SALVATAGGIO
+             ================================================= -->
+
+        <div th:if="${param.saved}"
+             class="alert save-alert
+                    d-flex
+                    align-items-center
+                    mb-4">
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            <span>
+                Personalizzazione salvata correttamente.
+            </span>
+
+        </div>
+
+
+        <!-- =================================================
+             LAYOUT PRINCIPALE
+             ================================================= -->
+
+        <div class="row g-4">
+
+
+            <!-- =================================================
+                 COLONNA IMPOSTAZIONI
+                 ================================================= -->
+
+            <div class="col-xl-7">
+
+
+                <!-- =============================================
+                     PROFILO
+                     ============================================= -->
+
+                <div class="card-custom p-4 mb-4">
+
+
+                    <div class="section-title">
+
+                        <div class="section-title-icon">
+
+                            <i class="bi bi-person-circle"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                Profilo Utente
+                            </h4>
+
+                            <small>
+                                Colori della pagina personale dell'utente
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         FORM PROFILO
+                         ========================================= -->
+
+                    <form th:action="@{/admin/auth-style/save}"
+                          th:object="${settings}"
+                          method="post"
+                          id="profileStyleForm">
+
+
+                        <!-- SFONDO PAGINA -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Sfondo pagina
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore dello sfondo principale della pagina profilo.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="profileBackgroundPicker"
+                                       class="color-picker"
+                                       th:value="${settings.profileBackgroundColor}">
+
+                                <input type="text"
+                                       id="profileBackgroundInput"
+                                       class="form-control hex-input"
+                                       th:field="*{profileBackgroundColor}"
+                                       maxlength="7"
+                                       placeholder="#080C14">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SFONDO FORM -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Sfondo form / card
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore della scheda che contiene il profilo.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="profileFormBackgroundPicker"
+                                       class="color-picker"
+                                       th:value="${settings.profileFormBackgroundColor}">
+
+                                <input type="text"
+                                       id="profileFormBackgroundInput"
+                                       class="form-control hex-input"
+                                       th:field="*{profileFormBackgroundColor}"
+                                       maxlength="7"
+                                       placeholder="#0F172A">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SFONDO INPUT -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Sfondo campi input
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore di sfondo dei campi Email, Nome e Cognome.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="profileInputBackgroundPicker"
+                                       class="color-picker"
+                                       th:value="${settings.profileInputBackgroundColor}">
+
+                                <input type="text"
+                                       id="profileInputBackgroundInput"
+                                       class="form-control hex-input"
+                                       th:field="*{profileInputBackgroundColor}"
+                                       maxlength="7"
+                                       placeholder="#0F172A">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COLORE LABEL -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Colore etichette / testi
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore delle etichette sopra i campi del profilo.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="profileLabelPicker"
+                                       class="color-picker"
+                                       th:value="${settings.profileLabelColor}">
+
+                                <input type="text"
+                                       id="profileLabelInput"
+                                       class="form-control hex-input"
+                                       th:field="*{profileLabelColor}"
+                                       maxlength="7"
+                                       placeholder="#CBD5E1">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COLORE PLACEHOLDER -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Colore placeholder
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore del testo mostrato nei campi vuoti.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="profilePlaceholderPicker"
+                                       class="color-picker"
+                                       th:value="${settings.profilePlaceholderColor}">
+
+                                <input type="text"
+                                       id="profilePlaceholderInput"
+                                       class="form-control hex-input"
+                                       th:field="*{profilePlaceholderColor}"
+                                       maxlength="7"
+                                       placeholder="#94A3B8">
+
+                            </div>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="btn btn-brand w-100 py-2 rounded-3">
+
+                            <i class="bi bi-save me-1"></i>
+
+                            Salva personalizzazione
+
+                        </button>
+
+
+                    </form>
+
+                </div>
+
+
+                <!-- =================================================
+                     LOGIN
+                     ================================================= -->
+
+                <div class="card-custom p-4">
+
+
+                    <div class="section-title">
+
+                        <div class="section-title-icon">
+
+                            <i class="bi bi-box-arrow-in-right"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                Login Utente
+                            </h4>
+
+                            <small>
+                                Colori della pagina di accesso
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =============================================
+                         FORM LOGIN
+                         ============================================= -->
+
+                    <form th:action="@{/admin/auth-style/save}"
+                          th:object="${settings}"
+                          method="post"
+                          id="loginStyleForm">
+
+
+                        <!-- SFONDO PAGINA -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Sfondo pagina
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore dello sfondo principale del login.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="loginBackgroundPicker"
+                                       class="color-picker"
+                                       th:value="${settings.loginBackgroundColor}">
+
+                                <input type="text"
+                                       id="loginBackgroundInput"
+                                       class="form-control hex-input"
+                                       th:field="*{loginBackgroundColor}"
+                                       maxlength="7"
+                                       placeholder="#080C14">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SFONDO FORM -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Sfondo form / card
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore della scheda contenente il modulo di accesso.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="loginFormBackgroundPicker"
+                                       class="color-picker"
+                                       th:value="${settings.loginFormBackgroundColor}">
+
+                                <input type="text"
+                                       id="loginFormBackgroundInput"
+                                       class="form-control hex-input"
+                                       th:field="*{loginFormBackgroundColor}"
+                                       maxlength="7"
+                                       placeholder="#0F172A">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SFONDO INPUT -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Sfondo campi input
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore dei campi Email e Password.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="loginInputBackgroundPicker"
+                                       class="color-picker"
+                                       th:value="${settings.loginInputBackgroundColor}">
+
+                                <input type="text"
+                                       id="loginInputBackgroundInput"
+                                       class="form-control hex-input"
+                                       th:field="*{loginInputBackgroundColor}"
+                                       maxlength="7"
+                                       placeholder="#0F172A">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COLORE LABEL -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Colore etichette / testi
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore delle etichette Email e Password.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="loginLabelPicker"
+                                       class="color-picker"
+                                       th:value="${settings.loginLabelColor}">
+
+                                <input type="text"
+                                       id="loginLabelInput"
+                                       class="form-control hex-input"
+                                       th:field="*{loginLabelColor}"
+                                       maxlength="7"
+                                       placeholder="#CBD5E1">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COLORE PLACEHOLDER -->
+
+                        <div class="color-setting mb-3">
+
+                            <label class="form-label fw-semibold mb-1">
+                                Colore placeholder
+                            </label>
+
+                            <div class="color-description mb-3">
+                                Colore del testo mostrato nei campi vuoti.
+                            </div>
+
+                            <div class="d-flex gap-2">
+
+                                <input type="color"
+                                       id="loginPlaceholderPicker"
+                                       class="color-picker"
+                                       th:value="${settings.loginPlaceholderColor}">
+
+                                <input type="text"
+                                       id="loginPlaceholderInput"
+                                       class="form-control hex-input"
+                                       th:field="*{loginPlaceholderColor}"
+                                       maxlength="7"
+                                       placeholder="#94A3B8">
+
+                            </div>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="btn btn-brand w-100 py-2 rounded-3">
+
+                            <i class="bi bi-save me-1"></i>
+
+                            Salva personalizzazione
+
+                        </button>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 COLONNA ANTEPRIMA
+                 ================================================= -->
+
+            <div class="col-xl-5">
+
+
+                <div class="card-custom p-4 sticky-xl-top"
+                     style="top: 1.5rem;">
+
+
+                    <div class="section-title">
+
+                        <div class="section-title-icon">
+
+                            <i class="bi bi-eye"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                Anteprima
+                            </h4>
+
+                            <small>
+                                Visualizzazione in tempo reale
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         SWITCH PREVIEW
+                         ========================================= -->
+
+                    <div class="d-flex gap-2 mb-3">
+
+                        <button type="button"
+                                id="previewLoginButton"
+                                class="btn btn-success btn-sm flex-grow-1">
+
+                            <i class="bi bi-box-arrow-in-right me-1"></i>
+
+                            Login
+
+                        </button>
+
+                        <button type="button"
+                                id="previewProfileButton"
+                                class="btn btn-outline-secondary btn-sm flex-grow-1">
+
+                            <i class="bi bi-person-circle me-1"></i>
+
+                            Profilo
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         PREVIEW
+                         ========================================= -->
+
+                    <div class="preview-wrapper">
+
+
+                        <div id="previewPage"
+                             class="preview-page">
+
+
+                            <div id="previewCard"
+                                 class="preview-card">
+
+
+                                <div class="preview-title"
+                                     id="previewTitle">
+
+                                    Area Utente
+
+                                </div>
+
+
+                                <label class="preview-label"
+                                       id="previewLabel1">
+
+                                    Email
+
+                                </label>
+
+
+                                <input type="text"
+                                       class="preview-input"
+                                       id="previewInput1"
+                                       placeholder="nome@email.it">
+
+
+                                <label class="preview-label"
+                                       id="previewLabel2">
+
+                                    Password
+
+                                </label>
+
+
+                                <input type="text"
+                                       class="preview-input"
+                                       id="previewInput2"
+                                       placeholder="••••••••">
+
+
+                                <button type="button"
+                                        class="preview-button">
+
+                                    Accedi
+
+                                </button>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         INFO
+                         ========================================= -->
+
+                    <div class="mt-3 p-3 rounded-3"
+                         style="
+                            background:rgba(54,228,218,.05);
+                            border:1px solid rgba(54,228,218,.1);
+                         ">
+
+                        <div class="small">
+
+                            <i class="bi bi-info-circle text-info me-1"></i>
+
+                            <span class="text-secondary">
+
+                                La modifica dell'anteprima è immediata.
+                                Le impostazioni vengono applicate alle
+                                pagine reali dopo il salvataggio.
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     BOOTSTRAP JS
+     ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+
+    /*
+     * =========================================================
+     * COLOR PICKER + CAMPO HEX
+     * =========================================================
+     *
+     * Ogni colore possiede:
+     *
+     * 1. color picker
+     * 2. campo HEX
+     *
+     * I due controlli rimangono sempre sincronizzati.
+     */
+
+
+    function setupColorControl(pickerId, inputId, callback) {
+
+        const picker =
+            document.getElementById(pickerId);
+
+        const input =
+            document.getElementById(inputId);
+
+
+        if (!picker || !input) {
+            return;
+        }
+
+
+        /*
+         * PICKER -> INPUT
+         */
+
+        picker.addEventListener('input', function () {
+
+            input.value =
+                this.value.toUpperCase();
+
+            if (callback) {
+                callback(this.value);
+            }
+
+        });
+
+
+        /*
+         * INPUT -> PICKER
+         */
+
+        input.addEventListener('input', function () {
+
+            let value =
+                this.value.trim();
+
+
+            /*
+             * Aggiungiamo automaticamente #
+             * quando l'utente inserisce solo
+             * i sei caratteri esadecimali.
+             */
+
+            if (
+                value.length === 6 &&
+                !value.startsWith('#')
+            ) {
+
+                value = '#' + value;
+
+                this.value =
+                    value.toUpperCase();
+            }
+
+
+            /*
+             * Controlliamo il formato HEX.
+             */
+
+            if (
+                /^#[0-9A-Fa-f]{6}$/.test(value)
+            ) {
+
+                picker.value =
+                    value.toLowerCase();
+
+                if (callback) {
+                    callback(value);
+                }
+            }
+
+        });
+
+
+        /*
+         * Normalizzazione quando si esce
+         * dal campo.
+         */
+
+        input.addEventListener('blur', function () {
+
+            let value =
+                this.value.trim();
+
+
+            if (
+                /^#[0-9A-Fa-f]{6}$/.test(value)
+            ) {
+
+                this.value =
+                    value.toUpperCase();
+
+                picker.value =
+                    value.toLowerCase();
+
+            } else {
+
+                /*
+                 * Se il valore non è valido,
+                 * ripristiniamo quello del picker.
+                 */
+
+                this.value =
+                    picker.value.toUpperCase();
+            }
+
+        });
+
+    }
+
+
+    /*
+     * =========================================================
+     * ELEMENTI PREVIEW
+     * =========================================================
+     */
+
+    const previewPage =
+        document.getElementById('previewPage');
+
+    const previewCard =
+        document.getElementById('previewCard');
+
+    const previewTitle =
+        document.getElementById('previewTitle');
+
+    const previewLabel1 =
+        document.getElementById('previewLabel1');
+
+    const previewLabel2 =
+        document.getElementById('previewLabel2');
+
+    const previewInput1 =
+        document.getElementById('previewInput1');
+
+    const previewInput2 =
+        document.getElementById('previewInput2');
+
+
+    /*
+     * =========================================================
+     * STATO PREVIEW
+     * =========================================================
+     */
+
+    let currentPreview = 'login';
+
+
+    /*
+     * =========================================================
+     * AGGIORNAMENTO PREVIEW LOGIN
+     * =========================================================
+     */
+
+    function updateLoginPreview() {
+
+        const pageColor =
+            document.getElementById(
+                'loginBackgroundInput'
+            ).value;
+
+        const formColor =
+            document.getElementById(
+                'loginFormBackgroundInput'
+            ).value;
+
+        const inputColor =
+            document.getElementById(
+                'loginInputBackgroundInput'
+            ).value;
+
+        const labelColor =
+            document.getElementById(
+                'loginLabelInput'
+            ).value;
+
+        const placeholderColor =
+            document.getElementById(
+                'loginPlaceholderInput'
+            ).value;
+
+
+        previewPage.style.backgroundColor =
+            isValidColor(pageColor)
+                ? pageColor
+                : '#080c14';
+
+
+        previewCard.style.backgroundColor =
+            isValidColor(formColor)
+                ? formColor
+                : '#0f172a';
+
+
+        previewTitle.textContent =
+            'Area Utente';
+
+
+        previewLabel1.textContent =
+            'Email';
+
+        previewLabel2.textContent =
+            'Password';
+
+
+        previewLabel1.style.color =
+            isValidColor(labelColor)
+                ? labelColor
+                : '#cbd5e1';
+
+        previewLabel2.style.color =
+            isValidColor(labelColor)
+                ? labelColor
+                : '#cbd5e1';
+
+
+        previewInput1.style.backgroundColor =
+            isValidColor(inputColor)
+                ? inputColor
+                : '#0f172a';
+
+        previewInput2.style.backgroundColor =
+            isValidColor(inputColor)
+                ? inputColor
+                : '#0f172a';
+
+
+        previewInput1.style.color =
+            '#ffffff';
+
+        previewInput2.style.color =
+            '#ffffff';
+
+
+        previewInput1.style.setProperty(
+            '--preview-placeholder',
+            placeholderColor
+        );
+
+        previewInput2.style.setProperty(
+            '--preview-placeholder',
+            placeholderColor
+        );
+
+
+        previewInput1.style.borderColor =
+            'rgba(255,255,255,.15)';
+
+        previewInput2.style.borderColor =
+            'rgba(255,255,255,.15)';
+
+
+        previewInput1.placeholder =
+            'nome@email.it';
+
+        previewInput2.placeholder =
+            '••••••••';
+
+    }
+
+
+    /*
+     * =========================================================
+     * AGGIORNAMENTO PREVIEW PROFILO
+     * =========================================================
+     */
+
+    function updateProfilePreview() {
+
+        const pageColor =
+            document.getElementById(
+                'profileBackgroundInput'
+            ).value;
+
+        const formColor =
+            document.getElementById(
+                'profileFormBackgroundInput'
+            ).value;
+
+        const inputColor =
+            document.getElementById(
+                'profileInputBackgroundInput'
+            ).value;
+
+        const labelColor =
+            document.getElementById(
+                'profileLabelInput'
+            ).value;
+
+        const placeholderColor =
+            document.getElementById(
+                'profilePlaceholderInput'
+            ).value;
+
+
+        previewPage.style.backgroundColor =
+            isValidColor(pageColor)
+                ? pageColor
+                : '#080c14';
+
+
+        previewCard.style.backgroundColor =
+            isValidColor(formColor)
+                ? formColor
+                : '#0f172a';
+
+
+        previewTitle.textContent =
+            'Il tuo Profilo';
+
+
+        previewLabel1.textContent =
+            'Email';
+
+
+        previewLabel2.textContent =
+            'Nome';
+
+
+        previewLabel1.style.color =
+            isValidColor(labelColor)
+                ? labelColor
+                : '#cbd5e1';
+
+        previewLabel2.style.color =
+            isValidColor(labelColor)
+                ? labelColor
+                : '#cbd5e1';
+
+
+        previewInput1.style.backgroundColor =
+            isValidColor(inputColor)
+                ? inputColor
+                : '#0f172a';
+
+        previewInput2.style.backgroundColor =
+            isValidColor(inputColor)
+                ? inputColor
+                : '#0f172a';
+
+
+        previewInput1.style.color =
+            '#ffffff';
+
+        previewInput2.style.color =
+            '#ffffff';
+
+
+        previewInput1.style.setProperty(
+            '--preview-placeholder',
+            placeholderColor
+        );
+
+        previewInput2.style.setProperty(
+            '--preview-placeholder',
+            placeholderColor
+        );
+
+
+        previewInput1.placeholder =
+            'email@esempio.it';
+
+        previewInput2.placeholder =
+            'Mario';
+
+
+        previewInput1.style.borderColor =
+            'rgba(255,255,255,.15)';
+
+        previewInput2.style.borderColor =
+            'rgba(255,255,255,.15)';
+    }
+
+
+    /*
+     * =========================================================
+     * VALIDAZIONE COLORE
+     * =========================================================
+     */
+
+    function isValidColor(value) {
+
+        return /^#[0-9A-Fa-f]{6}$/.test(
+            value
+        );
+
+    }
+
+
+    /*
+     * =========================================================
+     * CONTROLLI PROFILO
+     * =========================================================
+     */
+
+    setupColorControl(
+        'profileBackgroundPicker',
+        'profileBackgroundInput',
+        updateProfilePreview
+    );
+
+    setupColorControl(
+        'profileFormBackgroundPicker',
+        'profileFormBackgroundInput',
+        updateProfilePreview
+    );
+
+    setupColorControl(
+        'profileInputBackgroundPicker',
+        'profileInputBackgroundInput',
+        updateProfilePreview
+    );
+
+    setupColorControl(
+        'profileLabelPicker',
+        'profileLabelInput',
+        updateProfilePreview
+    );
+
+    setupColorControl(
+        'profilePlaceholderPicker',
+        'profilePlaceholderInput',
+        updateProfilePreview
+    );
+
+
+    /*
+     * =========================================================
+     * CONTROLLI LOGIN
+     * =========================================================
+     */
+
+    setupColorControl(
+        'loginBackgroundPicker',
+        'loginBackgroundInput',
+        updateLoginPreview
+    );
+
+    setupColorControl(
+        'loginFormBackgroundPicker',
+        'loginFormBackgroundInput',
+        updateLoginPreview
+    );
+
+    setupColorControl(
+        'loginInputBackgroundPicker',
+        'loginInputBackgroundInput',
+        updateLoginPreview
+    );
+
+    setupColorControl(
+        'loginLabelPicker',
+        'loginLabelInput',
+        updateLoginPreview
+    );
+
+    setupColorControl(
+        'loginPlaceholderPicker',
+        'loginPlaceholderInput',
+        updateLoginPreview
+    );
+
+
+    /*
+     * =========================================================
+     * SWITCH LOGIN / PROFILO
+     * =========================================================
+     */
+
+    const previewLoginButton =
+        document.getElementById(
+            'previewLoginButton'
+        );
+
+    const previewProfileButton =
+        document.getElementById(
+            'previewProfileButton'
+        );
+
+
+    previewLoginButton.addEventListener(
+        'click',
+        function () {
+
+            currentPreview = 'login';
+
+            previewLoginButton.className =
+                'btn btn-success btn-sm flex-grow-1';
+
+            previewProfileButton.className =
+                'btn btn-outline-secondary btn-sm flex-grow-1';
+
+            updateLoginPreview();
+
+        }
+    );
+
+
+    previewProfileButton.addEventListener(
+        'click',
+        function () {
+
+            currentPreview = 'profile';
+
+            previewProfileButton.className =
+                'btn btn-success btn-sm flex-grow-1';
+
+            previewLoginButton.className =
+                'btn btn-outline-secondary btn-sm flex-grow-1';
+
+            updateProfilePreview();
+
+        }
+    );
+
+
+    /*
+     * =========================================================
+     * AGGIORNAMENTO LIVE DEI CAMPI HEX
+     * =========================================================
+     */
+
+    document.querySelectorAll('.hex-input')
+        .forEach(function (input) {
+
+            input.addEventListener(
+                'input',
+                function () {
+
+                    if (currentPreview === 'login') {
+
+                        updateLoginPreview();
+
+                    } else {
+
+                        updateProfilePreview();
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    /*
+     * =========================================================
+     * PLACEHOLDER COLORI
+     * =========================================================
+     */
+
+    const previewStyle =
+        document.createElement('style');
+
+    previewStyle.textContent = `
+
+        #previewInput1::placeholder,
+        #previewInput2::placeholder {
+
+            color: var(--preview-placeholder, #94a3b8) !important;
+
+            opacity: 1;
+        }
+
+    `;
+
+    document.head.appendChild(previewStyle);
+
+
+    /*
+     * =========================================================
+     * PREVIEW INIZIALE
+     * ========================================================= */
+
+    updateLoginPreview();
+
+
+    /*
+     * =========================================================
+     * CANVAS TECNICO
+     * =========================================================
+     */
+
+    const canvas =
+        document.getElementById(
+            'tech-bg-canvas'
+        );
+
+    const ctx =
+        canvas.getContext('2d');
+
+    let width;
+    let height;
+
+
+    function resize() {
+
+        width =
+            canvas.width =
+            window.innerWidth;
+
+        height =
+            canvas.height =
+            window.innerHeight;
+    }
+
+
+    window.addEventListener(
+        'resize',
+        resize
+    );
+
+
+    resize();
+
+
+    /*
+     * =========================================================
+     * CIRCUITI
+     * =========================================================
+     */
+
+    class Circuit {
+
+        constructor() {
+
+            this.reset();
+        }
+
+
+        reset() {
+
+            this.x =
+                Math.random() * width;
+
+            this.y =
+                Math.random() * height;
+
+            this.length =
+                Math.floor(
+                    Math.random() * 8
+                ) + 4;
+
+            this.currentStep = 0;
+
+            this.dir =
+                Math.floor(
+                    Math.random() * 4
+                );
+
+            this.path = [
+                {
+                    x: this.x,
+                    y: this.y
+                }
+            ];
+
+            this.alpha =
+                Math.random() * 0.4 + 0.1;
+
+            this.size = 20;
+        }
+
+
+        update() {
+
+            if (
+                this.currentStep <
+                this.length
+            ) {
+
+                const last =
+                    this.path[
+                        this.path.length - 1
+                    ];
+
+                let nx = last.x;
+                let ny = last.y;
+
+
+                if (
+                    Math.random() < 0.3
+                ) {
+
+                    this.dir =
+                        (
+                            this.dir +
+                            (
+                                Math.random() < 0.5
+                                    ? 1
+                                    : 3
+                            )
+                        ) % 4;
+                }
+
+
+                switch (this.dir) {
+
+                    case 0:
+                        ny -= this.size;
+                        break;
+
+                    case 1:
+                        nx += this.size;
+                        break;
+
+                    case 2:
+                        ny += this.size;
+                        break;
+
+                    case 3:
+                        nx -= this.size;
+                        break;
+                }
+
+
+                this.path.push({
+                    x: nx,
+                    y: ny
+                });
+
+
+                this.currentStep++;
+
+            } else {
+
+                this.alpha -= 0.005;
+
+
+                if (
+                    this.alpha <= 0
+                ) {
+
+                    this.reset();
+                }
+            }
+        }
+
+
+        draw() {
+
+            if (
+                this.path.length < 2
+            ) {
+
+                return;
+            }
+
+
+            ctx.beginPath();
+
+
+            ctx.moveTo(
+                this.path[0].x,
+                this.path[0].y
+            );
+
+
+            for (
+                let i = 1;
+                i < this.path.length;
+                i++
+            ) {
+
+                ctx.lineTo(
+                    this.path[i].x,
+                    this.path[i].y
+                );
+            }
+
+
+            ctx.strokeStyle =
+                `rgba(0, 220, 130, ${this.alpha})`;
+
+            ctx.lineWidth = 1.5;
+
+            ctx.stroke();
+
+
+            const last =
+                this.path[
+                    this.path.length - 1
+                ];
+
+
+            ctx.beginPath();
+
+
+            ctx.arc(
+                last.x,
+                last.y,
+                3,
+                0,
+                Math.PI * 2
+            );
+
+
+            ctx.fillStyle =
+                `rgba(54, 228, 218, ${this.alpha + 0.2})`;
+
+            ctx.fill();
+        }
+
+    }
+
+
+    /*
+     * =========================================================
+     * TESTI CODE
+     * =========================================================
+     */
+
+    const codeSnippets = [
+
+        "class AuthStyle {}",
+
+        "import spring.boot.*;",
+
+        "<div class='profile'>",
+
+        "SELECT * FROM users;",
+
+        "01000101 01000011",
+
+        "mvn clean install",
+
+        "docker-compose up -d",
+
+        "background-color: #00dc82;"
+
+    ];
+
+
+    class CodeText {
+
+        constructor() {
+
+            this.reset();
+        }
+
+
+        reset() {
+
+            this.x =
+                Math.random() *
+                (width - 200);
+
+            this.y =
+                Math.random() *
+                height;
+
+            this.text =
+                codeSnippets[
+                    Math.floor(
+                        Math.random() *
+                        codeSnippets.length
+                    )
+                ];
+
+            this.alpha = 0;
+
+            this.maxAlpha =
+                Math.random() * 0.3 + 0.1;
+
+            this.fadeIn = true;
+
+            this.speed =
+                Math.random() * 0.3 + 0.1;
+        }
+
+
+        update() {
+
+            this.y -= this.speed;
+
+
+            if (this.fadeIn) {
+
+                this.alpha += 0.008;
+
+
+                if (
+                    this.alpha >=
+                    this.maxAlpha
+                ) {
+
+                    this.fadeIn = false;
+                }
+
+            } else {
+
+                this.alpha -= 0.005;
+
+
+                if (
+                    this.alpha <= 0
+                ) {
+
+                    this.reset();
+                }
+            }
+        }
+
+
+        draw() {
+
+            ctx.font =
+                '12px "Fira Code", monospace';
+
+            ctx.fillStyle =
+                `rgba(0, 220, 130, ${this.alpha})`;
+
+            ctx.fillText(
+                this.text,
+                this.x,
+                this.y
+            );
+        }
+
+    }
+
+
+    /*
+     * =========================================================
+     * AVVIO ANIMAZIONE
+     * ========================================================= */
+
+    const circuits =
+        Array.from(
+            {
+                length: 18
+            },
+            () => new Circuit()
+        );
+
+
+    const codeTexts =
+        Array.from(
+            {
+                length: 12
+            },
+            () => new CodeText()
+        );
+
+
+    function animate() {
+
+        ctx.clearRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+        circuits.forEach(
+            circuit => {
+
+                circuit.update();
+                circuit.draw();
+
+            }
+        );
+
+
+        codeTexts.forEach(
+            codeText => {
+
+                codeText.update();
+                codeText.draw();
+
+            }
+        );
+
+
+        requestAnimationFrame(
+            animate
+        );
+    }
+
+
+    animate();
+
+</script>
+
+</body>
+</html>

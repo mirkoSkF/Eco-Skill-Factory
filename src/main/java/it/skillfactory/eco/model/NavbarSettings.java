@@ -43,6 +43,12 @@ public class NavbarSettings {
     @Column(name = "hide_on_scroll_behavior")
     private String hideOnScrollBehavior = "NONE";
 
+    // Aggiungere all'entità delle impostazioni esistente (es. NavbarSettings):
+private boolean userLoginEnabled = false; // Default: disabilitato
+
+public boolean isUserLoginEnabled() { return userLoginEnabled; }
+public void setUserLoginEnabled(boolean userLoginEnabled) { this.userLoginEnabled = userLoginEnabled; }
+
     public NavbarSettings() {
     }
 

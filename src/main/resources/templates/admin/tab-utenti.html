@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gestione Utenti - Admin Eco Skill Factory</title>
+
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- BOOTSTRAP ICONS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+
+        /* =========================================================
+           VARIABILI GLOBALI
+        ========================================================= */
+
+        :root {
+            --brand-primary: #00dc82;
+            --brand-primary-hover: #00b368;
+            --brand-accent: #36e4da;
+            --brand-dark: #0f172a;
+            --body-bg: #080c14;
+            --sidebar-width: 280px;
+        }
+
+
+        /* =========================================================
+           RESET / BODY
+        ========================================================= */
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f1f5f9;
+            background-color: var(--body-bg);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+
+        /* =========================================================
+           SFONDO ANIMATO
+        ========================================================= */
+
+        #tech-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+
+        /* =========================================================
+           LAYOUT PRINCIPALE
+        ========================================================= */
+
+        .admin-layout {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
+
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+
+            background: rgba(15, 23, 42, 0.92);
+
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+            display: flex;
+            flex-direction: column;
+
+            position: fixed;
+
+            top: 0;
+            bottom: 0;
+            left: 0;
+
+            z-index: 1000;
+        }
+
+
+        /* =========================================================
+           SIDEBAR LINK
+        ========================================================= */
+
+        .sidebar-menu .nav-link,
+        .sidebar-nav .nav-link {
+            color: #94a3b8;
+
+            font-weight: 500;
+
+            padding: 0.8rem 1.25rem;
+
+            border-radius: 0.5rem;
+
+            margin-bottom: 0.35rem;
+
+            transition: all 0.25s ease;
+
+            display: flex;
+            align-items: center;
+
+            text-decoration: none;
+        }
+
+        .sidebar-menu .nav-link:hover,
+        .sidebar-menu .nav-link.active,
+        .sidebar-nav .nav-link:hover,
+        .sidebar-nav .nav-link.active {
+            color: var(--brand-primary) !important;
+
+            background: rgba(0, 220, 130, 0.1);
+
+            transform: translateX(4px);
+        }
+
+        .sidebar-menu .nav-link i,
+        .sidebar-nav .nav-link i {
+            font-size: 1.15rem;
+        }
+
+
+        /* =========================================================
+           CONTENUTO PRINCIPALE
+        ========================================================= */
+
+        .main-wrapper {
+            flex: 1 1 auto;
+
+            width: auto;
+
+            min-width: 0;
+
+            padding: 2.5rem;
+
+            position: relative;
+
+            z-index: 2;
+
+            margin-left: 0;
+        }
+
+
+        /* =========================================================
+           COLORI BRAND
+        ========================================================= */
+
+        .brand-text {
+            background: linear-gradient(
+                135deg,
+                #ffffff 0%,
+                #cbd5e1 100%
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-accent {
+            background: linear-gradient(
+                135deg,
+                #00dc82 0%,
+                #36e4da 100%
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .accent-text {
+            color: var(--brand-accent) !important;
+        }
+
+
+        /* =========================================================
+           CARD
+        ========================================================= */
+
+        .card-custom {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 1.25rem;
+
+            background: rgba(15, 23, 42, 0.88);
+
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+
+            color: #f1f5f9;
+
+            box-shadow:
+                0 10px 25px -5px rgba(0, 0, 0, 0.3);
+
+            position: relative;
+
+            z-index: 3;
+        }
+
+
+        /* =========================================================
+           RICERCA
+        ========================================================= */
+
+        .search-input {
+            background-color: rgba(15, 23, 42, 0.9) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+
+            color: #f8fafc !important;
+
+            border-radius: 0.5rem;
+        }
+
+        .search-input:focus {
+            background-color: rgba(15, 23, 42, 0.98) !important;
+
+            border-color: var(--brand-primary) !important;
+
+            color: #ffffff !important;
+
+            box-shadow:
+                0 0 0 0.25rem rgba(0, 220, 130, 0.25) !important;
+        }
+
+        .search-input::placeholder {
+            color: #64748b !important;
+        }
+
+
+        /* =========================================================
+           INPUT GROUP RICERCA
+        ========================================================= */
+
+        .search-icon {
+            background: rgba(15, 23, 42, 0.9) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+
+            border-right: none !important;
+
+            color: #94a3b8 !important;
+        }
+
+
+        /* =========================================================
+           TABELLA
+        ========================================================= */
+
+        .table-dark-custom {
+            --bs-table-bg: transparent;
+
+            --bs-table-color: #f1f5f9;
+
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .table-dark-custom > :not(caption) > * > * {
+            background-color: transparent !important;
+
+            color: #f1f5f9;
+
+            border-bottom-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .table-dark-custom thead th {
+            color: #94a3b8 !important;
+
+            font-weight: 600;
+        }
+
+        .table-dark-custom tbody tr {
+            transition: all 0.25s ease;
+        }
+
+        .table-dark-custom tbody tr:hover {
+            background: rgba(0, 220, 130, 0.04) !important;
+        }
+
+
+        /* =========================================================
+           MODALE
+        ========================================================= */
+
+        .modal-content-dark {
+            background: rgba(15, 23, 42, 0.96);
+
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 1.25rem;
+
+            color: #f1f5f9;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content-dark .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .modal-content-dark .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 991.98px) {
+
+            .admin-sidebar {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            .sidebar-nav {
+                position: relative;
+
+                width: 100%;
+                min-width: 100%;
+
+                height: auto;
+
+                border-right: none;
+
+                border-bottom:
+                    1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .admin-layout {
+                flex-direction: column;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+
+                width: 100%;
+
+                padding: 1.5rem;
+            }
+        }
+
+
+        @media (max-width: 575.98px) {
+
+            .main-wrapper {
+                padding: 1rem;
+            }
+
+            .main-wrapper h2 {
+                font-size: 1.35rem;
+            }
+
+            .main-wrapper > .d-flex {
+                align-items: flex-start !important;
+
+                gap: 1rem;
+            }
+
+            .main-wrapper > .d-flex .btn {
+                white-space: nowrap;
+            }
+
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SFONDO ANIMATO
+========================================================= -->
+
+<canvas id="tech-bg-canvas"></canvas>
+
+
+<!-- =========================================================
+     LAYOUT ADMIN
+========================================================= -->
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <div class="admin-sidebar">
+
+        <div th:replace="~{fragments/sidebar :: sidebar('users')}"></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CONTENUTO PRINCIPALE
+    ====================================================== -->
+
+    <main class="main-wrapper">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h2 class="mb-0 fw-bold text-white">
+
+                <i class="bi bi-people-fill accent-text me-2"></i>
+
+                Gestione Utenti Registrati
+
+            </h2>
+
+        </div>
+
+
+        <!-- =================================================
+             MESSAGGIO ELIMINAZIONE
+        ================================================== -->
+
+        <div th:if="${param.deleted}"
+             class="alert alert-success py-2 small mb-4"
+             role="alert"
+             style="
+                 background: rgba(0, 220, 130, 0.1);
+                 border: 1px solid rgba(0, 220, 130, 0.3);
+                 color: #75b798;
+                 border-radius: 0.75rem;
+             ">
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            Utente rimosso con successo.
+
+        </div>
+
+
+        <!-- =================================================
+             CARD UTENTI
+        ================================================== -->
+
+        <div class="card card-custom p-4">
+
+
+            <!-- BARRA DI RICERCA -->
+
+            <div class="row mb-4">
+
+                <div class="col-md-6 col-lg-5">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text search-icon">
+
+                            <i class="bi bi-search"></i>
+
+                        </span>
+
+                        <input type="text"
+                               id="searchInput"
+                               class="form-control search-input"
+                               style="border-left: none !important;"
+                               placeholder="Cerca per nome, cognome o email...">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 TABELLA
+            ================================================== -->
+
+            <div class="table-responsive">
+
+                <table class="table table-dark-custom align-middle mb-0"
+                       id="usersTable">
+
+                    <thead>
+
+                    <tr class="text-secondary small text-uppercase">
+
+                        <th>ID</th>
+
+                        <th>Foto</th>
+
+                        <th>Utente</th>
+
+                        <th>Email</th>
+
+                        <th>Data Iscrizione</th>
+
+                        <th class="text-end">
+                            Azione
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                    <tr th:each="u : ${users}"
+                        class="user-row">
+
+                        <td th:text="${u.id}">
+                            1
+                        </td>
+
+
+                        <td>
+
+                            <th:block th:if="${u.avatarUrl != null and !#strings.isEmpty(u.avatarUrl)}">
+
+                                <img th:src="${#strings.startsWith(u.avatarUrl, '/') or #strings.startsWith(u.avatarUrl, 'http') ? u.avatarUrl : '/uploads/' + u.avatarUrl}"
+                                     th:data-fallback-name="${u.nome + ' ' + u.cognome}"
+                                     width="40"
+                                     height="40"
+                                     class="rounded-circle"
+                                     style="object-fit: cover;"
+                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-fallback-name')) + '&background=random';" />
+
+                            </th:block>
+
+
+                            <span th:if="${u.avatarUrl == null or #strings.isEmpty(u.avatarUrl)}"
+                                  class="badge bg-secondary">
+
+                                No Avatar
+
+                            </span>
+
+                        </td>
+
+
+                        <td class="user-name fw-semibold text-white"
+                            th:text="${u.nome + ' ' + u.cognome}">
+
+                            Mario Rossi
+
+                        </td>
+
+
+                        <td class="user-email"
+                            style="color: #cbd5e1;"
+                            th:text="${u.email}">
+
+                            mario@email.it
+
+                        </td>
+
+
+                        <td style="color: #94a3b8;"
+                            th:text="${#temporals.format(u.createdAt, 'dd/MM/yyyy HH:mm')}">
+
+                            23/09/2026
+
+                        </td>
+
+
+                        <td class="text-end">
+
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    th:data-url="@{/admin/users/delete/{id}(id=${u.id})}"
+                                    th:data-name="${u.nome + ' ' + u.cognome}"
+                                    onclick="handleDeleteClick(this)">
+
+                                <i class="bi bi-trash me-1"></i>
+
+                                Eliminare
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- NESSUN RISULTATO -->
+
+                    <tr id="noResultsRow"
+                        style="display: none;">
+
+                        <td colspan="6"
+                            class="text-center text-muted py-4">
+
+                            <i class="bi bi-exclamation-circle me-2"></i>
+
+                            Nessun utente trovato con i criteri inseriti.
+
+                        </td>
+
+                    </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     MODALE ELIMINAZIONE
+========================================================= -->
+
+<div class="modal fade"
+     id="deleteUserModal"
+     tabindex="-1"
+     aria-labelledby="deleteUserModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content modal-content-dark">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold text-white"
+                    id="deleteUserModalLabel">
+
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+
+                    Conferma Eliminazione
+
+                </h5>
+
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+
+            <div class="modal-body text-light">
+
+                Sei sicuro di voler eliminare l'utente
+
+                <strong id="deleteUserName"
+                        class="text-white">
+                </strong>?
+
+
+                <p class="small mb-0 mt-2">
+
+                    L'azione è irreversibile e cancellerà definitivamente
+                    tutti i dati associati all'utente.
+
+                </p>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-outline-light"
+                        data-bs-dismiss="modal">
+
+                    Annulla
+
+                </button>
+
+
+                <form id="deleteUserForm"
+                      method="post"
+                      action="">
+
+                    <button type="submit"
+                            class="btn btn-danger px-4">
+
+                        <i class="bi bi-trash me-1"></i>
+
+                        Elimina Utente
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     BOOTSTRAP JS
+========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- =========================================================
+     LOGICA RICERCA + MODALE
+========================================================= -->
+
+<script>
+
+    let deleteModal = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        deleteModal =
+            new bootstrap.Modal(
+                document.getElementById('deleteUserModal')
+            );
+
+
+        const searchInput =
+            document.getElementById('searchInput');
+
+        const rows =
+            document.querySelectorAll('.user-row');
+
+        const noResultsRow =
+            document.getElementById('noResultsRow');
+
+
+        searchInput.addEventListener('input', function () {
+
+            const query =
+                this.value.toLowerCase().trim();
+
+            let matchesCount = 0;
+
+
+            rows.forEach(row => {
+
+                const nameText =
+                    row.querySelector('.user-name')
+                        ?.textContent
+                        .toLowerCase()
+                    || '';
+
+
+                const emailText =
+                    row.querySelector('.user-email')
+                        ?.textContent
+                        .toLowerCase()
+                    || '';
+
+
+                if (
+                    nameText.includes(query)
+                    ||
+                    emailText.includes(query)
+                ) {
+
+                    row.style.display = '';
+
+                    matchesCount++;
+
+                } else {
+
+                    row.style.display = 'none';
+
+                }
+
+            });
+
+
+            if (
+                matchesCount === 0
+                &&
+                rows.length > 0
+            ) {
+
+                noResultsRow.style.display = '';
+
+            } else {
+
+                noResultsRow.style.display = 'none';
+
+            }
+
+        });
+
+    });
+
+
+    function handleDeleteClick(buttonElement) {
+
+        const deleteUrl =
+            buttonElement.getAttribute('data-url');
+
+        const userName =
+            buttonElement.getAttribute('data-name');
+
+
+        document.getElementById(
+            'deleteUserForm'
+        ).action = deleteUrl;
+
+
+        document.getElementById(
+            'deleteUserName'
+        ).textContent = userName;
+
+
+        if (deleteModal) {
+
+            deleteModal.show();
+
+        }
+
+    }
+
+</script>
+
+
+<!-- =========================================================
+     SFONDO ANIMATO TECH
+========================================================= -->
+
+<script>
+
+    const canvas =
+        document.getElementById(
+            'tech-bg-canvas'
+        );
+
+    const ctx =
+        canvas.getContext('2d');
+
+
+    let width;
+    let height;
+
+
+    /* =========================================================
+       RIDIMENSIONAMENTO CANVAS
+    ========================================================= */
+
+    function resize() {
+
+        width =
+            canvas.width =
+                window.innerWidth;
+
+        height =
+            canvas.height =
+                window.innerHeight;
+
+    }
+
+
+    window.addEventListener(
+        'resize',
+        resize
+    );
+
+
+    resize();
+
+
+    /* =========================================================
+       CIRCUIT
+    ========================================================= */
+
+    class Circuit {
+
+        constructor() {
+
+            this.reset();
+
+        }
+
+
+        reset() {
+
+            this.x =
+                Math.random() * width;
+
+            this.y =
+                Math.random() * height;
+
+
+            this.length =
+                Math.floor(
+                    Math.random() * 8
+                ) + 4;
+
+
+            this.currentStep = 0;
+
+
+            this.dir =
+                Math.floor(
+                    Math.random() * 4
+                );
+
+
+            this.path = [
+
+                {
+                    x: this.x,
+                    y: this.y
+                }
+
+            ];
+
+
+            this.speed =
+                Math.random() * 1.5 + 0.5;
+
+
+            this.alpha =
+                Math.random() * 0.4 + 0.1;
+
+
+            this.size = 20;
+
+        }
+
+
+        update() {
+
+            if (
+                this.currentStep <
+                this.length
+            ) {
+
+                let last =
+                    this.path[
+                        this.path.length - 1
+                    ];
+
+
+                let nx = last.x;
+                let ny = last.y;
+
+
+                if (
+                    Math.random() < 0.3
+                ) {
+
+                    this.dir =
+                        (
+                            this.dir +
+                            (
+                                Math.random() < 0.5
+                                    ? 1
+                                    : 3
+                            )
+                        ) % 4;
+
+                }
+
+
+                switch (this.dir) {
+
+                    case 0:
+
+                        ny -= this.size;
+
+                        break;
+
+
+                    case 1:
+
+                        nx += this.size;
+
+                        break;
+
+
+                    case 2:
+
+                        ny += this.size;
+
+                        break;
+
+
+                    case 3:
+
+                        nx -= this.size;
+
+                        break;
+
+                }
+
+
+                this.path.push({
+
+                    x: nx,
+                    y: ny
+
+                });
+
+
+                this.currentStep++;
+
+            } else {
+
+                this.alpha -= 0.005;
+
+
+                if (
+                    this.alpha <= 0
+                ) {
+
+                    this.reset();
+
+                }
+
+            }
+
+        }
+
+
+        draw() {
+
+            if (
+                this.path.length < 2
+            ) {
+
+                return;
+
+            }
+
+
+            ctx.beginPath();
+
+
+            ctx.moveTo(
+                this.path[0].x,
+                this.path[0].y
+            );
+
+
+            for (
+                let i = 1;
+                i < this.path.length;
+                i++
+            ) {
+
+                ctx.lineTo(
+                    this.path[i].x,
+                    this.path[i].y
+                );
+
+            }
+
+
+            ctx.strokeStyle =
+                `rgba(
+                    0,
+                    220,
+                    130,
+                    ${this.alpha}
+                )`;
+
+
+            ctx.lineWidth = 1.5;
+
+
+            ctx.stroke();
+
+
+            let last =
+                this.path[
+                    this.path.length - 1
+                ];
+
+
+            ctx.beginPath();
+
+
+            ctx.arc(
+                last.x,
+                last.y,
+                3,
+                0,
+                Math.PI * 2
+            );
+
+
+            ctx.fillStyle =
+                `rgba(
+                    54,
+                    228,
+                    218,
+                    ${this.alpha + 0.2}
+                )`;
+
+
+            ctx.fill();
+
+        }
+
+    }
+
+
+    /* =========================================================
+       TESTI / CODICE FLOTTANTE
+    ========================================================= */
+
+    const codeSnippets = [
+
+        "class BlockManager {}",
+        "import spring.boot.*;",
+        "<div class='eco'>",
+        "SELECT * FROM blocks;",
+        "const init = () => {};",
+        "return new PageBlock();",
+        "01000101 01000011 01001111",
+        "public static void main()",
+        "async fetch('/api')",
+        "npm run build",
+        "docker-compose up -d",
+        "mvn clean install"
+
+    ];
+
+
+    class CodeText {
+
+        constructor() {
+
+            this.reset();
+
+        }
+
+
+        reset() {
+
+            this.x =
+                Math.random() *
+                Math.max(
+                    1,
+                    width - 200
+                );
+
+
+            this.y =
+                Math.random() *
+                height;
+
+
+            this.text =
+                codeSnippets[
+                    Math.floor(
+                        Math.random() *
+                        codeSnippets.length
+                    )
+                ];
+
+
+            this.alpha = 0;
+
+
+            this.maxAlpha =
+                Math.random() * 0.3 + 0.1;
+
+
+            this.fadeIn = true;
+
+
+            this.speed =
+                Math.random() * 0.3 + 0.1;
+
+        }
+
+
+        update() {
+
+            this.y -= this.speed;
+
+
+            if (this.fadeIn) {
+
+                this.alpha += 0.008;
+
+
+                if (
+                    this.alpha >=
+                    this.maxAlpha
+                ) {
+
+                    this.fadeIn = false;
+
+                }
+
+            } else {
+
+                this.alpha -= 0.005;
+
+
+                if (
+                    this.alpha <= 0
+                ) {
+
+                    this.reset();
+
+                }
+
+            }
+
+        }
+
+
+        draw() {
+
+            ctx.font =
+                '12px "Fira Code", monospace';
+
+
+            ctx.fillStyle =
+                `rgba(
+                    0,
+                    220,
+                    130,
+                    ${this.alpha}
+                )`;
+
+
+            ctx.fillText(
+                this.text,
+                this.x,
+                this.y
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       CREAZIONE ELEMENTI
+    ========================================================= */
+
+    const circuits =
+        Array.from(
+            { length: 18 },
+            () => new Circuit()
+        );
+
+
+    const codeTexts =
+        Array.from(
+            { length: 12 },
+            () => new CodeText()
+        );
+
+
+    /* =========================================================
+       ANIMAZIONE
+    ========================================================= */
+
+    function animate() {
+
+        ctx.clearRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+        circuits.forEach(
+            circuit => {
+
+                circuit.update();
+
+                circuit.draw();
+
+            }
+        );
+
+
+        codeTexts.forEach(
+            codeText => {
+
+                codeText.update();
+
+                codeText.draw();
+
+            }
+        );
+
+
+        requestAnimationFrame(
+            animate
+        );
+
+    }
+
+
+    animate();
+
+</script>
+
+</body>
+
+</html>

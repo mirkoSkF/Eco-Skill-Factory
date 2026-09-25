@@ -198,7 +198,7 @@
             color: #00dc82;
             font-size: 0.78rem;
             font-weight: 700;
-            mb: 1rem;
+            margin-bottom: 1rem;
         }
 
         .form-preview-placeholder {
@@ -230,9 +230,7 @@
         }
     </style>
 
-    <!-- ============================================================
-     INCLUSIONE FRAGMENT TINYMCE (da templates/fragments/tinymce.html)
-     ============================================================ -->
+    <!-- INCLUSIONE FRAGMENT TINYMCE -->
     <th:block th:insert="~{fragments/tinymce :: tinymce-scripts}" />
 
     <script>
@@ -267,6 +265,7 @@
             }
 
             textInput.value = picker.value;
+            triggerLivePreviewUpdate();
         }
 
         function syncColorFromText(textId, pickerId) {
@@ -279,21 +278,15 @@
 
             const value = textInput.value.trim();
 
-            /*
-             * Aggiorna il quadratino solo quando il valore
-             * è un colore esadecimale completo: #RRGGBB
-             */
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
                 picker.value = value.toLowerCase();
             }
+            triggerLivePreviewUpdate();
         }
 
         function resetToAnimatedBg() {
-            const backgroundColorInput =
-                document.getElementById('backgroundColorInput');
-
-            const pageBgPicker =
-                document.getElementById('pageBgPicker');
+            const backgroundColorInput = document.getElementById('backgroundColorInput');
+            const pageBgPicker = document.getElementById('pageBgPicker');
 
             if (backgroundColorInput) {
                 backgroundColorInput.value = '';
@@ -302,6 +295,7 @@
             if (pageBgPicker) {
                 pageBgPicker.value = '#080c14';
             }
+            triggerLivePreviewUpdate();
         }
     </script>
 
@@ -315,15 +309,19 @@
     <div class="container py-4">
 
         <!-- INTESTAZIONE -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
-                <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova
-                    Pagina</h2>
+                <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova Pagina</h2>
                 <p class="text-muted mb-0">Crea o modifica il contenuto della pagina.</p>
             </div>
-            <a th:href="@{/admin/pages}" class="btn btn-outline-light">
-                <i class="bi bi-arrow-left me-1"></i> Torna alla Gestione Pagine
-            </a>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-info" onclick="openLivePagePreview()">
+                    <i class="bi bi-window-stack me-1"></i> Anteprima Live Pagina
+                </button>
+                <a th:href="@{/admin/pages}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i> Torna alla Gestione Pagine
+                </a>
+            </div>
         </div>
 
         <!-- FORM PAGINA -->
@@ -356,11 +354,9 @@
                             max="100" step="1" placeholder="100">
                         <span class="input-group-text">%</span>
                     </div>
-                    <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e
-                        <strong>100%</strong>).</div>
+                    <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
                 </div>
 
-                <!-- PERSONALIZZAZIONE COLORI -->
                 <!-- PERSONALIZZAZIONE COLORI -->
                 <div class="mb-4 p-3 rounded" style="background-color: #0f172a; border: 1px solid #1e293b;">
                     <label class="form-label fw-bold d-flex align-items-center mb-3">
@@ -372,12 +368,8 @@
 
                         <!-- SFONDO PAGINA -->
                         <div class="col-12">
-                            <label class="form-label text-light fw-semibold">
-                                Sfondo Pagina (Body)
-                            </label>
-
+                            <label class="form-label text-light fw-semibold">Sfondo Pagina (Body)</label>
                             <div class="d-flex align-items-center gap-2">
-
                                 <input type="color" class="form-control form-control-color" id="pageBgPicker"
                                     th:value="${page.backgroundColor != null and !#strings.isEmpty(page.backgroundColor) ? page.backgroundColor : '#080c14'}"
                                     oninput="syncColorFromPicker('pageBgPicker', 'backgroundColorInput')">
@@ -388,20 +380,14 @@
 
                                 <button type="button" class="btn btn-outline-secondary text-nowrap"
                                     onclick="resetToAnimatedBg()">
-
-                                    <i class="bi bi-stars me-1 text-info"></i>
-                                    Reset Animato
-
+                                    <i class="bi bi-stars me-1 text-info"></i> Reset Animato
                                 </button>
-
                             </div>
                         </div>
 
                         <!-- FONT TITOLO -->
                         <div class="col-md-6">
-                            <label for="titleFontSelect" class="form-label text-light fw-semibold">
-                                Font Titolo (H1)
-                            </label>
+                            <label for="titleFontSelect" class="form-label text-light fw-semibold">Font Titolo (H1)</label>
                             <select id="titleFontSelect" th:field="*{titleFont}" class="form-select">
                                 <option value="">Predefinito di sistema</option>
                                 <option value="Space Grotesk, sans-serif">Space Grotesk</option>
@@ -430,12 +416,8 @@
 
                         <!-- COLORE TITOLO -->
                         <div class="col-md-6">
-                            <label class="form-label text-light fw-semibold">
-                                Colore Titolo (H1)
-                            </label>
-
+                            <label class="form-label text-light fw-semibold">Colore Titolo (H1)</label>
                             <div class="d-flex align-items-center gap-2">
-
                                 <input type="color" class="form-control form-control-color" id="titleColorPicker"
                                     th:value="${page.titleColor != null and !#strings.isEmpty(page.titleColor) ? page.titleColor : '#00dc82'}"
                                     oninput="syncColorFromPicker('titleColorPicker', 'titleColorInput')">
@@ -443,18 +425,13 @@
                                 <input type="text" id="titleColorInput" th:field="*{titleColor}" class="form-control"
                                     placeholder="es. #00dc82"
                                     oninput="syncColorFromText('titleColorInput', 'titleColorPicker')">
-
                             </div>
                         </div>
 
                         <!-- SFONDO CARD FORM -->
                         <div class="col-md-6">
-                            <label class="form-label text-light fw-semibold">
-                                Colore Sfondo Card Form
-                            </label>
-
+                            <label class="form-label text-light fw-semibold">Colore Sfondo Card Form</label>
                             <div class="d-flex align-items-center gap-2">
-
                                 <input type="color" class="form-control form-control-color" id="formBgPicker"
                                     th:value="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? page.formBgColor : '#0f172a'}"
                                     oninput="syncColorFromPicker('formBgPicker', 'formBgColorInput')">
@@ -462,18 +439,13 @@
                                 <input type="text" id="formBgColorInput" th:field="*{formBgColor}" class="form-control"
                                     placeholder="es. #1e293b"
                                     oninput="syncColorFromText('formBgColorInput', 'formBgPicker')">
-
                             </div>
                         </div>
 
                         <!-- SFONDO INPUT FORM -->
                         <div class="col-md-4">
-                            <label class="form-label text-light fw-semibold">
-                                Sfondo Input Form
-                            </label>
-
+                            <label class="form-label text-light fw-semibold">Sfondo Input Form</label>
                             <div class="d-flex align-items-center gap-2">
-
                                 <input type="color" class="form-control form-control-color" id="formInputBgPicker"
                                     th:value="${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? page.formInputBgColor : '#1e293b'}"
                                     oninput="syncColorFromPicker('formInputBgPicker', 'formInputBgColorInput')">
@@ -481,18 +453,13 @@
                                 <input type="text" id="formInputBgColorInput" th:field="*{formInputBgColor}"
                                     class="form-control" placeholder="es. #1e293b"
                                     oninput="syncColorFromText('formInputBgColorInput', 'formInputBgPicker')">
-
                             </div>
                         </div>
 
                         <!-- COLORE TESTO FORM -->
                         <div class="col-md-4">
-                            <label class="form-label text-light fw-semibold">
-                                Colore Testo e Label Form
-                            </label>
-
+                            <label class="form-label text-light fw-semibold">Colore Testo e Label Form</label>
                             <div class="d-flex align-items-center gap-2">
-
                                 <input type="color" class="form-control form-control-color" id="formTextColorPicker"
                                     th:value="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? page.formTextColor : '#ffffff'}"
                                     oninput="syncColorFromPicker('formTextColorPicker', 'formTextColorInput')">
@@ -501,27 +468,20 @@
                                     th:value="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? page.formTextColor : '#ffffff'}"
                                     class="form-control" placeholder="es. #ffffff"
                                     oninput="syncColorFromText('formTextColorInput', 'formTextColorPicker')">
-
                             </div>
                         </div>
 
                         <!-- COLORE PLACEHOLDER -->
                         <div class="col-md-4">
-                            <label class="form-label text-light fw-semibold">
-                                Colore Placeholder/Check Input
-                            </label>
-
+                            <label class="form-label text-light fw-semibold">Colore Placeholder/Check Input</label>
                             <div class="d-flex align-items-center gap-2">
-
-                                <input type="color" class="form-control form-control-color"
-                                    id="formPlaceholderColorPicker"
+                                <input type="color" class="form-control form-control-color" id="formPlaceholderColorPicker"
                                     th:value="${page.formPlaceholderColor != null and !#strings.isEmpty(page.formPlaceholderColor) ? page.formPlaceholderColor : '#94a3b8'}"
                                     oninput="syncColorFromPicker('formPlaceholderColorPicker', 'formPlaceholderColorInput')">
 
                                 <input type="text" id="formPlaceholderColorInput" th:field="*{formPlaceholderColor}"
                                     class="form-control" placeholder="es. #94a3b8"
                                     oninput="syncColorFromText('formPlaceholderColorInput', 'formPlaceholderColorPicker')">
-
                             </div>
                         </div>
 
@@ -544,8 +504,7 @@
 
                 <!-- CONFIGURAZIONE FORM CORSO / DESTINAZIONE -->
                 <div id="courseConfigBox" class="course-config-box mb-4" style="display: none;">
-                    <h5 class="text-success mb-3 fw-bold"><i class="bi bi-sliders me-2"></i> Impostazioni Form e
-                        Destinazione</h5>
+                    <h5 class="text-success mb-3 fw-bold"><i class="bi bi-sliders me-2"></i> Impostazioni Form e Destinazione</h5>
                     <div class="row g-3">
                         <div class="col-md-4 course-specific-field">
                             <label class="form-label fw-bold">Tipologia Corso</label>
@@ -563,10 +522,8 @@
                                 placeholder="es. Corso Java Developer">
                         </div>
                     </div>
-                    <div
-                        class="mt-4 pt-3 border-top border-secondary d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <div class="fw-bold text-white"><i class="bi bi-eye me-2 text-info"></i> Anteprima del Form
-                        </div>
+                    <div class="mt-4 pt-3 border-top border-secondary d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div class="fw-bold text-white"><i class="bi bi-eye me-2 text-info"></i> Anteprima del Form</div>
                         <button type="button" class="btn btn-outline-info" onclick="openFormPreview()">
                             <i class="bi bi-eye me-1"></i> Anteprima Form
                         </button>
@@ -576,8 +533,7 @@
                 <!-- CONTENUTO WYSIWYG & MONACO TRIGGER -->
                 <div class="mb-4">
                     <label class="form-label fw-bold">Contenuto Pagina (Editor)</label>
-                    <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e
-                        formattazione avanzata.</div>
+                    <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e formattazione avanzata.</div>
 
                     <div class="monaco-modal-editor-button">
                         <button type="button" class="btn btn-sm btn-outline-info monaco-open-button"
@@ -602,22 +558,25 @@
                 </div>
 
                 <!-- BOTTONI -->
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <a th:href="@{/admin/pages}" class="btn btn-outline-light">
                         <i class="bi bi-arrow-left me-1"></i> Annulla
                     </a>
-                    <button type="button" class="btn btn-success btn-lg" onclick="showConfirmModal()">
-                        <i class="bi bi-check-circle me-1"></i> Salva Pagina
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-info btn-lg" onclick="openLivePagePreview()">
+                            <i class="bi bi-window-stack me-1"></i> Anteprima Live
+                        </button>
+                        <button type="button" class="btn btn-success btn-lg" onclick="showConfirmModal()">
+                            <i class="bi bi-check-circle me-1"></i> Salva Pagina
+                        </button>
+                    </div>
                 </div>
 
             </div>
         </form>
     </div>
 
-    <!-- ============================================================
-     INCLUSIONE FRAGMENT MODALE MONACO EDITOR (da templates/fragments/monaco.html)
-     ============================================================ -->
+    <!-- INCLUSIONE FRAGMENT MODALE MONACO EDITOR -->
     <th:block th:insert="~{fragments/monaco :: monaco-modal}" />
 
     <!-- MODALE ANTEPRIMA FORM -->
@@ -648,14 +607,12 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content card border-0">
                 <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i> Campi
-                        Obbligatori Mancanti</h5>
+                    <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i> Campi Obbligatori Mancanti</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-light">Compilare tutti i campi obbligatori prima di salvare la pagina.</div>
                 <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-warning fw-bold text-dark" data-bs-dismiss="modal">Ho
-                        Capito</button>
+                    <button type="button" class="btn btn-warning fw-bold text-dark" data-bs-dismiss="modal">Ho Capito</button>
                 </div>
             </div>
         </div>
@@ -666,8 +623,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content card border-0">
                 <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title text-white"><i class="bi bi-check-circle-fill text-success me-2"></i>
-                        Conferma Operazione</h5>
+                    <h5 class="modal-title text-white"><i class="bi bi-check-circle-fill text-success me-2"></i> Conferma Operazione</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-light">Sei sicuro di voler salvare le modifiche alla pagina?</div>
@@ -681,11 +637,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-
     <script>
-
         /* ============================================================
-           ANTEPRIMA FORM
+           ANTEPRIMA FORM MODALE
            ============================================================ */
 
         function escapePreviewHtml(value) {
@@ -698,151 +652,68 @@
         }
 
         function getSelectedFormType() {
-
-            const select =
-                document.getElementById('formTypeSelect');
-
-            return select
-                ? select.value
-                : 'NONE';
+            const select = document.getElementById('formTypeSelect');
+            return select ? select.value : 'NONE';
         }
 
         function getPreviewPageTitle() {
-
-            const titleInput =
-                document.getElementById('title');
-
-            if (titleInput &&
-                titleInput.value.trim()) {
-
+            const titleInput = document.getElementById('title');
+            if (titleInput && titleInput.value.trim()) {
                 return titleInput.value.trim();
-
             }
-
-            const titleField =
-                document.querySelector('[name="title"]');
-
-            if (titleField &&
-                titleField.value.trim()) {
-
+            const titleField = document.querySelector('[name="title"]');
+            if (titleField && titleField.value.trim()) {
                 return titleField.value.trim();
-
             }
-
             return 'Pagina';
         }
 
         function getPreviewCourseValue(id, name) {
-
-            const byId =
-                document.getElementById(id);
-
-            if (byId &&
-                byId.value.trim()) {
-
+            const byId = document.getElementById(id);
+            if (byId && byId.value.trim()) {
                 return byId.value.trim();
-
             }
-
-            const byName =
-                document.querySelector(
-                    '[name="' + name + '"]'
-                );
-
-            return byName
-                ? byName.value.trim()
-                : '';
+            const byName = document.querySelector('[name="' + name + '"]');
+            return byName ? byName.value.trim() : '';
         }
 
-        function buildPreviewInput(
-            label,
-            name,
-            placeholder,
-            required = false,
-            type = 'text'
-        ) {
-
+        function buildPreviewInput(label, name, placeholder, required = false, type = 'text') {
             return `
             <div class="mb-3">
-
                 <label class="form-label">
-
                     ${escapePreviewHtml(label)}
-
-                    ${required
-                    ? '<span class="preview-required">*</span>'
-                    : ''
-                }
-
+                    ${required ? '<span class="preview-required">*</span>' : ''}
                 </label>
-
-                <input type="${escapePreviewHtml(type)}"
-                       class="form-control"
-                       placeholder="${escapePreviewHtml(placeholder)}"
-                       ${required ? 'required' : ''}>
-
+                <input type="${escapePreviewHtml(type)}" class="form-control" placeholder="${escapePreviewHtml(placeholder)}" ${required ? 'required' : ''}>
             </div>
         `;
         }
 
-        function buildPreviewTextarea(
-            label,
-            placeholder,
-            required = false
-        ) {
-
+        function buildPreviewTextarea(label, placeholder, required = false) {
             return `
             <div class="mb-3">
-
                 <label class="form-label">
-
                     ${escapePreviewHtml(label)}
-
-                    ${required
-                    ? '<span class="preview-required">*</span>'
-                    : ''
-                }
-
+                    ${required ? '<span class="preview-required">*</span>' : ''}
                 </label>
-
-                <textarea class="form-control"
-                          placeholder="${escapePreviewHtml(placeholder)}"
-                          ${required ? 'required' : ''}>
-                </textarea>
-
+                <textarea class="form-control" placeholder="${escapePreviewHtml(placeholder)}" ${required ? 'required' : ''}></textarea>
             </div>
         `;
         }
 
-        function buildPreviewCheckbox(
-            text,
-            required = false
-        ) {
-
+        function buildPreviewCheckbox(text, required = false) {
             return `
             <div class="form-check mb-2">
-
-                <input class="form-check-input"
-                       type="checkbox"
-                       ${required ? 'required' : ''}>
-
+                <input class="form-check-input" type="checkbox" ${required ? 'required' : ''}>
                 <label class="form-check-label">
-
                     ${escapePreviewHtml(text)}
-
-                    ${required
-                    ? '<span class="preview-required">*</span>'
-                    : ''
-                }
-
+                    ${required ? '<span class="preview-required">*</span>' : ''}
                 </label>
-
             </div>
         `;
         }
 
         function applyDynamicStylesToPreviewContainer() {
-
             const formBgColor = document.getElementById('formBgColorInput')?.value.trim();
             const formInputBgColor = document.getElementById('formInputBgColorInput')?.value.trim();
             const formTextColor = document.getElementById('formTextColorInput')?.value.trim();
@@ -886,7 +757,6 @@
             `;
             }
             if (formPlaceholderColor) {
-                // Genera l'immagine SVG codificata in URL con il colore dinamico per la spunta del checkbox
                 const encodedColor = encodeURIComponent(formPlaceholderColor);
                 const checkSvg = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='${encodedColor}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e`;
 
@@ -917,877 +787,517 @@
         }
 
         function buildBookingPreview() {
-
-            const courseType =
-                getPreviewCourseValue(
-                    'courseType',
-                    'courseType'
-                ) || 'Corso di Formazione';
-
-            const courseCode =
-                getPreviewCourseValue(
-                    'courseCode',
-                    'courseCode'
-                ) || 'CODICE-CORSO';
-
-            const courseName =
-                getPreviewCourseValue(
-                    'courseName',
-                    'courseName'
-                ) || 'Nome del corso';
+            const courseType = getPreviewCourseValue('courseType', 'courseType') || 'Corso di Formazione';
+            const courseCode = getPreviewCourseValue('courseCode', 'courseCode') || 'CODICE-CORSO';
+            const courseName = getPreviewCourseValue('courseName', 'courseName') || 'Nome del corso';
 
             return `
             <div class="form-preview-card">
-
                 <span class="form-preview-type-badge">
-
                     <i class="bi bi-calendar-check me-1"></i>
                     Prenotazione Corso
-
                 </span>
-
-                <h4 class="form-preview-title">
-                    Prenota il corso
-                </h4>
-
-                <div class="form-preview-description">
-                    Compila il modulo per richiedere la prenotazione.
-                </div>
-
+                <h4 class="form-preview-title">Prenota il corso</h4>
+                <div class="form-preview-description">Compila il modulo per richiedere la prenotazione.</div>
                 <div class="mb-4 p-3 rounded border border-secondary">
-
-                    <div class="small text-muted mb-1">
-                        Corso
-                    </div>
-
-                    <div class="fw-bold text-white">
-                        ${escapePreviewHtml(courseName)}
-                    </div>
-
-                    <div class="small text-muted mt-1">
-
-                        ${escapePreviewHtml(courseType)}
-                        ·
-                        ${escapePreviewHtml(courseCode)}
-
-                    </div>
-
+                    <div class="small text-muted mb-1">Corso</div>
+                    <div class="fw-bold text-white">${escapePreviewHtml(courseName)}</div>
+                    <div class="small text-muted mt-1">${escapePreviewHtml(courseType)} · ${escapePreviewHtml(courseCode)}</div>
                 </div>
-
                 <div class="row g-3">
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Nome',
-                'nome',
-                'Inserisci il nome',
-                true
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Cognome',
-                'cognome',
-                'Inserisci il cognome',
-                true
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Email',
-                'email',
-                'nome@esempio.it',
-                true,
-                'email'
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Telefono',
-                'telefono',
-                'Numero di telefono',
-                true,
-                'tel'
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Codice Fiscale',
-                'codiceFiscale',
-                'Inserisci il codice fiscale',
-                true
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Città',
-                'citta',
-                'Inserisci la città',
-                true
-            )}
-                    </div>
-
+                    <div class="col-md-6">${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}</div>
+                    <div class="col-md-6">${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}</div>
+                    <div class="col-md-6">${buildPreviewInput('Email', 'email', 'nome@esempio.it', true, 'email')}</div>
+                    <div class="col-md-6">${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', true, 'tel')}</div>
+                    <div class="col-md-6">${buildPreviewInput('Codice Fiscale', 'codiceFiscale', 'Inserisci il codice fiscale', true)}</div>
+                    <div class="col-md-6">${buildPreviewInput('Città', 'citta', 'Inserisci la città', true)}</div>
                 </div>
-
-                ${buildPreviewTextarea(
-                'Note',
-                'Eventuali note o richieste...',
-                false
-            )}
-
+                ${buildPreviewTextarea('Note', 'Eventuali note o richieste...', false)}
                 <div class="mt-3">
-
-                    ${buildPreviewCheckbox(
-                'Accetto la Privacy Policy',
-                true
-            )}
-
-                    ${buildPreviewCheckbox(
-                'Desidero ricevere comunicazioni di marketing',
-                false
-            )}
-
-                    ${buildPreviewCheckbox(
-                'Acconsento alla cessione dei dati a terzi',
-                false
-            )}
-
+                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
+                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
+                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
                 </div>
-
-                <button type="button"
-                        class="btn btn-brand w-100 mt-3">
-
-                    <i class="bi bi-send me-1"></i>
-                    Prenota corso
-
+                <button type="button" class="btn btn-brand w-100 mt-3">
+                    <i class="bi bi-send me-1"></i> Prenota corso
                 </button>
-
             </div>
         `;
         }
 
         function buildInfoPreview() {
-
             return `
             <div class="form-preview-card">
-
                 <span class="form-preview-type-badge">
-
                     <i class="bi bi-info-circle me-1"></i>
                     Richiesta Informazioni
-
                 </span>
-
-                <h4 class="form-preview-title">
-                    Richiedi informazioni
-                </h4>
-
-                <div class="form-preview-description">
-                    Compila il modulo per contattarci
-                    e ricevere maggiori informazioni.
-                </div>
-
+                <h4 class="form-preview-title">Richiedi informazioni</h4>
+                <div class="form-preview-description">Compila il modulo per contattarci e ricevere maggiori informazioni.</div>
                 <div class="row g-3">
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Nome',
-                'nome',
-                'Inserisci il nome',
-                true
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Cognome',
-                'cognome',
-                'Inserisci il cognome',
-                true
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Email',
-                'email',
-                'nome@esempio.it',
-                true,
-                'email'
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Telefono',
-                'telefono',
-                'Numero di telefono',
-                false,
-                'tel'
-            )}
-                    </div>
-
+                    <div class="col-md-6">${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}</div>
+                    <div class="col-md-6">${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}</div>
+                    <div class="col-md-6">${buildPreviewInput('Email', 'email', 'nome@esempio.it', true, 'email')}</div>
+                    <div class="col-md-6">${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', false, 'tel')}</div>
                 </div>
-
-                ${buildPreviewTextarea(
-                'Messaggio',
-                'Scrivi qui la tua richiesta...',
-                true
-            )}
-
+                ${buildPreviewTextarea('Messaggio', 'Scrivi qui la tua richiesta...', true)}
                 <div class="mt-3">
-
-                    ${buildPreviewCheckbox(
-                'Accetto la Privacy Policy',
-                true
-            )}
-
-                    ${buildPreviewCheckbox(
-                'Desidero ricevere comunicazioni di marketing',
-                false
-            )}
-
-                    ${buildPreviewCheckbox(
-                'Acconsento alla cessione dei dati a terzi',
-                false
-            )}
-
+                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
+                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
+                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
                 </div>
-
-                <button type="button"
-                        class="btn btn-brand w-100 mt-3">
-
-                    <i class="bi bi-send me-1"></i>
-                    Invia richiesta
-
+                <button type="button" class="btn btn-brand w-100 mt-3">
+                    <i class="bi bi-send me-1"></i> Invia richiesta
                 </button>
-
             </div>
         `;
         }
 
         function buildOrgInfoPreview() {
-
             return `
             <div class="form-preview-card">
-
                 <span class="form-preview-type-badge">
-
                     <i class="bi bi-building me-1"></i>
                     Informazioni per Organizzazioni
-
                 </span>
-
-                <h4 class="form-preview-title">
-                    Richiedi informazioni
-                    per la tua organizzazione
-                </h4>
-
-                <div class="form-preview-description">
-                    Compila il modulo per essere ricontattato
-                    in merito a corsi, servizi o soluzioni
-                    per organizzazioni.
-                </div>
-
+                <h4 class="form-preview-title">Richiedi informazioni per la tua organizzazione</h4>
+                <div class="form-preview-description">Compila il modulo per essere ricontattato in merito a corsi, servizi o soluzioni per organizzazioni.</div>
                 <div class="row g-3">
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Nome',
-                'nome',
-                'Inserisci il nome',
-                true
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Cognome',
-                'cognome',
-                'Inserisci il cognome',
-                true
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Organizzazione / Azienda',
-                'organizzazione',
-                'Nome dell’organizzazione',
-                true
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Ruolo Aziendale',
-                'ruolo',
-                'Es. HR Manager, Responsabile Formazione'
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Email',
-                'email',
-                'nome@azienda.it',
-                true,
-                'email'
-            )}
-                    </div>
-
-                    <div class="col-md-6">
-                        ${buildPreviewInput(
-                'Telefono',
-                'telefono',
-                'Numero di telefono',
-                false,
-                'tel'
-            )}
-                    </div>
-
+                    <div class="col-md-6">${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}</div>
+                    <div class="col-md-6">${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}</div>
+                    <div class="col-md-6">${buildPreviewInput('Organizzazione / Azienda', 'organizzazione', 'Nome dell’organizzazione', true)}</div>
+                    <div class="col-md-6">${buildPreviewInput('Ruolo Aziendale', 'ruolo', 'Es. HR Manager, Responsabile Formazione')}</div>
+                    <div class="col-md-6">${buildPreviewInput('Email', 'email', 'nome@azienda.it', true, 'email')}</div>
+                    <div class="col-md-6">${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', false, 'tel')}</div>
                 </div>
-
-                ${buildPreviewTextarea(
-                'Messaggio',
-                'Descrivi brevemente la tua esigenza...',
-                true
-            )}
-
+                ${buildPreviewTextarea('Messaggio', 'Descrivi brevemente la tua esigenza...', true)}
                 <div class="mt-3">
-
-                    ${buildPreviewCheckbox(
-                'Accetto la Privacy Policy',
-                true
-            )}
-
-                    ${buildPreviewCheckbox(
-                'Desidero ricevere comunicazioni di marketing',
-                false
-            )}
-
-                    ${buildPreviewCheckbox(
-                'Acconsento alla cessione dei dati a terzi',
-                false
-            )}
-
+                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
+                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
+                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
                 </div>
-
-                <button type="button"
-                        class="btn btn-brand w-100 mt-3">
-
-                    <i class="bi bi-send me-1"></i>
-                    Invia richiesta
-
+                <button type="button" class="btn btn-brand w-100 mt-3">
+                    <i class="bi bi-send me-1"></i> Invia richiesta
                 </button>
-
             </div>
         `;
         }
 
         function openFormPreview() {
+            const formType = getSelectedFormType();
+            const container = document.getElementById('formPreviewContainer');
 
-            const formType =
-                getSelectedFormType();
-
-            const container =
-                document.getElementById(
-                    'formPreviewContainer'
-                );
-
-            if (!container) {
-                return;
-            }
+            if (!container) return;
 
             let content = '';
 
             switch (formType) {
-
                 case 'BOOKING':
-
-                    content =
-                        buildBookingPreview();
-
+                    content = buildBookingPreview();
                     break;
-
                 case 'INFO':
-
-                    content =
-                        buildInfoPreview();
-
+                    content = buildInfoPreview();
                     break;
-
                 case 'ORG_INFO':
-
-                    content =
-                        buildOrgInfoPreview();
-
+                    content = buildOrgInfoPreview();
                     break;
-
                 case 'NONE':
-
                 default:
-
                     content = `
                     <div class="form-preview-placeholder">
-
                         <i class="bi bi-ui-checks"></i>
-
-                        <div class="fw-bold text-white mb-2">
-                            Nessun Form selezionato
-                        </div>
-
-                        <div>
-                            Seleziona prima un tipo di form
-                            nel menu "Integrazione Form nella Pagina".
-                        </div>
-
+                        <div class="fw-bold text-white mb-2">Nessun Form selezionato</div>
+                        <div>Seleziona prima un tipo di form nel menu "Integrazione Form nella Pagina".</div>
                     </div>
                 `;
-
                     break;
             }
 
-            container.innerHTML =
-                content;
-
+            container.innerHTML = content;
             applyDynamicStylesToPreviewContainer();
 
-            const modalElement =
-                document.getElementById(
-                    'formPreviewModal'
-                );
-
+            const modalElement = document.getElementById('formPreviewModal');
             if (modalElement) {
-
-                bootstrap.Modal
-                    .getOrCreateInstance(modalElement)
-                    .show();
-
+                bootstrap.Modal.getOrCreateInstance(modalElement).show();
             }
         }
 
-
         function showConfirmModal() {
-
             if (window.tinymce) {
                 tinymce.triggerSave();
             }
 
-            const pageForm =
-                document.getElementById(
-                    'pageForm'
-                );
+            const pageForm = document.getElementById('pageForm');
 
-            // Controlla se tutti i campi obbligatori del form sono validi
             if (!pageForm.checkValidity()) {
-
-                pageForm.classList.add(
-                    'was-validated'
-                );
-
+                pageForm.classList.add('was-validated');
                 pageForm.reportValidity();
 
-                // Mostra il popup di avviso
-                const warningModal =
-                    new bootstrap.Modal(
-                        document.getElementById(
-                            'warningModal'
-                        )
-                    );
-
+                const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
                 warningModal.show();
-
                 return;
             }
 
-            // Se tutto è valido apre la modale di conferma
-            const modal =
-                new bootstrap.Modal(
-                    document.getElementById(
-                        'confirmModal'
-                    )
-                );
-
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
             modal.show();
         }
 
         function submitPageForm() {
-
-            document
-                .getElementById('pageForm')
-                .submit();
-
+            document.getElementById('pageForm').submit();
         }
-
     </script>
 
-
-    <!-- SCRIPT ANIMAZIONE SFONDO -->
-
+    <!-- ============================================================
+     SCRIPT ANTEPRIMA LIVE IN NUOVA FINESTRA
+     ============================================================ -->
     <script>
+        let livePreviewWindow = null;
 
-        const canvas =
-            document.getElementById(
-                'tech-bg-canvas'
-            );
-
-        const ctx =
-            canvas.getContext('2d');
-
-        let width,
-            height;
-
-        function resize() {
-
-            width =
-                canvas.width =
-                window.innerWidth;
-
-            height =
-                canvas.height =
-                window.innerHeight;
+        function getFormCurrentContent() {
+            if (window.tinymce && tinymce.activeEditor) {
+                return tinymce.activeEditor.getContent();
+            }
+            const textarea = document.querySelector('textarea.wysiwyg-editor');
+            return textarea ? textarea.value : '';
         }
 
-        window.addEventListener(
-            'resize',
-            resize
-        );
+        function buildLivePreviewHtml() {
+            const title = document.getElementById('title')?.value || 'Titolo Pagina';
+            const widthPercent = document.getElementById('widthPercent')?.value || 100;
+            const titleFont = document.getElementById('titleFontSelect')?.value || 'inherit';
+            const titleColor = document.getElementById('titleColorInput')?.value || '#00dc82';
+            const backgroundColor = document.getElementById('backgroundColorInput')?.value || '';
+            const formBgColor = document.getElementById('formBgColorInput')?.value || '#0f172a';
+            const formInputBgColor = document.getElementById('formInputBgColorInput')?.value || '#1e293b';
+            const formTextColor = document.getElementById('formTextColorInput')?.value || '#ffffff';
+            const formPlaceholderColor = document.getElementById('formPlaceholderColorInput')?.value || '#94a3b8';
+            const contentHtml = getFormCurrentContent();
+            const formType = getSelectedFormType();
 
+            let embeddedFormHtml = '';
+            if (formType === 'BOOKING') embeddedFormHtml = buildBookingPreview();
+            else if (formType === 'INFO') embeddedFormHtml = buildInfoPreview();
+            else if (formType === 'ORG_INFO') embeddedFormHtml = buildOrgInfoPreview();
+
+            const bodyBgStyle = backgroundColor ? `background-color: ${backgroundColor} !important;` : 'background-color: #080c14 !important;';
+
+            return `<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Anteprima Live] ${escapePreviewHtml(title)}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f1f5f9;
+            ${bodyBgStyle}
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem 1rem;
+        }
+        #tech-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            display: ${backgroundColor ? 'none' : 'block'};
+        }
+        .page-header-title {
+            font-family: ${titleFont};
+            color: ${titleColor};
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+        .page-content-wrapper {
+            margin: 0 auto;
+            width: ${widthPercent}%;
+            transition: width 0.2s ease;
+        }
+        .live-badge {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 220, 130, 0.2);
+            border: 1px solid #00dc82;
+            color: #00dc82;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            z-index: 9999;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .form-preview-card {
+            background-color: ${formBgColor} !important;
+            border: 1px solid #1e293b;
+            border-radius: 0.85rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+        .form-preview-card, .form-preview-card .form-label, .form-preview-card .form-check-label, .form-preview-card h4, .form-preview-card .text-white {
+            color: ${formTextColor} !important;
+        }
+        .form-preview-card .form-control, .form-preview-card .form-select {
+            background-color: ${formInputBgColor} !important;
+            border-color: #334155 !important;
+            color: ${formTextColor} !important;
+        }
+        .form-preview-card .form-control::placeholder {
+            color: ${formPlaceholderColor} !important;
+            opacity: 1 !important;
+        }
+        .form-preview-type-badge {
+            display: inline-block;
+            padding: 0.35rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(0, 220, 130, 0.12);
+            border: 1px solid rgba(0, 220, 130, 0.3);
+            color: #00dc82;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .btn-brand {
+            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
+            color: #0f172a;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="live-badge"><i class="bi bi-circle-fill text-danger me-1 fs-6"></i> Anteprima Live</div>
+    <canvas id="tech-bg-canvas"></canvas>
+
+    <main class="page-content-wrapper">
+        <h1 class="page-header-title display-4">${escapePreviewHtml(title)}</h1>
+        <div id="live-body-content">${contentHtml}</div>
+        <div id="live-form-content">${embeddedFormHtml}</div>
+    </main>
+
+    <script>
+        const canvas = document.getElementById('tech-bg-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = window.innerWidth;
+            let h = canvas.height = window.innerHeight;
+            window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+
+            class Circuit {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.length = Math.floor(Math.random() * 8) + 4;
+                    this.currentStep = 0;
+                    this.dir = Math.floor(Math.random() * 4);
+                    this.path = [{ x: this.x, y: this.y }];
+                    this.alpha = Math.random() * 0.4 + 0.1;
+                    this.size = 20;
+                }
+                update() {
+                    if (this.currentStep < this.length) {
+                        let last = this.path[this.path.length - 1];
+                        let nx = last.x, ny = last.y;
+                        if (Math.random() < 0.3) this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+                        switch (this.dir) {
+                            case 0: ny -= this.size; break;
+                            case 1: nx += this.size; break;
+                            case 2: ny += this.size; break;
+                            case 3: nx -= this.size; break;
+                        }
+                        this.path.push({ x: nx, y: ny });
+                        this.currentStep++;
+                    } else {
+                        this.alpha -= 0.005;
+                        if (this.alpha <= 0) this.reset();
+                    }
+                }
+                draw() {
+                    if (this.path.length < 2) return;
+                    ctx.beginPath();
+                    ctx.moveTo(this.path[0].x, this.path[0].y);
+                    for (let i = 1; i < this.path.length; i++) ctx.lineTo(this.path[i].x, this.path[i].y);
+                    ctx.strokeStyle = 'rgba(0, 220, 130, ' + this.alpha + ')';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                }
+            }
+            const circuits = Array.from({ length: 15 }, () => new Circuit());
+            function animate() {
+                ctx.clearRect(0, 0, w, h);
+                circuits.forEach(c => { c.update(); c.draw(); });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+    <\/script>
+</body>
+</html>`;
+        }
+
+        function triggerLivePreviewUpdate() {
+            if (livePreviewWindow && !livePreviewWindow.closed) {
+                const doc = livePreviewWindow.document;
+                doc.open();
+                doc.write(buildLivePreviewHtml());
+                doc.close();
+            }
+        }
+
+        function openLivePagePreview() {
+            if (window.tinymce && tinymce.activeEditor) {
+                tinymce.triggerSave();
+            }
+
+            if (!livePreviewWindow || livePreviewWindow.closed) {
+                livePreviewWindow = window.open('', 'LivePagePreviewWindow', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+            }
+
+            triggerLivePreviewUpdate();
+            livePreviewWindow.focus();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const pageForm = document.getElementById('pageForm');
+            if (pageForm) {
+                pageForm.addEventListener('input', triggerLivePreviewUpdate);
+                pageForm.addEventListener('change', triggerLivePreviewUpdate);
+            }
+
+            if (window.tinymce) {
+                setTimeout(() => {
+                    const editor = tinymce.activeEditor;
+                    if (editor) {
+                        editor.on('keyup change NodeChange Undo Redo', function () {
+                            triggerLivePreviewUpdate();
+                        });
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+
+    <!-- SCRIPT ANIMAZIONE SFONDO FORM -->
+    <script>
+        const canvas = document.getElementById('tech-bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
         resize();
 
-
         class Circuit {
-
-            constructor() {
-                this.reset();
-            }
-
+            constructor() { this.reset(); }
             reset() {
-
-                this.x =
-                    Math.random() *
-                    width;
-
-                this.y =
-                    Math.random() *
-                    height;
-
-                this.length =
-                    Math.floor(
-                        Math.random() * 8
-                    ) + 4;
-
-                this.currentStep =
-                    0;
-
-                this.dir =
-                    Math.floor(
-                        Math.random() * 4
-                    );
-
-                this.path = [
-                    {
-                        x: this.x,
-                        y: this.y
-                    }
-                ];
-
-                this.speed =
-                    Math.random() * 1.5 + 0.5;
-
-                this.alpha =
-                    Math.random() * 0.4 + 0.1;
-
-                this.size =
-                    20;
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.length = Math.floor(Math.random() * 8) + 4;
+                this.currentStep = 0;
+                this.dir = Math.floor(Math.random() * 4);
+                this.path = [{ x: this.x, y: this.y }];
+                this.speed = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.4 + 0.1;
+                this.size = 20;
             }
-
             update() {
-
-                if (
-                    this.currentStep <
-                    this.length
-                ) {
-
-                    let last =
-                        this.path[
-                        this.path.length - 1
-                        ];
-
-                    let nx = last.x,
-                        ny = last.y;
-
-                    if (
-                        Math.random() < 0.3
-                    ) {
-
-                        this.dir =
-                            (
-                                this.dir +
-                                (
-                                    Math.random() < 0.5
-                                        ? 1
-                                        : 3
-                                )
-                            ) % 4;
+                if (this.currentStep < this.length) {
+                    let last = this.path[this.path.length - 1];
+                    let nx = last.x, ny = last.y;
+                    if (Math.random() < 0.3) {
+                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
                     }
-
                     switch (this.dir) {
-
-                        case 0:
-                            ny -= this.size;
-                            break;
-
-                        case 1:
-                            nx += this.size;
-                            break;
-
-                        case 2:
-                            ny += this.size;
-                            break;
-
-                        case 3:
-                            nx -= this.size;
-                            break;
+                        case 0: ny -= this.size; break;
+                        case 1: nx += this.size; break;
+                        case 2: ny += this.size; break;
+                        case 3: nx -= this.size; break;
                     }
-
-                    this.path.push({
-                        x: nx,
-                        y: ny
-                    });
-
+                    this.path.push({ x: nx, y: ny });
                     this.currentStep++;
-
                 } else {
-
                     this.alpha -= 0.005;
-
-                    if (
-                        this.alpha <= 0
-                    ) {
-                        this.reset();
-                    }
+                    if (this.alpha <= 0) this.reset();
                 }
             }
-
             draw() {
-
-                if (
-                    this.path.length < 2
-                ) {
-                    return;
-                }
-
+                if (this.path.length < 2) return;
                 ctx.beginPath();
-
-                ctx.moveTo(
-                    this.path[0].x,
-                    this.path[0].y
-                );
-
-                for (
-                    let i = 1;
-                    i < this.path.length;
-                    i++
-                ) {
-
-                    ctx.lineTo(
-                        this.path[i].x,
-                        this.path[i].y
-                    );
+                ctx.moveTo(this.path[0].x, this.path[0].y);
+                for (let i = 1; i < this.path.length; i++) {
+                    ctx.lineTo(this.path[i].x, this.path[i].y);
                 }
-
-                ctx.strokeStyle =
-                    `rgba(0, 220, 130, ${this.alpha})`;
-
-                ctx.lineWidth =
-                    1.5;
-
+                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.lineWidth = 1.5;
                 ctx.stroke();
-
-                let last =
-                    this.path[
-                    this.path.length - 1
-                    ];
-
+                let last = this.path[this.path.length - 1];
                 ctx.beginPath();
-
-                ctx.arc(
-                    last.x,
-                    last.y,
-                    3,
-                    0,
-                    Math.PI * 2
-                );
-
-                ctx.fillStyle =
-                    `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-
+                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
                 ctx.fill();
             }
         }
 
-
         const codeSnippets = [
-
-            "class BlockManager {}",
-            "import spring.boot.*;",
-            "<div class='eco'>",
-            "SELECT * FROM blocks;",
-            "const init = () => {};",
-            "return new PageBlock();",
-            "01000101 01000011 01001111",
-            "public static void main()",
-            "async fetch('/api')",
-            "npm run build",
-            "docker-compose up -d",
-            "mvn clean install"
-
+            "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
+            "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
+            "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
+            "npm run build", "docker-compose up -d", "mvn clean install"
         ];
 
-
         class CodeText {
-
-            constructor() {
-                this.reset();
-            }
-
+            constructor() { this.reset(); }
             reset() {
-
-                this.x =
-                    Math.random() *
-                    (width - 200);
-
-                this.y =
-                    Math.random() *
-                    height;
-
-                this.text =
-                    codeSnippets[
-                    Math.floor(
-                        Math.random() *
-                        codeSnippets.length
-                    )
-                    ];
-
-                this.alpha =
-                    0;
-
-                this.maxAlpha =
-                    Math.random() * 0.3 + 0.1;
-
-                this.fadeIn =
-                    true;
-
-                this.speed =
-                    Math.random() * 0.3 + 0.1;
+                this.x = Math.random() * (width - 200);
+                this.y = Math.random() * height;
+                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                this.alpha = 0;
+                this.maxAlpha = Math.random() * 0.3 + 0.1;
+                this.fadeIn = true;
+                this.speed = Math.random() * 0.3 + 0.1;
             }
-
             update() {
-
-                this.y -=
-                    this.speed;
-
+                this.y -= this.speed;
                 if (this.fadeIn) {
-
-                    this.alpha +=
-                        0.008;
-
-                    if (
-                        this.alpha >=
-                        this.maxAlpha
-                    ) {
-
-                        this.fadeIn =
-                            false;
-                    }
-
+                    this.alpha += 0.008;
+                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
                 } else {
-
-                    this.alpha -=
-                        0.005;
-
-                    if (
-                        this.alpha <= 0
-                    ) {
-
-                        this.reset();
-                    }
+                    this.alpha -= 0.005;
+                    if (this.alpha <= 0) this.reset();
                 }
             }
-
             draw() {
-
-                ctx.font =
-                    '12px "Fira Code", monospace';
-
-                ctx.fillStyle =
-                    `rgba(0, 220, 130, ${this.alpha})`;
-
-                ctx.fillText(
-                    this.text,
-                    this.x,
-                    this.y
-                );
+                ctx.font = '12px "Fira Code", monospace';
+                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
+                ctx.fillText(this.text, this.x, this.y);
             }
         }
 
-
-        const circuits =
-            Array.from(
-                {
-                    length: 18
-                },
-                () => new Circuit()
-            );
-
-        const codeTexts =
-            Array.from(
-                {
-                    length: 12
-                },
-                () => new CodeText()
-            );
-
+        const circuits = Array.from({ length: 18 }, () => new Circuit());
+        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
 
         function animate() {
-
-            ctx.clearRect(
-                0,
-                0,
-                width,
-                height
-            );
-
-            circuits.forEach(
-                c => {
-                    c.update();
-                    c.draw();
-                }
-            );
-
-            codeTexts.forEach(
-                ct => {
-                    ct.update();
-                    ct.draw();
-                }
-            );
-
-            requestAnimationFrame(
-                animate
-            );
+            ctx.clearRect(0, 0, width, height);
+            circuits.forEach(c => { c.update(); c.draw(); });
+            codeTexts.forEach(ct => { ct.update(); ct.draw(); });
+            requestAnimationFrame(animate);
         }
-
         animate();
-
     </script>
-
 </body>
-
 </html>

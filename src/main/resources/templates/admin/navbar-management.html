@@ -815,7 +815,6 @@
 
 <script>
 function resetBrandFormToDefault() {
-    // Valori Predefiniti
     const defaultBg = '#0F172A';
     const defaultText = '#F1F5F9';
     const defaultSelectedText = '#00DC82';
@@ -826,38 +825,29 @@ function resetBrandFormToDefault() {
     const defaultBehavior = 'NONE';
     const defaultOpacity = '90';
 
-    // Aggiornamento Campi Sfondo Navbar
     document.getElementById('bgColorPicker').value = defaultBg;
     document.getElementById('bgColorHex').value = defaultBg;
 
-    // Aggiornamento Campi Testo
     document.getElementById('textColorPicker').value = defaultText;
     document.getElementById('textColorHex').value = defaultText;
 
-    // Aggiornamento Campi Voce Selezionata
     document.getElementById('selectedTextColorPicker').value = defaultSelectedText;
     document.getElementById('selectedTextColorHex').value = defaultSelectedText;
 
-    // Aggiornamento Campi Dropdown Sfondo
     document.getElementById('dropdownBgColorPicker').value = defaultDropdownBg;
     document.getElementById('dropdownBgColorHex').value = defaultDropdownBg;
 
-    // Aggiornamento Campi Dropdown Testo
     document.getElementById('dropdownTextColorPicker').value = defaultDropdownText;
     document.getElementById('dropdownTextColorHex').value = defaultDropdownText;
 
-    // Aggiornamento Campi Dropdown Hover / Selezione
     document.getElementById('dropdownHoverBgColorPicker').value = defaultDropdownHoverBg;
     document.getElementById('dropdownHoverBgColorHex').value = defaultDropdownHoverBg;
 
-    // Aggiornamento Campi Dropdown Voce Selezionata
     document.getElementById('dropdownSelectedTextColorPicker').value = defaultDropdownSelectedText;
     document.getElementById('dropdownSelectedTextColorHex').value = defaultDropdownSelectedText;
 
-    // Aggiornamento Scomparsa Navbar
     document.getElementById('hideOnScrollBehavior').value = defaultBehavior;
 
-    // Aggiornamento Opacità
     document.getElementById('opacityRange').value = defaultOpacity;
     document.getElementById('opacityVal').innerText = defaultOpacity + '%';
 }

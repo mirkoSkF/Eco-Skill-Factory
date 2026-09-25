@@ -279,6 +279,7 @@
                     <ul th:if="${item.children != null and !item.children.isEmpty()}"
                         class="dropdown-menu border-secondary p-2 shadow">
                         <li th:each="child : ${item.children}">
+
                             <!-- CHILD CON PAGINA -->
                             <a th:if="${child.page != null}"
                                class="dropdown-item rounded"
@@ -311,14 +312,19 @@
                                th:text="${child.label}">
                                 Sub Item
                             </a>
+
                         </li>
                     </ul>
 
                 </li>
             </ul>
 
-            <!-- AUTH / DASHBOARD -->
+            <!-- ====================================================
+                 AUTH / PROFILO
+                 ==================================================== -->
             <div class="ms-auto">
+
+                <!-- UTENTE NON AUTENTICATO -->
                 <a sec:authorize="!isAuthenticated()"
                    th:href="@{/login}"
                    class="btn btn-sm rounded-pill px-3 shadow-sm btn-dynamic-auth">
@@ -326,12 +332,22 @@
                     Area Admin
                 </a>
 
-                <a sec:authorize="isAuthenticated()"
+                <!-- ADMIN -->
+                <a sec:authorize="hasRole('ADMIN')"
                    th:href="@{/admin/dashboard}"
                    class="btn btn-sm rounded-pill px-3 shadow-sm btn-dynamic-auth">
-                    <i class="bi bi-speedometer2 me-1"></i>
-                    Dashboard
+                    <i class="bi bi-person-circle me-1"></i>
+                    Il tuo profilo
                 </a>
+
+                <!-- UTENTE NORMALE -->
+                <a sec:authorize="isAuthenticated() and !hasRole('ADMIN')"
+                   th:href="@{/user/dashboard}"
+                   class="btn btn-sm rounded-pill px-3 shadow-sm btn-dynamic-auth">
+                    <i class="bi bi-person-circle me-1"></i>
+                    Il tuo profilo
+                </a>
+
             </div>
 
         </div>
@@ -378,3 +394,4 @@
 
 </body>
 </html>
+

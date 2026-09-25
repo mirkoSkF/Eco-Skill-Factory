@@ -4,20 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Gestione Pagina - Eco Skill Factory</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- ============================================================
+         BOOTSTRAP
+         ============================================================ -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- ============================================================
+         GOOGLE FONTS
+         ============================================================ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link
-        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap"
         rel="stylesheet">
 
     <!-- ============================================================
-     STILI SFONDO ANIMATO & LAYOUT PRINCIPALE
-     ============================================================ -->
+         TINYMCE
+         ============================================================ -->
+    <th:block th:insert="~{fragments/tinymce :: tinymce-scripts}" />
+
+    <!-- ============================================================
+         MONACO CSS
+         ============================================================ -->
+    <th:block th:insert="~{fragments/monaco :: monaco-css}" />
+
+    <!-- ============================================================
+         STILI PAGINA
+         ============================================================ -->
     <style>
+
         body {
             font-family: Arial, Helvetica, sans-serif;
             color: #f1f5f9;
@@ -81,7 +104,12 @@
         }
 
         .btn-brand {
-            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
+            background: linear-gradient(
+                135deg,
+                #00dc82 0%,
+                #00b368 100%
+            );
+
             color: #0f172a;
             font-weight: 700;
             border: none;
@@ -117,7 +145,10 @@
             color: #f1f5f9;
         }
 
-        /* ANTEPRIMA FORM */
+        /* ============================================================
+           ANTEPRIMA FORM
+           ============================================================ */
+
         .form-preview-modal .modal-content {
             background: #080c14;
             border: 1px solid #334155;
@@ -214,435 +245,1163 @@
             margin-bottom: 1rem;
         }
 
-        .monaco-open-button {
-            border-color: #36e4da !important;
-            color: #36e4da !important;
-            font-weight: 600
+        /*
+         * Importante:
+         * il modal Monaco è fullscreen, quindi evitiamo che
+         * eventuali regole Bootstrap della pagina interferiscano.
+         */
+        #monacoEditorModal .modal-dialog {
+            margin: 0;
+            width: 100vw;
+            max-width: none;
+            height: 100vh;
         }
 
-        .monaco-open-button:hover {
-            background: rgba(54, 228, 218, .12) !important;
-            color: #fff !important
+        #monacoEditorModal .modal-content {
+            height: 100vh;
+            border-radius: 0;
         }
 
-        .monaco-modal-editor-button {
-            margin-bottom: 8px
+        #monacoEditorModal .modal-body {
+            overflow: hidden;
         }
+
+        #monacoWorkspace {
+            height: calc(100vh - 170px);
+            min-height: 400px;
+        }
+
+        #monacoContainer {
+            width: 100%;
+            height: 100% !important;
+            min-height: 400px;
+        }
+
     </style>
 
-    <!-- INCLUSIONE FRAGMENT TINYMCE -->
-    <th:block th:insert="~{fragments/tinymce :: tinymce-scripts}" />
-
+    <!-- ============================================================
+         FUNZIONI BASE
+         ============================================================ -->
     <script>
+
         function toggleCourseForm() {
-            const formTypeSelect = document.getElementById('formTypeSelect');
-            const courseConfigBox = document.getElementById('courseConfigBox');
-            const courseFields = document.querySelectorAll('.course-specific-field');
 
-            if (formTypeSelect && courseConfigBox) {
-                const selectedVal = formTypeSelect.value;
+            const formTypeSelect =
+                document.getElementById('formTypeSelect');
 
-                if (selectedVal === 'NONE') {
-                    courseConfigBox.style.display = 'none';
+            const courseConfigBox =
+                document.getElementById('courseConfigBox');
+
+            const courseFields =
+                document.querySelectorAll('.course-specific-field');
+
+
+            if (!formTypeSelect || !courseConfigBox) {
+                return;
+            }
+
+
+            const selectedVal =
+                formTypeSelect.value;
+
+
+            if (selectedVal === 'NONE') {
+
+                courseConfigBox.style.display = 'none';
+
+            } else {
+
+                courseConfigBox.style.display = 'block';
+
+
+                if (selectedVal === 'BOOKING') {
+
+                    courseFields.forEach(
+                        el => el.style.display = 'block'
+                    );
+
                 } else {
-                    courseConfigBox.style.display = 'block';
 
-                    if (selectedVal === 'BOOKING') {
-                        courseFields.forEach(el => el.style.display = 'block');
-                    } else {
-                        courseFields.forEach(el => el.style.display = 'none');
-                    }
+                    courseFields.forEach(
+                        el => el.style.display = 'none'
+                    );
                 }
             }
         }
 
+
         function syncColorFromPicker(pickerId, textId) {
-            const picker = document.getElementById(pickerId);
-            const textInput = document.getElementById(textId);
+
+            const picker =
+                document.getElementById(pickerId);
+
+            const textInput =
+                document.getElementById(textId);
+
 
             if (!picker || !textInput) {
                 return;
             }
 
-            textInput.value = picker.value;
+
+            textInput.value =
+                picker.value;
+
+
             triggerLivePreviewUpdate();
         }
 
+
         function syncColorFromText(textId, pickerId) {
-            const textInput = document.getElementById(textId);
-            const picker = document.getElementById(pickerId);
+
+            const textInput =
+                document.getElementById(textId);
+
+            const picker =
+                document.getElementById(pickerId);
+
 
             if (!textInput || !picker) {
                 return;
             }
 
-            const value = textInput.value.trim();
+
+            const value =
+                textInput.value.trim();
+
 
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                picker.value = value.toLowerCase();
+
+                picker.value =
+                    value.toLowerCase();
             }
+
+
             triggerLivePreviewUpdate();
         }
 
+
         function resetToAnimatedBg() {
-            const backgroundColorInput = document.getElementById('backgroundColorInput');
-            const pageBgPicker = document.getElementById('pageBgPicker');
+
+            const backgroundColorInput =
+                document.getElementById(
+                    'backgroundColorInput'
+                );
+
+            const pageBgPicker =
+                document.getElementById(
+                    'pageBgPicker'
+                );
+
 
             if (backgroundColorInput) {
                 backgroundColorInput.value = '';
             }
 
+
             if (pageBgPicker) {
                 pageBgPicker.value = '#080c14';
             }
+
+
             triggerLivePreviewUpdate();
         }
+
     </script>
 
 </head>
 
+
 <body>
 
-    <!-- Canvas Sfondo Animato -->
+    <!-- ============================================================
+         SFONDO ANIMATO
+         ============================================================ -->
     <canvas id="tech-bg-canvas"></canvas>
+
 
     <div class="container py-4">
 
-        <!-- INTESTAZIONE -->
+        <!-- ========================================================
+             INTESTAZIONE
+             ======================================================== -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
             <div>
-                <h2 class="mb-1" th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">Nuova Pagina</h2>
-                <p class="text-muted mb-0">Crea o modifica il contenuto della pagina.</p>
+
+                <h2 class="mb-1"
+                    th:text="${page.id == null ? 'Nuova Pagina' : 'Modifica Pagina #' + page.id}">
+                    Nuova Pagina
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Crea o modifica il contenuto della pagina.
+                </p>
+
             </div>
+
+
             <div class="d-flex gap-2">
-                <button type="button" class="btn btn-outline-info" onclick="openLivePagePreview()">
-                    <i class="bi bi-window-stack me-1"></i> Anteprima Live Pagina
+
+                <button type="button"
+                        class="btn btn-outline-info"
+                        onclick="openLivePagePreview()">
+
+                    <i class="bi bi-window-stack me-1"></i>
+                    Anteprima Live Pagina
+
                 </button>
-                <a th:href="@{/admin/pages}" class="btn btn-outline-light">
-                    <i class="bi bi-arrow-left me-1"></i> Torna alla Gestione Pagine
+
+
+                <a th:href="@{/admin/pages}"
+                   class="btn btn-outline-light">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Torna alla Gestione Pagine
+
                 </a>
+
             </div>
+
         </div>
 
-        <!-- FORM PAGINA -->
-        <form id="pageForm" th:action="@{/admin/pages/save}" th:object="${page}" method="post"
-            class="card shadow-sm border-0" novalidate>
+
+        <!-- ========================================================
+             FORM PAGINA
+             ======================================================== -->
+        <form id="pageForm"
+              th:action="@{/admin/pages/save}"
+              th:object="${page}"
+              method="post"
+              class="card shadow-sm border-0"
+              novalidate>
 
             <div class="card-body p-4">
-                <input type="hidden" th:field="*{id}">
 
-                <!-- TITOLO -->
+                <input type="hidden"
+                       th:field="*{id}">
+
+
+                <!-- ==================================================
+                     TITOLO
+                     ================================================== -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Titolo Pagina <span class="text-danger">*</span></label>
-                    <input type="text" th:field="*{title}" class="form-control form-control-lg"
-                        placeholder="es. Chi Siamo" required>
-                    <div class="form-text">Il titolo verrà utilizzato come titolo amministrativo della pagina.</div>
-                </div>
 
-                <!-- SLUG -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Slug URL <span class="text-danger">*</span></label>
-                    <input type="text" th:field="*{slug}" class="form-control" placeholder="es. chi-siamo" required>
-                    <div class="form-text">La pagina sarà disponibile all'indirizzo: <code>/p/chi-siamo</code></div>
-                </div>
+                    <label class="form-label fw-bold">
 
-                <!-- LARGHEZZA BLOCCO -->
-                <div class="mb-4">
-                    <label for="widthPercent" class="form-label fw-bold">Larghezza Blocco (%)</label>
-                    <div class="input-group">
-                        <input id="widthPercent" type="number" th:field="*{widthPercent}" class="form-control" min="10"
-                            max="100" step="1" placeholder="100">
-                        <span class="input-group-text">%</span>
-                    </div>
-                    <div class="form-text">Imposta la larghezza del contenuto (tra <strong>10%</strong> e <strong>100%</strong>).</div>
-                </div>
+                        Titolo Pagina
+                        <span class="text-danger">*</span>
 
-                <!-- PERSONALIZZAZIONE COLORI -->
-                <div class="mb-4 p-3 rounded" style="background-color: #0f172a; border: 1px solid #1e293b;">
-                    <label class="form-label fw-bold d-flex align-items-center mb-3">
-                        <i class="bi bi-palette text-success me-2 fs-5"></i>
-                        Stile e Colori della Pagina
                     </label>
+
+
+                    <input type="text"
+                           th:field="*{title}"
+                           class="form-control form-control-lg"
+                           placeholder="es. Chi Siamo"
+                           required>
+
+
+                    <div class="form-text">
+
+                        Il titolo verrà utilizzato come titolo
+                        amministrativo della pagina.
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     SLUG
+                     ================================================== -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-bold">
+
+                        Slug URL
+                        <span class="text-danger">*</span>
+
+                    </label>
+
+
+                    <input type="text"
+                           th:field="*{slug}"
+                           class="form-control"
+                           placeholder="es. chi-siamo"
+                           required>
+
+
+                    <div class="form-text">
+
+                        La pagina sarà disponibile all'indirizzo:
+
+                        <code>/p/chi-siamo</code>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     LARGHEZZA
+                     ================================================== -->
+                <div class="mb-4">
+
+                    <label for="widthPercent"
+                           class="form-label fw-bold">
+
+                        Larghezza Blocco (%)
+
+                    </label>
+
+
+                    <div class="input-group">
+
+                        <input id="widthPercent"
+                               type="number"
+                               th:field="*{widthPercent}"
+                               class="form-control"
+                               min="10"
+                               max="100"
+                               step="1"
+                               placeholder="100">
+
+                        <span class="input-group-text">
+                            %
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-text">
+
+                        Imposta la larghezza del contenuto
+                        (tra <strong>10%</strong> e
+                        <strong>100%</strong>).
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     PERSONALIZZAZIONE COLORI
+                     ================================================== -->
+                <div class="mb-4 p-3 rounded"
+                     style="background-color:#0f172a;border:1px solid #1e293b;">
+
+                    <label class="form-label fw-bold d-flex align-items-center mb-3">
+
+                        <i class="bi bi-palette text-success me-2 fs-5"></i>
+
+                        Stile e Colori della Pagina
+
+                    </label>
+
 
                     <div class="row g-3">
 
-                        <!-- SFONDO PAGINA -->
+
+                        <!-- SFONDO -->
                         <div class="col-12">
-                            <label class="form-label text-light fw-semibold">Sfondo Pagina (Body)</label>
+
+                            <label class="form-label text-light fw-semibold">
+
+                                Sfondo Pagina (Body)
+
+                            </label>
+
+
                             <div class="d-flex align-items-center gap-2">
-                                <input type="color" class="form-control form-control-color" id="pageBgPicker"
-                                    th:value="${page.backgroundColor != null and !#strings.isEmpty(page.backgroundColor) ? page.backgroundColor : '#080c14'}"
-                                    oninput="syncColorFromPicker('pageBgPicker', 'backgroundColorInput')">
 
-                                <input type="text" id="backgroundColorInput" th:field="*{backgroundColor}"
-                                    class="form-control" placeholder="es. #0f172a (vuoto = sfondo animato)"
-                                    oninput="syncColorFromText('backgroundColorInput', 'pageBgPicker')">
+                                <input type="color"
+                                       class="form-control form-control-color"
+                                       id="pageBgPicker"
+                                       th:value="${page.backgroundColor != null and !#strings.isEmpty(page.backgroundColor) ? page.backgroundColor : '#080c14'}"
+                                       oninput="syncColorFromPicker('pageBgPicker','backgroundColorInput')">
 
-                                <button type="button" class="btn btn-outline-secondary text-nowrap"
-                                    onclick="resetToAnimatedBg()">
-                                    <i class="bi bi-stars me-1 text-info"></i> Reset Animato
+
+                                <input type="text"
+                                       id="backgroundColorInput"
+                                       th:field="*{backgroundColor}"
+                                       class="form-control"
+                                       placeholder="es. #0f172a (vuoto = sfondo animato)"
+                                       oninput="syncColorFromText('backgroundColorInput','pageBgPicker')">
+
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary text-nowrap"
+                                        onclick="resetToAnimatedBg()">
+
+                                    <i class="bi bi-stars me-1 text-info"></i>
+                                    Reset Animato
+
                                 </button>
+
                             </div>
+
                         </div>
+
 
                         <!-- FONT TITOLO -->
                         <div class="col-md-6">
-                            <label for="titleFontSelect" class="form-label text-light fw-semibold">Font Titolo (H1)</label>
-                            <select id="titleFontSelect" th:field="*{titleFont}" class="form-select">
-                                <option value="">Predefinito di sistema</option>
-                                <option value="Space Grotesk, sans-serif">Space Grotesk</option>
-                                <option value="andale mono, times">Andale Mono</option>
-                                <option value="arial, helvetica, sans-serif">Arial</option>
-                                <option value="arial black, avant garde">Arial Black</option>
-                                <option value="book antiqua, palatino">Book Antiqua</option>
-                                <option value="comic sans ms, sans-serif">Comic Sans MS</option>
-                                <option value="courier new, courier">Courier New</option>
-                                <option value="georgia, palatino">Georgia</option>
-                                <option value="helvetica">Helvetica</option>
-                                <option value="impact, chicago">Impact</option>
-                                <option value="Neue Haas Grotesk Display Pro, Helvetica Neue, Arial, sans-serif">Neue Haas Grotesk</option>
-                                <option value="Plus Jakarta Sans, sans-serif">Plus Jakarta Sans</option>
-                                <option value="Roboto, sans-serif">Roboto</option>
-                                <option value="symbol">Symbol</option>
-                                <option value="tahoma, arial, helvetica, sans-serif">Tahoma</option>
-                                <option value="terminal, monaco">Terminal</option>
-                                <option value="times new roman, times">Times New Roman</option>
-                                <option value="trebuchet ms, geneva">Trebuchet MS</option>
-                                <option value="verdana, geneva">Verdana</option>
-                                <option value="webdings">Webdings</option>
-                                <option value="wingdings, zapf dingbats">Wingdings</option>
+
+                            <label for="titleFontSelect"
+                                   class="form-label text-light fw-semibold">
+
+                                Font Titolo (H1)
+
+                            </label>
+
+
+                            <select id="titleFontSelect"
+                                    th:field="*{titleFont}"
+                                    class="form-select">
+
+                                <option value="">
+                                    Predefinito di sistema
+                                </option>
+
+                                <option value="Space Grotesk, sans-serif">
+                                    Space Grotesk
+                                </option>
+
+                                <option value="andale mono, times">
+                                    Andale Mono
+                                </option>
+
+                                <option value="arial, helvetica, sans-serif">
+                                    Arial
+                                </option>
+
+                                <option value="arial black, avant garde">
+                                    Arial Black
+                                </option>
+
+                                <option value="book antiqua, palatino">
+                                    Book Antiqua
+                                </option>
+
+                                <option value="comic sans ms, sans-serif">
+                                    Comic Sans MS
+                                </option>
+
+                                <option value="courier new, courier">
+                                    Courier New
+                                </option>
+
+                                <option value="georgia, palatino">
+                                    Georgia
+                                </option>
+
+                                <option value="helvetica">
+                                    Helvetica
+                                </option>
+
+                                <option value="impact, chicago">
+                                    Impact
+                                </option>
+
+                                <option value="Neue Haas Grotesk Display Pro, Helvetica Neue, Arial, sans-serif">
+                                    Neue Haas Grotesk
+                                </option>
+
+                                <option value="Plus Jakarta Sans, sans-serif">
+                                    Plus Jakarta Sans
+                                </option>
+
+                                <option value="Roboto, sans-serif">
+                                    Roboto
+                                </option>
+
+                                <option value="symbol">
+                                    Symbol
+                                </option>
+
+                                <option value="tahoma, arial, helvetica, sans-serif">
+                                    Tahoma
+                                </option>
+
+                                <option value="terminal, monaco">
+                                    Terminal
+                                </option>
+
+                                <option value="times new roman, times">
+                                    Times New Roman
+                                </option>
+
+                                <option value="trebuchet ms, geneva">
+                                    Trebuchet MS
+                                </option>
+
+                                <option value="verdana, geneva">
+                                    Verdana
+                                </option>
+
+                                <option value="webdings">
+                                    Webdings
+                                </option>
+
+                                <option value="wingdings, zapf dingbats">
+                                    Wingdings
+                                </option>
+
                             </select>
+
                         </div>
+
 
                         <!-- COLORE TITOLO -->
                         <div class="col-md-6">
-                            <label class="form-label text-light fw-semibold">Colore Titolo (H1)</label>
-                            <div class="d-flex align-items-center gap-2">
-                                <input type="color" class="form-control form-control-color" id="titleColorPicker"
-                                    th:value="${page.titleColor != null and !#strings.isEmpty(page.titleColor) ? page.titleColor : '#00dc82'}"
-                                    oninput="syncColorFromPicker('titleColorPicker', 'titleColorInput')">
 
-                                <input type="text" id="titleColorInput" th:field="*{titleColor}" class="form-control"
-                                    placeholder="es. #00dc82"
-                                    oninput="syncColorFromText('titleColorInput', 'titleColorPicker')">
+                            <label class="form-label text-light fw-semibold">
+                                Colore Titolo (H1)
+                            </label>
+
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <input type="color"
+                                       class="form-control form-control-color"
+                                       id="titleColorPicker"
+                                       th:value="${page.titleColor != null and !#strings.isEmpty(page.titleColor) ? page.titleColor : '#00dc82'}"
+                                       oninput="syncColorFromPicker('titleColorPicker','titleColorInput')">
+
+
+                                <input type="text"
+                                       id="titleColorInput"
+                                       th:field="*{titleColor}"
+                                       class="form-control"
+                                       placeholder="es. #00dc82"
+                                       oninput="syncColorFromText('titleColorInput','titleColorPicker')">
+
                             </div>
+
                         </div>
 
-                        <!-- SFONDO CARD FORM -->
+
+                        <!-- SFONDO FORM -->
                         <div class="col-md-6">
-                            <label class="form-label text-light fw-semibold">Colore Sfondo Card Form</label>
-                            <div class="d-flex align-items-center gap-2">
-                                <input type="color" class="form-control form-control-color" id="formBgPicker"
-                                    th:value="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? page.formBgColor : '#0f172a'}"
-                                    oninput="syncColorFromPicker('formBgPicker', 'formBgColorInput')">
 
-                                <input type="text" id="formBgColorInput" th:field="*{formBgColor}" class="form-control"
-                                    placeholder="es. #1e293b"
-                                    oninput="syncColorFromText('formBgColorInput', 'formBgPicker')">
+                            <label class="form-label text-light fw-semibold">
+
+                                Colore Sfondo Card Form
+
+                            </label>
+
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <input type="color"
+                                       class="form-control form-control-color"
+                                       id="formBgPicker"
+                                       th:value="${page.formBgColor != null and !#strings.isEmpty(page.formBgColor) ? page.formBgColor : '#0f172a'}"
+                                       oninput="syncColorFromPicker('formBgPicker','formBgColorInput')">
+
+
+                                <input type="text"
+                                       id="formBgColorInput"
+                                       th:field="*{formBgColor}"
+                                       class="form-control"
+                                       placeholder="es. #1e293b"
+                                       oninput="syncColorFromText('formBgColorInput','formBgPicker')">
+
                             </div>
+
                         </div>
 
-                        <!-- SFONDO INPUT FORM -->
-                        <div class="col-md-4">
-                            <label class="form-label text-light fw-semibold">Sfondo Input Form</label>
-                            <div class="d-flex align-items-center gap-2">
-                                <input type="color" class="form-control form-control-color" id="formInputBgPicker"
-                                    th:value="${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? page.formInputBgColor : '#1e293b'}"
-                                    oninput="syncColorFromPicker('formInputBgPicker', 'formInputBgColorInput')">
 
-                                <input type="text" id="formInputBgColorInput" th:field="*{formInputBgColor}"
-                                    class="form-control" placeholder="es. #1e293b"
-                                    oninput="syncColorFromText('formInputBgColorInput', 'formInputBgPicker')">
+                        <!-- INPUT BG -->
+                        <div class="col-md-4">
+
+                            <label class="form-label text-light fw-semibold">
+
+                                Sfondo Input Form
+
+                            </label>
+
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <input type="color"
+                                       class="form-control form-control-color"
+                                       id="formInputBgPicker"
+                                       th:value="${page.formInputBgColor != null and !#strings.isEmpty(page.formInputBgColor) ? page.formInputBgColor : '#1e293b'}"
+                                       oninput="syncColorFromPicker('formInputBgPicker','formInputBgColorInput')">
+
+
+                                <input type="text"
+                                       id="formInputBgColorInput"
+                                       th:field="*{formInputBgColor}"
+                                       class="form-control"
+                                       placeholder="es. #1e293b"
+                                       oninput="syncColorFromText('formInputBgColorInput','formInputBgPicker')">
+
                             </div>
+
                         </div>
 
-                        <!-- COLORE TESTO FORM -->
-                        <div class="col-md-4">
-                            <label class="form-label text-light fw-semibold">Colore Testo e Label Form</label>
-                            <div class="d-flex align-items-center gap-2">
-                                <input type="color" class="form-control form-control-color" id="formTextColorPicker"
-                                    th:value="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? page.formTextColor : '#ffffff'}"
-                                    oninput="syncColorFromPicker('formTextColorPicker', 'formTextColorInput')">
 
-                                <input type="text" id="formTextColorInput" th:field="*{formTextColor}"
-                                    th:value="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? page.formTextColor : '#ffffff'}"
-                                    class="form-control" placeholder="es. #ffffff"
-                                    oninput="syncColorFromText('formTextColorInput', 'formTextColorPicker')">
+                        <!-- TESTO -->
+                        <div class="col-md-4">
+
+                            <label class="form-label text-light fw-semibold">
+
+                                Colore Testo e Label Form
+
+                            </label>
+
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <input type="color"
+                                       class="form-control form-control-color"
+                                       id="formTextColorPicker"
+                                       th:value="${page.formTextColor != null and !#strings.isEmpty(page.formTextColor) ? page.formTextColor : '#ffffff'}"
+                                       oninput="syncColorFromPicker('formTextColorPicker','formTextColorInput')">
+
+
+                                <input type="text"
+                                       id="formTextColorInput"
+                                       th:field="*{formTextColor}"
+                                       class="form-control"
+                                       placeholder="es. #ffffff"
+                                       oninput="syncColorFromText('formTextColorInput','formTextColorPicker')">
+
                             </div>
+
                         </div>
 
-                        <!-- COLORE PLACEHOLDER -->
-                        <div class="col-md-4">
-                            <label class="form-label text-light fw-semibold">Colore Placeholder/Check Input</label>
-                            <div class="d-flex align-items-center gap-2">
-                                <input type="color" class="form-control form-control-color" id="formPlaceholderColorPicker"
-                                    th:value="${page.formPlaceholderColor != null and !#strings.isEmpty(page.formPlaceholderColor) ? page.formPlaceholderColor : '#94a3b8'}"
-                                    oninput="syncColorFromPicker('formPlaceholderColorPicker', 'formPlaceholderColorInput')">
 
-                                <input type="text" id="formPlaceholderColorInput" th:field="*{formPlaceholderColor}"
-                                    class="form-control" placeholder="es. #94a3b8"
-                                    oninput="syncColorFromText('formPlaceholderColorInput', 'formPlaceholderColorPicker')">
+                        <!-- PLACEHOLDER -->
+                        <div class="col-md-4">
+
+                            <label class="form-label text-light fw-semibold">
+
+                                Colore Placeholder/Check Input
+
+                            </label>
+
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <input type="color"
+                                       class="form-control form-control-color"
+                                       id="formPlaceholderColorPicker"
+                                       th:value="${page.formPlaceholderColor != null and !#strings.isEmpty(page.formPlaceholderColor) ? page.formPlaceholderColor : '#94a3b8'}"
+                                       oninput="syncColorFromPicker('formPlaceholderColorPicker','formPlaceholderColorInput')">
+
+
+                                <input type="text"
+                                       id="formPlaceholderColorInput"
+                                       th:field="*{formPlaceholderColor}"
+                                       class="form-control"
+                                       placeholder="es. #94a3b8"
+                                       oninput="syncColorFromText('formPlaceholderColorInput','formPlaceholderColorPicker')">
+
                             </div>
+
                         </div>
 
                     </div>
+
                 </div>
 
-                <!-- SELEZIONE MODALITÀ FORM -->
+
+                <!-- ==================================================
+                     TIPO FORM
+                     ================================================== -->
                 <div class="mb-4 p-3 border rounded bg-dark">
-                    <label for="formTypeSelect" class="form-label fw-bold text-white fs-5 mb-2">
-                        <i class="bi bi-ui-checks me-2 text-success"></i> Integrazione Form nella Pagina
+
+                    <label for="formTypeSelect"
+                           class="form-label fw-bold text-white fs-5 mb-2">
+
+                        <i class="bi bi-ui-checks me-2 text-success"></i>
+
+                        Integrazione Form nella Pagina
+
                     </label>
-                    <select id="formTypeSelect" th:field="*{formType}" class="form-select form-select-lg"
-                        onchange="toggleCourseForm()">
-                        <option value="NONE">Nessun Form</option>
-                        <option value="BOOKING">Includi Form di Prenotazione Corso in questa pagina</option>
-                        <option value="INFO">Includi Form di richiesta informazioni</option>
-                        <option value="ORG_INFO">Includi Form di richiesta informazioni per organizzazioni</option>
+
+
+                    <select id="formTypeSelect"
+                            th:field="*{formType}"
+                            class="form-select form-select-lg"
+                            onchange="toggleCourseForm()">
+
+                        <option value="NONE">
+                            Nessun Form
+                        </option>
+
+                        <option value="BOOKING">
+                            Includi Form di Prenotazione Corso in questa pagina
+                        </option>
+
+                        <option value="INFO">
+                            Includi Form di richiesta informazioni
+                        </option>
+
+                        <option value="ORG_INFO">
+                            Includi Form di richiesta informazioni per organizzazioni
+                        </option>
+
                     </select>
+
                 </div>
 
-                <!-- CONFIGURAZIONE FORM CORSO / DESTINAZIONE -->
-                <div id="courseConfigBox" class="course-config-box mb-4" style="display: none;">
-                    <h5 class="text-success mb-3 fw-bold"><i class="bi bi-sliders me-2"></i> Impostazioni Form e Destinazione</h5>
+
+                <!-- ==================================================
+                     CONFIGURAZIONE FORM
+                     ================================================== -->
+                <div id="courseConfigBox"
+                     class="course-config-box mb-4"
+                     style="display:none;">
+
+                    <h5 class="text-success mb-3 fw-bold">
+
+                        <i class="bi bi-sliders me-2"></i>
+
+                        Impostazioni Form e Destinazione
+
+                    </h5>
+
+
                     <div class="row g-3">
+
                         <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Tipologia Corso</label>
-                            <input type="text" th:field="*{courseType}" class="form-control"
-                                placeholder="es. Corso di Formazione">
+
+                            <label class="form-label fw-bold">
+                                Tipologia Corso
+                            </label>
+
+
+                            <input type="text"
+                                   th:field="*{courseType}"
+                                   class="form-control"
+                                   placeholder="es. Corso di Formazione">
+
                         </div>
+
+
                         <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Codice Corso</label>
-                            <input type="text" th:field="*{courseCode}" class="form-control"
-                                placeholder="es. JAVA-2026-01">
+
+                            <label class="form-label fw-bold">
+                                Codice Corso
+                            </label>
+
+
+                            <input type="text"
+                                   th:field="*{courseCode}"
+                                   class="form-control"
+                                   placeholder="es. JAVA-2026-01">
+
                         </div>
+
+
                         <div class="col-md-4 course-specific-field">
-                            <label class="form-label fw-bold">Nome Corso</label>
-                            <input type="text" th:field="*{courseName}" class="form-control"
-                                placeholder="es. Corso Java Developer">
+
+                            <label class="form-label fw-bold">
+                                Nome Corso
+                            </label>
+
+
+                            <input type="text"
+                                   th:field="*{courseName}"
+                                   class="form-control"
+                                   placeholder="es. Corso Java Developer">
+
                         </div>
+
                     </div>
+
+
                     <div class="mt-4 pt-3 border-top border-secondary d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <div class="fw-bold text-white"><i class="bi bi-eye me-2 text-info"></i> Anteprima del Form</div>
-                        <button type="button" class="btn btn-outline-info" onclick="openFormPreview()">
-                            <i class="bi bi-eye me-1"></i> Anteprima Form
-                        </button>
-                    </div>
-                </div>
 
-                <!-- CONTENUTO WYSIWYG & MONACO TRIGGER -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Contenuto Pagina (Editor)</label>
-                    <div class="form-text mb-2">Utilizza l'editor per inserire testo, immagini, link, tabelle, video e formattazione avanzata.</div>
+                        <div class="fw-bold text-white">
 
-                    <div class="monaco-modal-editor-button">
-                        <button type="button" class="btn btn-sm btn-outline-info monaco-open-button"
-                            data-bs-toggle="modal" data-bs-target="#monacoEditorModal"
-                            onclick="openMonacoFromButton(this)">
-                            <i class="bi bi-code-square me-1"></i> Apri HTML Editor Avanzato (Monaco)
-                        </button>
-                    </div>
+                            <i class="bi bi-eye me-2 text-info"></i>
 
-                    <textarea class="wysiwyg-editor" th:field="*{contentHtml}"></textarea>
-                </div>
+                            Anteprima del Form
 
-                <!-- INFORMAZIONI URL -->
-                <div class="alert alert-light border mb-4">
-                    <div class="d-flex align-items-start">
-                        <i class="bi bi-info-circle-fill text-success fs-4 me-3"></i>
-                        <div>
-                            <strong>URL della pagina</strong>
-                            <div class="mt-1"><code>/p/<span th:text="${page.slug}">slug-pagina</span></code></div>
                         </div>
+
+
+                        <button type="button"
+                                class="btn btn-outline-info"
+                                onclick="openFormPreview()">
+
+                            <i class="bi bi-eye me-1"></i>
+
+                            Anteprima Form
+
+                        </button>
+
                     </div>
+
                 </div>
 
-                <!-- BOTTONI -->
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <a th:href="@{/admin/pages}" class="btn btn-outline-light">
-                        <i class="bi bi-arrow-left me-1"></i> Annulla
-                    </a>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-info btn-lg" onclick="openLivePagePreview()">
-                            <i class="bi bi-window-stack me-1"></i> Anteprima Live
-                        </button>
-                        <button type="button" class="btn btn-success btn-lg" onclick="showConfirmModal()">
-                            <i class="bi bi-check-circle me-1"></i> Salva Pagina
-                        </button>
+
+                <!-- ==================================================
+                     EDITOR HTML
+                     ================================================== -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-bold">
+
+                        Contenuto Pagina (Editor)
+
+                    </label>
+
+
+                    <div class="form-text mb-2">
+
+                        Utilizza l'editor per inserire testo,
+                        immagini, link, tabelle, video e
+                        formattazione avanzata.
+
                     </div>
+
+
+                    <!-- ==================================================
+                         PULSANTE MONACO
+                         IMPORTANTE:
+                         data-target-id="contentHtml"
+                         ================================================== -->
+                    <div class="monaco-modal-editor-button">
+
+                        <button type="button"
+                                class="btn btn-sm btn-outline-info monaco-open-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#monacoEditorModal"
+                                data-target-id="contentHtml"
+                                onclick="openMonacoFromButton(this)">
+
+                            <i class="bi bi-code-square me-1"></i>
+
+                            Apri HTML Editor Avanzato (Monaco)
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- ==================================================
+                         TEXTAREA TINYMCE
+                         ================================================== -->
+                    <textarea id="contentHtml"
+                              class="wysiwyg-editor"
+                              th:field="*{contentHtml}">
+                    </textarea>
+
+                </div>
+
+
+                <!-- ==================================================
+                     URL
+                     ================================================== -->
+                <div class="alert alert-light border mb-4">
+
+                    <div class="d-flex align-items-start">
+
+                        <i class="bi bi-info-circle-fill text-success fs-4 me-3"></i>
+
+
+                        <div>
+
+                            <strong>
+                                URL della pagina
+                            </strong>
+
+
+                            <div class="mt-1">
+
+                                <code>
+                                    /p/<span th:text="${page.slug}">
+                                        slug-pagina
+                                    </span>
+                                </code>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     BOTTONI
+                     ================================================== -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+                    <a th:href="@{/admin/pages}"
+                       class="btn btn-outline-light">
+
+                        <i class="bi bi-arrow-left me-1"></i>
+
+                        Annulla
+
+                    </a>
+
+
+                    <div class="d-flex gap-2">
+
+                        <button type="button"
+                                class="btn btn-outline-info btn-lg"
+                                onclick="openLivePagePreview()">
+
+                            <i class="bi bi-window-stack me-1"></i>
+
+                            Anteprima Live
+
+                        </button>
+
+
+                        <button type="button"
+                                class="btn btn-success btn-lg"
+                                onclick="showConfirmModal()">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            Salva Pagina
+
+                        </button>
+
+                    </div>
+
                 </div>
 
             </div>
+
         </form>
+
     </div>
 
-    <!-- INCLUSIONE FRAGMENT MODALE MONACO EDITOR -->
+
+    <!-- ============================================================
+         MODALE MONACO
+         ============================================================ -->
     <th:block th:insert="~{fragments/monaco :: monaco-modal}" />
 
-    <!-- MODALE ANTEPRIMA FORM -->
-    <div class="modal fade form-preview-modal" id="formPreviewModal" tabindex="-1" aria-hidden="true">
+
+    <!-- ============================================================
+         ANTEPRIMA FORM
+         ============================================================ -->
+    <div class="modal fade form-preview-modal"
+         id="formPreviewModal"
+         tabindex="-1"
+         aria-hidden="true">
+
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+
             <div class="modal-content">
+
                 <div class="modal-header">
-                    <h5 class="modal-title text-white mb-1"><i class="bi bi-eye text-info me-2"></i> Anteprima Form</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+
+                    <h5 class="modal-title text-white mb-1">
+
+                        <i class="bi bi-eye text-info me-2"></i>
+
+                        Anteprima Form
+
+                    </h5>
+
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal">
+                    </button>
+
                 </div>
+
+
                 <div class="modal-body p-0">
-                    <div id="formPreviewContainer" class="form-preview-container">
+
+                    <div id="formPreviewContainer"
+                         class="form-preview-container">
+
                         <div class="form-preview-placeholder">
+
                             <i class="bi bi-ui-checks"></i>
-                            <div>Seleziona un tipo di form per visualizzarne l'anteprima.</div>
+
+                            <div>
+                                Seleziona un tipo di form
+                                per visualizzarne l'anteprima.
+                            </div>
+
                         </div>
+
                     </div>
+
                 </div>
+
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Chiudi</button>
+
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+
+                        Chiudi
+
+                    </button>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- MODAL DI AVVISO CAMPI MANCANTI -->
-    <div class="modal fade" id="warningModal" tabindex="-1" aria-hidden="true">
+
+    <!-- ============================================================
+         WARNING MODAL
+         ============================================================ -->
+    <div class="modal fade"
+         id="warningModal"
+         tabindex="-1"
+         aria-hidden="true">
+
         <div class="modal-dialog modal-dialog-centered">
+
             <div class="modal-content card border-0">
+
                 <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i> Campi Obbligatori Mancanti</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+
+                    <h5 class="modal-title text-warning">
+
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                        Campi Obbligatori Mancanti
+
+                    </h5>
+
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal">
+                    </button>
+
                 </div>
-                <div class="modal-body text-light">Compilare tutti i campi obbligatori prima di salvare la pagina.</div>
+
+
+                <div class="modal-body text-light">
+
+                    Compilare tutti i campi obbligatori
+                    prima di salvare la pagina.
+
+                </div>
+
+
                 <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-warning fw-bold text-dark" data-bs-dismiss="modal">Ho Capito</button>
+
+                    <button type="button"
+                            class="btn btn-warning fw-bold text-dark"
+                            data-bs-dismiss="modal">
+
+                        Ho Capito
+
+                    </button>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- MODAL DI CONFERMA SALVATAGGIO -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+
+    <!-- ============================================================
+         CONFIRM MODAL
+         ============================================================ -->
+    <div class="modal fade"
+         id="confirmModal"
+         tabindex="-1"
+         aria-hidden="true">
+
         <div class="modal-dialog modal-dialog-centered">
+
             <div class="modal-content card border-0">
+
                 <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title text-white"><i class="bi bi-check-circle-fill text-success me-2"></i> Conferma Operazione</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+
+                    <h5 class="modal-title text-white">
+
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+
+                        Conferma Operazione
+
+                    </h5>
+
+
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal">
+                    </button>
+
                 </div>
-                <div class="modal-body text-light">Sei sicuro di voler salvare le modifiche alla pagina?</div>
+
+
+                <div class="modal-body text-light">
+
+                    Sei sicuro di voler salvare
+                    le modifiche alla pagina?
+
+                </div>
+
+
                 <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-                    <button type="button" class="btn btn-success" onclick="submitPageForm()">Conferma e Salva</button>
+
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+
+                        Annulla
+
+                    </button>
+
+
+                    <button type="button"
+                            class="btn btn-success"
+                            onclick="submitPageForm()">
+
+                        Conferma e Salva
+
+                    </button>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
+
+    <!-- ============================================================
+         BOOTSTRAP JS
+         ============================================================ -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+
+    <!-- ============================================================
+         MONACO JS
+         IMPORTANTE:
+         deve essere inserito DOPO Bootstrap.
+         ============================================================ -->
+    <th:block th:insert="~{fragments/monaco :: monaco-scripts}" />
+
+
+    <!-- ============================================================
+         ANTEPRIMA FORM
+         ============================================================ -->
     <script>
-        /* ============================================================
-           ANTEPRIMA FORM MODALE
-           ============================================================ */
 
         function escapePreviewHtml(value) {
+
             return String(value ?? '')
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
@@ -651,653 +1410,2230 @@
                 .replace(/'/g, '&#039;');
         }
 
+
         function getSelectedFormType() {
-            const select = document.getElementById('formTypeSelect');
-            return select ? select.value : 'NONE';
+
+            const select =
+                document.getElementById('formTypeSelect');
+
+            return select
+                ? select.value
+                : 'NONE';
         }
 
+
         function getPreviewPageTitle() {
-            const titleInput = document.getElementById('title');
-            if (titleInput && titleInput.value.trim()) {
+
+            const titleInput =
+                document.getElementById('title');
+
+            if (
+                titleInput &&
+                titleInput.value.trim()
+            ) {
+
                 return titleInput.value.trim();
             }
-            const titleField = document.querySelector('[name="title"]');
-            if (titleField && titleField.value.trim()) {
+
+
+            const titleField =
+                document.querySelector('[name="title"]');
+
+
+            if (
+                titleField &&
+                titleField.value.trim()
+            ) {
+
                 return titleField.value.trim();
             }
+
+
             return 'Pagina';
         }
 
+
         function getPreviewCourseValue(id, name) {
-            const byId = document.getElementById(id);
-            if (byId && byId.value.trim()) {
+
+            const byId =
+                document.getElementById(id);
+
+
+            if (
+                byId &&
+                byId.value.trim()
+            ) {
+
                 return byId.value.trim();
             }
-            const byName = document.querySelector('[name="' + name + '"]');
-            return byName ? byName.value.trim() : '';
+
+
+            const byName =
+                document.querySelector(
+                    '[name="' + name + '"]'
+                );
+
+
+            return byName
+                ? byName.value.trim()
+                : '';
         }
 
-        function buildPreviewInput(label, name, placeholder, required = false, type = 'text') {
+
+        function buildPreviewInput(
+            label,
+            name,
+            placeholder,
+            required = false,
+            type = 'text'
+        ) {
+
             return `
-            <div class="mb-3">
-                <label class="form-label">
-                    ${escapePreviewHtml(label)}
-                    ${required ? '<span class="preview-required">*</span>' : ''}
-                </label>
-                <input type="${escapePreviewHtml(type)}" class="form-control" placeholder="${escapePreviewHtml(placeholder)}" ${required ? 'required' : ''}>
-            </div>
-        `;
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        ${escapePreviewHtml(label)}
+
+                        ${
+                            required
+                                ? '<span class="preview-required">*</span>'
+                                : ''
+                        }
+
+                    </label>
+
+                    <input
+                        type="${escapePreviewHtml(type)}"
+                        name="${escapePreviewHtml(name)}"
+                        class="form-control"
+                        placeholder="${escapePreviewHtml(placeholder)}"
+                        ${required ? 'required' : ''}
+                    >
+
+                </div>
+            `;
         }
 
-        function buildPreviewTextarea(label, placeholder, required = false) {
+
+        function buildPreviewTextarea(
+            label,
+            placeholder,
+            required = false
+        ) {
+
             return `
-            <div class="mb-3">
-                <label class="form-label">
-                    ${escapePreviewHtml(label)}
-                    ${required ? '<span class="preview-required">*</span>' : ''}
-                </label>
-                <textarea class="form-control" placeholder="${escapePreviewHtml(placeholder)}" ${required ? 'required' : ''}></textarea>
-            </div>
-        `;
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        ${escapePreviewHtml(label)}
+
+                        ${
+                            required
+                                ? '<span class="preview-required">*</span>'
+                                : ''
+                        }
+
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        placeholder="${escapePreviewHtml(placeholder)}"
+                        ${required ? 'required' : ''}
+                    ></textarea>
+
+                </div>
+            `;
         }
 
-        function buildPreviewCheckbox(text, required = false) {
+
+        function buildPreviewCheckbox(
+            text,
+            required = false
+        ) {
+
             return `
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" ${required ? 'required' : ''}>
-                <label class="form-check-label">
-                    ${escapePreviewHtml(text)}
-                    ${required ? '<span class="preview-required">*</span>' : ''}
-                </label>
-            </div>
-        `;
+                <div class="form-check mb-2">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        ${required ? 'required' : ''}
+                    >
+
+                    <label class="form-check-label">
+
+                        ${escapePreviewHtml(text)}
+
+                        ${
+                            required
+                                ? '<span class="preview-required">*</span>'
+                                : ''
+                        }
+
+                    </label>
+
+                </div>
+            `;
         }
+
 
         function applyDynamicStylesToPreviewContainer() {
-            const formBgColor = document.getElementById('formBgColorInput')?.value.trim();
-            const formInputBgColor = document.getElementById('formInputBgColorInput')?.value.trim();
-            const formTextColor = document.getElementById('formTextColorInput')?.value.trim();
-            const formPlaceholderColor = document.getElementById('formPlaceholderColorInput')?.value.trim();
+
+            const formBgColor =
+                document.getElementById(
+                    'formBgColorInput'
+                )?.value.trim();
+
+
+            const formInputBgColor =
+                document.getElementById(
+                    'formInputBgColorInput'
+                )?.value.trim();
+
+
+            const formTextColor =
+                document.getElementById(
+                    'formTextColorInput'
+                )?.value.trim();
+
+
+            const formPlaceholderColor =
+                document.getElementById(
+                    'formPlaceholderColorInput'
+                )?.value.trim();
+
 
             let customStyles = '';
 
+
             if (formBgColor) {
-                customStyles += `.form-preview-card { background-color: ${formBgColor} !important; }`;
-            }
-            if (formTextColor) {
+
                 customStyles += `
-                .form-preview-card,
-                .form-preview-card .form-label,
-                .form-preview-card .form-check-label,
-                .form-preview-card h3,
-                .form-preview-card h4,
-                .form-preview-card h5,
-                .form-preview-card p,
-                .form-preview-card .text-white,
-                .form-preview-card .text-secondary {
-                    color: ${formTextColor} !important;
-                }
-            `;
+                    .form-preview-card {
+                        background-color:
+                            ${formBgColor} !important;
+                    }
+                `;
             }
+
+
+            if (formTextColor) {
+
+                customStyles += `
+                    .form-preview-card,
+                    .form-preview-card .form-label,
+                    .form-preview-card .form-check-label,
+                    .form-preview-card h3,
+                    .form-preview-card h4,
+                    .form-preview-card h5,
+                    .form-preview-card p,
+                    .form-preview-card .text-white,
+                    .form-preview-card .text-secondary {
+                        color:
+                            ${formTextColor} !important;
+                    }
+                `;
+            }
+
+
             if (formInputBgColor) {
+
                 customStyles += `
-                .form-preview-card .form-control,
-                .form-preview-card .form-select,
-                .form-preview-card .form-check-input {
-                    background-color: ${formInputBgColor} !important;
-                }
-            `;
+                    .form-preview-card .form-control,
+                    .form-preview-card .form-select,
+                    .form-preview-card .form-check-input {
+                        background-color:
+                            ${formInputBgColor} !important;
+                    }
+                `;
             }
+
+
             if (formTextColor) {
+
                 customStyles += `
-                .form-preview-card .form-control,
-                .form-preview-card .form-select {
-                    color: ${formTextColor} !important;
-                }
-            `;
+                    .form-preview-card .form-control,
+                    .form-preview-card .form-select {
+                        color:
+                            ${formTextColor} !important;
+                    }
+                `;
             }
+
+
             if (formPlaceholderColor) {
-                const encodedColor = encodeURIComponent(formPlaceholderColor);
-                const checkSvg = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='${encodedColor}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e`;
+
+                const encodedColor =
+                    encodeURIComponent(
+                        formPlaceholderColor
+                    );
+
+
+                const checkSvg =
+                    `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='${encodedColor}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e`;
+
 
                 customStyles += `
-                .form-preview-card .form-control::placeholder,
-                .form-preview-card .form-select::placeholder {
-                    color: ${formPlaceholderColor} !important;
-                    opacity: 1 !important;
-                }
-                .form-preview-card .form-check-input:checked {
-                    background-color: ${formInputBgColor || '#1e293b'} !important;
-                    border-color: ${formPlaceholderColor} !important;
-                    background-image: url("${checkSvg}") !important;
-                }
-                .form-preview-card .form-check-input {
-                    accent-color: ${formPlaceholderColor} !important;
-                }
-            `;
+                    .form-preview-card .form-control::placeholder,
+                    .form-preview-card .form-select::placeholder {
+                        color:
+                            ${formPlaceholderColor} !important;
+
+                        opacity: 1 !important;
+                    }
+
+                    .form-preview-card .form-check-input:checked {
+                        background-color:
+                            ${formInputBgColor || '#1e293b'} !important;
+
+                        border-color:
+                            ${formPlaceholderColor} !important;
+
+                        background-image:
+                            url("${checkSvg}") !important;
+                    }
+
+                    .form-preview-card .form-check-input {
+                        accent-color:
+                            ${formPlaceholderColor} !important;
+                    }
+                `;
             }
 
-            let styleTag = document.getElementById('preview-dynamic-styles');
+
+            let styleTag =
+                document.getElementById(
+                    'preview-dynamic-styles'
+                );
+
+
             if (!styleTag) {
-                styleTag = document.createElement('style');
-                styleTag.id = 'preview-dynamic-styles';
-                document.head.appendChild(styleTag);
+
+                styleTag =
+                    document.createElement('style');
+
+                styleTag.id =
+                    'preview-dynamic-styles';
+
+                document.head.appendChild(
+                    styleTag
+                );
             }
-            styleTag.innerHTML = customStyles;
+
+
+            styleTag.innerHTML =
+                customStyles;
         }
+
 
         function buildBookingPreview() {
-            const courseType = getPreviewCourseValue('courseType', 'courseType') || 'Corso di Formazione';
-            const courseCode = getPreviewCourseValue('courseCode', 'courseCode') || 'CODICE-CORSO';
-            const courseName = getPreviewCourseValue('courseName', 'courseName') || 'Nome del corso';
+
+            const courseType =
+                getPreviewCourseValue(
+                    'courseType',
+                    'courseType'
+                ) || 'Corso di Formazione';
+
+
+            const courseCode =
+                getPreviewCourseValue(
+                    'courseCode',
+                    'courseCode'
+                ) || 'CODICE-CORSO';
+
+
+            const courseName =
+                getPreviewCourseValue(
+                    'courseName',
+                    'courseName'
+                ) || 'Nome del corso';
+
 
             return `
-            <div class="form-preview-card">
-                <span class="form-preview-type-badge">
-                    <i class="bi bi-calendar-check me-1"></i>
-                    Prenotazione Corso
-                </span>
-                <h4 class="form-preview-title">Prenota il corso</h4>
-                <div class="form-preview-description">Compila il modulo per richiedere la prenotazione.</div>
-                <div class="mb-4 p-3 rounded border border-secondary">
-                    <div class="small text-muted mb-1">Corso</div>
-                    <div class="fw-bold text-white">${escapePreviewHtml(courseName)}</div>
-                    <div class="small text-muted mt-1">${escapePreviewHtml(courseType)} · ${escapePreviewHtml(courseCode)}</div>
+                <div class="form-preview-card">
+
+                    <span class="form-preview-type-badge">
+
+                        <i class="bi bi-calendar-check me-1"></i>
+
+                        Prenotazione Corso
+
+                    </span>
+
+
+                    <h4 class="form-preview-title">
+                        Prenota il corso
+                    </h4>
+
+
+                    <div class="form-preview-description">
+
+                        Compila il modulo per richiedere
+                        la prenotazione.
+
+                    </div>
+
+
+                    <div class="mb-4 p-3 rounded border border-secondary">
+
+                        <div class="small text-muted mb-1">
+                            Corso
+                        </div>
+
+
+                        <div class="fw-bold text-white">
+
+                            ${escapePreviewHtml(courseName)}
+
+                        </div>
+
+
+                        <div class="small text-muted mt-1">
+
+                            ${escapePreviewHtml(courseType)}
+                            ·
+                            ${escapePreviewHtml(courseCode)}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Nome',
+                                'nome',
+                                'Inserisci il nome',
+                                true
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Cognome',
+                                'cognome',
+                                'Inserisci il cognome',
+                                true
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Email',
+                                'email',
+                                'nome@esempio.it',
+                                true,
+                                'email'
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Telefono',
+                                'telefono',
+                                'Numero di telefono',
+                                true,
+                                'tel'
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Codice Fiscale',
+                                'codiceFiscale',
+                                'Inserisci il codice fiscale',
+                                true
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Città',
+                                'citta',
+                                'Inserisci la città',
+                                true
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    ${buildPreviewTextarea(
+                        'Note',
+                        'Eventuali note o richieste...',
+                        false
+                    )}
+
+
+                    <div class="mt-3">
+
+                        ${buildPreviewCheckbox(
+                            'Accetto la Privacy Policy',
+                            true
+                        )}
+
+                        ${buildPreviewCheckbox(
+                            'Desidero ricevere comunicazioni di marketing',
+                            false
+                        )}
+
+                        ${buildPreviewCheckbox(
+                            'Acconsento alla cessione dei dati a terzi',
+                            false
+                        )}
+
+                    </div>
+
+
+                    <button type="button"
+                            class="btn btn-brand w-100 mt-3">
+
+                        <i class="bi bi-send me-1"></i>
+
+                        Prenota corso
+
+                    </button>
+
                 </div>
-                <div class="row g-3">
-                    <div class="col-md-6">${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}</div>
-                    <div class="col-md-6">${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}</div>
-                    <div class="col-md-6">${buildPreviewInput('Email', 'email', 'nome@esempio.it', true, 'email')}</div>
-                    <div class="col-md-6">${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', true, 'tel')}</div>
-                    <div class="col-md-6">${buildPreviewInput('Codice Fiscale', 'codiceFiscale', 'Inserisci il codice fiscale', true)}</div>
-                    <div class="col-md-6">${buildPreviewInput('Città', 'citta', 'Inserisci la città', true)}</div>
-                </div>
-                ${buildPreviewTextarea('Note', 'Eventuali note o richieste...', false)}
-                <div class="mt-3">
-                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
-                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
-                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
-                </div>
-                <button type="button" class="btn btn-brand w-100 mt-3">
-                    <i class="bi bi-send me-1"></i> Prenota corso
-                </button>
-            </div>
-        `;
+            `;
         }
+
 
         function buildInfoPreview() {
+
             return `
-            <div class="form-preview-card">
-                <span class="form-preview-type-badge">
-                    <i class="bi bi-info-circle me-1"></i>
-                    Richiesta Informazioni
-                </span>
-                <h4 class="form-preview-title">Richiedi informazioni</h4>
-                <div class="form-preview-description">Compila il modulo per contattarci e ricevere maggiori informazioni.</div>
-                <div class="row g-3">
-                    <div class="col-md-6">${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}</div>
-                    <div class="col-md-6">${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}</div>
-                    <div class="col-md-6">${buildPreviewInput('Email', 'email', 'nome@esempio.it', true, 'email')}</div>
-                    <div class="col-md-6">${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', false, 'tel')}</div>
+                <div class="form-preview-card">
+
+                    <span class="form-preview-type-badge">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Richiesta Informazioni
+
+                    </span>
+
+
+                    <h4 class="form-preview-title">
+
+                        Richiedi informazioni
+
+                    </h4>
+
+
+                    <div class="form-preview-description">
+
+                        Compila il modulo per contattarci
+                        e ricevere maggiori informazioni.
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Nome',
+                                'nome',
+                                'Inserisci il nome',
+                                true
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Cognome',
+                                'cognome',
+                                'Inserisci il cognome',
+                                true
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Email',
+                                'email',
+                                'nome@esempio.it',
+                                true,
+                                'email'
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Telefono',
+                                'telefono',
+                                'Numero di telefono',
+                                false,
+                                'tel'
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    ${buildPreviewTextarea(
+                        'Messaggio',
+                        'Scrivi qui la tua richiesta...',
+                        true
+                    )}
+
+
+                    <div class="mt-3">
+
+                        ${buildPreviewCheckbox(
+                            'Accetto la Privacy Policy',
+                            true
+                        )}
+
+                        ${buildPreviewCheckbox(
+                            'Desidero ricevere comunicazioni di marketing',
+                            false
+                        )}
+
+                        ${buildPreviewCheckbox(
+                            'Acconsento alla cessione dei dati a terzi',
+                            false
+                        )}
+
+                    </div>
+
+
+                    <button type="button"
+                            class="btn btn-brand w-100 mt-3">
+
+                        <i class="bi bi-send me-1"></i>
+
+                        Invia richiesta
+
+                    </button>
+
                 </div>
-                ${buildPreviewTextarea('Messaggio', 'Scrivi qui la tua richiesta...', true)}
-                <div class="mt-3">
-                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
-                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
-                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
-                </div>
-                <button type="button" class="btn btn-brand w-100 mt-3">
-                    <i class="bi bi-send me-1"></i> Invia richiesta
-                </button>
-            </div>
-        `;
+            `;
         }
+
 
         function buildOrgInfoPreview() {
+
             return `
-            <div class="form-preview-card">
-                <span class="form-preview-type-badge">
-                    <i class="bi bi-building me-1"></i>
-                    Informazioni per Organizzazioni
-                </span>
-                <h4 class="form-preview-title">Richiedi informazioni per la tua organizzazione</h4>
-                <div class="form-preview-description">Compila il modulo per essere ricontattato in merito a corsi, servizi o soluzioni per organizzazioni.</div>
-                <div class="row g-3">
-                    <div class="col-md-6">${buildPreviewInput('Nome', 'nome', 'Inserisci il nome', true)}</div>
-                    <div class="col-md-6">${buildPreviewInput('Cognome', 'cognome', 'Inserisci il cognome', true)}</div>
-                    <div class="col-md-6">${buildPreviewInput('Organizzazione / Azienda', 'organizzazione', 'Nome dell’organizzazione', true)}</div>
-                    <div class="col-md-6">${buildPreviewInput('Ruolo Aziendale', 'ruolo', 'Es. HR Manager, Responsabile Formazione')}</div>
-                    <div class="col-md-6">${buildPreviewInput('Email', 'email', 'nome@azienda.it', true, 'email')}</div>
-                    <div class="col-md-6">${buildPreviewInput('Telefono', 'telefono', 'Numero di telefono', false, 'tel')}</div>
+                <div class="form-preview-card">
+
+                    <span class="form-preview-type-badge">
+
+                        <i class="bi bi-building me-1"></i>
+
+                        Informazioni per Organizzazioni
+
+                    </span>
+
+
+                    <h4 class="form-preview-title">
+
+                        Richiedi informazioni
+                        per la tua organizzazione
+
+                    </h4>
+
+
+                    <div class="form-preview-description">
+
+                        Compila il modulo per essere
+                        ricontattato in merito a corsi,
+                        servizi o soluzioni per organizzazioni.
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Nome',
+                                'nome',
+                                'Inserisci il nome',
+                                true
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Cognome',
+                                'cognome',
+                                'Inserisci il cognome',
+                                true
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Organizzazione / Azienda',
+                                'organizzazione',
+                                'Nome dell’organizzazione',
+                                true
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Ruolo Aziendale',
+                                'ruolo',
+                                'Es. HR Manager, Responsabile Formazione'
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Email',
+                                'email',
+                                'nome@azienda.it',
+                                true,
+                                'email'
+                            )}
+                        </div>
+
+                        <div class="col-md-6">
+                            ${buildPreviewInput(
+                                'Telefono',
+                                'telefono',
+                                'Numero di telefono',
+                                false,
+                                'tel'
+                            )}
+                        </div>
+
+                    </div>
+
+
+                    ${buildPreviewTextarea(
+                        'Messaggio',
+                        'Descrivi brevemente la tua esigenza...',
+                        true
+                    )}
+
+
+                    <div class="mt-3">
+
+                        ${buildPreviewCheckbox(
+                            'Accetto la Privacy Policy',
+                            true
+                        )}
+
+                        ${buildPreviewCheckbox(
+                            'Desidero ricevere comunicazioni di marketing',
+                            false
+                        )}
+
+                        ${buildPreviewCheckbox(
+                            'Acconsento alla cessione dei dati a terzi',
+                            false
+                        )}
+
+                    </div>
+
+
+                    <button type="button"
+                            class="btn btn-brand w-100 mt-3">
+
+                        <i class="bi bi-send me-1"></i>
+
+                        Invia richiesta
+
+                    </button>
+
                 </div>
-                ${buildPreviewTextarea('Messaggio', 'Descrivi brevemente la tua esigenza...', true)}
-                <div class="mt-3">
-                    ${buildPreviewCheckbox('Accetto la Privacy Policy', true)}
-                    ${buildPreviewCheckbox('Desidero ricevere comunicazioni di marketing', false)}
-                    ${buildPreviewCheckbox('Acconsento alla cessione dei dati a terzi', false)}
-                </div>
-                <button type="button" class="btn btn-brand w-100 mt-3">
-                    <i class="bi bi-send me-1"></i> Invia richiesta
-                </button>
-            </div>
-        `;
+            `;
         }
 
-        function openFormPreview() {
-            const formType = getSelectedFormType();
-            const container = document.getElementById('formPreviewContainer');
 
-            if (!container) return;
+        function openFormPreview() {
+
+            const formType =
+                getSelectedFormType();
+
+
+            const container =
+                document.getElementById(
+                    'formPreviewContainer'
+                );
+
+
+            if (!container) {
+                return;
+            }
+
 
             let content = '';
 
+
             switch (formType) {
+
                 case 'BOOKING':
-                    content = buildBookingPreview();
+                    content =
+                        buildBookingPreview();
                     break;
+
+
                 case 'INFO':
-                    content = buildInfoPreview();
+                    content =
+                        buildInfoPreview();
                     break;
+
+
                 case 'ORG_INFO':
-                    content = buildOrgInfoPreview();
+                    content =
+                        buildOrgInfoPreview();
                     break;
+
+
                 case 'NONE':
                 default:
+
                     content = `
-                    <div class="form-preview-placeholder">
-                        <i class="bi bi-ui-checks"></i>
-                        <div class="fw-bold text-white mb-2">Nessun Form selezionato</div>
-                        <div>Seleziona prima un tipo di form nel menu "Integrazione Form nella Pagina".</div>
-                    </div>
-                `;
+                        <div class="form-preview-placeholder">
+
+                            <i class="bi bi-ui-checks"></i>
+
+                            <div class="fw-bold text-white mb-2">
+                                Nessun Form selezionato
+                            </div>
+
+                            <div>
+                                Seleziona prima un tipo di form
+                                nel menu "Integrazione Form nella Pagina".
+                            </div>
+
+                        </div>
+                    `;
+
                     break;
             }
 
-            container.innerHTML = content;
+
+            container.innerHTML =
+                content;
+
+
             applyDynamicStylesToPreviewContainer();
 
-            const modalElement = document.getElementById('formPreviewModal');
+
+            const modalElement =
+                document.getElementById(
+                    'formPreviewModal'
+                );
+
+
             if (modalElement) {
-                bootstrap.Modal.getOrCreateInstance(modalElement).show();
+
+                bootstrap.Modal
+                    .getOrCreateInstance(
+                        modalElement
+                    )
+                    .show();
             }
         }
 
+
+        /* ============================================================
+           SALVATAGGIO
+           ============================================================ */
+
         function showConfirmModal() {
+
+            /*
+             * TinyMCE -> textarea.
+             */
             if (window.tinymce) {
                 tinymce.triggerSave();
             }
 
-            const pageForm = document.getElementById('pageForm');
 
-            if (!pageForm.checkValidity()) {
-                pageForm.classList.add('was-validated');
-                pageForm.reportValidity();
+            /*
+             * Monaco -> TinyMCE/textarea.
+             */
+            if (
+                typeof syncMonacoToTarget === 'function' &&
+                typeof monacoEditor !== 'undefined' &&
+                monacoEditor
+            ) {
 
-                const warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
-                warningModal.show();
+                syncMonacoToTarget();
+            }
+
+
+            const pageForm =
+                document.getElementById(
+                    'pageForm'
+                );
+
+
+            if (!pageForm) {
                 return;
             }
 
-            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+
+            if (!pageForm.checkValidity()) {
+
+                pageForm.classList.add(
+                    'was-validated'
+                );
+
+
+                pageForm.reportValidity();
+
+
+                const warningModal =
+                    new bootstrap.Modal(
+                        document.getElementById(
+                            'warningModal'
+                        )
+                    );
+
+
+                warningModal.show();
+
+
+                return;
+            }
+
+
+            const modal =
+                new bootstrap.Modal(
+                    document.getElementById(
+                        'confirmModal'
+                    )
+                );
+
+
             modal.show();
         }
 
+
         function submitPageForm() {
-            document.getElementById('pageForm').submit();
+
+            /*
+             * Prima di inviare:
+             * sincronizziamo Monaco e TinyMCE.
+             */
+
+            if (
+                typeof syncMonacoToTarget === 'function' &&
+                typeof monacoEditor !== 'undefined' &&
+                monacoEditor
+            ) {
+
+                syncMonacoToTarget();
+            }
+
+
+            if (window.tinymce) {
+                tinymce.triggerSave();
+            }
+
+
+            document
+                .getElementById('pageForm')
+                .submit();
         }
+
     </script>
 
+
     <!-- ============================================================
-     SCRIPT ANTEPRIMA LIVE IN NUOVA FINESTRA
-     ============================================================ -->
+         ANTEPRIMA LIVE
+         ============================================================ -->
     <script>
+
         let livePreviewWindow = null;
 
+
+        /*
+         * ============================================================
+         * CONTENUTO TINYMCE
+         * ============================================================
+         *
+         * NON utilizziamo tinymce.activeEditor.
+         *
+         * Cerchiamo esplicitamente l'editor associato a contentHtml.
+         */
         function getFormCurrentContent() {
-            if (window.tinymce && tinymce.activeEditor) {
-                return tinymce.activeEditor.getContent();
+
+            const textarea =
+                document.querySelector(
+                    'textarea.wysiwyg-editor'
+                );
+
+
+            if (
+                window.tinymce &&
+                textarea &&
+                textarea.id
+            ) {
+
+                const editor =
+                    tinymce.get(
+                        textarea.id
+                    );
+
+
+                if (editor) {
+
+                    return editor.getContent();
+                }
             }
-            const textarea = document.querySelector('textarea.wysiwyg-editor');
-            return textarea ? textarea.value : '';
+
+
+            return textarea
+                ? textarea.value
+                : '';
         }
+
 
         function buildLivePreviewHtml() {
-            const title = document.getElementById('title')?.value || 'Titolo Pagina';
-            const widthPercent = document.getElementById('widthPercent')?.value || 100;
-            const titleFont = document.getElementById('titleFontSelect')?.value || 'inherit';
-            const titleColor = document.getElementById('titleColorInput')?.value || '#00dc82';
-            const backgroundColor = document.getElementById('backgroundColorInput')?.value || '';
-            const formBgColor = document.getElementById('formBgColorInput')?.value || '#0f172a';
-            const formInputBgColor = document.getElementById('formInputBgColorInput')?.value || '#1e293b';
-            const formTextColor = document.getElementById('formTextColorInput')?.value || '#ffffff';
-            const formPlaceholderColor = document.getElementById('formPlaceholderColorInput')?.value || '#94a3b8';
-            const contentHtml = getFormCurrentContent();
-            const formType = getSelectedFormType();
+
+            const title =
+                document.getElementById(
+                    'title'
+                )?.value ||
+                'Titolo Pagina';
+
+
+            const widthPercent =
+                document.getElementById(
+                    'widthPercent'
+                )?.value ||
+                100;
+
+
+            const titleFont =
+                document.getElementById(
+                    'titleFontSelect'
+                )?.value ||
+                'inherit';
+
+
+            const titleColor =
+                document.getElementById(
+                    'titleColorInput'
+                )?.value ||
+                '#00dc82';
+
+
+            const backgroundColor =
+                document.getElementById(
+                    'backgroundColorInput'
+                )?.value ||
+                '';
+
+
+            const formBgColor =
+                document.getElementById(
+                    'formBgColorInput'
+                )?.value ||
+                '#0f172a';
+
+
+            const formInputBgColor =
+                document.getElementById(
+                    'formInputBgColorInput'
+                )?.value ||
+                '#1e293b';
+
+
+            const formTextColor =
+                document.getElementById(
+                    'formTextColorInput'
+                )?.value ||
+                '#ffffff';
+
+
+            const formPlaceholderColor =
+                document.getElementById(
+                    'formPlaceholderColorInput'
+                )?.value ||
+                '#94a3b8';
+
+
+            const contentHtml =
+                getFormCurrentContent();
+
+
+            const formType =
+                getSelectedFormType();
+
 
             let embeddedFormHtml = '';
-            if (formType === 'BOOKING') embeddedFormHtml = buildBookingPreview();
-            else if (formType === 'INFO') embeddedFormHtml = buildInfoPreview();
-            else if (formType === 'ORG_INFO') embeddedFormHtml = buildOrgInfoPreview();
 
-            const bodyBgStyle = backgroundColor ? `background-color: ${backgroundColor} !important;` : 'background-color: #080c14 !important;';
+
+            if (formType === 'BOOKING') {
+
+                embeddedFormHtml =
+                    buildBookingPreview();
+
+            } else if (formType === 'INFO') {
+
+                embeddedFormHtml =
+                    buildInfoPreview();
+
+            } else if (formType === 'ORG_INFO') {
+
+                embeddedFormHtml =
+                    buildOrgInfoPreview();
+            }
+
+
+            const bodyBgStyle =
+                backgroundColor
+                    ? `background-color:${backgroundColor} !important;`
+                    : 'background-color:#080c14 !important;';
+
 
             return `<!DOCTYPE html>
+
 <html lang="it">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[Anteprima Live] ${escapePreviewHtml(title)}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        [Anteprima Live]
+        ${escapePreviewHtml(title)}
+    </title>
+
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+
+
     <style>
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+
+            font-family:
+                'Plus Jakarta Sans',
+                sans-serif;
+
             color: #f1f5f9;
+
             ${bodyBgStyle}
+
             min-height: 100vh;
+
             margin: 0;
+
             padding: 2rem 1rem;
         }
+
+
         #tech-bg-canvas {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100vw;
+
             height: 100vh;
+
             z-index: -1;
+
             pointer-events: none;
-            display: ${backgroundColor ? 'none' : 'block'};
+
+            display:
+                ${backgroundColor ? 'none' : 'block'};
         }
+
+
         .page-header-title {
-            font-family: ${titleFont};
-            color: ${titleColor};
+
+            font-family:
+                ${titleFont};
+
+            color:
+                ${titleColor};
+
             font-weight: 800;
+
             margin-bottom: 1.5rem;
         }
+
+
         .page-content-wrapper {
+
             margin: 0 auto;
-            width: ${widthPercent}%;
-            transition: width 0.2s ease;
+
+            width:
+                ${widthPercent}%;
+
+            transition:
+                width 0.2s ease;
         }
+
+
         .live-badge {
+
             position: fixed;
+
             top: 15px;
+
             right: 15px;
-            background: rgba(0, 220, 130, 0.2);
-            border: 1px solid #00dc82;
-            color: #00dc82;
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            z-index: 9999;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+
+            background:
+                rgba(0, 220, 130, 0.2);
+
+            border:
+                1px solid #00dc82;
+
+            color:
+                #00dc82;
+
+            padding:
+                6px 14px;
+
+            border-radius:
+                50px;
+
+            font-size:
+                0.85rem;
+
+            font-weight:
+                700;
+
+            z-index:
+                9999;
+
+            backdrop-filter:
+                blur(8px);
+
+            box-shadow:
+                0 4px 12px rgba(0,0,0,0.5);
         }
+
+
         .form-preview-card {
-            background-color: ${formBgColor} !important;
-            border: 1px solid #1e293b;
-            border-radius: 0.85rem;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+            background-color:
+                ${formBgColor} !important;
+
+            border:
+                1px solid #1e293b;
+
+            border-radius:
+                0.85rem;
+
+            padding:
+                1.5rem;
+
+            margin-top:
+                2rem;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.35);
         }
-        .form-preview-card, .form-preview-card .form-label, .form-preview-card .form-check-label, .form-preview-card h4, .form-preview-card .text-white {
-            color: ${formTextColor} !important;
+
+
+        .form-preview-card,
+        .form-preview-card .form-label,
+        .form-preview-card .form-check-label,
+        .form-preview-card h4,
+        .form-preview-card .text-white {
+
+            color:
+                ${formTextColor} !important;
         }
-        .form-preview-card .form-control, .form-preview-card .form-select {
-            background-color: ${formInputBgColor} !important;
-            border-color: #334155 !important;
-            color: ${formTextColor} !important;
+
+
+        .form-preview-card .form-control,
+        .form-preview-card .form-select {
+
+            background-color:
+                ${formInputBgColor} !important;
+
+            border-color:
+                #334155 !important;
+
+            color:
+                ${formTextColor} !important;
         }
-        .form-preview-card .form-control::placeholder {
-            color: ${formPlaceholderColor} !important;
-            opacity: 1 !important;
+
+
+        .form-preview-card
+        .form-control::placeholder {
+
+            color:
+                ${formPlaceholderColor} !important;
+
+            opacity:
+                1 !important;
         }
+
+
         .form-preview-type-badge {
-            display: inline-block;
-            padding: 0.35rem 0.65rem;
-            border-radius: 999px;
-            background: rgba(0, 220, 130, 0.12);
-            border: 1px solid rgba(0, 220, 130, 0.3);
-            color: #00dc82;
-            font-size: 0.78rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+
+            display:
+                inline-block;
+
+            padding:
+                0.35rem 0.65rem;
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(0, 220, 130, 0.12);
+
+            border:
+                1px solid rgba(0, 220, 130, 0.3);
+
+            color:
+                #00dc82;
+
+            font-size:
+                0.78rem;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                1rem;
         }
+
+
         .btn-brand {
-            background: linear-gradient(135deg, #00dc82 0%, #00b368 100%);
-            color: #0f172a;
-            font-weight: 700;
-            border: none;
-            border-radius: 0.5rem;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00dc82 0%,
+                    #00b368 100%
+                );
+
+            color:
+                #0f172a;
+
+            font-weight:
+                700;
+
+            border:
+                none;
+
+            border-radius:
+                0.5rem;
         }
+
     </style>
+
 </head>
+
+
 <body>
-    <div class="live-badge"><i class="bi bi-circle-fill text-danger me-1 fs-6"></i> Anteprima Live</div>
+
+    <div class="live-badge">
+
+        <i class="bi bi-circle-fill text-danger me-1 fs-6"></i>
+
+        Anteprima Live
+
+    </div>
+
+
     <canvas id="tech-bg-canvas"></canvas>
 
+
     <main class="page-content-wrapper">
-        <h1 class="page-header-title display-4">${escapePreviewHtml(title)}</h1>
-        <div id="live-body-content">${contentHtml}</div>
-        <div id="live-form-content">${embeddedFormHtml}</div>
+
+        <h1 class="page-header-title display-4">
+
+            ${escapePreviewHtml(title)}
+
+        </h1>
+
+
+        <div id="live-body-content">
+
+            ${contentHtml}
+
+        </div>
+
+
+        <div id="live-form-content">
+
+            ${embeddedFormHtml}
+
+        </div>
+
     </main>
 
+
     <script>
-        const canvas = document.getElementById('tech-bg-canvas');
+
+        const canvas =
+            document.getElementById(
+                'tech-bg-canvas'
+            );
+
+
         if (canvas) {
-            const ctx = canvas.getContext('2d');
-            let w = canvas.width = window.innerWidth;
-            let h = canvas.height = window.innerHeight;
-            window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+
+            const ctx =
+                canvas.getContext('2d');
+
+
+            let w =
+                canvas.width =
+                    window.innerWidth;
+
+
+            let h =
+                canvas.height =
+                    window.innerHeight;
+
+
+            window.addEventListener(
+                'resize',
+                () => {
+
+                    w =
+                        canvas.width =
+                            window.innerWidth;
+
+                    h =
+                        canvas.height =
+                            window.innerHeight;
+                }
+            );
+
 
             class Circuit {
-                constructor() { this.reset(); }
-                reset() {
-                    this.x = Math.random() * w;
-                    this.y = Math.random() * h;
-                    this.length = Math.floor(Math.random() * 8) + 4;
-                    this.currentStep = 0;
-                    this.dir = Math.floor(Math.random() * 4);
-                    this.path = [{ x: this.x, y: this.y }];
-                    this.alpha = Math.random() * 0.4 + 0.1;
-                    this.size = 20;
+
+                constructor() {
+                    this.reset();
                 }
-                update() {
-                    if (this.currentStep < this.length) {
-                        let last = this.path[this.path.length - 1];
-                        let nx = last.x, ny = last.y;
-                        if (Math.random() < 0.3) this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
-                        switch (this.dir) {
-                            case 0: ny -= this.size; break;
-                            case 1: nx += this.size; break;
-                            case 2: ny += this.size; break;
-                            case 3: nx -= this.size; break;
+
+
+                reset() {
+
+                    this.x =
+                        Math.random() * w;
+
+                    this.y =
+                        Math.random() * h;
+
+                    this.length =
+                        Math.floor(
+                            Math.random() * 8
+                        ) + 4;
+
+                    this.currentStep =
+                        0;
+
+                    this.dir =
+                        Math.floor(
+                            Math.random() * 4
+                        );
+
+                    this.path = [
+                        {
+                            x: this.x,
+                            y: this.y
                         }
-                        this.path.push({ x: nx, y: ny });
+                    ];
+
+                    this.alpha =
+                        Math.random() * 0.4 + 0.1;
+
+                    this.size =
+                        20;
+                }
+
+
+                update() {
+
+                    if (
+                        this.currentStep <
+                        this.length
+                    ) {
+
+                        let last =
+                            this.path[
+                                this.path.length - 1
+                            ];
+
+
+                        let nx =
+                            last.x;
+
+                        let ny =
+                            last.y;
+
+
+                        if (
+                            Math.random() < 0.3
+                        ) {
+
+                            this.dir =
+                                (
+                                    this.dir +
+                                    (
+                                        Math.random() < 0.5
+                                            ? 1
+                                            : 3
+                                    )
+                                ) % 4;
+                        }
+
+
+                        switch (this.dir) {
+
+                            case 0:
+                                ny -= this.size;
+                                break;
+
+                            case 1:
+                                nx += this.size;
+                                break;
+
+                            case 2:
+                                ny += this.size;
+                                break;
+
+                            case 3:
+                                nx -= this.size;
+                                break;
+                        }
+
+
+                        this.path.push({
+                            x: nx,
+                            y: ny
+                        });
+
+
                         this.currentStep++;
+
                     } else {
-                        this.alpha -= 0.005;
-                        if (this.alpha <= 0) this.reset();
+
+                        this.alpha -=
+                            0.005;
+
+
+                        if (
+                            this.alpha <= 0
+                        ) {
+
+                            this.reset();
+                        }
                     }
                 }
+
+
                 draw() {
-                    if (this.path.length < 2) return;
+
+                    if (
+                        this.path.length < 2
+                    ) {
+                        return;
+                    }
+
+
                     ctx.beginPath();
-                    ctx.moveTo(this.path[0].x, this.path[0].y);
-                    for (let i = 1; i < this.path.length; i++) ctx.lineTo(this.path[i].x, this.path[i].y);
-                    ctx.strokeStyle = 'rgba(0, 220, 130, ' + this.alpha + ')';
-                    ctx.lineWidth = 1.5;
+
+
+                    ctx.moveTo(
+                        this.path[0].x,
+                        this.path[0].y
+                    );
+
+
+                    for (
+                        let i = 1;
+                        i < this.path.length;
+                        i++
+                    ) {
+
+                        ctx.lineTo(
+                            this.path[i].x,
+                            this.path[i].y
+                        );
+                    }
+
+
+                    ctx.strokeStyle =
+                        'rgba(0,220,130,' +
+                        this.alpha +
+                        ')';
+
+
+                    ctx.lineWidth =
+                        1.5;
+
+
                     ctx.stroke();
                 }
             }
-            const circuits = Array.from({ length: 15 }, () => new Circuit());
+
+
+            const circuits =
+                Array.from(
+                    { length: 15 },
+                    () => new Circuit()
+                );
+
+
             function animate() {
-                ctx.clearRect(0, 0, w, h);
-                circuits.forEach(c => { c.update(); c.draw(); });
-                requestAnimationFrame(animate);
+
+                ctx.clearRect(
+                    0,
+                    0,
+                    w,
+                    h
+                );
+
+
+                circuits.forEach(
+                    c => {
+
+                        c.update();
+                        c.draw();
+
+                    }
+                );
+
+
+                requestAnimationFrame(
+                    animate
+                );
             }
+
+
             animate();
         }
+
     <\/script>
+
 </body>
+
 </html>`;
         }
 
+
+        /*
+         * ============================================================
+         * AGGIORNAMENTO ANTEPRIMA LIVE
+         * ============================================================
+         */
         function triggerLivePreviewUpdate() {
-            if (livePreviewWindow && !livePreviewWindow.closed) {
-                const doc = livePreviewWindow.document;
+
+            if (
+                livePreviewWindow &&
+                !livePreviewWindow.closed
+            ) {
+
+                const doc =
+                    livePreviewWindow.document;
+
+
                 doc.open();
-                doc.write(buildLivePreviewHtml());
+
+                doc.write(
+                    buildLivePreviewHtml()
+                );
+
                 doc.close();
             }
         }
 
+
+        /*
+         * ============================================================
+         * APERTURA ANTEPRIMA LIVE
+         * ============================================================
+         */
         function openLivePagePreview() {
-            if (window.tinymce && tinymce.activeEditor) {
+
+            /*
+             * TinyMCE -> textarea.
+             */
+            if (window.tinymce) {
                 tinymce.triggerSave();
             }
 
-            if (!livePreviewWindow || livePreviewWindow.closed) {
-                livePreviewWindow = window.open('', 'LivePagePreviewWindow', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+
+            /*
+             * Monaco -> target.
+             */
+            if (
+                typeof syncMonacoToTarget === 'function' &&
+                typeof monacoEditor !== 'undefined' &&
+                monacoEditor
+            ) {
+
+                syncMonacoToTarget();
             }
 
+
+            if (
+                !livePreviewWindow ||
+                livePreviewWindow.closed
+            ) {
+
+                livePreviewWindow =
+                    window.open(
+                        '',
+                        'LivePagePreviewWindow',
+                        'width=1200,height=800,scrollbars=yes,resizable=yes'
+                    );
+            }
+
+
+            if (!livePreviewWindow) {
+
+                alert(
+                    'Il browser ha bloccato la finestra di anteprima. Abilita i popup per questo sito.'
+                );
+
+                return;
+            }
+
+
             triggerLivePreviewUpdate();
+
+
             livePreviewWindow.focus();
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const pageForm = document.getElementById('pageForm');
-            if (pageForm) {
-                pageForm.addEventListener('input', triggerLivePreviewUpdate);
-                pageForm.addEventListener('change', triggerLivePreviewUpdate);
-            }
 
-            if (window.tinymce) {
-                setTimeout(() => {
-                    const editor = tinymce.activeEditor;
-                    if (editor) {
-                        editor.on('keyup change NodeChange Undo Redo', function () {
+        /*
+         * ============================================================
+         * LISTENER FORM
+         * ============================================================
+         */
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const pageForm =
+                    document.getElementById(
+                        'pageForm'
+                    );
+
+
+                if (pageForm) {
+
+                    pageForm.addEventListener(
+                        'input',
+                        function () {
+
                             triggerLivePreviewUpdate();
-                        });
-                    }
-                }, 1000);
+                        }
+                    );
+
+
+                    pageForm.addEventListener(
+                        'change',
+                        function () {
+
+                            triggerLivePreviewUpdate();
+                        }
+                    );
+                }
+
+
+                /*
+                 * Impostazione iniziale form.
+                 */
+                toggleCourseForm();
+
+
+                /*
+                 * TinyMCE.
+                 *
+                 * Cerchiamo l'editor specifico contentHtml,
+                 * non tinymce.activeEditor.
+                 */
+                setTimeout(
+                    function () {
+
+                        if (!window.tinymce) {
+                            return;
+                        }
+
+
+                        const editor =
+                            tinymce.get(
+                                'contentHtml'
+                            );
+
+
+                        if (!editor) {
+                            return;
+                        }
+
+
+                        editor.on(
+                            'keyup change NodeChange Undo Redo',
+                            function () {
+
+                                triggerLivePreviewUpdate();
+                            }
+                        );
+
+                    },
+                    1200
+                );
+
             }
-        });
+        );
+
     </script>
 
-    <!-- SCRIPT ANIMAZIONE SFONDO FORM -->
+
+    <!-- ============================================================
+         ANIMAZIONE SFONDO PAGINA ADMIN
+         ============================================================ -->
     <script>
-        const canvas = document.getElementById('tech-bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+        const adminCanvas =
+            document.getElementById(
+                'tech-bg-canvas'
+            );
+
+
+        const adminCtx =
+            adminCanvas.getContext('2d');
+
+
+        let width;
+        let height;
+
+
+        function resizeAdminCanvas() {
+
+            width =
+                adminCanvas.width =
+                    window.innerWidth;
+
+
+            height =
+                adminCanvas.height =
+                    window.innerHeight;
         }
 
-        window.addEventListener('resize', resize);
-        resize();
 
-        class Circuit {
-            constructor() { this.reset(); }
+        window.addEventListener(
+            'resize',
+            resizeAdminCanvas
+        );
+
+
+        resizeAdminCanvas();
+
+
+        class AdminCircuit {
+
+            constructor() {
+                this.reset();
+            }
+
+
             reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.length = Math.floor(Math.random() * 8) + 4;
-                this.currentStep = 0;
-                this.dir = Math.floor(Math.random() * 4);
-                this.path = [{ x: this.x, y: this.y }];
-                this.speed = Math.random() * 1.5 + 0.5;
-                this.alpha = Math.random() * 0.4 + 0.1;
-                this.size = 20;
+
+                this.x =
+                    Math.random() * width;
+
+                this.y =
+                    Math.random() * height;
+
+                this.length =
+                    Math.floor(
+                        Math.random() * 8
+                    ) + 4;
+
+                this.currentStep =
+                    0;
+
+                this.dir =
+                    Math.floor(
+                        Math.random() * 4
+                    );
+
+                this.path = [
+                    {
+                        x: this.x,
+                        y: this.y
+                    }
+                ];
+
+                this.speed =
+                    Math.random() * 1.5 + 0.5;
+
+                this.alpha =
+                    Math.random() * 0.4 + 0.1;
+
+                this.size =
+                    20;
             }
+
+
             update() {
-                if (this.currentStep < this.length) {
-                    let last = this.path[this.path.length - 1];
-                    let nx = last.x, ny = last.y;
-                    if (Math.random() < 0.3) {
-                        this.dir = (this.dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
+
+                if (
+                    this.currentStep <
+                    this.length
+                ) {
+
+                    let last =
+                        this.path[
+                            this.path.length - 1
+                        ];
+
+
+                    let nx =
+                        last.x;
+
+                    let ny =
+                        last.y;
+
+
+                    if (
+                        Math.random() < 0.3
+                    ) {
+
+                        this.dir =
+                            (
+                                this.dir +
+                                (
+                                    Math.random() < 0.5
+                                        ? 1
+                                        : 3
+                                )
+                            ) % 4;
                     }
+
+
                     switch (this.dir) {
-                        case 0: ny -= this.size; break;
-                        case 1: nx += this.size; break;
-                        case 2: ny += this.size; break;
-                        case 3: nx -= this.size; break;
+
+                        case 0:
+                            ny -= this.size;
+                            break;
+
+                        case 1:
+                            nx += this.size;
+                            break;
+
+                        case 2:
+                            ny += this.size;
+                            break;
+
+                        case 3:
+                            nx -= this.size;
+                            break;
                     }
-                    this.path.push({ x: nx, y: ny });
+
+
+                    this.path.push({
+                        x: nx,
+                        y: ny
+                    });
+
+
                     this.currentStep++;
+
                 } else {
-                    this.alpha -= 0.005;
-                    if (this.alpha <= 0) this.reset();
+
+                    this.alpha -=
+                        0.005;
+
+
+                    if (
+                        this.alpha <= 0
+                    ) {
+
+                        this.reset();
+                    }
                 }
             }
+
+
             draw() {
-                if (this.path.length < 2) return;
-                ctx.beginPath();
-                ctx.moveTo(this.path[0].x, this.path[0].y);
-                for (let i = 1; i < this.path.length; i++) {
-                    ctx.lineTo(this.path[i].x, this.path[i].y);
+
+                if (
+                    this.path.length < 2
+                ) {
+                    return;
                 }
-                ctx.strokeStyle = `rgba(0, 220, 130, ${this.alpha})`;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-                let last = this.path[this.path.length - 1];
-                ctx.beginPath();
-                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(54, 228, 218, ${this.alpha + 0.2})`;
-                ctx.fill();
+
+
+                adminCtx.beginPath();
+
+
+                adminCtx.moveTo(
+                    this.path[0].x,
+                    this.path[0].y
+                );
+
+
+                for (
+                    let i = 1;
+                    i < this.path.length;
+                    i++
+                ) {
+
+                    adminCtx.lineTo(
+                        this.path[i].x,
+                        this.path[i].y
+                    );
+                }
+
+
+                adminCtx.strokeStyle =
+                    `rgba(0,220,130,${this.alpha})`;
+
+
+                adminCtx.lineWidth =
+                    1.5;
+
+
+                adminCtx.stroke();
+
+
+                let last =
+                    this.path[
+                        this.path.length - 1
+                    ];
+
+
+                adminCtx.beginPath();
+
+
+                adminCtx.arc(
+                    last.x,
+                    last.y,
+                    3,
+                    0,
+                    Math.PI * 2
+                );
+
+
+                adminCtx.fillStyle =
+                    `rgba(54,228,218,${this.alpha + 0.2})`;
+
+
+                adminCtx.fill();
             }
         }
+
 
         const codeSnippets = [
-            "class BlockManager {}", "import spring.boot.*;", "<div class='eco'>",
-            "SELECT * FROM blocks;", "const init = () => {};", "return new PageBlock();",
-            "01000101 01000011 01001111", "public static void main()", "async fetch('/api')",
-            "npm run build", "docker-compose up -d", "mvn clean install"
+
+            "class BlockManager {}",
+
+            "import spring.boot.*;",
+
+            "<div class='eco'>",
+
+            "SELECT * FROM blocks;",
+
+            "const init = () => {};",
+
+            "return new PageBlock();",
+
+            "01000101 01000011 01001111",
+
+            "public static void main()",
+
+            "async fetch('/api')",
+
+            "npm run build",
+
+            "docker-compose up -d",
+
+            "mvn clean install"
+
         ];
 
+
         class CodeText {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * (width - 200);
-                this.y = Math.random() * height;
-                this.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-                this.alpha = 0;
-                this.maxAlpha = Math.random() * 0.3 + 0.1;
-                this.fadeIn = true;
-                this.speed = Math.random() * 0.3 + 0.1;
+
+            constructor() {
+                this.reset();
             }
+
+
+            reset() {
+
+                this.x =
+                    Math.random() *
+                    Math.max(
+                        100,
+                        width - 200
+                    );
+
+
+                this.y =
+                    Math.random() *
+                    height;
+
+
+                this.text =
+                    codeSnippets[
+                        Math.floor(
+                            Math.random() *
+                            codeSnippets.length
+                        )
+                    ];
+
+
+                this.alpha =
+                    0;
+
+
+                this.maxAlpha =
+                    Math.random() *
+                    0.3 +
+                    0.1;
+
+
+                this.fadeIn =
+                    true;
+
+
+                this.speed =
+                    Math.random() *
+                    0.3 +
+                    0.1;
+            }
+
+
             update() {
-                this.y -= this.speed;
+
+                this.y -=
+                    this.speed;
+
+
                 if (this.fadeIn) {
-                    this.alpha += 0.008;
-                    if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+
+                    this.alpha +=
+                        0.008;
+
+
+                    if (
+                        this.alpha >=
+                        this.maxAlpha
+                    ) {
+
+                        this.fadeIn =
+                            false;
+                    }
+
                 } else {
-                    this.alpha -= 0.005;
-                    if (this.alpha <= 0) this.reset();
+
+                    this.alpha -=
+                        0.005;
+
+
+                    if (
+                        this.alpha <= 0
+                    ) {
+
+                        this.reset();
+                    }
                 }
             }
+
+
             draw() {
-                ctx.font = '12px "Fira Code", monospace';
-                ctx.fillStyle = `rgba(0, 220, 130, ${this.alpha})`;
-                ctx.fillText(this.text, this.x, this.y);
+
+                adminCtx.font =
+                    '12px "Fira Code", monospace';
+
+
+                adminCtx.fillStyle =
+                    `rgba(0,220,130,${this.alpha})`;
+
+
+                adminCtx.fillText(
+                    this.text,
+                    this.x,
+                    this.y
+                );
             }
         }
 
-        const circuits = Array.from({ length: 18 }, () => new Circuit());
-        const codeTexts = Array.from({ length: 12 }, () => new CodeText());
 
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            circuits.forEach(c => { c.update(); c.draw(); });
-            codeTexts.forEach(ct => { ct.update(); ct.draw(); });
-            requestAnimationFrame(animate);
+        const adminCircuits =
+            Array.from(
+                { length: 18 },
+                () => new AdminCircuit()
+            );
+
+
+        const codeTexts =
+            Array.from(
+                { length: 12 },
+                () => new CodeText()
+            );
+
+
+        function animateAdminBackground() {
+
+            adminCtx.clearRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            adminCircuits.forEach(
+                circuit => {
+
+                    circuit.update();
+                    circuit.draw();
+
+                }
+            );
+
+
+            codeTexts.forEach(
+                codeText => {
+
+                    codeText.update();
+                    codeText.draw();
+
+                }
+            );
+
+
+            requestAnimationFrame(
+                animateAdminBackground
+            );
         }
-        animate();
+
+
+        animateAdminBackground();
+
     </script>
+
 </body>
+
 </html>

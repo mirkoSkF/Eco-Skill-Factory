@@ -431,6 +431,9 @@
              */
             let monacoTargetId = null;
 
+            /* Linguaggio del documento attualmente aperto in Monaco. */
+            let monacoTargetLanguage = 'html';
+
 
             /*
              * Dimensione iniziale del font.
@@ -466,6 +469,10 @@
 
                 monacoTargetId = targetId;
 
+                monacoTargetLanguage =
+                    button?.dataset?.targetLanguage
+                    || 'html';
+
                 const modalElement =
                     document.getElementById(
                         'monacoEditorModal'
@@ -491,6 +498,16 @@
                     bootstrap.Modal.getOrCreateInstance(
                         modalElement
                     );
+
+                const modalTitle =
+                    modalElement.querySelector('.modal-title');
+
+                if (modalTitle) {
+                    modalTitle.innerHTML =
+                        monacoTargetLanguage === 'css'
+                            ? '<i class="bi bi-filetype-css text-info me-2"></i>Editor CSS Avanzato'
+                            : '<i class="bi bi-code-square text-info me-2"></i>Monaco Code Editor <small class="text-muted fs-6 ms-2">(Emmet abilitato - Premi TAB)</small>';
+                }
 
                 modal.show();
 
@@ -824,7 +841,7 @@
                                     initialContent,
 
                                 language:
-                                    'html',
+                                    monacoTargetLanguage,
 
                                 theme:
                                     'vs-dark',
@@ -954,6 +971,18 @@
                      * il textarea/TinyMCE senza salvare ancora
                      * definitivamente il contenuto.
                      */
+                    /*
+                     * Impostiamo esplicitamente il linguaggio del model
+                     * anche alla prima apertura.
+                     */
+                    if (monacoEditor.getModel()) {
+                        monaco.editor.setModelLanguage(
+                            monacoEditor.getModel(),
+                            monacoTargetLanguage
+                        );
+                    }
+
+
                     monacoEditor.onDidChangeModelContent(
                         function () {
 
@@ -989,13 +1018,23 @@
                     const model =
                         monacoEditor.getModel();
 
-                    if (
-                        model
-                        && model.getValue() !== currentContent
-                    ) {
+                    if (model) {
 
-                        model.setValue(
-                            currentContent
+                        if (model.getValue() !== currentContent) {
+
+                            model.setValue(
+                                currentContent
+                            );
+                        }
+
+                        /*
+                         * Lo stesso editor Monaco viene riutilizzato sia
+                         * per HTML sia per CSS. Cambiamo quindi il
+                         * linguaggio del model in base al campo aperto.
+                         */
+                        monaco.editor.setModelLanguage(
+                            model,
+                            monacoTargetLanguage
                         );
                     }
                 }

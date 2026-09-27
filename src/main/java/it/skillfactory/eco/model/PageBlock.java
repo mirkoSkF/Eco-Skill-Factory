@@ -65,44 +65,34 @@ public class PageBlock {
     @Column(name = "card_image_height")
     private String cardImageHeight = "280px";
 
-    // Larghezza massima singola card in px (opzionale)
-    @Column(name = "card_max_width")
-    private Integer cardMaxWidth;
-
     // Altezza slide per Carosello Standard (Hero)
     @Column(name = "carousel_slide_height")
     private String carouselSlideHeight = "500px";
-
-    // Larghezza massima blocco carosello in px (opzionale)
-    @Column(name = "carousel_max_width")
-    private Integer carouselMaxWidth;
 
     // Larghezza singola slide per Carosello Multi-Immagine (in px)
     @Column(name = "multi_item_width")
     private Integer multiItemWidth = 390;
 
-    // Altezza singola slide per Carosello Multi-Immagine (in px, opzionale)
-    @Column(name = "multi_item_height")
-    private Integer multiItemHeight;
+    // ============================================================
+    // NUOVE PERSONALIZZAZIONI GRAFICHE
+    // ============================================================
 
-    // ============================================================
-    // BORDO RIGA / BLOCCO
-    // ============================================================
+    // Stile del bordo dell'intera riga/blocco
     // NONE, THIN_SOLID, MEDIUM_SOLID, THICK_SOLID, DASHED, DOTTED
     @Column(name = "border_style")
     private String borderStyle = "NONE";
 
+    // Colore del bordo della riga/blocco.
     @Column(name = "border_color")
-    private String borderColor = "#334155"; // Default dark/slate
+    private String borderColor = "#334155";
 
-    // ============================================================
-    // PERSONALIZZAZIONI GRAFICHE CARD E CAROSELLO
-    // ============================================================
-    // Stile spigoli Card: ROUNDED, SQUARED, TOP_ROUNDED
+    // Stile spigoli Card:
+    // ROUNDED, SQUARED, TOP_ROUNDED
     @Column(name = "card_radius_style")
     private String cardRadiusStyle = "ROUNDED";
 
-    // Stile spigoli Carosello Standard: ROUNDED, SQUARED
+    // Stile spigoli Carosello Standard:
+    // ROUNDED, SQUARED
     @Column(name = "carousel_radius_style")
     private String carouselRadiusStyle = "ROUNDED";
 
@@ -114,23 +104,21 @@ public class PageBlock {
     @Column(name = "button_text_color")
     private String buttonTextColor = "#0f172a";
 
-    // Stile spigoli del pulsante: ROUNDED, SQUARED
+    // Stile spigoli del pulsante:
+    // ROUNDED, SQUARED
     @Column(name = "button_radius_style")
     private String buttonRadiusStyle = "ROUNDED";
 
+    // CSS personalizzato associato esclusivamente a questo blocco.
+    @Lob
+    @Column(name = "custom_css", columnDefinition = "LONGTEXT")
+    private String customCss;
 
-    // ============================================================
-    // COSTRUTTORI
-    // ============================================================
-    public PageBlock() {}
 
-
-    // ============================================================
-    // GETTER E SETTER CON FALLBACK
-    // ============================================================
+    // --- GETTER E SETTER CON FALLBACK ---
 
     public Integer getCardsPerRow() {
-        return (cardsPerRow != null && cardsPerRow >= 1 && cardsPerRow <= 6) ? cardsPerRow : 3;
+        return cardsPerRow != null && cardsPerRow > 0 ? cardsPerRow : 3;
     }
 
     public void setCardsPerRow(Integer cardsPerRow) {
@@ -138,51 +126,27 @@ public class PageBlock {
     }
 
     public String getCardImageHeight() {
-        return (cardImageHeight != null && !cardImageHeight.isBlank()) ? cardImageHeight : "280px";
+        return cardImageHeight != null && !cardImageHeight.isBlank() ? cardImageHeight : "280px";
     }
 
     public void setCardImageHeight(String cardImageHeight) {
         this.cardImageHeight = cardImageHeight;
     }
 
-    public Integer getCardMaxWidth() {
-        return cardMaxWidth;
-    }
-
-    public void setCardMaxWidth(Integer cardMaxWidth) {
-        this.cardMaxWidth = cardMaxWidth;
-    }
-
     public String getCarouselSlideHeight() {
-        return (carouselSlideHeight != null && !carouselSlideHeight.isBlank()) ? carouselSlideHeight : "500px";
+        return carouselSlideHeight != null && !carouselSlideHeight.isBlank() ? carouselSlideHeight : "500px";
     }
 
     public void setCarouselSlideHeight(String carouselSlideHeight) {
         this.carouselSlideHeight = carouselSlideHeight;
     }
 
-    public Integer getCarouselMaxWidth() {
-        return carouselMaxWidth;
-    }
-
-    public void setCarouselMaxWidth(Integer carouselMaxWidth) {
-        this.carouselMaxWidth = carouselMaxWidth;
-    }
-
     public Integer getMultiItemWidth() {
-        return (multiItemWidth != null && multiItemWidth >= 100) ? multiItemWidth : 390;
+        return multiItemWidth != null && multiItemWidth > 0 ? multiItemWidth : 390;
     }
 
     public void setMultiItemWidth(Integer multiItemWidth) {
         this.multiItemWidth = multiItemWidth;
-    }
-
-    public Integer getMultiItemHeight() {
-        return multiItemHeight;
-    }
-
-    public void setMultiItemHeight(Integer multiItemHeight) {
-        this.multiItemHeight = multiItemHeight;
     }
 
     public String getBorderStyle() {
@@ -194,11 +158,29 @@ public class PageBlock {
     }
 
     public String getBorderColor() {
-        return borderColor != null && !borderColor.isBlank() ? borderColor : "#334155";
+        return borderColor != null && !borderColor.isBlank()
+                ? borderColor
+                : "#334155";
     }
 
     public void setBorderColor(String borderColor) {
         this.borderColor = borderColor;
+    }
+
+    /**
+     * Valore CSS completo del bordo, usato dal template pubblico.
+     */
+    public String getBorderCssValue() {
+        String color = getBorderColor();
+
+        return switch (getBorderStyle()) {
+            case "THIN_SOLID" -> "1px solid " + color;
+            case "MEDIUM_SOLID" -> "2px solid " + color;
+            case "THICK_SOLID" -> "4px solid " + color;
+            case "DASHED" -> "2px dashed " + color;
+            case "DOTTED" -> "2px dotted " + color;
+            default -> "none";
+        };
     }
 
     public String getCardRadiusStyle() {
@@ -247,33 +229,25 @@ public class PageBlock {
         this.buttonRadiusStyle = buttonRadiusStyle;
     }
 
-    // ============================================================
-    // METODI HELPER PER IL RENDERING CSS IN THYMELEAF
-    // ============================================================
-
-    public String getBorderCssValue() {
-        if (this.borderStyle == null || "NONE".equalsIgnoreCase(this.borderStyle)) {
-            return "none";
-        }
-        String color = getBorderColor();
-        return switch (this.borderStyle) {
-            case "THIN_SOLID"   -> "1px solid " + color;
-            case "MEDIUM_SOLID" -> "2px solid " + color;
-            case "THICK_SOLID"  -> "4px solid " + color;
-            case "DASHED"       -> "2px dashed " + color;
-            case "DOTTED"       -> "2px dotted " + color;
-            default             -> "none";
-        };
-    }
-
+    /**
+     * Valore CSS del raggio del pulsante, usato dal template pubblico.
+     */
     public String getButtonRadiusCssValue() {
-        return "SQUARED".equalsIgnoreCase(this.buttonRadiusStyle) ? "0" : "999px";
+        return "SQUARED".equals(getButtonRadiusStyle()) ? "0" : "999px";
     }
 
-    // ============================================================
-    // GETTER E SETTER STANDARD
-    // ============================================================
+    public String getCustomCss() {
+        return customCss != null ? customCss : "";
+    }
 
+    public void setCustomCss(String customCss) {
+        this.customCss = customCss;
+    }
+
+
+    public PageBlock() {}
+
+    // GETTER E SETTER
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

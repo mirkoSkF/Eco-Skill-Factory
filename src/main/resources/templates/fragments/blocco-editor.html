@@ -339,7 +339,62 @@
                 </div>
             </div>
 
-            <!-- SEZIONE 4: IMMAGINE PRINCIPALE JUMBO -->
+            <!-- SEZIONE 4: PERSONALIZZAZIONE AVANZATA CSS -->
+            <div class="accordion-item card mb-3">
+                <h2 class="accordion-header" id="headingCustomCss">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseCustomCss" aria-expanded="false" aria-controls="collapseCustomCss">
+                        <i class="bi bi-code-slash me-2 text-info"></i> Personalizzazione Avanzata CSS
+                    </button>
+                </h2>
+                <div id="collapseCustomCss" class="accordion-collapse collapse" aria-labelledby="headingCustomCss">
+                    <div class="accordion-body p-3">
+                        <div class="p-2 rounded mb-3" style="background: rgba(0,220,130,.06); border:1px solid rgba(0,220,130,.20);">
+                            <div class="small text-light mb-2">
+                                <i class="bi bi-shield-check text-success me-1"></i>
+                                <strong>CSS isolato per questa riga</strong>
+                            </div>
+                            <div class="small text-muted">
+                                Scrivi normale CSS: nell'anteprima e nella pagina pubblica verrà applicato esclusivamente all'interno di questo blocco.
+                            </div>
+                        </div>
+
+                        <div class="monaco-modal-editor-button">
+                            <button type="button"
+                                class="btn btn-sm btn-outline-info monaco-open-button w-100 mb-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#monacoEditorModal"
+                                data-target-id="customCss"
+                                data-target-language="css"
+                                onclick="openMonacoFromButton(this)">
+                                <i class="bi bi-code-square me-1"></i> Apri Editor CSS Avanzato (Monaco)
+                            </button>
+                        </div>
+
+                        <textarea id="customCss"
+                            class="form-control font-monospace"
+                            th:field="*{customCss}"
+                            rows="12"
+                            spellcheck="false"
+                            oninput="renderRowPreviewIfOpen()"
+                            placeholder="Esempio:
+.my-titolo {
+    letter-spacing: 2px;
+}
+
+.card-custom {
+    border-radius: 0;
+}"></textarea>
+
+                        <div class="small text-muted mt-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Sono consigliati selettori relativi al contenuto del blocco, ad esempio <code>h2</code>, <code>.card-custom</code>, <code>img</code> o una tua classe personalizzata.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEZIONE 5: IMMAGINE PRINCIPALE JUMBO -->
             <div id="mainImageUpload" class="card p-3 mb-3"
                 th:style="${block.blockType != null and (block.blockType.name() == 'JUMBO_DEMO_1' or block.blockType.name() == 'JUMBO_DEMO_2')} ? '' : 'display:none;'">
                 <label class="form-label fw-bold text-success small"><i class="bi bi-upload me-1"></i>

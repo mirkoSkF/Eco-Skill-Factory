@@ -251,153 +251,36 @@ public class AdminController {
                 formBlock.getBlockType()
         );
 
-        // Tipologia Carosello (preserva "STANDARD" come fallback)
-        if (formBlock.getCarouselType() != null && !formBlock.getCarouselType().isBlank()) {
-            block.setCarouselType(formBlock.getCarouselType());
-        } else {
-            block.setCarouselType("STANDARD");
-        }
-
-        // Dimensioni Griglia Card
-        if (formBlock.getCardsPerRow() != null) {
-            block.setCardsPerRow(formBlock.getCardsPerRow());
-        } else {
-            block.setCardsPerRow(3);
-        }
-
-        if (formBlock.getCardImageHeight() != null && !formBlock.getCardImageHeight().isBlank()) {
-            block.setCardImageHeight(formBlock.getCardImageHeight().trim());
-        } else {
-            block.setCardImageHeight("280px");
-        }
-
-        // Dimensioni Caroselli
-        if (formBlock.getCarouselSlideHeight() != null && !formBlock.getCarouselSlideHeight().isBlank()) {
-            block.setCarouselSlideHeight(formBlock.getCarouselSlideHeight().trim());
-        } else {
-            block.setCarouselSlideHeight("500px");
-        }
-
-        if (formBlock.getMultiItemWidth() != null && formBlock.getMultiItemWidth() > 0) {
-            block.setMultiItemWidth(formBlock.getMultiItemWidth());
-        } else {
-            block.setMultiItemWidth(390);
-        }
-
-
-        // ============================================================
-        // STILE BORDO RIGA / BLOCCO
-        // ============================================================
-
-        if (formBlock.getBorderStyle() != null
-                && !formBlock.getBorderStyle().isBlank()) {
-
-            block.setBorderStyle(
-                    formBlock.getBorderStyle().trim()
-            );
-
-        } else {
-
-            block.setBorderStyle("NONE");
-        }
-
-                // ============================================================
-        // COLORE BORDO RIGA / BLOCCO
-        // ============================================================
-        if (formBlock.getBorderColor() != null && !formBlock.getBorderColor().isBlank()) {
-            block.setBorderColor(formBlock.getBorderColor().trim());
-        } else {
-            block.setBorderColor("#334155");
-        }
-
-
-        // ============================================================
-        // STILE ANGOLI CARD
-        // ============================================================
-
-        if (formBlock.getCardRadiusStyle() != null
-                && !formBlock.getCardRadiusStyle().isBlank()) {
-
-            block.setCardRadiusStyle(
-                    formBlock.getCardRadiusStyle().trim()
-            );
-
-        } else {
-
-            block.setCardRadiusStyle("ROUNDED");
-        }
-
-
-        // ============================================================
-        // STILE ANGOLI CAROSELLO
-        // ============================================================
-
-        if (formBlock.getCarouselRadiusStyle() != null
-                && !formBlock.getCarouselRadiusStyle().isBlank()) {
-
-            block.setCarouselRadiusStyle(
-                    formBlock.getCarouselRadiusStyle().trim()
-            );
-
-        } else {
-
-            block.setCarouselRadiusStyle("ROUNDED");
-        }
-
-
-        // ============================================================
-        // COLORE SFONDO PULSANTI
-        // ============================================================
-
-        if (formBlock.getButtonBackgroundColor() != null
-                && !formBlock.getButtonBackgroundColor().isBlank()) {
-
-            block.setButtonBackgroundColor(
-                    formBlock.getButtonBackgroundColor().trim()
-            );
-
-        } else {
-
-            block.setButtonBackgroundColor("#00dc82");
-        }
-
-
-        // ============================================================
-        // COLORE TESTO PULSANTI
-        // ============================================================
-
-        if (formBlock.getButtonTextColor() != null
-                && !formBlock.getButtonTextColor().isBlank()) {
-
-            block.setButtonTextColor(
-                    formBlock.getButtonTextColor().trim()
-            );
-
-        } else {
-
-            block.setButtonTextColor("#0f172a");
-        }
-
-
-        // ============================================================
-        // STILE PULSANTI
-        // ============================================================
-
-        if (formBlock.getButtonRadiusStyle() != null
-                && !formBlock.getButtonRadiusStyle().isBlank()) {
-
-            block.setButtonRadiusStyle(
-                    formBlock.getButtonRadiusStyle().trim()
-            );
-
-        } else {
-
-            block.setButtonRadiusStyle("ROUNDED");
-        }
-
 
         block.setContentHtml(
                 formBlock.getContentHtml()
+        );
+
+        // ============================================================
+        // PERSONALIZZAZIONI GRAFICHE DEL BLOCCO
+        // ============================================================
+        block.setCarouselType(formBlock.getCarouselType());
+        block.setCardsPerRow(formBlock.getCardsPerRow());
+        block.setCardImageHeight(formBlock.getCardImageHeight());
+        block.setCarouselSlideHeight(formBlock.getCarouselSlideHeight());
+        block.setMultiItemWidth(formBlock.getMultiItemWidth());
+        block.setBorderStyle(formBlock.getBorderStyle());
+        block.setBorderColor(formBlock.getBorderColor());
+        block.setCardRadiusStyle(formBlock.getCardRadiusStyle());
+        block.setCarouselRadiusStyle(formBlock.getCarouselRadiusStyle());
+        block.setButtonBackgroundColor(formBlock.getButtonBackgroundColor());
+        block.setButtonTextColor(formBlock.getButtonTextColor());
+        block.setButtonRadiusStyle(formBlock.getButtonRadiusStyle());
+
+
+        // ============================================================
+        // CSS PERSONALIZZATO DEL BLOCCO
+        // ============================================================
+        // Il CSS viene salvato come testo. La limitazione al singolo
+        // blocco viene applicata nel template pubblico tramite @scope
+        // usando l'ID univoco del PageBlock.
+        block.setCustomCss(
+                formBlock.getCustomCss()
         );
 
 
@@ -455,20 +338,6 @@ public class AdminController {
             bgImageGrayscale = 100;
         }
         block.setBgImageGrayscale(bgImageGrayscale);
-
-
-        // --- LUMINOSITÀ ---
-        Integer bgImageBrightness = formBlock.getBgImageBrightness();
-        if (bgImageBrightness == null) {
-            bgImageBrightness = 100;
-        }
-        if (bgImageBrightness < 0) {
-            bgImageBrightness = 0;
-        }
-        if (bgImageBrightness > 200) {
-            bgImageBrightness = 200;
-        }
-        block.setBgImageBrightness(bgImageBrightness);
 
 
         // ============================================================
@@ -1266,4 +1135,3 @@ public class AdminController {
                 + blockId;
     }
 }
-

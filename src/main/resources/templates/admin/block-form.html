@@ -772,8 +772,13 @@
 
             const innerWidthStyle = `width: ${widthPercent}%;`;
 
+            const previewBlockId =
+                targetAreaId === 'rowPreviewRenderArea'
+                    ? 'sf-block-preview-modal'
+                    : 'sf-block-preview-inline';
+
             let htmlOutput = `
-        <div class="${chosenContainerClass} py-3 preview-block-container position-relative ${hasBgImage ? 'has-background-image' : ''} ${isFixedHeight ? 'has-fixed-height' : ''}" 
+        <div id="${previewBlockId}" class="${chosenContainerClass} py-3 preview-block-container position-relative ${hasBgImage ? 'has-background-image' : ''} ${isFixedHeight ? 'has-fixed-height' : ''}" 
              style="${blockContainerStyles}">`;
 
             // -------------------------------------------------------------
@@ -1058,6 +1063,74 @@
             htmlOutput += `</div>`;
 
             renderArea.innerHTML = htmlOutput;
+
+            /*
+             * CSS personalizzato: viene applicato con textContent,
+             * quindi non viene mai interpretato come HTML.
+             * Il selettore @scope limita il CSS al solo blocco di preview.
+             */
+            applyCustomCssToPreview(previewBlockId);
+        }
+
+        function applyCustomCssToPreview(previewBlockId) {
+
+            const target = document.getElementById(previewBlockId);
+            if (!target) return;
+
+            const customCss =
+                document.getElementById('customCss')?.value || '';
+
+            const styleId = previewBlockId + '-custom-css';
+            const oldStyle = document.getElementById(styleId);
+
+            if (oldStyle) {
+                oldStyle.remove();
+            }
+
+            if (!customCss.trim()) return;
+
+            const style = document.createElement('style');
+            style.id = styleId;
+
+            const scopedCustomCss = customCss
+                .replace(/\.block-container\b/g, ':scope')
+                .replace(/\.preview-block-container\b/g, ':scope');
+
+            style.textContent =
+                `@scope (#${CSS.escape(previewBlockId)}) {\n${scopedCustomCss}\n}`;
+
+            document.head.appendChild(style);
+
+            /*
+             * Il CSS personalizzato deve avere priorità sulle regole grafiche
+             * predefinite del CMS (molte delle quali usano !important).
+             * Dopo aver inserito il foglio, rendiamo importanti le proprietà
+             * delle normali CSSStyleRule, senza modificare @keyframes o altre
+             * regole speciali.
+             */
+            try {
+                const makeCustomRulesImportant = (rules) => {
+                    Array.from(rules).forEach(rule => {
+                        if (rule.cssRules) {
+                            makeCustomRulesImportant(rule.cssRules);
+                        }
+
+                        if (rule.type === CSSRule.STYLE_RULE && rule.style) {
+                            for (let i = 0; i < rule.style.length; i++) {
+                                const property = rule.style[i];
+                                const value = rule.style.getPropertyValue(property);
+                                if (value && !/\!important\s*$/i.test(value)) {
+                                    rule.style.setProperty(property, value, 'important');
+                                }
+                            }
+                        }
+                    });
+                };
+
+                makeCustomRulesImportant(style.sheet.cssRules);
+            } catch (error) {
+                console.warn('Impossibile applicare la priorità al CSS personalizzato:', error);
+            }
         }
 
         function renderRowPreviewIfOpen() {

@@ -387,7 +387,8 @@
     <!-- NAVBAR CONDIVISA -->
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <!-- PAGINA -->
+    <!-- PAGINA: contenitore dedicato per isolare il CSS personalizzato -->
+    <div id="sf-page-custom-root" th:attr="data-sf-custom-css=${page.customCss}">
     <main class="container-fluid py-5">
         <div class="page-container"
             th:style="'width: ' + (${page.widthPercent != null ? page.widthPercent : 100}) + '%;'">
@@ -645,6 +646,7 @@
             </div>
         </div>
     </main>
+    </div>
 
     <!-- FOOTER CONDIVISO -->
     <footer th:replace="~{fragments/footer :: footer}"></footer>
@@ -875,6 +877,23 @@
                     input.style.setProperty("color", "#ffffff", "important");
                 }
             });
+        });
+    </script>
+
+
+    <!-- CSS PERSONALIZZATO ISOLATO ALLA SINGOLA PAGINA -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const root = document.getElementById('sf-page-custom-root');
+            if (!root) return;
+
+            const customCss = root.getAttribute('data-sf-custom-css') || '';
+            if (!customCss.trim()) return;
+
+            const style = document.createElement('style');
+            style.id = 'sf-page-custom-css';
+            style.textContent = '@scope (#sf-page-custom-root) {\n' + customCss + '\n}';
+            document.head.appendChild(style);
         });
     </script>
 

@@ -146,6 +146,36 @@
         }
 
         /* ============================================================
+           CSS PERSONALIZZATO PAGINA
+           ============================================================ */
+
+        .page-custom-css-box {
+            background-color: rgba(15, 23, 42, 0.85) !important;
+            border: 1px solid #1e293b !important;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+        }
+
+        .page-custom-css-box .custom-css-description {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        #customCss {
+            font-family: "Fira Code", monospace !important;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            min-height: 260px;
+            resize: vertical;
+            tab-size: 4;
+        }
+
+        #customCss::placeholder {
+            color: #64748b !important;
+        }
+
+        /* ============================================================
            ANTEPRIMA FORM
            ============================================================ */
 
@@ -405,6 +435,97 @@
 
 
             triggerLivePreviewUpdate();
+        }
+
+
+        /* ============================================================
+           CSS PERSONALIZZATO
+           ============================================================ */
+
+        function getCustomCss() {
+
+            const customCss =
+                document.getElementById('customCss');
+
+            return customCss
+                ? customCss.value
+                : '';
+        }
+
+
+        /*
+         * Prepara il CSS personalizzato per l'anteprima.
+         *
+         * La pagina di anteprima ha come radice:
+         *
+         *     #sf-page-preview
+         *
+         * Gli alias permettono di usare nel CSS:
+         *
+         *     body
+         *     html
+         *     .page-content-wrapper
+         *
+         * senza modificare il resto della finestra
+         * dell'anteprima.
+         */
+        function prepareCustomPageCss(customCss) {
+
+            if (!customCss || !customCss.trim()) {
+                return '';
+            }
+
+
+            let css =
+                customCss;
+
+
+            /*
+             * Evitiamo che body/html vadano a modificare
+             * l'intero documento di anteprima.
+             */
+            css =
+                css.replace(
+                    /(^|[,{]\s*)body(?=\s*[{,])/gi,
+                    '$1#sf-page-preview'
+                );
+
+
+            css =
+                css.replace(
+                    /(^|[,{]\s*)html(?=\s*[{,])/gi,
+                    '$1#sf-page-preview'
+                );
+
+
+            /*
+             * Il vecchio riferimento al wrapper resta
+             * compatibile con la pagina.
+             */
+            css =
+                css.replace(
+                    /\.page-content-wrapper\b/g,
+                    ':scope'
+                );
+
+
+            /*
+             * :root viene ricondotto alla pagina.
+             */
+            css =
+                css.replace(
+                    /:root\b/g,
+                    ':scope'
+                );
+
+
+            return `
+                @scope (#sf-page-preview) {
+
+                    ${css}
+
+                }
+            `;
         }
 
     </script>
@@ -910,6 +1031,88 @@
 
 
                 <!-- ==================================================
+                     CSS PERSONALIZZATO
+                     ================================================== -->
+                <div class="page-custom-css-box mb-4">
+
+                    <label class="form-label fw-bold d-flex align-items-center mb-2">
+
+                        <i class="bi bi-code-slash text-info me-2 fs-5"></i>
+
+                        Personalizzazione Avanzata CSS
+
+                    </label>
+
+
+                    <div class="custom-css-description mb-3">
+
+                        Inserisci CSS personalizzato per modificare
+                        graficamente questa pagina senza modificare
+                        il codice del sito.
+                        <br>
+
+                        Il CSS viene applicato esclusivamente
+                        alla pagina e viene mostrato anche
+                        nell'Anteprima Live.
+
+                    </div>
+
+
+                    <button type="button"
+                            class="btn btn-sm btn-outline-info monaco-open-button w-100 mb-3"
+                            data-bs-toggle="modal"
+                            data-bs-target="#monacoEditorModal"
+                            data-target-id="customCss"
+                            data-target-language="css"
+                            onclick="openMonacoFromButton(this)">
+
+                        <i class="bi bi-code-square me-1"></i>
+
+                        Apri CSS Editor Avanzato (Monaco)
+
+                    </button>
+
+
+                    <textarea id="customCss"
+                              class="form-control font-monospace"
+                              th:field="*{customCss}"
+                              rows="12"
+                              spellcheck="false"
+                              oninput="triggerLivePreviewUpdate()"
+                              placeholder="Esempio:
+
+.page-header-title {
+    font-size: 52px;
+    letter-spacing: 3px;
+}
+
+#live-body-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+}
+
+.form-preview-card {
+    border-radius: 0;
+}"></textarea>
+
+
+                    <div class="form-text mt-2">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Puoi utilizzare normali selettori CSS.
+                        Nell'anteprima puoi usare anche
+                        <code>.page-header-title</code>,
+                        <code>#live-body-content</code> e
+                        <code>.form-preview-card</code>.
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
                      TIPO FORM
                      ================================================== -->
                 <div class="mb-4 p-3 border rounded bg-dark">
@@ -1062,11 +1265,6 @@
                     </div>
 
 
-                    <!-- ==================================================
-                         PULSANTE MONACO
-                         IMPORTANTE:
-                         data-target-id="contentHtml"
-                         ================================================== -->
                     <div class="monaco-modal-editor-button">
 
                         <button type="button"
@@ -1074,6 +1272,7 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#monacoEditorModal"
                                 data-target-id="contentHtml"
+                                data-target-language="html"
                                 onclick="openMonacoFromButton(this)">
 
                             <i class="bi bi-code-square me-1"></i>
@@ -1085,9 +1284,6 @@
                     </div>
 
 
-                    <!-- ==================================================
-                         TEXTAREA TINYMCE
-                         ================================================== -->
                     <textarea id="contentHtml"
                               class="wysiwyg-editor"
                               th:field="*{contentHtml}">
@@ -1389,8 +1585,6 @@
 
     <!-- ============================================================
          MONACO JS
-         IMPORTANTE:
-         deve essere inserito DOPO Bootstrap.
          ============================================================ -->
     <th:block th:insert="~{fragments/monaco :: monaco-scripts}" />
 
@@ -2242,17 +2436,11 @@
 
         function showConfirmModal() {
 
-            /*
-             * TinyMCE -> textarea.
-             */
             if (window.tinymce) {
                 tinymce.triggerSave();
             }
 
 
-            /*
-             * Monaco -> TinyMCE/textarea.
-             */
             if (
                 typeof syncMonacoToTarget === 'function' &&
                 typeof monacoEditor !== 'undefined' &&
@@ -2313,11 +2501,6 @@
 
         function submitPageForm() {
 
-            /*
-             * Prima di inviare:
-             * sincronizziamo Monaco e TinyMCE.
-             */
-
             if (
                 typeof syncMonacoToTarget === 'function' &&
                 typeof monacoEditor !== 'undefined' &&
@@ -2349,15 +2532,6 @@
         let livePreviewWindow = null;
 
 
-        /*
-         * ============================================================
-         * CONTENUTO TINYMCE
-         * ============================================================
-         *
-         * NON utilizziamo tinymce.activeEditor.
-         *
-         * Cerchiamo esplicitamente l'editor associato a contentHtml.
-         */
         function getFormCurrentContent() {
 
             const textarea =
@@ -2464,6 +2638,10 @@
                 getSelectedFormType();
 
 
+            const customCss =
+                getCustomCss();
+
+
             let embeddedFormHtml = '';
 
 
@@ -2488,6 +2666,10 @@
                 backgroundColor
                     ? `background-color:${backgroundColor} !important;`
                     : 'background-color:#080c14 !important;';
+
+
+            const preparedCustomCss =
+                prepareCustomPageCss(customCss);
 
 
             return `<!DOCTYPE html>
@@ -2742,6 +2924,17 @@
 
     </style>
 
+
+    <!-- ========================================================
+         CSS PERSONALIZZATO DELLA PAGINA
+         ======================================================== -->
+
+    <style id="page-custom-css">
+
+        ${preparedCustomCss}
+
+    </style>
+
 </head>
 
 
@@ -2759,7 +2952,8 @@
     <canvas id="tech-bg-canvas"></canvas>
 
 
-    <main class="page-content-wrapper">
+    <main id="sf-page-preview"
+          class="page-content-wrapper">
 
         <h1 class="page-header-title display-4">
 
@@ -3036,11 +3230,10 @@
         }
 
 
-        /*
-         * ============================================================
-         * AGGIORNAMENTO ANTEPRIMA LIVE
-         * ============================================================
-         */
+        /* ============================================================
+           AGGIORNAMENTO ANTEPRIMA LIVE
+           ============================================================ */
+
         function triggerLivePreviewUpdate() {
 
             if (
@@ -3063,24 +3256,17 @@
         }
 
 
-        /*
-         * ============================================================
-         * APERTURA ANTEPRIMA LIVE
-         * ============================================================
-         */
+        /* ============================================================
+           APERTURA ANTEPRIMA LIVE
+           ============================================================ */
+
         function openLivePagePreview() {
 
-            /*
-             * TinyMCE -> textarea.
-             */
             if (window.tinymce) {
                 tinymce.triggerSave();
             }
 
 
-            /*
-             * Monaco -> target.
-             */
             if (
                 typeof syncMonacoToTarget === 'function' &&
                 typeof monacoEditor !== 'undefined' &&
@@ -3122,11 +3308,10 @@
         }
 
 
-        /*
-         * ============================================================
-         * LISTENER FORM
-         * ============================================================
-         */
+        /* ============================================================
+           LISTENER FORM
+           ============================================================ */
+
         document.addEventListener(
             'DOMContentLoaded',
             function () {
@@ -3158,18 +3343,9 @@
                 }
 
 
-                /*
-                 * Impostazione iniziale form.
-                 */
                 toggleCourseForm();
 
 
-                /*
-                 * TinyMCE.
-                 *
-                 * Cerchiamo l'editor specifico contentHtml,
-                 * non tinymce.activeEditor.
-                 */
                 setTimeout(
                     function () {
 
@@ -3637,3 +3813,4 @@
 </body>
 
 </html>
+

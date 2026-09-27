@@ -1,6 +1,12 @@
 package it.skillfactory.eco.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "pages")
@@ -10,96 +16,45 @@ public class Page {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    // ============================================================
-    // TITOLO
-    // ============================================================
-
     @Column(nullable = false)
     private String title;
 
-
-    // ============================================================
-    // SLUG
-    // ============================================================
-
     @Column(unique = true, nullable = false)
     private String slug;
-
-
-    // ============================================================
-    // CONTENUTO HTML
-    // ============================================================
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String contentHtml;
 
-
-    // ============================================================
-    // LARGHEZZA BLOCCO (%)
-    // ============================================================
-
     @Column(nullable = false)
     private Integer widthPercent = 100;
-
-
-    // ============================================================
-    // IMPOSTAZIONI FORM
-    // ============================================================
 
     @Column(nullable = false)
     private Boolean hasForm = false;
 
-    private String formType = "NONE"; // NONE, BOOKING, INFO, ORG_INFO
+    private String formType = "NONE";
+    private String courseType;
+    private String courseCode;
+    private String courseName;
+    private String recipientEmail;
 
-    private String courseType;      // Tipologia (es. Corso di Formazione)
-
-    private String courseCode;      // Codice Corso (es. JAVA-2026-01)
-
-    private String courseName;      // Nome Corso (es. Corso Java Developer)
-
-    private String recipientEmail;  // Email a cui inoltrare le iscrizioni / richieste
-    
     @Column(name = "background_color", length = 50)
     private String backgroundColor;
 
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public void setBackgroundColor(String backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-    
     @Column(name = "title_color", length = 50)
     private String titleColor;
 
     @Column(name = "form_bg_color", length = 50)
     private String formBgColor;
 
-    public String getTitleColor() {
-        return titleColor;
-    }
+    @Lob
+    @Column(name = "custom_css", columnDefinition = "LONGTEXT")
+    private String customCss;
 
-    public void setTitleColor(String titleColor) {
-        this.titleColor = titleColor;
-    }
-
-    public String getFormBgColor() {
-        return formBgColor;
-    }
-
-    public void setFormBgColor(String formBgColor) {
-        this.formBgColor = formBgColor;
-    }
-
-
-
-
-    // ============================================================
-    // COSTRUTTORI
-    // ============================================================
+    private String formInputBgColor;
+    private String formTextColor;
+    private String formPlaceholderColor;
+    private String titleFont;
 
     public Page() {
         this.widthPercent = 100;
@@ -115,55 +70,6 @@ public class Page {
         this.hasForm = false;
         this.formType = "NONE";
     }
-
-    // Colore Sfondo Input Form
-    private String formInputBgColor;
-
-    // Colore Testo & Label Form
-    private String formTextColor;
-
-    // Colore Placeholder Input Form
-    private String formPlaceholderColor;
-
-    // All'interno della classe Page (o PageDTO):
-private String titleFont;
-
-public String getTitleFont() {
-    return titleFont;
-}
-
-public void setTitleFont(String titleFont) {
-    this.titleFont = titleFont;
-}
-
-    public String getFormInputBgColor() {
-        return formInputBgColor;
-    }
-
-    public void setFormInputBgColor(String formInputBgColor) {
-        this.formInputBgColor = formInputBgColor;
-    }
-
-    public String getFormTextColor() {
-        return formTextColor;
-    }
-
-    public void setFormTextColor(String formTextColor) {
-        this.formTextColor = formTextColor;
-    }
-
-    public String getFormPlaceholderColor() {
-        return formPlaceholderColor;
-    }
-
-    public void setFormPlaceholderColor(String formPlaceholderColor) {
-        this.formPlaceholderColor = formPlaceholderColor;
-    }
-
-
-    // ============================================================
-    // GETTERS E SETTERS BASE
-    // ============================================================
 
     public Long getId() {
         return id;
@@ -205,37 +111,35 @@ public void setTitleFont(String titleFont) {
         this.widthPercent = widthPercent;
     }
 
-
-    // ============================================================
-    // GETTERS E SETTERS FORM E MODALITÀ
-    // ============================================================
-
     public Boolean getHasForm() {
-        if (formType != null && !"NONE".equalsIgnoreCase(formType)) {
-            return true;
-        }
-        return hasForm != null ? hasForm : false;
+        return hasForm != null && hasForm;
     }
 
     public void setHasForm(Boolean hasForm) {
-        this.hasForm = hasForm;
-        if (Boolean.TRUE.equals(hasForm) && ("NONE".equalsIgnoreCase(this.formType) || this.formType == null)) {
-            this.formType = "BOOKING";
-        } else if (Boolean.FALSE.equals(hasForm)) {
+        this.hasForm = hasForm != null && hasForm;
+        if (!this.hasForm) {
             this.formType = "NONE";
+        } else if (this.formType == null || this.formType.trim().isEmpty() || "NONE".equalsIgnoreCase(this.formType)) {
+            this.formType = "BOOKING";
         }
     }
 
     public String getFormType() {
         if (formType == null || formType.trim().isEmpty()) {
-            return (hasForm != null && hasForm) ? "BOOKING" : "NONE";
+            return Boolean.TRUE.equals(hasForm) ? "BOOKING" : "NONE";
         }
         return formType;
     }
 
     public void setFormType(String formType) {
+        if (formType == null || formType.trim().isEmpty()) {
+            this.formType = "NONE";
+            this.hasForm = false;
+            return;
+        }
+
         this.formType = formType;
-        this.hasForm = !"NONE".equalsIgnoreCase(formType) && formType != null;
+        this.hasForm = !"NONE".equalsIgnoreCase(formType);
     }
 
     public String getCourseType() {
@@ -268,5 +172,69 @@ public void setTitleFont(String titleFont) {
 
     public void setRecipientEmail(String recipientEmail) {
         this.recipientEmail = recipientEmail;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public String getTitleColor() {
+        return titleColor;
+    }
+
+    public void setTitleColor(String titleColor) {
+        this.titleColor = titleColor;
+    }
+
+    public String getFormBgColor() {
+        return formBgColor;
+    }
+
+    public void setFormBgColor(String formBgColor) {
+        this.formBgColor = formBgColor;
+    }
+
+    public String getCustomCss() {
+        return customCss;
+    }
+
+    public void setCustomCss(String customCss) {
+        this.customCss = customCss;
+    }
+
+    public String getFormInputBgColor() {
+        return formInputBgColor;
+    }
+
+    public void setFormInputBgColor(String formInputBgColor) {
+        this.formInputBgColor = formInputBgColor;
+    }
+
+    public String getFormTextColor() {
+        return formTextColor;
+    }
+
+    public void setFormTextColor(String formTextColor) {
+        this.formTextColor = formTextColor;
+    }
+
+    public String getFormPlaceholderColor() {
+        return formPlaceholderColor;
+    }
+
+    public void setFormPlaceholderColor(String formPlaceholderColor) {
+        this.formPlaceholderColor = formPlaceholderColor;
+    }
+
+    public String getTitleFont() {
+        return titleFont;
+    }
+
+    public void setTitleFont(String titleFont) {
+        this.titleFont = titleFont;
     }
 }
